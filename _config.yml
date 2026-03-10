@@ -1,0 +1,19 @@
+title: Liping's Research Notes
+description: Notes and projects from my research
+baseurl: ""
+url: "https://zhanglpg.github.io"
+
+markdown: kramdown
+highlighter: rouge
+
+collections:
+  research:
+    output: true
+    permalink: /research/:slug/
+
+defaults:
+  - scope:
+      path: ""
+      type: "research"
+    values:
+      layout: "project"
