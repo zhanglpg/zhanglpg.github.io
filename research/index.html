@@ -1,0 +1,26 @@
+---
+layout: default
+title: Research Projects
+---
+<h1>Research Projects</h1>
+<p>All research notes and project documentation.</p>
+
+<ul class="project-list">
+  {% assign sorted = site.research | sort: 'date' | reverse %}
+  {% for project in sorted %}
+  <li>
+    <a href="{{ project.url | relative_url }}">
+      <div class="title">{{ project.title }}</div>
+      {% if project.summary %}<div class="summary">{{ project.summary }}</div>{% endif %}
+      <div class="meta">
+        {{ project.date | date: "%B %d, %Y" }}
+        {% if project.status %} &middot; <span class="status status-{{ project.status }}">{{ project.status }}</span>{% endif %}
+        {% if project.tags %}
+        &middot;
+        {% for tag in project.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+        {% endif %}
+      </div>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
