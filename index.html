@@ -1,0 +1,29 @@
+---
+layout: default
+title: Home
+---
+<div class="intro">
+  <h1>Research Notes</h1>
+  <p>A collection of notes, ideas, and progress logs from my research projects.</p>
+</div>
+
+<h2>Recent Projects</h2>
+<ul class="project-list">
+  {% assign sorted = site.research | sort: 'date' | reverse %}
+  {% for project in sorted limit:5 %}
+  <li>
+    <a href="{{ project.url | relative_url }}">
+      <div class="title">{{ project.title }}</div>
+      {% if project.summary %}<div class="summary">{{ project.summary }}</div>{% endif %}
+      <div class="meta">
+        {{ project.date | date: "%B %d, %Y" }}
+        {% if project.status %} &middot; <span class="status status-{{ project.status }}">{{ project.status }}</span>{% endif %}
+      </div>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+{% if site.research.size > 5 %}
+<p><a href="{{ '/research/' | relative_url }}">View all projects &rarr;</a></p>
+{% endif %}
