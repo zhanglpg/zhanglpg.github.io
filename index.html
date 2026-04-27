@@ -27,6 +27,12 @@ title: Home
 <h2>Tools &amp; Dashboards</h2>
 <ul class="project-list">
   <li>
+    <a href="{{ '/llm-roofline-sim/' | relative_url }}">
+      <div class="title">LLM Roofline Simulator</div>
+      <div class="summary">Interactive React dashboard for SLO-constrained per-chip total-token throughput on MoE LLMs. Six models (DeepSeek V4 Pro/Flash, Qwen 3.5-397B, Kimi K2.6, GLM 5.1, MiniMax M2.7) × six chips (B200, B300, GB300 NVL72, TPU Ironwood, TPU v8i, AMD MI355X) × four scenarios, with TPOT/TTFT/cache-hit-rate sliders, optimal-θ search, decode/TTFT breakdowns, and the precision-aware roofline algorithm from the companion paper.</div>
+    </a>
+  </li>
+  <li>
     <a href="{{ '/hermes-llm-roofline-sim/' | relative_url }}">
       <div class="title">⚡ Hermes LLM Roofline Simulator</div>
       <div class="summary">Interactive roofline performance simulator for MoE LLMs on next-gen hardware (B300, GB300, TPU Ironwood, MI355X). Compare 6 models across 4 scenarios with SLO constraints.</div>
