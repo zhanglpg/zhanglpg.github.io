@@ -28,8 +28,8 @@ title: Home
 <ul class="project-list">
   <li>
     <a href="{{ '/llm-roofline-sim/' | relative_url }}">
-      <div class="title">LLM Roofline Simulator</div>
-      <div class="summary">Interactive React dashboard for SLO-constrained per-chip total-token throughput on MoE LLMs. Six models (DeepSeek V4 Pro/Flash, Qwen 3.5-397B, Kimi K2.6, GLM 5.1, MiniMax M2.7) × six chips (B200, B300, GB300 NVL72, TPU Ironwood, TPU v8i, AMD MI355X) × four scenarios, with TPOT/TTFT/cache-hit-rate sliders, optimal-θ search, decode/TTFT breakdowns, and the precision-aware roofline algorithm from the companion paper.</div>
+      <div class="title">Revenue-per-Chip-Hour Roofline Simulator</div>
+      <div class="summary">Interactive React dashboard that maximizes per-chip total-token TPM (the policy-invariant proxy for revenue/chip-hour) under TTFT/TPOT SLOs for MoE LLMs. Six models (DeepSeek V4 Pro/Flash, Qwen 3.5-397B, Kimi K2.6, GLM 5.1, MiniMax M2.7) × six chips (B200, B300, GB300 NVL72, TPU Ironwood, TPU v8i, AMD MI355X) × four scenarios, with TPOT/TTFT/cache-hit-rate sliders, optimal-θ search, decode/TTFT breakdowns, and the precision-aware hierarchical roofline algorithm from the companion paper.</div>
     </a>
   </li>
   <li>
