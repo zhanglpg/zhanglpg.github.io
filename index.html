@@ -24,6 +24,16 @@ title: Home
   {% endfor %}
 </ul>
 
+<h2>Tools &amp; Dashboards</h2>
+<ul class="project-list">
+  <li>
+    <a href="{{ '/hermes-llm-roofline-sim/' | relative_url }}">
+      <div class="title">⚡ Hermes LLM Roofline Simulator</div>
+      <div class="summary">Interactive roofline performance simulator for MoE LLMs on next-gen hardware (B300, GB300, TPU Ironwood, MI355X). Compare 6 models across 4 scenarios with SLO constraints.</div>
+    </a>
+  </li>
+</ul>
+
 {% if site.research.size > 5 %}
 <p><a href="{{ '/research/' | relative_url }}">View all projects &rarr;</a></p>
 {% endif %}
