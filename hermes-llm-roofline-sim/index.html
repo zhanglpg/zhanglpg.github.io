@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes LLM Roofline Simulator</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.5}
+.container{max-width:1400px;margin:0 auto;padding:20px}
+h1{font-size:1.8rem;margin-bottom:4px;color:#f8fafc}
+h2{font-size:1.2rem;margin:24px 0 12px;color:#94a3b8;border-bottom:1px solid #1e293b;padding-bottom:8px}
+h3{font-size:1rem;margin:12px 0 8px;color:#cbd5e1}
+.subtitle{color:#64748b;font-size:0.85rem;margin-bottom:20px}
+.subtitle a{color:#38bdf8}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.control-group{background:#1e293b;border-radius:10px;padding:16px}
+.control-group label{display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+select,input[type=range]{width:100%;padding:8px 12px;background:#0f172a;border:1px solid #334155;border-radius:6px;color:#e2e8f0;font-size:0.9rem}
+select:focus,input:focus{outline:none;border-color:#38bdf8}
+.range-value{display:flex;justify-content:space-between;font-size:0.8rem;color:#64748b;margin-top:4px}
+.slo-row{display:flex;gap:12px;align-items:center}
+.slo-row>div{flex:1}
+.slo-row input{flex:2}
+.slo-row span{font-size:0.85rem;color:#38bdf8;min-width:60px;text-align:right}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.card{background:#1e293b;border-radius:10px;padding:16px;border:1px solid #334155}
+.card.best{border-color:#22c55e;box-shadow:0 0 12px rgba(34,197,94,0.15)}
+.card.fail{border-color:#ef4444;opacity:0.7}
+.card .chip-name{font-weight:700;font-size:0.95rem;margin-bottom:8px}
+.card .metric{display:flex;justify-content:space-between;font-size:0.85rem;margin:4px 0}
+.card .metric .label{color:#94a3b8}
+.card .metric .value{font-weight:600}
+.card .value.good{color:#22c55e}
+.card .value.warn{color:#f59e0b}
+.card .value.bad{color:#ef4444}
+.card .slo-badge{display:inline-block;font-size:0.7rem;padding:2px 8px;border-radius:10px;margin-left:4px}
+.card .slo-badge.pass{background:#064e3b;color:#22c55e}
+.card .slo-badge.fail{background:#450a0a;color:#ef4444}
+.card .config{font-size:0.75rem;color:#64748b;margin-top:8px;font-family:monospace}
+.table-wrap{overflow-x:auto;margin-bottom:24px}
+table{width:100%;border-collapse:collapse;font-size:0.85rem}
+th{background:#1e293b;padding:10px 12px;text-align:left;font-weight:600;color:#94a3b8;border-bottom:2px solid #334155;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid #1e293b}
+tr:hover td{background:#1e293b}
+.num{text-align:right;font-family:monospace;font-size:0.85rem}
+.breakdown-bar{height:20px;border-radius:4px;display:flex;overflow:hidden;margin:4px 0}
+.breakdown-bar .seg{display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#fff;font-weight:600}
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-bottom:24px}
+.spec-card{background:#1e293b;border-radius:10px;padding:16px;border:1px solid #334155}
+.spec-card .spec-row{display:flex;justify-content:space-between;padding:4px 0;font-size:0.82rem;border-bottom:1px solid #1e293b}
+.spec-card .spec-row:last-child{border-bottom:none}
+.algo-section{background:#1e293b;border-radius:10px;padding:20px;margin-bottom:24px;font-size:0.9rem;line-height:1.7}
+.algo-section code{background:#0f172a;padding:2px 6px;border-radius:4px;font-size:0.85rem;color:#38bdf8}
+.algo-section pre{background:#0f172a;padding:12px;border-radius:8px;overflow-x:auto;font-size:0.8rem;margin:8px 0}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:8px 8px 0 0;border:1px solid #334155;border-bottom:none;background:#0f172a;color:#94a3b8;cursor:pointer;font-size:0.85rem}
+.tab.active{background:#1e293b;color:#f8fafc;border-color:#38bdf8}
+.chip-strip{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.chip-tag{padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1px solid #334155;background:#0f172a;color:#94a3b8}
+.chip-tag.active{background:#1e3a5f;color:#38bdf8;border-color:#38bdf8}
+@media(max-width:768px){.controls{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo, useCallback } = React;
+
+// ==================== DATA ====================
+
+const MODELS = {
+  "qwen3.5-397b": { name: "Qwen3.5-397B-A17B", layers: 64, hidden: 5120, ffn: 13824, experts: 128, topk: 17, activeParams: 17, vocab: 152064, desc: "MoE, 397B total, 17B active. Strong reasoning." },
+  "kimi-2.6": { name: "Kimi 2.6", layers: 60, hidden: 6144, ffn: 18432, experts: 128, topk: 8, activeParams: 14, vocab: 160000, desc: "MoE, long-context optimized. Moonshot AI." },
+  "deepseek-v4-pro": { name: "DeepSeek V4 Pro", layers: 72, hidden: 8192, ffn: 24576, experts: 384, topk: 8, activeParams: 45, vocab: 129280, desc: "MoE, 384 experts, FP4 QAT. Top-tier reasoning." },
+  "deepseek-v4-flash": { name: "DeepSeek V4 Flash", layers: 48, hidden: 6144, ffn: 16384, experts: 256, topk: 8, activeParams: 18, vocab: 129280, desc: "MoE, speed-optimized V4 variant." },
+  "glm-5.1": { name: "GLM 5.1", layers: 64, hidden: 7168, ffn: 20480, experts: 128, topk: 8, activeParams: 22, vocab: 151936, desc: "MoE, Zhipu AI. Strong coding." },
+  "minimax-2.7": { name: "MiniMax 2.7", layers: 54, hidden: 5632, ffn: 16384, experts: 64, topk: 8, activeParams: 12, vocab: 200000, desc: "MoE, efficient serving. MiniMax." }
+};
+
+const CHIPS = {
+  "B200": { name: "NVIDIA B200", bf16: 2250, fp8: 5000, fp4: 10000, hbm: 192, hbmBw: 8.0, interconnect: 1.8, tdp: 1200, arch: "Blackwell", vendor: "NVIDIA", year: 2024 },
+  "B300": { name: "NVIDIA B300 Ultra", bf16: 3750, fp8: 7500, fp4: 15000, hbm: 288, hbmBw: 8.0, interconnect: 1.8, tdp: 1400, arch: "Blackwell Ultra", vendor: "NVIDIA", year: 2025 },
+  "GB300": { name: "NVIDIA GB300", bf16: 3750, fp8: 7500, fp4: 15000, hbm: 288, hbmBw: 8.0, interconnect: 2.7, tdp: 1600, arch: "Grace-Blackwell Ultra", vendor: "NVIDIA", year: 2025 },
+  "TPU-v7": { name: "TPU v7 Ironwood", bf16: 2307, fp8: 4614, fp4: 9228, hbm: 192, hbmBw: 7.37, interconnect: 4.8, tdp: 1200, arch: "Ironwood", vendor: "Google", year: 2025 },
+  "TPU-v8i": { name: "TPU v8i", bf16: 4200, fp8: 9200, fp4: 18400, hbm: 384, hbmBw: 13.0, interconnect: 9.6, tdp: 1500, arch: "v8 Inference", vendor: "Google", year: 2026 },
+  "MI355X": { name: "AMD MI355X", bf16: 3500, fp8: 7000, fp4: 14000, hbm: 288, hbmBw: 8.0, interconnect: 1.2, tdp: 1000, arch: "CDNA4", vendor: "AMD", year: 2025 }
+};
+
+const SCENARIOS = {
+  "chat": { name: "Chat", prefillLen: 2048, decodeLen: 256, batchSize: 8, desc: "Standard chat completion" },
+  "agentic-32k": { name: "Agentic Reasoning (32K/4K)", prefillLen: 32768, decodeLen: 4096, batchSize: 4, desc: "Long reasoning chain" },
+  "agentic-4k": { name: "Agentic Reasoning (4K/1K)", prefillLen: 4096, decodeLen: 1024, batchSize: 4, desc: "Short reasoning task" },
+  "rag": { name: "RAG", prefillLen: 8192, decodeLen: 512, batchSize: 16, desc: "Retrieval-Augmented Generation" }
+};
+
+const DEFAULT_N_DEVICES = 16;
+
+// ==================== ALGORITHM ====================
+
+function computeFlops(model, scenario, nDevices, tp, ep) {
+  const { layers, hidden, ffn, experts, topk } = model;
+  const { prefillLen, decodeLen, batchSize } = scenario;
+  
+  const expertFlopsPerToken = 2 * topk * hidden * ffn;
+  const attnFlopsPerToken = 4 * hidden * hidden;
+  const otherFlopsPerToken = 2 * hidden * hidden;
+  const totalFlopsPerToken = expertFlopsPerToken + attnFlopsPerToken + otherFlopsPerToken;
+  
+  const prefillFlops = batchSize * prefillLen * totalFlopsPerToken / (tp * ep);
+  const decodeFlops = batchSize * totalFlopsPerToken / (tp * ep);
+  
+  return { prefillFlops, decodeFlops, totalFlopsPerToken, expertFlopsPerToken, attnFlopsPerToken, otherFlopsPerToken };
+}
+
+function computeCommunication(model, scenario, tp, ep) {
+  const { hidden } = model;
+  const { batchSize } = scenario;
+  
+  const allReduceBytes = 2 * hidden * 2; // FP16 per all-reduce
+  const allReduceCost = (tp > 1) ? allReduceBytes * (tp - 1) / tp : 0;
+  
+  const allToAllBytes = batchSize * hidden * 2;
+  const epGroups = ep;
+  const allToAllCost = (epGroups > 1) ? allToAllBytes * (epGroups - 1) / epGroups : 0;
+  
+  return { allReduceBytes, allReduceCost, allToAllBytes, allToAllCost };
+}
+
+function computeThroughput(chip, model, scenario, tp, ep, cacheHitRate, nDevices) {
+  const pp = Math.floor(nDevices / (tp * ep));
+  if (pp < 1) return null;
+  const actualDevices = tp * ep * pp;
+  
+  const { prefillFlops, decodeFlops } = computeFlops(model, scenario, actualDevices, tp, ep);
+  const { allReduceCost, allToAllCost } = computeCommunication(model, scenario, tp, ep);
+  
+  const { prefillLen, decodeLen, batchSize } = scenario;
+  const { bf16, fp8, hbmBw, interconnect } = chip;
+  
+  // Precision-weighted FLOPS (FP4 FFN + FP8 attention)
+  const fp4Frac = 0.70, fp8Frac = 0.25, bf16Frac = 0.05;
+  const feff = 1 / (bf16Frac/bf16 + fp8Frac/fp8 + fp4Frac/(fp8*2));
+  
+  // HBM data movement
+  const weightBytes = estimateWeights(model);
+  const kvCacheBytes = 2 * model.hidden * model.layers * 2; // per token
+  
+  // Cache-aware prefill (only compute non-cached portion)
+  const effectivePrefillLen = prefillLen * (1 - cacheHitRate);
+  
+  // Prefill: compute-bound check
+  const aiPrefill = (prefillFlops * effectivePrefillLen / prefillLen) / (weightBytes + allReduceCost + allToAllCost);
+  const prefillBound = aiPrefill * hbmBw * 1e12 / 1e12;
+  const prefillTput = Math.min(feff, prefillBound) / (prefillFlops / effectivePrefillLen * prefillLen);
+  
+  // Decode: bandwidth-bound check (1 token at a time per batch item)
+  const decodeTput = hbmBw * 1e12 / (weightBytes + kvCacheBytes * batchSize + allReduceCost);
+  
+  // KV transfer (for disaggregated)
+  const kvTransferBytes = (1 - cacheHitRate) * prefillLen * model.hidden * model.layers * 2;
+  const kvTransferTput = interconnect * 1e12 / kvTransferBytes;
+  
+  // TTFT: time to prefill
+  const ttft = (prefillFlops * effectivePrefillLen / prefillLen) * 1e15 / (Math.min(feff, prefillBound) * 1e12);
+  
+  // TPOT: time per output token (decode)
+  const tpot = decodeFlops * 1e15 / (feff * 1e12);
+  const tpotBandwidth = (weightBytes + kvCacheBytes * batchSize) / (hbmBw * 1e12);
+  const tpotActual = Math.max(tpot, tpotBandwidth);
+  
+  // Total throughput
+  const totalTokensPerReq = effectivePrefillLen + decodeLen;
+  const totalTime = ttft + tpotActual * decodeLen;
+  const inputTput = effectivePrefillLen / totalTime * batchSize;
+  const outputTput = decodeLen / totalTime * batchSize;
+  const totalTput = totalTokensPerReq / totalTime * batchSize;
+  
+  return {
+    tp, ep, pp, actualDevices,
+    ttftMs: ttft * 1000,
+    tpotMs: tpotActual * 1000,
+    inputTput, outputTput, totalTput,
+    kvTransferTput,
+    prefillBound: prefillBound < feff ? "bandwidth" : "compute",
+    decodeBound: tpotBandwidth > tpot ? "bandwidth" : "compute",
+    aiPrefill,
+    feffTFlops: feff
+  };
+}
+
+function estimateWeights(model) {
+  const { layers, hidden, ffn, experts, vocab } = model;
+  // Rough estimate: attention + FFN + embedding
+  const attnWeights = 4 * hidden * hidden * layers;
+  const ffnWeights = 3 * hidden * ffn * experts * layers;
+  const embedWeights = vocab * hidden;
+  return (attnWeights + ffnWeights + embedWeights) * 2; // FP16 bytes
+}
+
+function findOptimal(chip, model, scenario, cacheHitRate, slo, nDevices) {
+  let best = null;
+  
+  for (let tp of [1, 2, 4, 8, 16]) {
+    for (let ep of [1, 2, 4, 8, 16]) {
+      if (tp * ep > nDevices) continue;
+      const pp = Math.floor(nDevices / (tp * ep));
+      if (pp < 1 || tp * ep * pp > nDevices) continue;
+      
+      const result = computeThroughput(chip, model, scenario, tp, ep, cacheHitRate, nDevices);
+      if (!result) continue;
+      
+      const sloMet = result.ttftMs <= slo.ttftMs && result.tpotMs <= slo.tpotMs;
+      
+      if (!best || (sloMet && !best.sloMet) || 
+          (sloMet === best.sloMet && result.totalTput > best.totalTput)) {
+        best = { ...result, sloMet };
+      }
+    }
+  }
+  return best;
+}
+
+// ==================== COMPONENTS ====================
+
+function SliderControl({ label, value, onChange, min, max, step, unit, presets }) {
+  return (
+    <div className="control-group">
+      <label>{label}</label>
+      <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))} />
+      <div className="range-value">
+        <span>{presets ? presets.map(p => <span key={p} style={{cursor:'pointer',color:'#38bdf8',marginRight:8}} onClick={() => onChange(p)}>{p}{unit}</span>) : ''}</span>
+        <span style={{fontWeight:700,color:'#38bdf8'}}>{value}{unit}</span>
+      </div>
+    </div>
+  );
+}
+
+function ChipCard({ result, chip, slo, highlight }) {
+  if (!result) return null;
+  const met = result.sloMet;
+  const cls = highlight ? 'card best' : (met ? 'card' : 'card fail');
+  
+  return (
+    <div className={cls}>
+      <div className="chip-name">
+        {chip.name}
+        <span className={`slo-badge ${met ? 'pass' : 'fail'}`}>{met ? 'SLO ✓' : 'SLO ✗'}</span>
+      </div>
+      <div className="metric"><span className="label">TTFT</span><span className={`value ${result.ttftMs <= slo.ttftMs ? 'good' : 'bad'}`}>{result.ttftMs.toFixed(0)}ms</span></div>
+      <div className="metric"><span className="label">TPOT</span><span className={`value ${result.tpotMs <= slo.tpotMs ? 'good' : 'bad'}`}>{result.tpotMs.toFixed(1)}ms</span></div>
+      <div className="metric"><span className="label">Input Tput</span><span className="value">{result.inputTput.toFixed(0)} tok/s</span></div>
+      <div className="metric"><span className="label">Output Tput</span><span className="value">{result.outputTput.toFixed(0)} tok/s</span></div>
+      <div className="metric"><span className="label">Total Tput</span><span className="value good">{result.totalTput.toFixed(0)} tok/s</span></div>
+      <div className="config">Optimal: TP={result.tp} EP={result.ep} PP={result.pp} | AI={result.aiPrefill.toFixed(1)} | F_eff={result.feffTFlops.toFixed(0)}TF</div>
+    </div>
+  );
+}
+
+function ChipCards({ results, slo }) {
+  const entries = Object.entries(results);
+  if (entries.length === 0) return <p style={{color:'#64748b'}}>Select a model and scenario to see results.</p>;
+  
+  const best = entries.reduce((a, b) => (b[1]?.sloMet && (!a[1]?.sloMet || b[1].totalTput > a[1].totalTput)) ? b : a, entries[0]);
+  
+  return (
+    <div className="cards">
+      {entries.map(([key, r]) => (
+        <ChipCard key={key} result={r} chip={CHIPS[key]} slo={slo} highlight={key === best[0] && r?.sloMet} />
+      ))}
+    </div>
+  );
+}
+
+function BreakdownSection({ results, scenario }) {
+  const entries = Object.entries(results).filter(([,r]) => r);
+  if (entries.length === 0) return null;
+  
+  return (
+    <div>
+      <h2>🔬 Decode Step & TTFT Breakdown</h2>
+      <div className="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Chip</th>
+            <th className="num">TPOT (ms)</th>
+            <th className="num">TTFT (ms)</th>
+            <th className="num">Prefill Bound</th>
+            <th className="num">Decode Bound</th>
+            <th className="num">F_eff (TF)</th>
+            <th className="num">AI_prefill</th>
+            <th>Optimal (T,E,P)</th>
+          </tr></thead>
+          <tbody>
+            {entries.map(([key, r]) => (
+              <tr key={key}>
+                <td><strong>{CHIPS[key].name}</strong></td>
+                <td className="num" style={{color: r.tpotMs <= 30 ? '#22c55e' : '#ef4444'}}>{r.tpotMs.toFixed(1)}</td>
+                <td className="num" style={{color: r.ttftMs <= 1500 ? '#22c55e' : '#ef4444'}}>{r.ttftMs.toFixed(0)}</td>
+                <td className="num">{r.prefillBound}</td>
+                <td className="num">{r.decodeBound}</td>
+                <td className="num">{r.feffTFlops.toFixed(0)}</td>
+                <td className="num">{r.aiPrefill.toFixed(1)}</td>
+                <td className="num">({r.tp},{r.ep},{r.pp})</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ModelCrossSection({ modelKey, scenario, cacheHitRate, slo }) {
+  const model = MODELS[modelKey];
+  const results = {};
+  for (let chipKey of Object.keys(CHIPS)) {
+    results[chipKey] = findOptimal(CHIPS[chipKey], model, scenario, cacheHitRate, slo, DEFAULT_N_DEVICES);
+  }
+  
+  const entries = Object.entries(results).filter(([,r]) => r);
+  
+  return (
+    <div>
+      <h2>📊 {model.name} — All Devices × {SCENARIOS[scenario]?.name || scenario}</h2>
+      <div className="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Chip</th>
+            <th className="num">TTFT (ms)</th>
+            <th className="num">TPOT (ms)</th>
+            <th className="num">Input tok/s</th>
+            <th className="num">Output tok/s</th>
+            <th className="num">Total tok/s</th>
+            <th className="num">TPM (output)</th>
+            <th className="num">Daily Tokens</th>
+            <th>SLO</th>
+          </tr></thead>
+          <tbody>
+            {entries.map(([key, r]) => (
+              <tr key={key}>
+                <td><strong>{CHIPS[key].name}</strong></td>
+                <td className="num">{r.ttftMs.toFixed(0)}</td>
+                <td className="num" style={{color: r.tpotMs <= slo.tpotMs ? '#22c55e':'#ef4444'}}>{r.tpotMs.toFixed(1)}</td>
+                <td className="num">{r.inputTput.toFixed(0)}</td>
+                <td className="num">{r.outputTput.toFixed(0)}</td>
+                <td className="num" style={{color:'#38bdf8'}}>{r.totalTput.toFixed(0)}</td>
+                <td className="num">{(r.outputTput * 60).toLocaleString()}</td>
+                <td className="num">{(r.totalTput * 86400 / 1e9).toFixed(1)}B</td>
+                <td><span className={`slo-badge ${r.sloMet?'pass':'fail'}`}>{r.sloMet?'✓':'✗'}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function DeviceCrossSection({ chipKey, scenario, cacheHitRate, slo }) {
+  const chip = CHIPS[chipKey];
+  const results = {};
+  for (let modelKey of Object.keys(MODELS)) {
+    results[modelKey] = findOptimal(chip, MODELS[modelKey], SCENARIOS[scenario] || scenario, cacheHitRate, slo, DEFAULT_N_DEVICES);
+  }
+  
+  const entries = Object.entries(results).filter(([,r]) => r);
+  
+  return (
+    <div>
+      <h2>📈 {chip.name} — All Models × {SCENARIOS[scenario]?.name || scenario}</h2>
+      <div className="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Model</th>
+            <th className="num">TTFT (ms)</th>
+            <th className="num">TPOT (ms)</th>
+            <th className="num">TPM (output)</th>
+            <th className="num">Daily Tokens</th>
+            <th>Optimal (T,E,P)</th>
+            <th>SLO</th>
+          </tr></thead>
+          <tbody>
+            {entries.sort((a,b) => b[1].totalTput - a[1].totalTput).map(([key, r]) => (
+              <tr key={key}>
+                <td><strong>{MODELS[key].name}</strong></td>
+                <td className="num">{r.ttftMs.toFixed(0)}</td>
+                <td className="num" style={{color: r.tpotMs <= slo.tpotMs ? '#22c55e':'#ef4444'}}>{r.tpotMs.toFixed(1)}</td>
+                <td className="num">{Math.round(r.outputTput * 60).toLocaleString()}</td>
+                <td className="num">{(r.totalTput * 86400 / 1e9).toFixed(1)}B</td>
+                <td className="num">({r.tp},{r.ep},{r.pp})</td>
+                <td><span className={`slo-badge ${r.sloMet?'pass':'fail'}`}>{r.sloMet?'✓':'✗'}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function SpecsSection() {
+  return (
+    <div>
+      <h2>🖥️ Device Specifications</h2>
+      <div className="spec-grid">
+        {Object.entries(CHIPS).map(([key, c]) => (
+          <div className="spec-card" key={key}>
+            <h3>{c.name} <span style={{fontSize:'0.75rem',color:'#64748b',fontWeight:400}}>{c.arch}</span></h3>
+            <div className="spec-row"><span>BF16 TFLOPS</span><strong>{c.bf16.toLocaleString()}</strong></div>
+            <div className="spec-row"><span>FP8 TFLOPS</span><strong>{c.fp8.toLocaleString()}</strong></div>
+            <div className="spec-row"><span>FP4 TFLOPS</span><strong>{c.fp4.toLocaleString()}</strong></div>
+            <div className="spec-row"><span>HBM</span><strong>{c.hbm} GB {c.arch.includes('HBM3e') ? 'HBM3e' : 'HBM'}</strong></div>
+            <div className="spec-row"><span>HBM BW</span><strong>{c.hbmBw} TB/s</strong></div>
+            <div className="spec-row"><span>Interconnect</span><strong>{c.interconnect} TB/s</strong></div>
+            <div className="spec-row"><span>TDP</span><strong>{c.tdp}W</strong></div>
+            <div className="spec-row"><span>Vendor</span><strong>{c.vendor}</strong></div>
+            <div className="spec-row"><span>Year</span><strong>{c.year}</strong></div>
+          </div>
+        ))}
+      </div>
+      <h2>🧠 Model Cards</h2>
+      <div className="spec-grid">
+        {Object.entries(MODELS).map(([key, m]) => (
+          <div className="spec-card" key={key}>
+            <h3>{m.name}</h3>
+            <div className="spec-row"><span>Architecture</span><strong>MoE, E={m.experts}, k={m.topk}</strong></div>
+            <div className="spec-row"><span>Layers</span><strong>{m.layers}</strong></div>
+            <div className="spec-row"><span>Hidden Dim</span><strong>{m.hidden}</strong></div>
+            <div className="spec-row"><span>FFN Dim</span><strong>{m.ffn}</strong></div>
+            <div className="spec-row"><span>Active Params</span><strong>{m.activeParams}B</strong></div>
+            <div className="spec-row"><span>Vocabulary</span><strong>{m.vocab.toLocaleString()}</strong></div>
+            <div className="spec-row"><span>Est. Weights</span><strong>{(estimateWeights(m)/1e9).toFixed(1)} GB (FP16)</strong></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AlgoSection() {
+  return (
+    <div className="algo-section">
+      <h2>📐 Algorithm: Roofline-MoE</h2>
+      <p>
+        This simulator implements the <strong>Roofline-MoE</strong> analytical framework described in 
+        our <a href="https://gist.github.com/zhanglpg/34211200f620ce422333156a8a3d26b9" target="_blank" style={{color:'#38bdf8'}}>research paper</a>.
+        The algorithm models MoE inference performance under disaggregated prefill/decode serving with multi-dimensional parallelism.
+      </p>
+      <h3>How Numbers Are Calculated</h3>
+      <ol style={{paddingLeft:20}}>
+        <li><strong>FLOPs computation</strong>: Per-token FLOPs = 2·k·d·d<sub>ff</sub> (MoE FFN) + 4·d² (attention) + 2·d² (other), scaled by batch size and sequence length, divided by TP·EP.</li>
+        <li><strong>Communication model</strong>: All-reduce cost for TP, all-to-all cost for EP, both scale with hidden dimension and batch size.</li>
+        <li><strong>Precision-weighted FLOPS</strong>: F<sub>eff</sub> = 1/(p<sub>BF16</sub>/F<sub>BF16</sub> + p<sub>FP8</sub>/F<sub>FP8</sub> + p<sub>FP4</sub>/F<sub>FP4</sub>), assuming 70% FP4 (FFN), 25% FP8 (attention), 5% BF16 (embedding/norm).</li>
+        <li><strong>Roofline check</strong>: AI = FLOPs/data_moved. If AI × HBM_BW &lt; F<sub>eff</sub> → bandwidth-bound (use HBM BW). Otherwise → compute-bound (use F<sub>eff</sub>).</li>
+        <li><strong>Cache-aware prefill</strong>: Effective prefill length = S<sub>in</sub> × (1 − H). KV transfer volume scales with (1 − H).</li>
+        <li><strong>TTFT</strong>: Prefill FLOPs / effective throughput ceiling.</li>
+        <li><strong>TPOT</strong>: max(decode FLOPs / F<sub>eff</sub>, weight_bytes / HBM_BW). Decode is typically bandwidth-bound.</li>
+        <li><strong>Optimal parallelism</strong>: Exhaustive search over feasible (TP, EP, PP) with constraint TP·EP·PP ≤ N<sub>devices</sub>.</li>
+      </ol>
+      <p style={{marginTop:12,color:'#64748b',fontSize:'0.8rem'}}>
+        <strong>Note</strong>: These are theoretical roofline predictions. Real-world throughput is typically 10-30% lower due to software overhead (kernel launch, NCCL scheduling, OS noise). 
+        TPU v8i specs are projected from generational trends. All throughput figures assume continuous batching is active.
+      </p>
+    </div>
+  );
+}
+
+// ==================== APP ====================
+
+function App() {
+  const [modelKey, setModelKey] = useState("deepseek-v4-pro");
+  const [scenarioKey, setScenarioKey] = useState("chat");
+  const [cacheHitRate, setCacheHitRate] = useState(0.3);
+  const [ttftSlo, setTtftSlo] = useState(1500);
+  const [tpotSlo, setTpotSlo] = useState(30);
+  const [activeTab, setActiveTab] = useState("cards");
+  const [activeScenario, setActiveScenario] = useState("chat");
+  
+  const model = MODELS[modelKey];
+  const scenario = SCENARIOS[activeScenario];
+  const slo = { ttftMs: ttftSlo, tpotMs: tpotSlo };
+  
+  const results = useMemo(() => {
+    const r = {};
+    for (let chipKey of Object.keys(CHIPS)) {
+      r[chipKey] = findOptimal(CHIPS[chipKey], model, scenario, cacheHitRate, slo, DEFAULT_N_DEVICES);
+    }
+    return r;
+  }, [modelKey, activeScenario, cacheHitRate, ttftSlo, tpotSlo]);
+  
+  return (
+    <div className="container">
+      <h1>⚡ Hermes LLM Roofline Simulator</h1>
+      <p className="subtitle">
+        Analytical MoE inference performance simulator for next-gen hardware.
+        {' '}<a href="https://gist.github.com/zhanglpg/34211200f620ce422333156a8a3d26b9" target="_blank">📄 Research Paper</a>
+      </p>
+      
+      <div className="controls">
+        <div className="control-group">
+          <label>Model</label>
+          <select value={modelKey} onChange={e => setModelKey(e.target.value)}>
+            {Object.entries(MODELS).map(([k, m]) => <option key={k} value={k}>{m.name}</option>)}
+          </select>
+        </div>
+        <div className="control-group">
+          <label>Scenario</label>
+          <div className="chip-strip">
+            {Object.entries(SCENARIOS).map(([k, s]) => (
+              <div key={k} className={`chip-tag ${activeScenario === k ? 'active' : ''}`} onClick={() => setActiveScenario(k)}>{s.name}</div>
+            ))}
+          </div>
+        </div>
+        <SliderControl label="KV Cache Hit Rate" value={cacheHitRate} onChange={setCacheHitRate} min={0} max={1} step={0.05} unit="" presets={[0, 0.3, 0.5, 0.7, 0.95]} />
+        <div className="control-group">
+          <label>SLO Targets</label>
+          <div className="slo-row">
+            <span style={{fontSize:'0.8rem',color:'#94a3b8'}}>TTFT</span>
+            <input type="range" min={100} max={5000} step={100} value={ttftSlo} onChange={e => setTtftSlo(Number(e.target.value))} />
+            <span>{ttftSlo}ms</span>
+          </div>
+          <div className="slo-row" style={{marginTop:8}}>
+            <span style={{fontSize:'0.8rem',color:'#94a3b8'}}>TPOT</span>
+            <input type="range" min={5} max={200} step={5} value={tpotSlo} onChange={e => setTpotSlo(Number(e.target.value))} />
+            <span>{tpotSlo}ms</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="tabs">
+        {[
+          ["cards", "📋 Per-Chip Performance"],
+          ["breakdown", "🔬 Decode & TTFT Breakdown"],
+          ["model-x", "📊 Model × All Devices"],
+          ["device-x", "📈 Device × All Models"],
+          ["specs", "🖥️ Specs & Model Cards"],
+          ["algo", "📐 Algorithm"],
+        ].map(([tab, label]) => (
+          <div key={tab} className={`tab ${activeTab === tab ? 'active' : ''}`} onClick={() => setActiveTab(tab)}>{label}</div>
+        ))}
+      </div>
+      
+      {activeTab === "cards" && <ChipCards results={results} slo={slo} />}
+      {activeTab === "breakdown" && <BreakdownSection results={results} scenario={scenario} />}
+      {activeTab === "model-x" && <ModelCrossSection modelKey={modelKey} scenario={activeScenario} cacheHitRate={cacheHitRate} slo={slo} />}
+      {activeTab === "device-x" && (
+        <div>
+          <h2>📈 Select Device</h2>
+          <div className="chip-strip">
+            {Object.entries(CHIPS).map(([k, c]) => (
+              <div key={k} className={`chip-tag ${scenarioKey === k ? 'active' : ''}`} onClick={() => setScenarioKey(k)}>{c.name}</div>
+            ))}
+          </div>
+          <DeviceCrossSection chipKey={scenarioKey || "B300"} scenario={activeScenario} cacheHitRate={cacheHitRate} slo={slo} />
+        </div>
+      )}
+      {activeTab === "specs" && <SpecsSection />}
+      {activeTab === "algo" && <AlgoSection />}
+      
+      <p style={{textAlign:'center',color:'#334155',fontSize:'0.75rem',marginTop:40,padding:20}}>
+        Hermes LLM Roofline Simulator · {Object.keys(MODELS).length} Models · {Object.keys(CHIPS).length} Chips · {Object.keys(SCENARIOS).length} Scenarios · N={DEFAULT_N_DEVICES} devices · Powered by Roofline-MoE
+      </p>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
