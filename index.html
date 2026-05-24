@@ -27,6 +27,12 @@ title: Home
 <h2>Tools &amp; Dashboards</h2>
 <ul class="project-list">
   <li>
+    <a href="{{ '/schoology-tracker/' | relative_url }}">
+      <div class="title">📚 Schoology Tracker</div>
+      <div class="summary">Personal dashboard that pulls Schoology Weekly Summary emails from Gmail (IMAP), parses grades, assignments, and overdue items, and renders a color-coded view per student with sortable courses, sparkline trends from a daily snapshot history, and an activity timeline. Pipeline auto-deploys to GitHub Pages after each refresh.</div>
+    </a>
+  </li>
+  <li>
     <a href="{{ '/llm-roofline-sim/' | relative_url }}">
       <div class="title">Revenue-per-Chip-Hour Roofline Simulator</div>
       <div class="summary">Interactive React dashboard that maximizes per-chip total-token TPM (the policy-invariant proxy for revenue/chip-hour) under TTFT/TPOT SLOs for MoE LLMs. Six models (DeepSeek V4 Pro/Flash, Qwen 3.5-397B, Kimi K2.6, GLM 5.1, MiniMax M2.7) × six chips (B200, B300, GB300 NVL72, TPU Ironwood, TPU v8i, AMD MI355X) × four scenarios, with TPOT/TTFT/cache-hit-rate sliders, optimal-θ search, decode/TTFT breakdowns, and the precision-aware hierarchical roofline algorithm from the companion paper.</div>
