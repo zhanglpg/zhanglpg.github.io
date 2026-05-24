@@ -3,15 +3,220 @@
     "Glenn": {
       "grade": 10,
       "school": "Lynbrook High School",
-      "courses": {}
+      "courses": {
+        "AP Chinese Lng/Cul": {
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
+          "grade": "A",
+          "percentage": "95.76%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Lesson 10 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "World Lit/Writ": {
+          "full_name": "World Lit/Writ - 1020: WelshM p5 T2",
+          "grade": "A",
+          "percentage": "97.5%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Narrative Writing Essay - Alternate Point of View in The Stranger",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "Chemistry H": {
+          "full_name": "Chemistry H - 3620: LeungC p4 T2",
+          "grade": "A",
+          "percentage": "95.68%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Balancing eq practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reactivity series and balancing equations practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Redox path game 1 (In class)",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "08 Thermo pixel art",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Calorimetry Challenge",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            }
+          ]
+        },
+        "PE 10": {
+          "full_name": "PE 10-12 - 2530: Griffin Period 2 T2",
+          "grade": "-",
+          "percentage": "96.57%",
+          "term": "25-26 T2",
+          "assignments": []
+        },
+        "AP Calculus BC": {
+          "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
+          "grade": "A-",
+          "percentage": "91%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "HW 12",
+              "score": "42/50",
+              "percentage": 84.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 13",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "AP Comp Sci A": {
+          "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
+          "grade": "A",
+          "percentage": "96.2%",
+          "term": "25-26 T2",
+          "assignments": []
+        },
+        "PE 10-12": {
+          "full_name": "PE 10-12 - 2530: Griffin Period 2 T2",
+          "grade": "A",
+          "percentage": "96.57%",
+          "term": "25-26 T2",
+          "assignments": []
+        }
+      },
+      "overdue": []
     },
     "Sheldon": {
       "grade": 10,
       "school": "Lynbrook High School",
-      "courses": {}
+      "courses": {
+        "AP Chinese Lng/Cul": {
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
+          "grade": "A-",
+          "percentage": "92.06%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Lesson 10 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Flash card paragraph writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "World Lit/Writ": {
+          "full_name": "World Lit/Writ - 1020: WillsonC p5 T2",
+          "grade": "B",
+          "percentage": "84%",
+          "term": "25-26 T2",
+          "assignments": []
+        },
+        "Chemistry H": {
+          "full_name": "Chemistry H - 3620: LuJ p3 T2",
+          "grade": "C",
+          "percentage": "71.65%",
+          "term": "25-26 T2",
+          "assignments": []
+        },
+        "Art 1": {
+          "full_name": "Art 1 - 6110: SchulzeJ p6 T2",
+          "grade": "A-",
+          "percentage": "91.21%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Reflection: Reimagine an Artwork",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Final Reimagine Project",
+              "score": "45/50",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Name Print",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "AP Calculus BC": {
+          "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
+          "grade": "B+",
+          "percentage": "87%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "HW 13",
+              "score": "24/30",
+              "percentage": 80.0,
+              "perfect": false
+            }
+          ]
+        },
+        "AP Comp Sci A": {
+          "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
+          "grade": "A-",
+          "percentage": "90.57%",
+          "term": "25-26 T2",
+          "assignments": []
+        }
+      },
+      "overdue": [
+        {
+          "assignment": "LHS Career Exploration",
+          "due_date": "Friday, 12/05/2025",
+          "days_overdue": 164
+        },
+        {
+          "assignment": "Act 2 Quiz",
+          "due_date": "Friday, 05/08/2026",
+          "days_overdue": 10
+        }
+      ]
     }
   },
-  "last_updated": null,
-  "email_count": 0,
-  "events": []
+  "last_updated": "2026-05-24T13:07:03.367673",
+  "email_count": 5,
+  "events": [],
+  "week_start": "5/11/26",
+  "week_end": "5/18/26"
 }
