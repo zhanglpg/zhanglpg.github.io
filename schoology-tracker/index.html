@@ -88,17 +88,16 @@ const TYPE_COLORS = {
 
 function StudentCard({ student, data }) {
   const courses = data?.students?.[student]?.courses || {};
+  const overdues = data?.students?.[student]?.overdue || [];
   const courseList = Object.entries(courses);
   
   const stats = useMemo(() => {
-    let grades = 0, upcoming = 0, overdue = 0;
+    let totalAsgn = 0;
     courseList.forEach(([_, c]) => {
-      grades += c.grades?.length || 0;
-      upcoming += c.upcoming?.length || 0;
-      overdue += c.overdue?.length || 0;
+      totalAsgn += c.assignments?.length || 0;
     });
-    return { grades, upcoming, overdue };
-  }, [courseList]);
+    return { totalAsgn, overdue: overdues.length };
+  }, [courseList, overdues]);
   
   if (courseList.length === 0) {
     return (
@@ -124,12 +123,12 @@ function StudentCard({ student, data }) {
       </div>
       <div className="stats-row">
         <div className="stat-box">
-          <div className="stat-val">{stats.grades}</div>
-          <div className="stat-label">Grades</div>
+          <div className="stat-val">{stats.totalAsgn}</div>
+          <div className="stat-label">Assignments</div>
         </div>
         <div className="stat-box">
-          <div className="stat-val">{stats.upcoming}</div>
-          <div className="stat-label">Upcoming</div>
+          <div className="stat-val">{courseList.length}</div>
+          <div className="stat-label">Courses</div>
         </div>
         <div className={`stat-box ${stats.overdue > 0 ? 'danger' : ''}`}>
           <div className="stat-val">{stats.overdue}</div>
@@ -146,37 +145,29 @@ function StudentCard({ student, data }) {
 }
 
 function CourseItem({ name, course }) {
-  const allItems = [
-    ...(course.grades || []).map(g => ({...g, _type: 'grade_posted'})),
-    ...(course.upcoming || []).map(u => ({...u, _type: 'assignment_due'})),
-    ...(course.overdue || []).map(o => ({...o, _type: 'overdue'})),
-    ...(course.general || []).map(g => ({...g, _type: 'general'})),
-  ].sort((a, b) => new Date(b.date) - new Date(a.date));
-  
-  const recent = allItems.slice(0, 4);
+  const items = (course.assignments || []).map(a => ({...a, _type: 'assignment'}));
+  const recent = items.slice(0, 4);
   
   return (
     <div className="course-item">
       <div className="course-header">
         <span className="course-name">{name}</span>
-        {course.category && course.category !== "Unknown" && (
-          <span className="course-badge">{course.category}</span>
+        {course.grade && course.grade !== '-' && (
+          <span className="tag tag-grade" style={{marginLeft: 8}}>{course.grade} {course.percentage}</span>
         )}
         <span style={{fontSize: 12, color: '#64748b', marginLeft: 'auto'}}>
-          {allItems.length} updates
+          {items.length} assignments
         </span>
       </div>
       <div className="detail-row">
         {recent.map((item, i) => (
-          <span key={i} className={`tag ${TYPE_COLORS[item._type] || 'tag-general'}`}>
-            {TYPE_LABELS[item._type] || 'Update'}
-            {item.grade ? `: ${item.grade}` : ''}
-            {item.due_date ? ` · ${item.due_date}` : ''}
-            {!item.grade && !item.due_date ? `: ${item.subject?.substring(0, 30)}...` : ''}
+          <span key={i} className="tag tag-upcoming">
+            {item.name?.substring(0, 28)}{item.name?.length > 28 ? '...' : ''}
+            {item.score ? `: ${item.score}` : ''}
           </span>
         ))}
-        {allItems.length > 4 && (
-          <span className="tag tag-general">+{allItems.length - 4} more</span>
+        {items.length > 4 && (
+          <span className="tag tag-general">+{items.length - 4} more</span>
         )}
       </div>
     </div>
