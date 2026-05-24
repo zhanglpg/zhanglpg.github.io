@@ -20,6 +20,7 @@
       ],
       "site": "https://ase26.hotcrp.com/paper/10",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-03-30T15:23:12+00:00",
       "last_event": "2026-03-30T15:23:12+00:00",
       "events": [
@@ -38,7 +39,9 @@
       "message_ids": [
         "<20260330152312.ECCBF9AFEB6@mail.hotcrp.com>"
       ],
-      "deadline": null
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     },
     "MICRO 2026::#498": {
       "conference": "MICRO 2026",
@@ -57,6 +60,7 @@
       ],
       "site": "https://micro2026.hotcrp.com/paper/498",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-03-31T08:39:14+00:00",
       "last_event": "2026-04-08T02:05:01+00:00",
       "events": [
@@ -93,7 +97,9 @@
         "<20260407171121.502D69475B9@mail.hotcrp.com>",
         "<20260408020501.7DDDE91EAC4@mail.hotcrp.com>"
       ],
-      "deadline": "Tuesday Apr 7, 2026, 11:59 PM EDT"
+      "deadline": "Tuesday Apr 7, 2026, 11:59 PM EDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "SOSP 2026::#629": {
       "conference": "SOSP 2026",
@@ -116,6 +122,7 @@
       ],
       "site": "https://sosp26.hotcrp.com/paper/629",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
       "last_event": "2026-04-02T11:30:43+00:00",
       "events": [
@@ -164,7 +171,9 @@
         "<20260402113009.E6DFF9CF360@mail.hotcrp.com>",
         "<20260402113043.769C59CF378@mail.hotcrp.com>"
       ],
-      "deadline": "Thursday Apr 2, 2026, 7:59:59 AM EDT"
+      "deadline": "Thursday Apr 2, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "OSDI '26::#587": {
       "conference": "OSDI '26",
@@ -193,7 +202,8 @@
         "Wei Wang"
       ],
       "site": "https://osdi26.usenix.hotcrp.com/paper/587",
-      "status": "reviews_received",
+      "status": "likely_accepted",
+      "status_source": "inferred",
       "first_seen": "2026-04-02T19:56:15+00:00",
       "last_event": "2026-05-23T16:39:12+00:00",
       "events": [
@@ -278,7 +288,14 @@
         "<20260521181827.04FF98F2684@mail.hotcrp.com>",
         "<20260523163912.373468F0EF6@mail.hotcrp.com>"
       ],
-      "deadline": null
+      "deadline": null,
+      "review_scores": [
+        4,
+        3,
+        5,
+        3
+      ],
+      "review_mean": 3.75
     },
     "OSDI '26::#1542": {
       "conference": "OSDI '26",
@@ -300,7 +317,8 @@
         "Wei Wang"
       ],
       "site": "https://osdi26.usenix.hotcrp.com/paper/1542",
-      "status": "reviews_received",
+      "status": "likely_rejected",
+      "status_source": "inferred",
       "first_seen": "2026-04-02T19:56:21+00:00",
       "last_event": "2026-04-02T19:56:21+00:00",
       "events": [
@@ -319,7 +337,14 @@
       "message_ids": [
         "<20260402195621.52F4E9D2C07@mail.hotcrp.com>"
       ],
-      "deadline": null
+      "deadline": null,
+      "review_scores": [
+        2,
+        3,
+        2,
+        3
+      ],
+      "review_mean": 2.5
     },
     "ICS 2026::#99": {
       "conference": "ICS 2026",
@@ -328,6 +353,7 @@
       "authors": [],
       "site": "https://ics2026-cycle-2.hotcrp.com/paper/99",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-04-04T07:26:13+00:00",
       "last_event": "2026-04-04T07:26:13+00:00",
       "events": [
@@ -346,7 +372,9 @@
       "message_ids": [
         "<20260404072613.A592D9D5918@mail.hotcrp.com>"
       ],
-      "deadline": null
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     },
     "NSDI '26 Spring::#218": {
       "conference": "NSDI '26 Spring",
@@ -355,6 +383,7 @@
       "authors": [],
       "site": null,
       "status": "award",
+      "status_source": "canonical",
       "first_seen": "2026-04-04T22:33:00+00:00",
       "last_event": "2026-04-12T20:24:17+00:00",
       "events": [
@@ -385,7 +414,9 @@
         "<20260406172257.B27A29E3853@mail.hotcrp.com>",
         "<20260412202417.887B99F6D4E@mail.hotcrp.com>"
       ],
-      "deadline": null
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     },
     "ASPLOS'27 - April cycle::#59": {
       "conference": "ASPLOS'27 - April cycle",
@@ -403,6 +434,7 @@
       ],
       "site": "https://asplos27-apr.hotcrp.com/paper/59",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-04-12T12:28:31+00:00",
       "last_event": "2026-04-16T08:50:29+00:00",
       "events": [
@@ -445,7 +477,9 @@
         "<20260416013530.56B77A57416@mail.hotcrp.com>",
         "<20260416085029.B489DA57431@mail.hotcrp.com>"
       ],
-      "deadline": "Wednesday Apr 15, 2026, 11:59 PM AoE"
+      "deadline": "Wednesday Apr 15, 2026, 11:59 PM AoE",
+      "review_scores": [],
+      "review_mean": null
     },
     "ASE2026 Industry Showcase::#159": {
       "conference": "ASE2026 Industry Showcase",
@@ -467,6 +501,7 @@
       ],
       "site": "https://ase26-industry.hotcrp.com/paper/159",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-04-22T04:40:05+00:00",
       "last_event": "2026-04-22T04:40:05+00:00",
       "events": [
@@ -485,7 +520,9 @@
       "message_ids": [
         "<20260422044005.D0FEFAEA956@mail.hotcrp.com>"
       ],
-      "deadline": "Friday May 1, 2026, 7:59:59 AM EDT"
+      "deadline": "Friday May 1, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "FSE2026-Industry::#77": {
       "conference": "FSE2026-Industry",
@@ -506,6 +543,7 @@
       ],
       "site": "https://fse2026-industry.hotcrp.com/paper/77",
       "status": "accepted",
+      "status_source": "canonical",
       "first_seen": "2026-04-23T06:49:40+00:00",
       "last_event": "2026-04-30T12:21:45+00:00",
       "events": [
@@ -542,7 +580,9 @@
         "<20260424075216.28A588CDB1D@mail.hotcrp.com>",
         "<20260430122145.681668CDB26@mail.hotcrp.com>"
       ],
-      "deadline": null
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     },
     "NSDI '27::#510": {
       "conference": "NSDI '27",
@@ -567,6 +607,7 @@
       ],
       "site": "https://nsdi27spring.usenix.hotcrp.com/paper/510",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-04-24T03:00:33+00:00",
       "last_event": "2026-04-28T20:33:01+00:00",
       "events": [
@@ -627,7 +668,9 @@
         "<20260428202509.33A08AE9C70@mail.hotcrp.com>",
         "<20260428203301.C26B28CC88A@mail.hotcrp.com>"
       ],
-      "deadline": "Thursday Apr 23, 2026, 8:59 PM PDT"
+      "deadline": "Thursday Apr 23, 2026, 8:59 PM PDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "OSDI '26 Artifact Evaluation::#54": {
       "conference": "OSDI '26 Artifact Evaluation",
@@ -657,6 +700,7 @@
       ],
       "site": "https://osdi26ae.usenix.hotcrp.com/paper/54",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-05-07T03:30:19+00:00",
       "last_event": "2026-05-17T13:15:20+00:00",
       "events": [
@@ -705,7 +749,9 @@
         "<20260509030342.424EE915009@mail.hotcrp.com>",
         "<20260517131520.597448CD548@mail.hotcrp.com>"
       ],
-      "deadline": "Friday May 8, 2026, 8:59 PM PDT"
+      "deadline": "Friday May 8, 2026, 8:59 PM PDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "EuroSys '27 Spring::#586": {
       "conference": "EuroSys '27 Spring",
@@ -731,6 +777,7 @@
       ],
       "site": "https://eurosys27-spring.hotcrp.com/paper/586",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-05-08T10:29:52+00:00",
       "last_event": "2026-05-15T11:59:29+00:00",
       "events": [
@@ -929,7 +976,9 @@
         "<20260515115829.BF7BE915030@mail.hotcrp.com>",
         "<20260515115929.8C7C49163EA@mail.hotcrp.com>"
       ],
-      "deadline": "Friday May 15, 2026, 7:59:59 AM EDT"
+      "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "EuroSys '27 Spring::#796": {
       "conference": "EuroSys '27 Spring",
@@ -949,6 +998,7 @@
       ],
       "site": "https://eurosys27-spring.hotcrp.com/paper/796",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
       "last_event": "2026-05-12T02:11:33+00:00",
       "events": [
@@ -1021,7 +1071,9 @@
         "<20260511115352.BFCA991FC0E@mail.hotcrp.com>",
         "<20260512021133.BAFED8D78D7@mail.hotcrp.com>"
       ],
-      "deadline": "Friday May 15, 2026, 7:59:59 AM EDT"
+      "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     },
     "EuroSys '27 Spring::#310": {
       "conference": "EuroSys '27 Spring",
@@ -1040,6 +1092,7 @@
       ],
       "site": "https://eurosys27-spring.hotcrp.com/paper/310",
       "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-05-11T16:44:43+00:00",
       "last_event": "2026-05-15T11:53:14+00:00",
       "events": [
@@ -1136,7 +1189,9 @@
         "<20260515114653.4C63F8F07C2@mail.hotcrp.com>",
         "<20260515115314.D04A08CD72A@mail.hotcrp.com>"
       ],
-      "deadline": "Friday May 15, 2026, 7:59:59 AM EDT"
+      "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -1263,6 +1318,6 @@
       "date": "2026-05-22T00:09:32+00:00"
     }
   ],
-  "last_updated": "2026-05-24T06:05:44.256473+00:00",
+  "last_updated": "2026-05-24T06:21:42.389235+00:00",
   "email_count": 119
 }

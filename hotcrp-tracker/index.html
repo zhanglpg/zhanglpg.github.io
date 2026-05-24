@@ -53,11 +53,14 @@
 
   .status-strip {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 10px;
     margin-bottom: 18px;
   }
-  @media (max-width: 720px) {
+  @media (max-width: 980px) {
+    .status-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 540px) {
     .status-strip { grid-template-columns: repeat(2, 1fr); }
   }
   .status-tile {
@@ -77,7 +80,13 @@
   .status-tile.accepted .n, .status-tile.camera_ready .n { color: var(--good); }
   .status-tile.reviews_received .n { color: var(--reviews); }
   .status-tile.submitted .n { color: var(--text); }
+  .status-tile.likely_rejected .n { color: var(--bad); }
   .status-tile.all .n { color: var(--accent); }
+  .status-tile .sub-count {
+    font-size: 9px; color: var(--dim); font-style: italic;
+    text-transform: none; letter-spacing: 0;
+    margin-top: 1px;
+  }
 
   .toolbar {
     display: flex;
@@ -144,7 +153,9 @@
   .paper.s-submitted::before { background: #818cf8; }
   .paper.s-updated::before { background: #818cf8; }
   .paper.s-reviews_received::before { background: var(--reviews); }
-  .paper.s-accepted::before, .paper.s-camera_ready::before { background: var(--good); }
+  .paper.s-borderline::before { background: var(--ok); }
+  .paper.s-accepted::before, .paper.s-camera_ready::before, .paper.s-likely_accepted::before { background: var(--good); }
+  .paper.s-likely_rejected::before { background: var(--bad); }
   .paper.s-award::before { background: var(--award); }
 
   .paper .top { display: flex; gap: 10px; align-items: flex-start; }
@@ -158,8 +169,42 @@
   }
   .b-submitted, .b-updated { background: rgba(129,140,248,0.15); color: #a5b4fc; }
   .b-reviews_received { background: rgba(56,189,248,0.15); color: var(--reviews); }
-  .b-accepted, .b-camera_ready { background: rgba(16,185,129,0.15); color: var(--good); }
+  .b-accepted, .b-camera_ready, .b-likely_accepted { background: rgba(16,185,129,0.15); color: var(--good); }
   .b-award { background: rgba(251,191,36,0.18); color: var(--award); }
+  .b-borderline { background: rgba(251,191,36,0.15); color: var(--ok); }
+  .b-likely_rejected { background: rgba(239,68,68,0.15); color: var(--bad); }
+
+  .inferred-tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    background: rgba(100,116,139,0.18);
+    color: var(--muted);
+    text-transform: none;
+    vertical-align: middle;
+  }
+
+  .review-mean {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: var(--surface-2);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .review-mean .v { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .review-mean .scale { color: var(--dim); font-size: 10px; }
+  .review-mean.high .v { color: var(--good); }
+  .review-mean.mid .v { color: var(--ok); }
+  .review-mean.low .v { color: var(--bad); }
 
   .paper .authors {
     font-size: 12px;
@@ -272,10 +317,12 @@
 <script>
 "use strict";
 
-const STATUS_ORDER = ["award", "camera_ready", "accepted", "reviews_received", "submitted", "updated"];
+const STATUS_ORDER = ["award", "camera_ready", "accepted", "likely_accepted", "reviews_received", "borderline", "submitted", "updated", "likely_rejected"];
 const STATUS_LABEL = {
   award: "Award", camera_ready: "Camera-Ready", accepted: "Accepted",
+  likely_accepted: "Likely Accept", borderline: "Borderline",
   reviews_received: "Reviews", submitted: "Submitted", updated: "Updated",
+  likely_rejected: "Likely Reject",
   comment: "Comment", other: "Other", announcement: "Announcement",
 };
 const PREFS_KEY = "hotcrp-prefs-v1";
@@ -326,8 +373,25 @@ function daysAgo(iso) {
   return `${months}mo ago`;
 }
 
-function statusBadge(status) {
-  return el("span", { class: "status-badge b-" + status }, STATUS_LABEL[status] || status);
+function statusBadge(status, source) {
+  const badge = el("span", { class: "status-badge b-" + status }, STATUS_LABEL[status] || status);
+  if (source === "inferred") {
+    return el("span", { style: "display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px;" },
+      badge,
+      el("span", { class: "inferred-tag", title: "Inferred from reviewer scores — no explicit notification received" }, "inferred"),
+    );
+  }
+  return badge;
+}
+
+function reviewMeanChip(mean, scoreCount) {
+  if (mean == null) return null;
+  const band = mean >= 3.5 ? "high" : (mean <= 2.5 ? "low" : "mid");
+  return el("div", { class: "review-mean " + band, title: "Mean overall-merit score on 1-5 scale (5=Strong accept)" },
+    "Avg score:",
+    el("span", { class: "v" }, mean.toFixed(2)),
+    el("span", { class: "scale" }, `/ 5  (${scoreCount} review${scoreCount === 1 ? "" : "s"})`),
+  );
 }
 
 function authorsLine(authors) {
@@ -342,12 +406,15 @@ function paperCard(p) {
   const top = el("div", { class: "top" },
     el("span", { class: "id" }, "#" + p.paper_id),
     el("div", { class: "title" }, p.title || "(no title yet)"),
-    statusBadge(p.status),
+    statusBadge(p.status, p.status_source),
   );
   card.appendChild(top);
 
   const auths = authorsLine(p.authors);
   if (auths) card.appendChild(el("div", { class: "authors" }, auths));
+
+  const meanChip = reviewMeanChip(p.review_mean, (p.review_scores || []).length);
+  if (meanChip) card.appendChild(meanChip);
 
   const cnt = p.counts || {};
   const footer = el("div", { class: "footer-row" },
@@ -383,22 +450,33 @@ function paperCard(p) {
 function statusStrip(papers, currentFilter) {
   const counts = { all: papers.length };
   for (const s of STATUS_ORDER) counts[s] = 0;
-  for (const p of papers) counts[p.status] = (counts[p.status] || 0) + 1;
-
-  const tile = (key, label) => el("div", {
+  let acceptedInferred = 0, acceptedCanonical = 0;
+  for (const p of papers) {
+    counts[p.status] = (counts[p.status] || 0) + 1;
+    if (p.status === "accepted" || p.status === "camera_ready") acceptedCanonical++;
+    if (p.status === "likely_accepted") acceptedInferred++;
+  }
+  const acceptedTotal = acceptedCanonical + acceptedInferred + counts.award;
+  const tile = (key, label, n, subText) => el("div", {
     class: "status-tile " + key + (currentFilter === key ? " active" : ""),
     onclick: () => { savePref("filter", key); rerender(); },
   },
-    el("div", { class: "n" }, String(counts[key] || 0)),
+    el("div", { class: "n" }, String(n)),
     el("div", { class: "l" }, label),
+    subText ? el("div", { class: "sub-count" }, subText) : null,
   );
 
   return el("div", { class: "status-strip" },
-    tile("all", "All Papers"),
-    tile("award", "Award"),
-    tile("accepted", "Accepted"),
-    tile("reviews_received", "Reviews In"),
-    tile("submitted", "Under Review"),
+    tile("all", "All Papers", papers.length, null),
+    tile("award", "Award", counts.award || 0, null),
+    tile("accepted", "Accepted",
+      acceptedTotal,
+      acceptedInferred > 0 ? `${acceptedCanonical + counts.award} confirmed · ${acceptedInferred} inferred` : null),
+    tile("reviews_received", "Reviews In",
+      (counts.reviews_received || 0) + (counts.borderline || 0),
+      counts.borderline ? `${counts.borderline} borderline` : null),
+    tile("submitted", "Under Review", (counts.submitted || 0) + (counts.updated || 0), null),
+    tile("likely_rejected", "Likely Reject", counts.likely_rejected || 0, counts.likely_rejected ? "inferred" : null),
   );
 }
 
@@ -423,7 +501,8 @@ function rerender() { renderRoot(_data); }
 function statusForFilter(p, f) {
   if (f === "all" || !f) return true;
   if (f === "submitted") return p.status === "submitted" || p.status === "updated";
-  if (f === "accepted") return p.status === "accepted" || p.status === "camera_ready" || p.status === "award";
+  if (f === "accepted") return p.status === "accepted" || p.status === "camera_ready" || p.status === "award" || p.status === "likely_accepted";
+  if (f === "reviews_received") return p.status === "reviews_received" || p.status === "borderline";
   return p.status === f;
 }
 
