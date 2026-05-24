@@ -1,0 +1,17 @@
+{
+  "students": {
+    "Glenn": {
+      "grade": 10,
+      "school": "Lynbrook High School",
+      "courses": {}
+    },
+    "Sheldon": {
+      "grade": 10,
+      "school": "Lynbrook High School",
+      "courses": {}
+    }
+  },
+  "last_updated": null,
+  "email_count": 0,
+  "events": []
+}

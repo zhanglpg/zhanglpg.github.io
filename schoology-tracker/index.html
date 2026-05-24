@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schoology Tracker — Glenn & Sheldon</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+.header { background: linear-gradient(135deg, #1e293b, #0f172a); padding: 24px 32px; border-bottom: 1px solid #334155; }
+.header h1 { font-size: 24px; color: #f8fafc; }
+.header .sub { color: #94a3b8; font-size: 14px; margin-top: 4px; }
+.header .updated { color: #64748b; font-size: 12px; margin-top: 8px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.student-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.student-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; }
+.student-header { padding: 20px; background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+.student-header.sheldon { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
+.student-header h2 { font-size: 20px; color: #fff; }
+.student-header .grade { font-size: 13px; color: #bfdbfe; margin-top: 4px; }
+.stats-row { display: flex; gap: 16px; padding: 16px 20px; background: #0f172a; border-bottom: 1px solid #334155; }
+.stat-box { flex: 1; text-align: center; }
+.stat-val { font-size: 24px; font-weight: 700; color: #60a5fa; }
+.stat-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-box.warn .stat-val { color: #fbbf24; }
+.stat-box.danger .stat-val { color: #ef4444; }
+.course-list { padding: 8px 0; }
+.course-item { padding: 16px 20px; border-bottom: 1px solid #1e293b; transition: background 0.15s; }
+.course-item:hover { background: #0f172a; }
+.course-item:last-child { border-bottom: none; }
+.course-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.course-name { font-size: 15px; font-weight: 600; color: #f1f5f9; }
+.course-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #334155; color: #94a3b8; }
+.detail-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+.tag-grade { background: #064e3b; color: #6ee7b7; }
+.tag-upcoming { background: #1e3a5f; color: #93c5fd; }
+.tag-overdue { background: #7f1d1d; color: #fca5a5; }
+.tag-general { background: #334155; color: #cbd5e1; }
+.empty-state { padding: 40px 20px; text-align: center; color: #64748b; }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.timeline { margin-top: 24px; background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; }
+.timeline h3 { padding: 16px 20px; font-size: 16px; border-bottom: 1px solid #334155; }
+.timeline-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #1e293b; font-size: 13px; }
+.timeline-item:last-child { border-bottom: none; }
+.timeline-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.timeline-dot.grade_posted { background: #10b981; }
+.timeline-dot.assignment_due { background: #3b82f6; }
+.timeline-dot.overdue { background: #ef4444; }
+.timeline-dot.general, .timeline-dot.course_update, .timeline-dot.progress_report { background: #64748b; }
+.timeline-text { color: #cbd5e1; line-height: 1.5; }
+.timeline-text strong { color: #f1f5f9; }
+.timeline-time { color: #64748b; font-size: 11px; margin-top: 2px; }
+.loading { text-align: center; padding: 60px; color: #64748b; font-size: 16px; }
+.error { text-align: center; padding: 60px; color: #ef4444; }
+.footer { text-align: center; padding: 20px; color: #475569; font-size: 12px; }
+.tabs { display: flex; padding: 0 20px; background: #1e293b; border-bottom: 1px solid #334155; gap: 0; }
+.tab { padding: 12px 20px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.tab:hover { color: #94a3b8; }
+.tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const TYPE_LABELS = {
+  grade_posted: "Grade",
+  assignment_due: "Due",
+  overdue: "Overdue",
+  course_update: "Update",
+  progress_report: "Report",
+  general: "Notice"
+};
+
+const TYPE_COLORS = {
+  grade_posted: "tag-grade",
+  assignment_due: "tag-upcoming",
+  overdue: "tag-overdue",
+  course_update: "tag-general",
+  progress_report: "tag-general",
+  general: "tag-general"
+};
+
+function StudentCard({ student, data }) {
+  const courses = data?.students?.[student]?.courses || {};
+  const courseList = Object.entries(courses);
+  
+  const stats = useMemo(() => {
+    let grades = 0, upcoming = 0, overdue = 0;
+    courseList.forEach(([_, c]) => {
+      grades += c.grades?.length || 0;
+      upcoming += c.upcoming?.length || 0;
+      overdue += c.overdue?.length || 0;
+    });
+    return { grades, upcoming, overdue };
+  }, [courseList]);
+  
+  if (courseList.length === 0) {
+    return (
+      <div className="student-card">
+        <div className={`student-header ${student === 'Sheldon' ? 'sheldon' : ''}`}>
+          <h2>{student}</h2>
+          <div className="grade">Grade 10 · Lynbrook High School</div>
+        </div>
+        <div className="empty-state">
+          <div className="icon">📭</div>
+          <p>No Schoology activity yet</p>
+          <p style={{fontSize: 12, marginTop: 8}}>Waiting for email data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="student-card">
+      <div className={`student-header ${student === 'Sheldon' ? 'sheldon' : ''}`}>
+        <h2>{student}</h2>
+        <div className="grade">Grade 10 · Lynbrook High School</div>
+      </div>
+      <div className="stats-row">
+        <div className="stat-box">
+          <div className="stat-val">{stats.grades}</div>
+          <div className="stat-label">Grades</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-val">{stats.upcoming}</div>
+          <div className="stat-label">Upcoming</div>
+        </div>
+        <div className={`stat-box ${stats.overdue > 0 ? 'danger' : ''}`}>
+          <div className="stat-val">{stats.overdue}</div>
+          <div className="stat-label">Overdue</div>
+        </div>
+      </div>
+      <div className="course-list">
+        {courseList.map(([name, course]) => (
+          <CourseItem key={name} name={name} course={course} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CourseItem({ name, course }) {
+  const allItems = [
+    ...(course.grades || []).map(g => ({...g, _type: 'grade_posted'})),
+    ...(course.upcoming || []).map(u => ({...u, _type: 'assignment_due'})),
+    ...(course.overdue || []).map(o => ({...o, _type: 'overdue'})),
+    ...(course.general || []).map(g => ({...g, _type: 'general'})),
+  ].sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  const recent = allItems.slice(0, 4);
+  
+  return (
+    <div className="course-item">
+      <div className="course-header">
+        <span className="course-name">{name}</span>
+        {course.category && course.category !== "Unknown" && (
+          <span className="course-badge">{course.category}</span>
+        )}
+        <span style={{fontSize: 12, color: '#64748b', marginLeft: 'auto'}}>
+          {allItems.length} updates
+        </span>
+      </div>
+      <div className="detail-row">
+        {recent.map((item, i) => (
+          <span key={i} className={`tag ${TYPE_COLORS[item._type] || 'tag-general'}`}>
+            {TYPE_LABELS[item._type] || 'Update'}
+            {item.grade ? `: ${item.grade}` : ''}
+            {item.due_date ? ` · ${item.due_date}` : ''}
+            {!item.grade && !item.due_date ? `: ${item.subject?.substring(0, 30)}...` : ''}
+          </span>
+        ))}
+        {allItems.length > 4 && (
+          <span className="tag tag-general">+{allItems.length - 4} more</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Timeline({ data }) {
+  const events = data?.events || [];
+  const recent = events
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 20);
+  
+  if (recent.length === 0) return null;
+  
+  return (
+    <div className="timeline">
+      <h3>📋 Recent Activity</h3>
+      {recent.map((e, i) => (
+        <div key={i} className="timeline-item">
+          <div className={`timeline-dot ${e.type || 'general'}`}></div>
+          <div>
+            <div className="timeline-text">
+              <strong>{e.student}</strong> · {e.course || 'Unknown'} — {e.subject}
+              {e.grade && <span style={{color: '#6ee7b7'}}> [{e.grade}]</span>}
+            </div>
+            <div className="timeline-time">{new Date(e.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [tab, setTab] = useState('both');
+  
+  useEffect(() => {
+    fetch('schoology-data.json?' + Date.now())
+      .then(r => {
+        if (!r.ok) throw new Error('Data not available');
+        return r.json();
+      })
+      .then(d => { setData(d); setLoading(false); })
+      .catch(e => { setError(e.message); setLoading(false); });
+  }, []);
+  
+  if (loading) return <div className="loading">Loading Schoology data...</div>;
+  if (error) return <div className="error">⚠️ {error}<br/><small>Data file will appear once Schoology emails are processed.</small></div>;
+  
+  const updated = data?.last_updated ? new Date(data.last_updated).toLocaleString() : 'Never';
+  
+  return (
+    <div>
+      <div className="header">
+        <h1>📚 Schoology Tracker</h1>
+        <div className="sub">Glenn & Sheldon · Grade 10 · Lynbrook High School</div>
+        <div className="updated">Last updated: {updated} · {data?.email_count || 0} emails processed</div>
+      </div>
+      <div className="container">
+        <div className="tabs">
+          <div className={`tab ${tab === 'both' ? 'active' : ''}`} onClick={() => setTab('both')}>Both</div>
+          <div className={`tab ${tab === 'Glenn' ? 'active' : ''}`} onClick={() => setTab('Glenn')}>Glenn</div>
+          <div className={`tab ${tab === 'Sheldon' ? 'active' : ''}`} onClick={() => setTab('Sheldon')}>Sheldon</div>
+        </div>
+        <div style={{marginTop: 24}}>
+          <div className="student-grid" style={tab !== 'both' ? {gridTemplateColumns: '1fr', maxWidth: 700, margin: '0 auto'} : {}}>
+            {(tab === 'both' || tab === 'Glenn') && <StudentCard student="Glenn" data={data} />}
+            {(tab === 'both' || tab === 'Sheldon') && <StudentCard student="Sheldon" data={data} />}
+          </div>
+        </div>
+        <Timeline data={data} />
+      </div>
+      <div className="footer">
+        Auto-updated from Schoology email notifications · Powered by Hermes Agent
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
