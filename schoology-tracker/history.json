@@ -1,0 +1,26 @@
+{
+  "snapshots": [
+    {
+      "date": "2026-05-24",
+      "captured_at": "2026-05-24T05:46:55.908469+00:00",
+      "grades": {
+        "Glenn": {
+          "AP Chinese Lng/Cul": 95.76,
+          "World Lit/Writ": 97.5,
+          "Chemistry H": 95.68,
+          "AP Calculus BC": 91.0,
+          "AP Comp Sci A": 96.2,
+          "PE 10-12": 96.57
+        },
+        "Sheldon": {
+          "AP Chinese Lng/Cul": 92.06,
+          "World Lit/Writ": 84.0,
+          "Chemistry H": 71.65,
+          "Art 1": 91.21,
+          "AP Calculus BC": 87.0,
+          "AP Comp Sci A": 90.57
+        }
+      }
+    }
+  ]
+}

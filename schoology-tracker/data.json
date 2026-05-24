@@ -1,0 +1,6041 @@
+{
+  "students": {
+    "Glenn": {
+      "grade": 10,
+      "school": "Lynbrook High School",
+      "courses": {
+        "AP Chinese Lng/Cul": {
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
+          "grade": "A",
+          "percentage": "95.76%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Lesson 10 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "L8 40 Flash Card Paragraph writing",
+              "score": "117/120",
+              "percentage": 97.5,
+              "perfect": false
+            },
+            {
+              "name": "L8 Conversation video- (Birthday) please cover your eyes",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 1 天安门 Test",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "L8 Dictation Test",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 Homework (Character & Sentence pattern)",
+              "score": "190/200",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 8 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 Flash Card Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 Speaking Test",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1st Progress Report Extra Credits",
+              "score": "11/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "1st Progress report class Practice/Participation",
+              "score": "228/228",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1st progress report citizenship",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Dictation Test",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Conversation Test-Internship Application",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 -40 Flash Card Paragraph writing",
+              "score": "60/120",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Chapter 2 Reading Test--京剧",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Writing Homework (Character & Sentence pattern)",
+              "score": "200/200",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Skit Presentation",
+              "score": "10/20",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 1 Flash Card Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Speaking Test",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Conversation test--field trip to Chinatown",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 -40 Flash Card Paragraph writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 3 Reading Test--北京大学",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2nd Extra Credit",
+              "score": "36/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "2nd class practice/participation",
+              "score": "480/480",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2nd Citizhenship",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 2 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Flash Card (Making sentences) Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Culture Presentaion Test - 成语和俗话",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 -40 Flash Card Vocabulaires writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Conversation -- A trip to China",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 4 Reading Test--故宫",
+              "score": "7/7",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Homework (Character & Sentence pattern)",
+              "score": "100/200",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 3 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Extra Credit",
+              "score": "20/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "3rd Progress report class Practice/Participation",
+              "score": "226/226",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 AP Typing Test",
+              "score": "20/24",
+              "percentage": 83.3,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 3 Culture Presentaion Test - 一个傳統觀念 和 一个習俗 传统观念/习俗",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Flash Card (Making sentences) Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 -40 Flash Card Vocabulaires writing",
+              "score": "57/120",
+              "percentage": 47.5,
+              "perfect": false
+            },
+            {
+              "name": "L7 Conversation Test --video (student life)",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH5 Reading Test --老字號和小吃",
+              "score": "6/8",
+              "percentage": 75.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 7 Homework book (Character & Sentence pattern)",
+              "score": "200/200",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 AP Typing Test",
+              "score": "23/24",
+              "percentage": 95.8,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 7 Flash Card (Making sentences) Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Culture Presentaion Test--文化活動",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 6 頤和園和長城 Test",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 coversation video",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Flash card paragraph writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Dictattion",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1st Extra Credit",
+              "score": "28/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 4 Skit presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Homework book due",
+              "score": "200/200",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1st Citizenship",
+              "score": "0/10",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "1st Class Participation",
+              "score": "315/315",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH8 Reading Test--中小學生生活",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 AP typing test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Flash card test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Speaking test--中國傳統服飾",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Flash card paragraph writing",
+              "score": "150/150",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Conversation video due",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 10 Reading test 北京的四合院和胡同",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Homework book due",
+              "score": "200/200",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Flash Card Test",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Speaking Test 旅游景点（點）、名胜（勝）古迹 （蹟 ）",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Conversation video --summer vacation",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 AP Typing test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Flash Card Writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2nd Citizenship",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "2nd Class Practice&Participation",
+              "score": "400/400",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Skit",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Homework Book due",
+              "score": "190/200",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "CH 11 Reading Test 北京的夜市和夜生活",
+              "score": "5/6",
+              "percentage": 83.3,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 10 Speaking 科技发（發）明 (四大发（發）明)",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Flash card test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "World Lit/Writ": {
+          "full_name": "World Lit/Writ - 1020: WelshM p5 T2",
+          "grade": "A",
+          "percentage": "97.5%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Narrative Writing Essay - Alternate Point of View in The Stranger",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Signed Final Page of the Course Description (Green Sheet)",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"A Continuity of Parks\" Reading Tasks",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab safety quiz",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab - How to use lab glassware individual portion",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Case of the Miscalibrated Core",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Signed Syllabus",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Signed lab safety contract",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Hexagonal Thinking\" Activity",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab - How to use lab glassware group portion",
+              "score": "7/7",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Measurement lab",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOF Chp. 2 Reading Tasks",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 1 Reading Tasks - LOF",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Quiz - Chp. 2",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10 Things OR Letter of Intro.",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 1 Review Packet",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Measurement Basics: Sig figs and units",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chemical and physical properties, ECM HW",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Dimensional Analysis",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Density lab and self-grade",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Quiz Chp. 4",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit 1 Lab Challenge",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "Chp. 6 Reading Tasks",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Id, Ego, and Superego - Exercise for Understanding Characters in LOF",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Paragraph on Jack (\"Awesome Stranger\")",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 5 Reading Tasks",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Half-Life Practice Problems",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "U-238 Decay Series",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Electron configuration and orbital notation practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 1 test",
+              "score": "50/52",
+              "percentage": 96.2,
+              "perfect": false
+            },
+            {
+              "name": "Open note syllabus quiz",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Participation - 1st Grading Period",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOF Chp. 7 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Quiz Chp. 10",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Radioactive Decay lab (with dice)",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit 2 review packet",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reading Tasks Chp. 12",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOF Chp. 8 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOF Unit Test",
+              "score": "58/60",
+              "percentage": 96.7,
+              "perfect": false
+            },
+            {
+              "name": "Graphing periodic trends",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Coulombic attraction",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "The Periodic Table WS",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Periodic Trends POGIL",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Even More periodic trends practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Periodic trends (4 trends on one page practice",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Periodic trends worksheet",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Periodic trends assessment",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Periodic trends extra MC practice",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Periodic trends card sort conclusion questions",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Action Plan - TFA Research",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "04 Naming compounds drag and drop practice",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Nomenclature packet",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "PBS Covalent bonding tutorial",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Nomenclature Questions survey",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "01 Ionic Bonding tutorial",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "NOTES for TFA Research - ALL SOURCES",
+              "score": "60/60",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Bond polarity practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "molecular geometry, electron geometry, and bond angle practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Molecular Geometry POGIL",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "molecular geometry tutorial",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOF Essay",
+              "score": "33/45",
+              "percentage": 73.3,
+              "perfect": false
+            },
+            {
+              "name": "Bond energy review problems 1-4",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 3 test",
+              "score": "23/24",
+              "percentage": 95.8,
+              "perfect": false
+            },
+            {
+              "name": "Bond energy practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Research Presentation Slides",
+              "score": "22/25",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "Chps. 4-6 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chps. 1-3 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Participation - 2nd grading period",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "IMF video notes",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Model making lab",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "Bond Energy POGIL",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 9 Reading Tasks",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 8 Reading Tasks: Foils",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 7 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Quiz - Chps. 10-13",
+              "score": "24/25",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit 4 one pager",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "04 Solutions practice",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "03 IMF Pixel art practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Molarity POGIL",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "06 Solutions calculations practice (FRQ)",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Dissolving process",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "IMF worksheet",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Chps. 16-19 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chps. 14-15 Reading Tasks",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chps. 10-13 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In class practice problems",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Solubility lab",
+              "score": "12/15",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Retest sign up",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Solids and Molarity WS",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Molarity stained glass practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chps. 23-25 Reading Tasks",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chps. 20-22 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Symbolic Shield Activity",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TFA Unit Test",
+              "score": "59/60",
+              "percentage": 98.3,
+              "perfect": false
+            },
+            {
+              "name": "Participation - Final Grading Period Semester 1",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Group Slide - TFA Essay Prompt",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 5 test",
+              "score": "37/40",
+              "percentage": 92.5,
+              "perfect": false
+            },
+            {
+              "name": "Review packet page 5",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Review packet page 4",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Review packet pages 2/3",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "wave calculations stained glass",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final exam",
+              "score": "95/100",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "One-pager",
+              "score": "6/8",
+              "percentage": 75.0,
+              "perfect": false
+            },
+            {
+              "name": "\"Truth\" in Advertising",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Letter from a Birmingham Jail\" SOAPSTone",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Perils of Indifference\" SOAPSTone",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Antigone Plot Graphic Organizer",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Creon's Ship of State\"",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Ode in Praise of Humanity\"",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"21st Century Ode\"",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Marriage and the Afterlife\" article and TDQs",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Credo Poem\" Typed version",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "SOAPSTone for \"The Apology\"",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Responding to Antigone\"",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"The Handsomest Drowned Man\" Graphic Organizer",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Dos Palabras\" Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Tony's Story\" Graphic Organizer",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Timed Writing: Close Reading of Haimon's Speech",
+              "score": "18/20",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "\"The Night Face-Up\" Graphic Organizer",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Life of Pi Graphic Organizer",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Participation - Semester 2 / Grading Period 1",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 1 Reading Q's",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Sisyphus\" Reading Tasks",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Group Work - Chps. 4-5",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chp. 3 Translation Exercise",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Color/Light Chart for Chps. 1-2",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Part II, Chp. 5 Reading Tasks",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Part II, Chps. 1-2 Reading Tasks",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Trial Notes - Chp. 3",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Essay on MR Elements in a Short Story",
+              "score": "28/30",
+              "percentage": 93.3,
+              "perfect": false
+            },
+            {
+              "name": "Stage Direction - Act II sc. 2",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Soliloquy #4 - \"Is this a dagger which I see...\"",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Participation - 2nd semester / Grading Period 2",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Introduction to the Sonnet + Sonnet 29",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "Chemistry H": {
+          "full_name": "Chemistry H - 3620: LeungC p4 T2",
+          "grade": "A",
+          "percentage": "95.68%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Balancing eq practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reactivity series and balancing equations practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Redox path game 1 (In class)",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "08 Thermo pixel art",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Calorimetry Challenge",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Practice balancing equations and drawing particle diagrams",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Formulas and Equations Practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "02 Types of Reactions Pixel Art",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Empirical and molecular formula stained glass",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Molar mass and one step conversion practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Barium iodate analysis and conclusion",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Limiting Reactant practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Percent Yield",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "balancing reactions and chemical rxns from a sentence",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In Class: Interpreting chemical reactions",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Balancing Equations and Limiting Reactant games",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In class: Gravimetric analysis whiteboarding",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit test MC Practice",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Stoichiometry quiz",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Gravimetric analysis prelab",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 6 FRQ practice",
+              "score": "2/4",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit test practice",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In class Kinetics Review papers",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Mechanism and rate law practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Kinetics quest review",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab procedure and techniques",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "ICE table practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "16.1-16.2 Reading guide",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Le Chatelier's HW",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Equilibrium pixel art work",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "04 Equilibrium pixel art",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "16.6 Le Chatelier's Reading",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In class practice: Using ICE....",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Le Chatelier's lab group assessment",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In class: Equilibrium dominoes",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Review part 2 (MC packet)",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Review problems",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Intro to acid and bases",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Naming and pH practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Naming acids",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Le Chatelier's lab handout",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Equilibrium lab scenarios",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "05 Neutralizations/titrations calculations practice",
+              "score": "0/6",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Ka/Kb practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Acids, Bases, and You lab",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Acids and Bases PhET",
+              "score": "2/4",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "05 Diagramming Acid Base Titrations",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "06 Neutralizations/titrations calculations practice",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Titration and particle diagram review with corrections",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Acids and Bases one page review with corrections",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Equilibrium Test",
+              "score": "26/27",
+              "percentage": 96.3,
+              "perfect": false
+            },
+            {
+              "name": "Work for digital calculation practice",
+              "score": "2/3",
+              "percentage": 66.7,
+              "perfect": false
+            },
+            {
+              "name": "Review packet part 2",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Phase change and simple calorimetry problems 2",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Phase change and simple calorimetry problems 1",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Acid/Base Lab Practical",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "Enthalpy and heating curve calculations",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Intro to Thermo",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "specific heat capacity lab",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Thermo MC practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Class work from 4/29 (sub day)",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Thermochemical stoichimetry",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Mixed Enthalpy calculations",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Review packet (FRQ only)",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "AP Calculus BC": {
+          "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
+          "grade": "A-",
+          "percentage": "91%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "HW 12",
+              "score": "42/50",
+              "percentage": 84.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 13",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.5b CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Graphing Calculator Quiz",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test 2.1-3.3",
+              "score": "98/100",
+              "percentage": 98.0,
+              "perfect": false
+            },
+            {
+              "name": "3.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 3",
+              "score": "31/30",
+              "percentage": 103.3,
+              "perfect": false
+            },
+            {
+              "name": "HW 2",
+              "score": "51/50",
+              "percentage": 102.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 1",
+              "score": "51/50",
+              "percentage": 102.0,
+              "perfect": false
+            },
+            {
+              "name": "Test Ch 2/3",
+              "score": "92/100",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "3.8 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 4",
+              "score": "76/100",
+              "percentage": 76.0,
+              "perfect": false
+            },
+            {
+              "name": "4.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 6",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 5",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "5.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.2a CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.2b CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 6",
+              "score": "78/100",
+              "percentage": 78.0,
+              "perfect": false
+            },
+            {
+              "name": "6.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "8.1, 8.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 7/8",
+              "score": "87/100",
+              "percentage": 87.0,
+              "perfect": false
+            },
+            {
+              "name": "Final Exam",
+              "score": "94/100",
+              "percentage": 94.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 16",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 14",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 17",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "9.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "9.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "14.1-14.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 9/10",
+              "score": "74/100",
+              "percentage": 74.0,
+              "perfect": false
+            },
+            {
+              "name": "9.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "13.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "13.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "15.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Eulers method CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 14, 15 sflpgeu",
+              "score": "96/100",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 4",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "11.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.3 CFU",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "11.1-5",
+              "score": "98/100",
+              "percentage": 98.0,
+              "perfect": false
+            },
+            {
+              "name": "11.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 9",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 8",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 7",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "11.8a CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 11",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 10",
+              "score": "34/40",
+              "percentage": 85.0,
+              "perfect": false
+            },
+            {
+              "name": "11.8b CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "AP Comp Sci A": {
+          "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
+          "grade": "A",
+          "percentage": "96.2%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "First Day Survey",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch02 - Ways to Say Hello",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: Home Software Installation",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch1",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch2",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch3Ex11 - Book",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.3.2 - Coins",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch6.10 - Pie Chart (Code/AutoLab Score)",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch6.10 - Pie Chart (Image Score)",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch5 - Syntax",
+              "score": "0/6",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "HW: Ch3 - Objects & Classes",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: APCS Elevens Lab Activity 1",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch7.9 & 7.12 Case Study and Lab - Rolling Dice",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch7 Exercises",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In-Class Lab: JM Ch4 Ex16 - Ornament",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Java Methods Chapters 3, 5-8",
+              "score": "49/50",
+              "percentage": 98.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch8.6 - Perfect Numbers",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.12.6 - ParallelLines",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch4 Homework",
+              "score": "6/8",
+              "percentage": 75.0,
+              "perfect": false
+            },
+            {
+              "name": "Skills Check #3 - Ch. 9 & 10 - Classes & Strings",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch9 Ex 1-3, 5, 9-12, 15 & 18",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch10 Exercise 2, 6-11, 14-15, 20 & 22",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch9 - Complex",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch9.9 & 9.12 Case Study and Lab - Snackbar",
+              "score": "11/11",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Skills Check #4 - Abstract Classes, Interfaces, & Polymorphism",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch10 - Lipograms",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch10 - Piglatinator",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: GridWorld Part 3 - Jumper",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.11.1 - BackToSchool",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.16.1 - Statistics",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch12 Ex 1-9, 11-14, 17-18, 20, 26-27, 29",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch12.11 - Chomp (p. 346-351)",
+              "score": "12/12",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Skills Check #5 - Arrays & ArrayLists",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.29.1 - Old MacDonald",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch12, Sec12.9 - IndexMaker",
+              "score": "10/12",
+              "percentage": 83.3,
+              "perfect": false
+            },
+            {
+              "name": "Review Check: Chapter 14 Files",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: A15.1 - IrregularPolygon",
+              "score": "4/6",
+              "percentage": 66.7,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch14.5 - DictionaryMaker",
+              "score": "7/7",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: BlusterCritter (GridWorld Part 4, Exercise 4)",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: LA24.1 - EraseObject",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: KnightCrittersTour",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: JM Ch18 Ex 1-10 (pp. 461-464)",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch13.4 - Keeping Things in Order",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: AB27.2 MergeList",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST #3 - Arrays, ArrayLists, & File I/O",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "Final Exam",
+              "score": "98/100",
+              "percentage": 98.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch20.4 - Singly-Linked List",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch20.5 - Linked List with a Tail (Extra Credit!)",
+              "score": "3/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch20.7 - Teletext",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch21.6 - Actors World (p. 536-541)",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: AB31.3 - RPN",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch20Exercise 1-10, 13, 14",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch21.3 - Browsing",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Skills Check - Linked Lists Retake plus Stacks and Queues",
+              "score": "7/11",
+              "percentage": 63.6,
+              "perfect": false
+            },
+            {
+              "name": "HW: JM Ch22 - Recursion Revisited",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch23.5 - Do-It-Yourself BST (p. 586-591)",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: AB30.3BST - TreeStats",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: JM Ch23 - Binary Tree Worksheet",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Ch21, Stacks and Queues",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch22.6 - The Game of Hex (p. 563-568)",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch23.6 - Morse Code (p. 591-592)",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Binary Trees (Curved Score)",
+              "score": "49/50",
+              "percentage": 98.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch24 - Exercise 19-22",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch24.6 - Search Engine (pp. 615-617)",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: JM Ch24 - Lookup Tables & Hashing",
+              "score": "7/8",
+              "percentage": 87.5,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch24.3 - Cryptogram",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Hashing Practice Skills Check",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch25.5 - Heapsort (pp. 632)",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch25 - Heap of Trouble",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: JM Ch25 - Heaps and Priority Queues",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch25 - Exercise 21-25",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Lookup Tables & Hashing",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch19.9 - Stock Exchange",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Heaps & PQ",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "TEST: Ch 19 - Collections",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: A21.1 - Numbers",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: Club Members Practice FRQ",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: Quilt - AP A Free Response",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "APCS Final Exam",
+              "score": "76/80",
+              "percentage": 95.0,
+              "perfect": false
+            }
+          ]
+        },
+        "PE 10-12": {
+          "full_name": "PE 10-12 - 2530: Griffin Period 2 T2",
+          "grade": "A",
+          "percentage": "96.57%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Blue Sheet",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Program Syllabus",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Blue Sheet Quiz",
+              "score": "25/25",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Who are you? Form",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Attendance/Active Participation - Grading Period 1",
+              "score": "100/100",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Badminton in the Community",
+              "score": "25/25",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Attendance/Active Participation - Grading Period 2",
+              "score": "100/100",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Attendance/Active Participation - Grading Period 3",
+              "score": "100/100",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Attendance/Active Participation - Grading Period 4",
+              "score": "90/100",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Attendance/Active Participation - Grading Period 5",
+              "score": "92/100",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "Overall Effort",
+              "score": "100/100",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Attendance / Active Participation - Grading Period 6",
+              "score": "100/100",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        }
+      },
+      "overdue": []
+    },
+    "Sheldon": {
+      "grade": 10,
+      "school": "Lynbrook High School",
+      "courses": {
+        "AP Chinese Lng/Cul": {
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
+          "grade": "A-",
+          "percentage": "92.06%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Lesson 10 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Flash card paragraph writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "L8 40 Flash Card Paragraph writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "L8 Conversation video- (Birthday) please cover your eyes",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 1 天安门 Test",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "L8 Dictation Test",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 Homework (Character & Sentence pattern)",
+              "score": "180/200",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 8 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 Flash Card Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 8 Speaking Test",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1st Progress Report Extra Credits",
+              "score": "12/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "1st Progress report class Practice/Participation",
+              "score": "228/228",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1st progress report citizenship",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Dictation Test",
+              "score": "19/20",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 1 Conversation Test-Internship Application",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Writing Homework (Character & Sentence pattern)",
+              "score": "93/200",
+              "percentage": 46.5,
+              "perfect": false
+            },
+            {
+              "name": "Chapter 2 Reading Test--京剧",
+              "score": "4/6",
+              "percentage": 66.7,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 1 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 -40 Flash Card Paragraph writing",
+              "score": "111/120",
+              "percentage": 92.5,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 1 Flash Card Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 Speaking Test",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Conversation test--field trip to Chinatown",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 1 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 -40 Flash Card Paragraph writing",
+              "score": "0/120",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 2 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 3 Reading Test--北京大学",
+              "score": "5/6",
+              "percentage": 83.3,
+              "perfect": false
+            },
+            {
+              "name": "2nd Extra Credit",
+              "score": "29/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "2nd class practice/participation",
+              "score": "480/480",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2nd Citizhenship",
+              "score": "4/10",
+              "percentage": 40.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 2 Homework Book (Character & Sentence pattern)",
+              "score": "175/200",
+              "percentage": 87.5,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 2 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Flash Card (Making sentences) Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 2 Culture Presentaion Test - 成语和俗话",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 -40 Flash Card Vocabulaires writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Conversation -- A trip to China",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 4 Reading Test--故宫",
+              "score": "7/7",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Homework (Character & Sentence pattern)",
+              "score": "185/200",
+              "percentage": 92.5,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 3 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Extra Credit",
+              "score": "21/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "3rd Progress report class Practice/Participation",
+              "score": "226/226",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Culture Presentaion Test - 一个傳統觀念 和 一个習俗 传统观念/习俗",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 3 Flash Card (Making sentences) Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 -40 Flash Card Vocabulaires writing",
+              "score": "0/120",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "L7 Conversation Test --video (student life)",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH5 Reading Test --老字號和小吃",
+              "score": "5/8",
+              "percentage": 62.5,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 7 Homework book (Character & Sentence pattern)",
+              "score": "190/200",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 7 AP Typing Test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Flash Card (Making sentences) Test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Culture Presentaion Test--文化活動",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 7 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 6 頤和園和長城 Test",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 coversation video",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Dictattion",
+              "score": "19/20",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "1st Class Participation",
+              "score": "245/315",
+              "percentage": 77.8,
+              "perfect": false
+            },
+            {
+              "name": "1st Extra Credit",
+              "score": "21/0",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 4 Skit presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Homework book due",
+              "score": "100/200",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "1st Citizenship",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "CH8 Reading Test--中小學生生活",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 4 AP typing test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Flash card test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 4 Speaking test--中國傳統服飾",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 9 Dictation",
+              "score": "19/20",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 9 Flash card paragraph writing",
+              "score": "135/150",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 9 Conversation video due",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 10 Reading test 北京的四合院和胡同",
+              "score": "4/6",
+              "percentage": 66.7,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 9 Homework book due",
+              "score": "200/200",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Skit Presentation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Flash Card Test",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 Speaking Test 旅游景点（點）、名胜（勝）古迹 （蹟 ）",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Conversation video --summer vacation",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 9 AP Typing test",
+              "score": "24/24",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Flash Card Writing",
+              "score": "120/120",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2nd Citizenship",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "2nd Class Practice&Participation",
+              "score": "400/400",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Dictation",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Skit",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Homework Book due",
+              "score": "185/200",
+              "percentage": 92.5,
+              "perfect": false
+            },
+            {
+              "name": "CH 11 Reading Test 北京的夜市和夜生活",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Speaking 科技发（發）明 (四大发（發）明)",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 10 Flash card test",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "World Lit/Writ": {
+          "full_name": "World Lit/Writ - 1020: WillsonC p5 T2",
+          "grade": "B",
+          "percentage": "84%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "True / False Test",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Video introduction",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Upload a picture of your signed green sheet (signature page only)",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lather and Nothing Else Diagnostic",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "What animal writing",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 3-4 Quiz",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOTF Chapter 2 Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lockdown browser setup test",
+              "score": "0/0",
+              "percentage": 0.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 4-7 Annotations",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 5 questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lost Questions (finish in class on Thursday / Friday)",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 2-3 questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 5 quiz",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Journal 1-9",
+              "score": "13/13",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 9 questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 10-12 Annotations",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Yes She's a Christ Figure Too\" Annotations",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 8-9 Annotations",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lord of the Flies Vocab test",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Effective Effort - 6 Weeks",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Symbolism poster",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Kite Runner Presentations",
+              "score": "25/30",
+              "percentage": 83.3,
+              "perfect": false
+            },
+            {
+              "name": "Pre search and Action plan - submit one per group",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Research notes - take notes on one source for Thursday / Friday and submit them",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Research notes",
+              "score": "4/6",
+              "percentage": 66.7,
+              "perfect": false
+            },
+            {
+              "name": "Essay reflection",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "LOTF Essay",
+              "score": "87/100",
+              "percentage": 87.0,
+              "perfect": false
+            },
+            {
+              "name": "Journals 10 - 22",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 10 Quiz",
+              "score": "1/5",
+              "percentage": 20.0,
+              "perfect": false
+            },
+            {
+              "name": "Presentation and chapter 11-12 Quiz",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Effective effort 12 weeks",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Chapter 17-19 Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 15-16 Quote Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapters 8-14 Annotations",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 13-14 Quiz",
+              "score": "7/7",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Finish, type, and print out your pomegranate poem before class!",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 15-19 Roundtable Discussion",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 20-21 Questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Type and print out credo poem before class",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Kite Runner Vocab and Chapter 25 Test",
+              "score": "19/20",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "Finish blackout poem",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 23 silent discussion",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 22 quote quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Effective Effort 18 Weeks",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Complete integrating quotes wkst",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Foil Paragraph",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "Chapter 23 Quiz",
+              "score": "7/7",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "One pager",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Finish scene 2 questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Finish scene / ode 1 questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "The Grateful Dead Wkst",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Prologue - scene 2 annotations",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Upload a picture of your completed hexagons. Write one paragraph.",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Antigone Test",
+              "score": "45/50",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Antigone close reading paragraph",
+              "score": "18/20",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Read and annotate \"Dos Palabras\"''",
+              "score": "0/1",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Optic handout",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Very Old Man Annotations",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Handsome drowned man annotations",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Handsome drowned man group discussion",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Journal #1-8",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Very Old Man Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Effective Effort - 6 weeks",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "Origami Assignment",
+              "score": "0/0",
+              "percentage": 0.0,
+              "perfect": true
+            },
+            {
+              "name": "Origami reflection",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Paper Menagerie Questions",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Life of Pi movie notes",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Complete three forms for the counselors",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Stereotypes and Antisemitism Wkst",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 4 Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Perils of Indifference\"",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reading Log - Night",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 1-2 Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "\"Stars\" questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Holocaust ID assignment",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Dehumanization to humanization",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Theories of survival",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 6-7 Quiz",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Journal 4/23 and 4/24",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Night Test",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "Magical realism essay",
+              "score": "84/100",
+              "percentage": 84.0,
+              "perfect": false
+            },
+            {
+              "name": "Finish Promptbook",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1.4-1.7 Questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "Chemistry H": {
+          "full_name": "Chemistry H - 3620: LuJ p3 T2",
+          "grade": "C",
+          "percentage": "71.65%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "HW: Name pronunciation",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Syllabus signature",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "School supplies: 8.5x11 notebook, glue, red pen, dry erase, student ID",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Open note syllabus quiz",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Notebook/binder check",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Half Life practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Half Life and Radiometric Dating Calculations",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Notebook/binder check 2",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "Lab WS Day 1",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Nomenclature quiz",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Molecular Geometry Practice",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Radioactive Decay Lab",
+              "score": "5/10",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit 3 Test",
+              "score": "18/18",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab Assessment",
+              "score": "6/7",
+              "percentage": 85.7,
+              "perfect": false
+            },
+            {
+              "name": "Bond Energy Review Problems",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Bond Energies practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Solutions conceptual in class practice",
+              "score": "3/4",
+              "percentage": 75.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit 5 multiple choice practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Classifying Solids/Practice Problems: Molarity & Dilutions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 4 Test",
+              "score": "29/31",
+              "percentage": 93.5,
+              "perfect": false
+            },
+            {
+              "name": "Unit 5 notebook/binder check",
+              "score": "6/10",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: Solubility of a salt",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Types of chemical reactions Mystery Pixel Art",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Review one-pager",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Class Practice PhET Games",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Percent Yield practice homework",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Practice Questions",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chemistry Honors: Limiting Reactant",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Formulas and Equations Worksheet",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Molar mass and One-Step Calculations WS",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "New and Improved Digital Test Practice",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 6 Quiz",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "MC Practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chapter 16.6 Le Chatelier’s reading guide",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chemistry Honors: Equilibrium constants 16-2",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "ICE Table Practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Equilibrium reading",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Equilibrium pixel art (show work on paper provided in class)",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Equilibrium Test Practice",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Chemistry: LeChatelier’s Principle",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Titration calculations practice",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Diagramming Acid-Base Titrations",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Le Chatelier's Mazes",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Equilibrium test",
+              "score": "28/32",
+              "percentage": 87.5,
+              "perfect": false
+            },
+            {
+              "name": "Lab: Which acid is the most concentrated?",
+              "score": "24/25",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "Heat Capacity/Calorimetry Pixel Art",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Unit 9 Test",
+              "score": "43/68",
+              "percentage": 63.2,
+              "perfect": false
+            }
+          ]
+        },
+        "Art 1": {
+          "full_name": "Art 1 - 6110: SchulzeJ p6 T2",
+          "grade": "A-",
+          "percentage": "91.21%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "Reflection: Reimagine an Artwork",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Final Reimagine Project",
+              "score": "45/50",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Name Print",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Art 1 Signature Form - Syllabus & Donation Request",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Art 1 Student Questionnaire",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Sketchbook Check--Week #1 (in class)",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Art 1 - Turn-In Slides: Self-Portrait & Reflection",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Sketchbook Check--Week #2 (in class)",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Progress Upload #1",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Sketchbook Check #3",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Progress Upload #2",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Sketchbook Cover & Rubric",
+              "score": "45/50",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "3 Faces Contour Line Drawing",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5 Hands - blind contour",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Upside Down Contour Drawing",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Silhouette \"My Teenage Life\" activity",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Notan Worksheet",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Sketchbook Check: Shape Notes",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "X-ACTO knife cutting practice",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Reflection--Sketchbook Cover",
+              "score": "14/15",
+              "percentage": 93.3,
+              "perfect": false
+            },
+            {
+              "name": "Sketchbook Check - Value Notes",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4 Thumbnail Sketches",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4 alternative arrangements",
+              "score": "2/5",
+              "percentage": 40.0,
+              "perfect": false
+            },
+            {
+              "name": "Reminder! Bring an object to school to photograph with your backpack or body part",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Planning your composition",
+              "score": "11/15",
+              "percentage": 73.3,
+              "perfect": false
+            },
+            {
+              "name": "Charcoal Value & Grid Practice",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "How to attach your Sketchbook Cover",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Charcoal - Progress Upload #1",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Reference Image",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reflection--Notan Design",
+              "score": "14/15",
+              "percentage": 93.3,
+              "perfect": false
+            },
+            {
+              "name": "Charcoal - Photo Upload #2 (finished or not)",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Class Notes: Proportions in a Face",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Facial Features Practice Worksheet",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Hero--Final Reference Photo",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Hero--4 Photos & Your Thoughts",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "Lips & Teeth - Worksheet #2",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Charcoal Drawing",
+              "score": "47/50",
+              "percentage": 94.0,
+              "perfect": false
+            },
+            {
+              "name": "Hero Progress Upload #3",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Hero - Beginning and end of class progress uploads #1 & #2",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Things We Carry Artist Statement",
+              "score": "14/15",
+              "percentage": 93.3,
+              "perfect": false
+            },
+            {
+              "name": "Art 1 Final - Reflection",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Semester 1 - Final Dec 16 2025",
+              "score": "14/16",
+              "percentage": 87.5,
+              "perfect": false
+            },
+            {
+              "name": "Final Part 1: Realistic Self-Portrait Drawing",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Hero Portrait - Graphite Only",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "Watercolor Practice - 8 Techniques",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Photo Uploads--Final Hero & Succulent",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4 Thumbnails & Full Size Sketch",
+              "score": "20/20",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "monochromatic value scale",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Two-Point Perspective Practice",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Watercolor Succulent Painting",
+              "score": "25/25",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Fantastical Places - Value Scale & Progress Upload",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Watercolor background on Hero Portrait",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Hung Liu Reflection & Share Out",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Monochromatic Value - Fantastical Places Painting",
+              "score": "47/50",
+              "percentage": 94.0,
+              "perfect": false
+            },
+            {
+              "name": "Linear Perspective Quiz",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 2 Quiz: Monochromatic Value & Space",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Color Schemes Worksheet",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 1: Object Study - 9 Thumbnails",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Put your object in your backpack!",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Title & Artist Statement: Fantastical Places",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "Turn-In Slides: Color Mixing",
+              "score": "22/25",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 3: Actual size sketch & transfer design over painted panels",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 2: Triptych--Color Scheme Trials & Underpainting",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 4: Progress Upload",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Unit 3 Quiz: Color Theory & Creativity",
+              "score": "13/15",
+              "percentage": 86.7,
+              "perfect": false
+            },
+            {
+              "name": "Group Practice - Reimagine Activity",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reimagine - Images to Print",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6 Samples - Reimagine an Artwork",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Step 6B: Reflection - Object Study Triptych",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 6A: Triptych Share Out",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Reimagine - FINAL images to print",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Step 5: Submitting your Object Study Triptych",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            }
+          ]
+        },
+        "AP Calculus BC": {
+          "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
+          "grade": "B+",
+          "percentage": "87%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "HW 13",
+              "score": "24/30",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "2.3 CFU",
+              "score": "2/10",
+              "percentage": 20.0,
+              "perfect": false
+            },
+            {
+              "name": "2.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.1 CFU",
+              "score": "8/10",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "2.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.5b CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Graphing Calculator Quiz",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test 2.1-3.3",
+              "score": "89/100",
+              "percentage": 89.0,
+              "perfect": false
+            },
+            {
+              "name": "3.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3.8 CFU",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 3",
+              "score": "30/30",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 2",
+              "score": "51/50",
+              "percentage": 102.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 1",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 2/3",
+              "score": "83/100",
+              "percentage": 83.0,
+              "perfect": false
+            },
+            {
+              "name": "Test Ch 4",
+              "score": "76/100",
+              "percentage": 76.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 6",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 5",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 4",
+              "score": "40/50",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "4.4 CFU",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "5.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.2b CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.2a CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 11",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 9",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 7",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 10",
+              "score": "51/50",
+              "percentage": 102.0,
+              "perfect": false
+            },
+            {
+              "name": "6.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 6",
+              "score": "88/100",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "7.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "8.1, 8.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 7/8",
+              "score": "90/100",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 15",
+              "score": "21/20",
+              "percentage": 105.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 14",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 12",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "Final Exam",
+              "score": "96/100",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 17",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW 16",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "9.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "9.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "9.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "9.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "13.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "10.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "13.2 CFU",
+              "score": "5/10",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Test Ch 9/10",
+              "score": "85/100",
+              "percentage": 85.0,
+              "perfect": false
+            },
+            {
+              "name": "14.1-14.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "13.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "13.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Logistic population growth CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Slope field CFU",
+              "score": "0/10",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "15.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Eulers method CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.2 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.1 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Ch 14, 15 sflpgeu",
+              "score": "89/100",
+              "percentage": 89.0,
+              "perfect": false
+            },
+            {
+              "name": "11.4 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.6 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.5 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.8a CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.7 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.3 CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "11.1-5",
+              "score": "82/100",
+              "percentage": 82.0,
+              "perfect": false
+            },
+            {
+              "name": "HW 8",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "11.8b CFU",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "AP Comp Sci A": {
+          "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
+          "grade": "A-",
+          "percentage": "90.57%",
+          "term": "25-26 T2",
+          "assignments": [
+            {
+              "name": "First Day Survey",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: Home Software Installation",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch02 - Ways to Say Hello",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch1",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch2",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch3Ex11 - Book",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.3.2 - Coins",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch6.10 - Pie Chart (Code/AutoLab Score)",
+              "score": "3/3",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch6.10 - Pie Chart (Image Score)",
+              "score": "1/2",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "HW: Ch5 - Syntax",
+              "score": "0/6",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "HW: Ch3 - Objects & Classes",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: APCS Elevens Lab Activity 1",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch7.9 & 7.12 Case Study and Lab - Rolling Dice",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch7 Exercises",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "In-Class Lab: JM Ch4 Ex16 - Ornament",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Java Methods Chapters 3, 5-8",
+              "score": "50/50",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch8.6 - Perfect Numbers",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.12.6 - ParallelLines",
+              "score": "4/6",
+              "percentage": 66.7,
+              "perfect": false
+            },
+            {
+              "name": "HW: Ch4 Homework",
+              "score": "5/8",
+              "percentage": 62.5,
+              "perfect": false
+            },
+            {
+              "name": "Skills Check #3 - Ch. 9 & 10 - Classes & Strings",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: Ch9 Ex 1-3, 5, 9-12, 15 & 18",
+              "score": "7/8",
+              "percentage": 87.5,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch10 Exercise 2, 6-11, 14-15, 20 & 22",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch9 - Complex",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch9.9 & 9.12 Case Study and Lab - Snackbar",
+              "score": "11/11",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Skills Check #4 - Abstract Classes, Interfaces, & Polymorphism",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch10 - Lipograms",
+              "score": "5/10",
+              "percentage": 50.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch10 - Piglatinator",
+              "score": "3/10",
+              "percentage": 30.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: GridWorld Part 3 - Jumper",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.11.1 - BackToSchool",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: L.A.16.1 - Statistics",
+              "score": "0/5",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch12 Ex 1-9, 11-14, 17-18, 20, 26-27, 29",
+              "score": "0/10",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch12.11 - Chomp (p. 346-351)",
+              "score": "10/12",
+              "percentage": 83.3,
+              "perfect": false
+            },
+            {
+              "name": "Skills Check #5 - Arrays & ArrayLists",
+              "score": "2/5",
+              "percentage": 40.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: L.A.29.1 - Old MacDonald",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch12, Sec12.9 - IndexMaker",
+              "score": "0/12",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Review Check: Chapter 14 Files",
+              "score": "0/5",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: A15.1 - IrregularPolygon",
+              "score": "0/6",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch14.5 - DictionaryMaker",
+              "score": "5/7",
+              "percentage": 71.4,
+              "perfect": false
+            },
+            {
+              "name": "Lab: BlusterCritter (GridWorld Part 4, Exercise 4)",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: LA24.1 - EraseObject",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: KnightCrittersTour",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: JM Ch18 Ex 1-10 (pp. 461-464)",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch13.4 - Keeping Things in Order",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: AB27.2 MergeList",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST #3 - Arrays, ArrayLists, & File I/O",
+              "score": "46/50",
+              "percentage": 92.0,
+              "perfect": false
+            },
+            {
+              "name": "Final Exam",
+              "score": "95/100",
+              "percentage": 95.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch20.4 - Singly-Linked List",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch20.5 - Linked List with a Tail (Extra Credit!)",
+              "score": "0/0",
+              "percentage": 0.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch20.7 - Teletext",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch21.6 - Actors World (p. 536-541)",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: AB31.3 - RPN",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch20Exercise 1-10, 13, 14",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch21.3 - Browsing",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Skill Check - Linked List, Stacks, Queue",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "HW: JM Ch22 - Recursion Revisited",
+              "score": "7/8",
+              "percentage": 87.5,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch23.5 - Do-It-Yourself BST (p. 586-591)",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: AB30.3BST - TreeStats",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Skills Check Grade: Binary Trees",
+              "score": "2/5",
+              "percentage": 40.0,
+              "perfect": false
+            },
+            {
+              "name": "HW: JM Ch23 - Binary Tree Worksheet",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Ch21, Stacks and Queues",
+              "score": "43/50",
+              "percentage": 86.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch23.6 - Morse Code (p. 591-592)",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Binary Trees (Curved Score)",
+              "score": "48/50",
+              "percentage": 96.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch24 - Exercise 19-22",
+              "score": "3/4",
+              "percentage": 75.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch24.6 - Search Engine (pp. 615-617)",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Hashing Practice Skills Check",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "HW: JM Ch24 - Lookup Tables & Hashing",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch24.3 - Cryptogram",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch25.5 - Heapsort (pp. 632)",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: JM Ch25 - Heap of Trouble",
+              "score": "0/6",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "HW: JM Ch25 - Heaps and Priority Queues",
+              "score": "0/8",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch25 - Exercise 21-25",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Lookup Tables & Hashing",
+              "score": "44/50",
+              "percentage": 88.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: JM Ch19.9 - Stock Exchange",
+              "score": "15/15",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "TEST: Heaps & PQ",
+              "score": "41/50",
+              "percentage": 82.0,
+              "perfect": false
+            },
+            {
+              "name": "TEST: Ch 19 - Collections",
+              "score": "40/50",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Lab: A21.1 - Numbers",
+              "score": "6/6",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: Club Members Practice FRQ",
+              "score": "8/8",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lab: Quilt - AP A Free Response",
+              "score": "9/9",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "APCS Final Exam",
+              "score": "73/80",
+              "percentage": 91.2,
+              "perfect": false
+            }
+          ]
+        }
+      },
+      "overdue": [
+        {
+          "assignment": "LHS Career Exploration",
+          "due_date": "Friday, 12/05/2025",
+          "days_overdue": 164
+        },
+        {
+          "assignment": "Act 2 Quiz",
+          "due_date": "Friday, 05/08/2026",
+          "days_overdue": 10
+        }
+      ]
+    }
+  },
+  "last_updated": "2026-05-24T05:46:55.908469+00:00",
+  "email_count": 47,
+  "events": [
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Intro to Thermo",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Calculus BC",
+      "subject": "HW 11",
+      "grade": "46/50",
+      "percentage": 92.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Calculus BC",
+      "subject": "HW 10",
+      "grade": "34/40",
+      "percentage": 85.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Calculus BC",
+      "subject": "11.8b CFU",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Flash Card Writing",
+      "grade": "120/120",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "2nd Citizenship",
+      "grade": "8/10",
+      "percentage": 80.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "2nd Class Practice&Participation",
+      "grade": "400/400",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Dictation",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Journal 4/23 and 4/24",
+      "grade": "4/5",
+      "percentage": 80.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Unit 3 Quiz: Color Theory & Creativity",
+      "grade": "13/15",
+      "percentage": 86.7,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Group Practice - Reimagine Activity",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Reimagine - Images to Print",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Calculus BC",
+      "subject": "HW 8",
+      "grade": "48/50",
+      "percentage": 96.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Calculus BC",
+      "subject": "11.8b CFU",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-04-27T22:04:37+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Skit",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Homework Book due",
+      "grade": "190/200",
+      "percentage": 95.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "CH 11 Reading Test 北京的夜市和夜生活",
+      "grade": "5/6",
+      "percentage": 83.3,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "specific heat capacity lab",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Thermo MC practice",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Class work from 4/29 (sub day)",
+      "grade": "4/4",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Thermochemical stoichimetry",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Mixed Enthalpy calculations",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Skit",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Homework Book due",
+      "grade": "185/200",
+      "percentage": 92.5,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "CH 11 Reading Test 北京的夜市和夜生活",
+      "grade": "6/6",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Night Test",
+      "grade": "44/50",
+      "percentage": 88.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Magical realism essay",
+      "grade": "84/100",
+      "percentage": 84.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Lab: Which acid is the most concentrated?",
+      "grade": "24/25",
+      "percentage": 96.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "6 Samples - Reimagine an Artwork",
+      "grade": "15/15",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 6B: Reflection - Object Study Triptych",
+      "grade": "8/10",
+      "percentage": 80.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 6A: Triptych Share Out",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-05-04T22:07:41+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Speaking 科技发（發）明 (四大发（發）明)",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Flash card test",
+      "grade": "40/40",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Stage Direction - Act II sc. 2",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Soliloquy #4 - \"Is this a dagger which I see...\"",
+      "grade": "30/30",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Participation - 2nd semester / Grading Period 2",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Introduction to the Sonnet + Sonnet 29",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Review packet (FRQ only)",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "PE 10-12",
+      "subject": "Overall Effort",
+      "grade": "100/100",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "PE 10-12",
+      "subject": "Attendance / Active Participation - Grading Period 6",
+      "grade": "100/100",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Comp Sci A",
+      "subject": "APCS Final Exam",
+      "grade": "76/80",
+      "percentage": 95.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Speaking 科技发（發）明 (四大发（發）明)",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Lesson 10 Flash card test",
+      "grade": "40/40",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Finish Promptbook",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "1.4-1.7 Questions",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Heat Capacity/Calorimetry Pixel Art",
+      "grade": "1/2",
+      "percentage": 50.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Unit 9 Test",
+      "grade": "43/68",
+      "percentage": 63.2,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Reimagine - FINAL images to print",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 5: Submitting your Object Study Triptych",
+      "grade": "44/50",
+      "percentage": 88.0,
+      "date": "2026-05-11T22:05:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Comp Sci A",
+      "subject": "APCS Final Exam",
+      "grade": "73/80",
+      "percentage": 91.2,
+      "date": "2026-05-11T22:05:52+00:00"
+    }
+  ],
+  "week_start": "5/11/26",
+  "week_end": "5/18/26"
+}
