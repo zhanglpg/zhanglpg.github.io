@@ -702,7 +702,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-07T03:30:19+00:00",
-      "last_event": "2026-05-17T13:15:20+00:00",
+      "last_event": "2026-05-25T08:43:52+00:00",
       "events": [
         {
           "type": "submitted",
@@ -733,13 +733,23 @@
           "type": "comment",
           "date": "2026-05-17T13:15:20+00:00",
           "subject": "[OSDI '26 Artifact Evaluation] Comment for #54 \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-05-25T08:38:14+00:00",
+          "subject": "[OSDI '26 Artifact Evaluation] Comment for #54 \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-05-25T08:43:52+00:00",
+          "subject": "[OSDI '26 Artifact Evaluation] Submitted review #54A \"Heterogeneity at Hyperscale:...\""
         }
       ],
       "counts": {
         "updates": 3,
-        "comments": 1,
+        "comments": 2,
         "reviews": 0,
-        "total": 6
+        "total": 8
       },
       "message_ids": [
         "<20260507033019.A9CFA8D78F0@mail.hotcrp.com>",
@@ -747,7 +757,9 @@
         "<20260509030124.88F2091500F@mail.hotcrp.com>",
         "<20260509030132.5417E915009@mail.hotcrp.com>",
         "<20260509030342.424EE915009@mail.hotcrp.com>",
-        "<20260517131520.597448CD548@mail.hotcrp.com>"
+        "<20260517131520.597448CD548@mail.hotcrp.com>",
+        "<20260525083814.21B728FF452@mail.hotcrp.com>",
+        "<20260525084352.9A6F28FF444@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 8, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -1237,7 +1249,7 @@
     },
     "OSDI '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-05-17T13:15:20+00:00"
+      "last_event": "2026-05-25T08:43:52+00:00"
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
@@ -1318,6 +1330,6 @@
       "date": "2026-05-22T00:09:32+00:00"
     }
   ],
-  "last_updated": "2026-05-25T04:04:44.399844+00:00",
-  "email_count": 119
+  "last_updated": "2026-05-25T12:04:21.840235+00:00",
+  "email_count": 121
 }
