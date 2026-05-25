@@ -578,7 +578,7 @@ function renderRoot(data) {
     confEntries.length === 0
       ? el("div", { class: "empty" }, "No papers match your filters.")
       : confEntries.map(({ conf, papers, lastEvent }) => conferenceGroup(conf, papers, lastEvent)),
-    announcementsSection(data.announcements || []),
+    announcementsSection(data.announcements || [], { search }),
   );
   root.appendChild(container);
   document.body.appendChild(el("div", { class: "footer" },
@@ -586,16 +586,25 @@ function renderRoot(data) {
   ));
 }
 
-function announcementsSection(items) {
+function announcementsSection(items, { search }) {
   if (!items.length) return null;
-  const sorted = items.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 30);
+  // Announcements are venue-level (no paper status), so the status tiles
+  // don't apply. They track the search box only (conference / subject).
+  const matches = items.filter(a => {
+    if (!search) return true;
+    const conf = (a.conference || "").toLowerCase();
+    const subj = (a.subject || "").toLowerCase();
+    return conf.includes(search) || subj.includes(search);
+  });
+  if (!matches.length) return null;
+  const sorted = matches.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 30);
   const closed = !!prefs["closed:announcements"];
   const wrap = el("div", { class: "announcements" + (closed ? " collapsed" : "") });
   const head = el("h3", { onclick: () => {
     savePref("closed:announcements", !prefs["closed:announcements"]);
     wrap.classList.toggle("collapsed");
   } },
-    el("span", null, `📢 Announcements & reminders (${items.length})`),
+    el("span", null, `📢 Announcements & reminders (${matches.length}${matches.length < items.length ? " of " + items.length : ""})`),
     el("span", { class: "chev" }, "▾"),
   );
   wrap.appendChild(head);
