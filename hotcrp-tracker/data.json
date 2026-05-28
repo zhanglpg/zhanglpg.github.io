@@ -22,7 +22,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-03-30T15:23:12+00:00",
-      "last_event": "2026-05-25T14:14:02+00:00",
+      "last_event": "2026-05-28T11:23:39+00:00",
       "events": [
         {
           "type": "updated",
@@ -33,17 +33,23 @@
           "type": "other",
           "date": "2026-05-25T14:14:02+00:00",
           "subject": "[ASE 2026] #10: Author Response Period has started"
+        },
+        {
+          "type": "other",
+          "date": "2026-05-28T11:23:39+00:00",
+          "subject": "[ASE 2026] Response for #10 \"LLM-Prof: A Hierarchical Cross-Stack...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 3
       },
       "message_ids": [
         "<20260330152312.ECCBF9AFEB6@mail.hotcrp.com>",
-        "<20260525141402.2C0198FF447@mail.hotcrp.com>"
+        "<20260525141402.2C0198FF447@mail.hotcrp.com>",
+        "<20260528112339.B0BD98D8180@mail.hotcrp.com>"
       ],
       "deadline": null,
       "review_scores": [],
@@ -1269,7 +1275,7 @@
   "conferences": {
     "ASE 2026": {
       "paper_count": 2,
-      "last_event": "2026-05-27T19:11:18+00:00"
+      "last_event": "2026-05-28T11:23:39+00:00"
     },
     "MICRO 2026": {
       "paper_count": 1,
@@ -1402,6 +1408,6 @@
       "date": "2026-05-27T19:38:21+00:00"
     }
   ],
-  "last_updated": "2026-05-28T04:04:32.402679+00:00",
-  "email_count": 129
+  "last_updated": "2026-05-28T12:06:19.976152+00:00",
+  "email_count": 130
 }
