@@ -1239,12 +1239,25 @@
       "conference": "ASE 2026",
       "paper_id": "3295",
       "title": "Bifrost: Empowering Pretrained Language Model with Fallibility Representation for Log-based Fault Diagnosis",
-      "authors": [],
+      "authors": [
+        "Minghua He",
+        "Tong Jia",
+        "lingzhe zhang",
+        "Chiming Duan",
+        "Xinlong Zhao",
+        "Leyi Pan",
+        "Cheng Wang",
+        "Kangjin Wang",
+        "Yinghao Yu",
+        "Liping Zhang",
+        "Yifan Wu",
+        "Ying Li"
+      ],
       "site": "https://ase26.hotcrp.com/paper/3295",
-      "status": "unknown",
-      "status_source": null,
+      "status": "submitted",
+      "status_source": "canonical",
       "first_seen": "2026-05-25T14:14:14+00:00",
-      "last_event": "2026-05-27T19:11:18+00:00",
+      "last_event": "2026-05-29T17:31:00+00:00",
       "events": [
         {
           "type": "other",
@@ -1255,17 +1268,23 @@
           "type": "other",
           "date": "2026-05-27T19:11:18+00:00",
           "subject": "[ASE 2026] Response for #3295 \"Bifrost: Empowering Pretrained Language...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-05-29T17:31:00+00:00",
+          "subject": "[ASE 2026] Submitted review #3295D \"Bifrost: Empowering Pretrained Language...\""
         }
       ],
       "counts": {
         "updates": 0,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 3
       },
       "message_ids": [
         "<20260525141414.80BF99468FD@mail.hotcrp.com>",
-        "<20260527191118.515209163F3@mail.hotcrp.com>"
+        "<20260527191118.515209163F3@mail.hotcrp.com>",
+        "<20260529173100.A07B68D80C9@mail.hotcrp.com>"
       ],
       "deadline": null,
       "review_scores": [],
@@ -1275,7 +1294,7 @@
   "conferences": {
     "ASE 2026": {
       "paper_count": 2,
-      "last_event": "2026-05-28T11:23:39+00:00"
+      "last_event": "2026-05-29T17:31:00+00:00"
     },
     "MICRO 2026": {
       "paper_count": 1,
@@ -1408,6 +1427,6 @@
       "date": "2026-05-27T19:38:21+00:00"
     }
   ],
-  "last_updated": "2026-05-28T12:06:19.976152+00:00",
-  "email_count": 130
+  "last_updated": "2026-05-30T00:08:42.283905+00:00",
+  "email_count": 131
 }
