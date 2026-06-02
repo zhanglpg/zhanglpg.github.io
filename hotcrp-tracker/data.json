@@ -720,7 +720,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-07T03:30:19+00:00",
-      "last_event": "2026-05-25T23:47:42+00:00",
+      "last_event": "2026-06-01T21:09:14+00:00",
       "events": [
         {
           "type": "submitted",
@@ -771,13 +771,18 @@
           "type": "submitted",
           "date": "2026-05-25T23:47:42+00:00",
           "subject": "[OSDI '26 Artifact Evaluation] Submitted review #54C \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-06-01T21:09:14+00:00",
+          "subject": "[OSDI '26 Artifact Evaluation] Rejected submission #54 \"Heterogeneity at Hyperscale:...\""
         }
       ],
       "counts": {
         "updates": 3,
         "comments": 2,
         "reviews": 0,
-        "total": 10
+        "total": 11
       },
       "message_ids": [
         "<20260507033019.A9CFA8D78F0@mail.hotcrp.com>",
@@ -789,7 +794,8 @@
         "<20260525083814.21B728FF452@mail.hotcrp.com>",
         "<20260525084352.9A6F28FF444@mail.hotcrp.com>",
         "<20260525215748.784F18E9702@mail.hotcrp.com>",
-        "<20260525234742.2CD058E6E89@mail.hotcrp.com>"
+        "<20260525234742.2CD058E6E89@mail.hotcrp.com>",
+        "<20260601210914.59EBF8F2684@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 8, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -1334,7 +1340,7 @@
     },
     "OSDI '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-05-25T23:47:42+00:00"
+      "last_event": "2026-06-01T21:09:14+00:00"
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
@@ -1427,6 +1433,6 @@
       "date": "2026-05-27T19:38:21+00:00"
     }
   ],
-  "last_updated": "2026-05-30T00:08:42.283905+00:00",
-  "email_count": 131
+  "last_updated": "2026-06-02T00:10:04.826094+00:00",
+  "email_count": 132
 }
