@@ -5,9 +5,9 @@
       "school": "Lynbrook High School",
       "courses": {
         "AP Chinese Lng/Cul": {
-          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p6 T2",
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
           "grade": "A",
-          "percentage": "95.76%",
+          "percentage": "96.7%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -246,7 +246,7 @@
             },
             {
               "name": "Final Extra Credit",
-              "score": "20/0",
+              "score": "3/0",
               "percentage": 0.0,
               "perfect": false
             },
@@ -519,13 +519,31 @@
               "score": "40/40",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Karaoke",
+              "score": "11/11",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Citizenship",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final class practice/participation",
+              "score": "100/100",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
         "World Lit/Writ": {
           "full_name": "World Lit/Writ - 1020: WelshM p5 T2",
           "grade": "A",
-          "percentage": "97.92%",
+          "percentage": "97.86%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -1349,13 +1367,31 @@
               "score": "30/30",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Scene Performance",
+              "score": "27/30",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Written Portion of the Scene Prep (Theme Report)",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Dramatic Introduction",
+              "score": "40/40",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
         "Chemistry H": {
-          "full_name": "Chemistry H - 3620: LeungC p6 T2",
+          "full_name": "Chemistry H - 3620: LeungC p4 T2",
           "grade": "A",
-          "percentage": "94%",
+          "percentage": "93.41%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -1768,6 +1804,36 @@
             },
             {
               "name": "Electrochemistry review packet",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Single Replacement lab",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Acids and Bases Test",
+              "score": "52/58",
+              "percentage": 89.7,
+              "perfect": false
+            },
+            {
+              "name": "Acid/Base Equilibrium",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Mixed stoichiometry stained glass",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Neutralization stained glass",
               "score": "2/2",
               "percentage": 100.0,
               "perfect": true
@@ -2271,13 +2337,31 @@
               "score": "91/100",
               "percentage": 91.0,
               "perfect": false
+            },
+            {
+              "name": "HW Extra Topics",
+              "score": "27/27",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Extra Topics",
+              "score": "89/100",
+              "percentage": 89.0,
+              "perfect": false
+            },
+            {
+              "name": "Extra Topics Quizzes",
+              "score": "23/27",
+              "percentage": 85.2,
+              "perfect": false
             }
           ]
         },
         "AP Comp Sci A": {
           "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
           "grade": "A",
-          "percentage": "96.2%",
+          "percentage": "95.22%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -2753,6 +2837,12 @@
               "score": "76/80",
               "percentage": 95.0,
               "perfect": false
+            },
+            {
+              "name": "Final Project",
+              "score": "47/55",
+              "percentage": 85.5,
+              "perfect": false
             }
           ]
         },
@@ -2844,9 +2934,9 @@
       "school": "Lynbrook High School",
       "courses": {
         "AP Chinese Lng/Cul": {
-          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p6 T2",
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
           "grade": "A-",
-          "percentage": "92.06%",
+          "percentage": "91.42%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -3091,7 +3181,7 @@
             },
             {
               "name": "Final Extra Credit",
-              "score": "21/0",
+              "score": "9/0",
               "percentage": 0.0,
               "perfect": false
             },
@@ -3358,6 +3448,24 @@
               "score": "40/40",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Karaoke",
+              "score": "11/11",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Citizenship",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final class practice/participation",
+              "score": "0/100",
+              "percentage": 0.0,
+              "perfect": false
             }
           ]
         },
@@ -3893,8 +4001,8 @@
         },
         "Chemistry H": {
           "full_name": "Chemistry H - 3620: LuJ p3 T2",
-          "grade": "D",
-          "percentage": "69.57%",
+          "grade": "B",
+          "percentage": "81.53%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -4175,8 +4283,8 @@
             },
             {
               "name": "Unit 9 Test",
-              "score": "43/68",
-              "percentage": 63.2,
+              "score": "56/68",
+              "percentage": 82.4,
               "perfect": false
             },
             {
@@ -4184,13 +4292,31 @@
               "score": "18/26",
               "percentage": 69.2,
               "perfect": false
+            },
+            {
+              "name": "Lab Report: Determination of the Concentration of a Strong Acid",
+              "score": "30/40",
+              "percentage": 75.0,
+              "perfect": false
+            },
+            {
+              "name": "Phase change and simple calorimetry practice 1",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Phase change and simple calorimetry practice 2",
+              "score": "2/2",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
         "Art 1": {
-          "full_name": "Art 1 - 6110: SchulzeJ p6 T2",
+          "full_name": "Art 1 - 6110: SchulzeJ p3 T2",
           "grade": "A-",
-          "percentage": "91.94%",
+          "percentage": "91.4%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -4642,13 +4768,37 @@
               "score": "5/5",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Step 3: Reflection - Digital Portfolio",
+              "score": "7/10",
+              "percentage": 70.0,
+              "perfect": false
+            },
+            {
+              "name": "Art Supply Return",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Collaborative 3-4 Bird Print",
+              "score": "14/15",
+              "percentage": 93.3,
+              "perfect": false
+            },
+            {
+              "name": "Colored ink bird print",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
             }
           ]
         },
         "AP Calculus BC": {
           "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
           "grade": "B+",
-          "percentage": "87%",
+          "percentage": "88%",
           "term": "25-26 T2",
           "assignments": [
             {
@@ -4797,9 +4947,9 @@
             },
             {
               "name": "HW 5",
-              "score": "40/40",
-              "percentage": 100.0,
-              "perfect": true
+              "score": "30/50",
+              "percentage": 60.0,
+              "perfect": false
             },
             {
               "name": "HW 4",
@@ -4893,8 +5043,8 @@
             },
             {
               "name": "HW 10",
-              "score": "51/50",
-              "percentage": 102.0,
+              "score": "30/40",
+              "percentage": 75.0,
               "perfect": false
             },
             {
@@ -5189,6 +5339,24 @@
               "name": "Presentation",
               "score": "87/100",
               "percentage": 87.0,
+              "perfect": false
+            },
+            {
+              "name": "HW Extra Topics",
+              "score": "27/27",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Test Extra Topics",
+              "score": "78/100",
+              "percentage": 78.0,
+              "perfect": false
+            },
+            {
+              "name": "Extra Topics Quizzes",
+              "score": "21/27",
+              "percentage": 77.8,
               "perfect": false
             }
           ]
@@ -5680,266 +5848,14 @@
         {
           "assignment": "LHS Career Exploration",
           "due_date": "Friday, 12/05/2025",
-          "days_overdue": 171
+          "days_overdue": 178
         }
       ]
     }
   },
-  "last_updated": "2026-05-26T12:13:33.678876+00:00",
-  "email_count": 49,
+  "last_updated": "2026-06-02T00:09:10.020342+00:00",
+  "email_count": 50,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Thermo MC practice",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Class work from 4/29 (sub day)",
-      "grade": "4/4",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Thermochemical stoichimetry",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Mixed Enthalpy calculations",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Lesson 10 Skit",
-      "grade": "20/20",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Lesson 10 Homework Book due",
-      "grade": "185/200",
-      "percentage": 92.5,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "CH 11 Reading Test 北京的夜市和夜生活",
-      "grade": "6/6",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Night Test",
-      "grade": "44/50",
-      "percentage": 88.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Magical realism essay",
-      "grade": "84/100",
-      "percentage": 84.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Chemistry H",
-      "subject": "Lab: Which acid is the most concentrated?",
-      "grade": "24/25",
-      "percentage": 96.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "6 Samples - Reimagine an Artwork",
-      "grade": "15/15",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Step 6B: Reflection - Object Study Triptych",
-      "grade": "8/10",
-      "percentage": 80.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Step 6A: Triptych Share Out",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-05-04T22:07:41+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Lesson 10 Speaking 科技发（發）明 (四大发（發）明)",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Lesson 10 Flash card test",
-      "grade": "40/40",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Stage Direction - Act II sc. 2",
-      "grade": "20/20",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Soliloquy #4 - \"Is this a dagger which I see...\"",
-      "grade": "30/30",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Participation - 2nd semester / Grading Period 2",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Introduction to the Sonnet + Sonnet 29",
-      "grade": "20/20",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Review packet (FRQ only)",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "PE 10-12",
-      "subject": "Overall Effort",
-      "grade": "100/100",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "PE 10-12",
-      "subject": "Attendance / Active Participation - Grading Period 6",
-      "grade": "100/100",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Comp Sci A",
-      "subject": "APCS Final Exam",
-      "grade": "76/80",
-      "percentage": 95.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Lesson 10 Speaking 科技发（發）明 (四大发（發）明)",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Lesson 10 Flash card test",
-      "grade": "40/40",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Finish Promptbook",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "1.4-1.7 Questions",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Chemistry H",
-      "subject": "Heat Capacity/Calorimetry Pixel Art",
-      "grade": "1/2",
-      "percentage": 50.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Sheldon",
@@ -6137,8 +6053,260 @@
       "grade": "87/100",
       "percentage": 87.0,
       "date": "2026-05-25T22:08:33+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Karaoke",
+      "grade": "11/11",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Final Citizenship",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Final class practice/participation",
+      "grade": "100/100",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Scene Performance",
+      "grade": "27/30",
+      "percentage": 90.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Written Portion of the Scene Prep (Theme Report)",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Dramatic Introduction",
+      "grade": "40/40",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Single Replacement lab",
+      "grade": "4/5",
+      "percentage": 80.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Acids and Bases Test",
+      "grade": "52/58",
+      "percentage": 89.7,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Acid/Base Equilibrium",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Mixed stoichiometry stained glass",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Neutralization stained glass",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Calculus BC",
+      "subject": "HW Extra Topics",
+      "grade": "27/27",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Calculus BC",
+      "subject": "Test Extra Topics",
+      "grade": "89/100",
+      "percentage": 89.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Calculus BC",
+      "subject": "Extra Topics Quizzes",
+      "grade": "23/27",
+      "percentage": 85.2,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Comp Sci A",
+      "subject": "Final Project",
+      "grade": "47/55",
+      "percentage": 85.5,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Karaoke",
+      "grade": "11/11",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Final Citizenship",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Chinese Lng/Cul",
+      "subject": "Final class practice/participation",
+      "grade": "0/100",
+      "percentage": 0.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Lab Report: Determination of the Concentration of a Strong Acid",
+      "grade": "30/40",
+      "percentage": 75.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Phase change and simple calorimetry practice 1",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Phase change and simple calorimetry practice 2",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 3: Reflection - Digital Portfolio",
+      "grade": "7/10",
+      "percentage": 70.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Art Supply Return",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Collaborative 3-4 Bird Print",
+      "grade": "14/15",
+      "percentage": 93.3,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Colored ink bird print",
+      "grade": "4/5",
+      "percentage": 80.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Calculus BC",
+      "subject": "HW Extra Topics",
+      "grade": "27/27",
+      "percentage": 100.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Calculus BC",
+      "subject": "Test Extra Topics",
+      "grade": "78/100",
+      "percentage": 78.0,
+      "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Calculus BC",
+      "subject": "Extra Topics Quizzes",
+      "grade": "21/27",
+      "percentage": 77.8,
+      "date": "2026-06-01T22:05:23+00:00"
     }
   ],
-  "week_start": "5/18/26",
-  "week_end": "5/25/26"
+  "week_start": "5/25/26",
+  "week_end": "6/01/26"
 }
