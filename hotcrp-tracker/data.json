@@ -1295,6 +1295,52 @@
       "deadline": null,
       "review_scores": [],
       "review_mean": null
+    },
+    "ATC '26::#75": {
+      "conference": "ATC '26",
+      "paper_id": "75",
+      "title": "Rethinking Urgent Memory Management in the Wild: A Priority-Aware Approach",
+      "authors": [
+        "Kaifu Tian",
+        "Kaihao Bai",
+        "Haowei Huang",
+        "Cheng Huang",
+        "Baolin Wang",
+        "Tao Ma",
+        "Liping Zhang",
+        "Yong Yang",
+        "Guodong Yang",
+        "Quan Chen",
+        "Huanle Xu",
+        "Minyi Guo",
+        "Kang Chen",
+        "Zhuo Song",
+        "Yu Chen"
+      ],
+      "site": "https://atc26.hotcrp.com/paper/75",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-06-03T07:03:06+00:00",
+      "last_event": "2026-06-03T07:03:06+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-06-03T07:03:06+00:00",
+          "subject": "[ATC '26] Updated #75 \"Rethinking Urgent Memory Management in...\""
+        }
+      ],
+      "counts": {
+        "updates": 1,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20260603070306.602148F10B2@mail.hotcrp.com>"
+      ],
+      "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -1345,6 +1391,10 @@
     "EuroSys '27 Spring": {
       "paper_count": 3,
       "last_event": "2026-05-15T11:59:29+00:00"
+    },
+    "ATC '26": {
+      "paper_count": 1,
+      "last_event": "2026-06-03T07:03:06+00:00"
     }
   },
   "announcements": [
@@ -1433,6 +1483,6 @@
       "date": "2026-05-27T19:38:21+00:00"
     }
   ],
-  "last_updated": "2026-06-02T00:10:04.826094+00:00",
-  "email_count": 132
+  "last_updated": "2026-06-03T08:09:04.553588+00:00",
+  "email_count": 133
 }
