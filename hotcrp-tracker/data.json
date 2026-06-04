@@ -58,7 +58,7 @@
     "MICRO 2026::#498": {
       "conference": "MICRO 2026",
       "paper_id": "498",
-      "title": "WaveWeaver: Wave-aware Bilinear Modeling for Efficient Runtime Parameter Configuration of GPU Kernels",
+      "title": "WaveWeaver: Wave-aware Bilinear Modeling...",
       "authors": [
         "Kaixuan Zhang",
         "Chutong Ding",
@@ -74,7 +74,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-03-31T08:39:14+00:00",
-      "last_event": "2026-04-08T02:05:01+00:00",
+      "last_event": "2026-06-04T04:00:13+00:00",
       "events": [
         {
           "type": "updated",
@@ -95,19 +95,25 @@
           "type": "updated",
           "date": "2026-04-08T02:05:01+00:00",
           "subject": "[MICRO 2026] Updated #498 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-06-04T04:00:13+00:00",
+          "subject": "[MICRO 2026] Submission #498 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
         }
       ],
       "counts": {
         "updates": 3,
         "comments": 0,
         "reviews": 0,
-        "total": 4
+        "total": 5
       },
       "message_ids": [
         "<20260331083914.2D7C3855E2C@mail.hotcrp.com>",
         "<20260407170259.7153D96BED3@mail.hotcrp.com>",
         "<20260407171121.502D69475B9@mail.hotcrp.com>",
-        "<20260408020501.7DDDE91EAC4@mail.hotcrp.com>"
+        "<20260408020501.7DDDE91EAC4@mail.hotcrp.com>",
+        "<20260604040013.05CA390A6F2@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Apr 7, 2026, 11:59 PM EDT",
       "review_scores": [],
@@ -1321,22 +1327,28 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-06-03T07:03:06+00:00",
+      "last_event": "2026-06-04T02:13:38+00:00",
       "events": [
         {
           "type": "updated",
           "date": "2026-06-03T07:03:06+00:00",
           "subject": "[ATC '26] Updated #75 \"Rethinking Urgent Memory Management in...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-04T02:13:38+00:00",
+          "subject": "[ATC '26] Updated #75 \"Rethinking Urgent Memory Management in...\""
         }
       ],
       "counts": {
-        "updates": 1,
+        "updates": 2,
         "comments": 0,
         "reviews": 0,
-        "total": 1
+        "total": 2
       },
       "message_ids": [
-        "<20260603070306.602148F10B2@mail.hotcrp.com>"
+        "<20260603070306.602148F10B2@mail.hotcrp.com>",
+        "<20260604021338.2443D8E3B64@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1350,7 +1362,7 @@
     },
     "MICRO 2026": {
       "paper_count": 1,
-      "last_event": "2026-04-08T02:05:01+00:00"
+      "last_event": "2026-06-04T04:00:13+00:00"
     },
     "SOSP 2026": {
       "paper_count": 1,
@@ -1394,7 +1406,7 @@
     },
     "ATC '26": {
       "paper_count": 1,
-      "last_event": "2026-06-03T07:03:06+00:00"
+      "last_event": "2026-06-04T02:13:38+00:00"
     }
   },
   "announcements": [
@@ -1489,6 +1501,6 @@
       "date": "2026-06-03T21:36:04+00:00"
     }
   ],
-  "last_updated": "2026-06-04T00:07:25.387529+00:00",
-  "email_count": 134
+  "last_updated": "2026-06-04T04:06:32.234480+00:00",
+  "email_count": 136
 }
