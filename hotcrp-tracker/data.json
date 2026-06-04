@@ -1481,8 +1481,14 @@
       "type": "announcement",
       "subject": "[OSDI '26] Take Action Now: Registration Reminder",
       "date": "2026-05-27T19:38:21+00:00"
+    },
+    {
+      "conference": "OSDI '26",
+      "type": "announcement",
+      "subject": "[OSDI '26] Take Action Now: Registration Reminder",
+      "date": "2026-06-03T21:36:04+00:00"
     }
   ],
-  "last_updated": "2026-06-03T08:09:04.553588+00:00",
-  "email_count": 133
+  "last_updated": "2026-06-04T00:07:25.387529+00:00",
+  "email_count": 134
 }
