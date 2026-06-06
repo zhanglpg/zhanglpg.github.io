@@ -8,7 +8,7 @@
           "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
           "grade": "A",
           "percentage": "96.7%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "Lesson 10 AP Typing Test",
@@ -544,7 +544,7 @@
           "full_name": "World Lit/Writ - 1020: WelshM p5 T2",
           "grade": "A",
           "percentage": "97.86%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "Narrative Writing Essay - Alternate Point of View in The Stranger",
@@ -1392,7 +1392,7 @@
           "full_name": "Chemistry H - 3620: LeungC p4 T2",
           "grade": "A",
           "percentage": "93.41%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "Balancing eq practice",
@@ -1844,7 +1844,7 @@
           "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
           "grade": "A-",
           "percentage": "91%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "HW 12",
@@ -2362,7 +2362,7 @@
           "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
           "grade": "A",
           "percentage": "95.22%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "First Day Survey",
@@ -2850,7 +2850,7 @@
           "full_name": "PE 10-12 - 2530: Griffin Period 2 T2",
           "grade": "A",
           "percentage": "94.67%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "Blue Sheet",
@@ -2937,7 +2937,7 @@
           "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
           "grade": "A-",
           "percentage": "91.42%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "Lesson 10 AP Typing Test",
@@ -3473,7 +3473,7 @@
           "full_name": "World Lit/Writ - 1020: WillsonC p5 T2",
           "grade": "B",
           "percentage": "85%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "True / False Test",
@@ -4003,7 +4003,7 @@
           "full_name": "Chemistry H - 3620: LuJ p3 T2",
           "grade": "B",
           "percentage": "81.53%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "HW: Name pronunciation",
@@ -4317,7 +4317,7 @@
           "full_name": "Art 1 - 6110: SchulzeJ p3 T2",
           "grade": "A-",
           "percentage": "91.4%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "Reflection: Reimagine an Artwork",
@@ -4799,7 +4799,7 @@
           "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
           "grade": "B+",
           "percentage": "88%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "HW 13",
@@ -5365,7 +5365,7 @@
           "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
           "grade": "A-",
           "percentage": "90.05%",
-          "term": "25-26 T2",
+          "term": "25-26 T2�",
           "assignments": [
             {
               "name": "First Day Survey",
@@ -5853,8 +5853,8 @@
       ]
     }
   },
-  "last_updated": "2026-06-02T00:09:10.020342+00:00",
-  "email_count": 50,
+  "last_updated": "2026-06-06T08:11:47.128364+00:00",
+  "email_count": 51,
   "events": [
     {
       "type": "grade_posted",
