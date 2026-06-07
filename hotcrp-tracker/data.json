@@ -196,7 +196,7 @@
     "OSDI '26::#587": {
       "conference": "OSDI '26",
       "paper_id": "587",
-      "title": "Heterogeneity at Hyperscale: Characterization and Scheduling of Large Production AI Clusters (Operational Systems)",
+      "title": "Heterogeneity at Hyperscale: Characterization and Scheduling of Large Production AI Clusters at Alibaba (Operational Systems)",
       "authors": [
         "Suyi Li",
         "Lingyun Yang",
@@ -220,10 +220,10 @@
         "Wei Wang"
       ],
       "site": "https://osdi26.usenix.hotcrp.com/paper/587",
-      "status": "likely_accepted",
-      "status_source": "inferred",
+      "status": "accepted",
+      "status_source": "canonical",
       "first_seen": "2026-04-02T19:56:15+00:00",
-      "last_event": "2026-05-23T16:39:12+00:00",
+      "last_event": "2026-06-07T09:53:35+00:00",
       "events": [
         {
           "type": "reviews_received",
@@ -284,13 +284,28 @@
           "type": "comment",
           "date": "2026-05-23T16:39:12+00:00",
           "subject": "[OSDI '26] Comment for #587 \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-06-07T09:50:24+00:00",
+          "subject": "[OSDI '26] Updated accepted #587 \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-06-07T09:53:25+00:00",
+          "subject": "[OSDI '26] Updated accepted #587 \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-06-07T09:53:35+00:00",
+          "subject": "[OSDI '26] Updated accepted #587 \"Heterogeneity at Hyperscale:...\""
         }
       ],
       "counts": {
         "updates": 0,
         "comments": 9,
         "reviews": 1,
-        "total": 12
+        "total": 15
       },
       "message_ids": [
         "<20260402195615.25E319D5B8A@mail.hotcrp.com>",
@@ -304,9 +319,12 @@
         "<20260518174648.71CE08F07EC@mail.hotcrp.com>",
         "<20260520133652.96E468FBB03@mail.hotcrp.com>",
         "<20260521181827.04FF98F2684@mail.hotcrp.com>",
-        "<20260523163912.373468F0EF6@mail.hotcrp.com>"
+        "<20260523163912.373468F0EF6@mail.hotcrp.com>",
+        "<20260607095024.77D8C8D80C0@mail.hotcrp.com>",
+        "<20260607095325.3C45A8D80C0@mail.hotcrp.com>",
+        "<20260607095335.048798D80C0@mail.hotcrp.com>"
       ],
-      "deadline": null,
+      "deadline": "Tuesday Jun 9, 2026, 11:59 PM PDT",
       "review_scores": [
         4,
         3,
@@ -1370,7 +1388,7 @@
     },
     "OSDI '26": {
       "paper_count": 2,
-      "last_event": "2026-05-23T16:39:12+00:00"
+      "last_event": "2026-06-07T09:53:35+00:00"
     },
     "ICS 2026": {
       "paper_count": 1,
@@ -1501,6 +1519,6 @@
       "date": "2026-06-03T21:36:04+00:00"
     }
   ],
-  "last_updated": "2026-06-04T04:06:32.234480+00:00",
-  "email_count": 136
+  "last_updated": "2026-06-07T12:09:53.779513+00:00",
+  "email_count": 139
 }
