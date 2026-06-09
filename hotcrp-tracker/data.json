@@ -223,7 +223,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T19:56:15+00:00",
-      "last_event": "2026-06-08T04:12:18+00:00",
+      "last_event": "2026-06-08T20:07:16+00:00",
       "events": [
         {
           "type": "reviews_received",
@@ -309,13 +309,18 @@
           "type": "accepted",
           "date": "2026-06-08T04:12:18+00:00",
           "subject": "[OSDI '26] Updated accepted #587 \"Heterogeneity at Hyperscale:...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-06-08T20:07:16+00:00",
+          "subject": "[OSDI '26] Updated accepted #587 \"Heterogeneity at Hyperscale:...\""
         }
       ],
       "counts": {
         "updates": 0,
         "comments": 9,
         "reviews": 1,
-        "total": 17
+        "total": 18
       },
       "message_ids": [
         "<20260402195615.25E319D5B8A@mail.hotcrp.com>",
@@ -334,7 +339,8 @@
         "<20260607095325.3C45A8D80C0@mail.hotcrp.com>",
         "<20260607095335.048798D80C0@mail.hotcrp.com>",
         "<20260608032350.31210AE8EF4@mail.hotcrp.com>",
-        "<20260608041218.C70DB8F128D@mail.hotcrp.com>"
+        "<20260608041218.C70DB8F128D@mail.hotcrp.com>",
+        "<20260608200716.368EB8E3B54@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jun 9, 2026, 11:59 PM PDT",
       "review_scores": [
@@ -1400,7 +1406,7 @@
     },
     "OSDI '26": {
       "paper_count": 2,
-      "last_event": "2026-06-08T04:12:18+00:00"
+      "last_event": "2026-06-08T20:07:16+00:00"
     },
     "ICS 2026": {
       "paper_count": 1,
@@ -1531,6 +1537,6 @@
       "date": "2026-06-03T21:36:04+00:00"
     }
   ],
-  "last_updated": "2026-06-08T12:06:52.483189+00:00",
-  "email_count": 141
+  "last_updated": "2026-06-09T00:08:48.784125+00:00",
+  "email_count": 142
 }
