@@ -5,10 +5,10 @@
       "school": "Lynbrook High School",
       "courses": {
         "AP Chinese Lng/Cul": {
-          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p5 T2",
           "grade": "A",
           "percentage": "96.7%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "Lesson 10 AP Typing Test",
@@ -544,7 +544,7 @@
           "full_name": "World Lit/Writ - 1020: WelshM p5 T2",
           "grade": "A",
           "percentage": "97.86%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "Narrative Writing Essay - Alternate Point of View in The Stranger",
@@ -1385,14 +1385,20 @@
               "score": "40/40",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Participation End of Semester 2",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
         "Chemistry H": {
           "full_name": "Chemistry H - 3620: LeungC p4 T2",
           "grade": "A",
-          "percentage": "93.41%",
-          "term": "25-26 T2�",
+          "percentage": "92.24%",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "Balancing eq practice",
@@ -1837,14 +1843,26 @@
               "score": "2/2",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Review packet",
+              "score": "4/5",
+              "percentage": 80.0,
+              "perfect": false
+            },
+            {
+              "name": "Final exam",
+              "score": "93/100",
+              "percentage": 93.0,
+              "perfect": false
             }
           ]
         },
         "AP Calculus BC": {
-          "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
+          "full_name": "AP Calculus BC - 2440: DybdahlJ p3 T2",
           "grade": "A-",
           "percentage": "91%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "HW 12",
@@ -2362,7 +2380,7 @@
           "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
           "grade": "A",
           "percentage": "95.22%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "First Day Survey",
@@ -2850,7 +2868,7 @@
           "full_name": "PE 10-12 - 2530: Griffin Period 2 T2",
           "grade": "A",
           "percentage": "94.67%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "Blue Sheet",
@@ -2934,10 +2952,10 @@
       "school": "Lynbrook High School",
       "courses": {
         "AP Chinese Lng/Cul": {
-          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p7 T2",
+          "full_name": "AP Chinese Lng/Cul - 4450: ChenJ p5 T2",
           "grade": "A-",
           "percentage": "91.42%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "Lesson 10 AP Typing Test",
@@ -3473,7 +3491,7 @@
           "full_name": "World Lit/Writ - 1020: WillsonC p5 T2",
           "grade": "B",
           "percentage": "85%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "True / False Test",
@@ -3996,14 +4014,44 @@
               "score": "9/10",
               "percentage": 90.0,
               "perfect": false
+            },
+            {
+              "name": "Final Performance",
+              "score": "17/20",
+              "percentage": 85.0,
+              "perfect": false
+            },
+            {
+              "name": "Complete 3.1 soliloquy analysis",
+              "score": "0/2",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Wordless Banquet Scene",
+              "score": "0/2",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "Banquet Scene and Witches Wkst",
+              "score": "0/2",
+              "percentage": 0.0,
+              "perfect": false
+            },
+            {
+              "name": "4.2-3 Questions",
+              "score": "0/2",
+              "percentage": 0.0,
+              "perfect": false
             }
           ]
         },
         "Chemistry H": {
           "full_name": "Chemistry H - 3620: LuJ p3 T2",
           "grade": "B",
-          "percentage": "81.53%",
-          "term": "25-26 T2�",
+          "percentage": "82.11%",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "HW: Name pronunciation",
@@ -4310,14 +4358,32 @@
               "score": "2/2",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Final Review Packet",
+              "score": "3/5",
+              "percentage": 60.0,
+              "perfect": false
+            },
+            {
+              "name": "Test retake sign up",
+              "score": "1/1",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Final Exam",
+              "score": "88/100",
+              "percentage": 88.0,
+              "perfect": false
             }
           ]
         },
         "Art 1": {
-          "full_name": "Art 1 - 6110: SchulzeJ p3 T2",
-          "grade": "A-",
-          "percentage": "91.4%",
-          "term": "25-26 T2�",
+          "full_name": "Art 1 - 6110: SchulzeJ p7 T2",
+          "grade": "B+",
+          "percentage": "88.74%",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "Reflection: Reimagine an Artwork",
@@ -4792,14 +4858,32 @@
               "score": "4/5",
               "percentage": 80.0,
               "perfect": false
+            },
+            {
+              "name": "Step 2: Digital Portfolio: Turn-in Slides",
+              "score": "33/50",
+              "percentage": 66.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 5: Portfolio Presentation",
+              "score": "9/10",
+              "percentage": 90.0,
+              "perfect": false
+            },
+            {
+              "name": "Step 4: Artwork Share Out Completion Form",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
         "AP Calculus BC": {
-          "full_name": "AP Calculus BC - 2440: DybdahlJ p4 T2",
+          "full_name": "AP Calculus BC - 2440: DybdahlJ p3 T2",
           "grade": "B+",
           "percentage": "88%",
-          "term": "25-26 T2�",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "HW 13",
@@ -5364,8 +5448,8 @@
         "AP Comp Sci A": {
           "full_name": "AP Comp Sci A - 2350: FulkB p1 T2",
           "grade": "A-",
-          "percentage": "90.05%",
-          "term": "25-26 T2�",
+          "percentage": "90.01%",
+          "term": "25-26 T2",
           "assignments": [
             {
               "name": "First Day Survey",
@@ -5837,8 +5921,14 @@
             },
             {
               "name": "APCS Final Exam",
-              "score": "70/80",
-              "percentage": 87.5,
+              "score": "71/80",
+              "percentage": 88.8,
+              "perfect": false
+            },
+            {
+              "name": "Final Project",
+              "score": "48/55",
+              "percentage": 87.3,
               "perfect": false
             }
           ]
@@ -5848,149 +5938,14 @@
         {
           "assignment": "LHS Career Exploration",
           "due_date": "Friday, 12/05/2025",
-          "days_overdue": 178
+          "days_overdue": 185
         }
       ]
     }
   },
-  "last_updated": "2026-06-06T08:11:47.128364+00:00",
-  "email_count": 51,
+  "last_updated": "2026-06-09T00:07:48.245193+00:00",
+  "email_count": 52,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Chemistry H",
-      "subject": "Unit 9 Test",
-      "grade": "43/68",
-      "percentage": 63.2,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Reimagine - FINAL images to print",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Step 5: Submitting your Object Study Triptych",
-      "grade": "44/50",
-      "percentage": 88.0,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Comp Sci A",
-      "subject": "APCS Final Exam",
-      "grade": "73/80",
-      "percentage": 91.2,
-      "date": "2026-05-11T22:05:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Act 5.1 - Lady Macbeth Changes",
-      "grade": "20/20",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Macbeth MC Test",
-      "grade": "54/55",
-      "percentage": 98.2,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Soliloquy #5 - \"To be thus is nothing...\"",
-      "grade": "30/30",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Thermo unit test",
-      "grade": "14/18",
-      "percentage": 77.8,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Electrochemistry question trail",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Redox question trail",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Titration and Gravimetric Analysis lab report",
-      "grade": "35/40",
-      "percentage": 87.5,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Electrochemistry review packet",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Calculus BC",
-      "subject": "Presentation",
-      "grade": "91/100",
-      "percentage": 91.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Act 4-5 Quiz",
-      "grade": "7/10",
-      "percentage": 70.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Act 2 Quiz",
-      "grade": "8/10",
-      "percentage": 80.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Sheldon",
@@ -6305,8 +6260,143 @@
       "grade": "21/27",
       "percentage": 77.8,
       "date": "2026-06-01T22:05:23+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "World Lit/Writ",
+      "subject": "Participation End of Semester 2",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Review packet",
+      "grade": "4/5",
+      "percentage": 80.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Chemistry H",
+      "subject": "Final exam",
+      "grade": "93/100",
+      "percentage": 93.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Final Performance",
+      "grade": "17/20",
+      "percentage": 85.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Complete 3.1 soliloquy analysis",
+      "grade": "0/2",
+      "percentage": 0.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Wordless Banquet Scene",
+      "grade": "0/2",
+      "percentage": 0.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "Banquet Scene and Witches Wkst",
+      "grade": "0/2",
+      "percentage": 0.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "World Lit/Writ",
+      "subject": "4.2-3 Questions",
+      "grade": "0/2",
+      "percentage": 0.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Final Review Packet",
+      "grade": "3/5",
+      "percentage": 60.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Test retake sign up",
+      "grade": "1/1",
+      "percentage": 100.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Chemistry H",
+      "subject": "Final Exam",
+      "grade": "88/100",
+      "percentage": 88.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 2: Digital Portfolio: Turn-in Slides",
+      "grade": "33/50",
+      "percentage": 66.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 5: Portfolio Presentation",
+      "grade": "9/10",
+      "percentage": 90.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "Art 1",
+      "subject": "Step 4: Artwork Share Out Completion Form",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Comp Sci A",
+      "subject": "Final Project",
+      "grade": "48/55",
+      "percentage": 87.3,
+      "date": "2026-06-08T22:03:52+00:00"
     }
   ],
-  "week_start": "5/25/26",
-  "week_end": "6/01/26"
+  "week_start": "6/01/26",
+  "week_end": "6/08/26"
 }
