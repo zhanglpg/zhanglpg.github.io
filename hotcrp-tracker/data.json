@@ -1389,6 +1389,49 @@
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "ATC '26::#473": {
+      "conference": "ATC '26",
+      "paper_id": "473",
+      "title": "Model-as-a-Service in the Wild: Characterizing Production LLM Inference Clusters at 100K-GPU Scale",
+      "authors": [
+        "Yiyun Zheng",
+        "Lingyun Yang",
+        "Yinghao Yu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Minchen Yu"
+      ],
+      "site": "https://atc26.hotcrp.com/paper/473",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-06-09T12:16:55+00:00",
+      "last_event": "2026-06-09T13:49:21+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-06-09T12:16:55+00:00",
+          "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-09T13:49:21+00:00",
+          "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
+        }
+      ],
+      "counts": {
+        "updates": 2,
+        "comments": 0,
+        "reviews": 0,
+        "total": 2
+      },
+      "message_ids": [
+        "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
+        "<20260609134921.B260A93B5A5@mail.hotcrp.com>"
+      ],
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -1441,8 +1484,8 @@
       "last_event": "2026-05-15T11:59:29+00:00"
     },
     "ATC '26": {
-      "paper_count": 1,
-      "last_event": "2026-06-04T02:13:38+00:00"
+      "paper_count": 2,
+      "last_event": "2026-06-09T13:49:21+00:00"
     }
   },
   "announcements": [
@@ -1535,8 +1578,14 @@
       "type": "announcement",
       "subject": "[OSDI '26] Take Action Now: Registration Reminder",
       "date": "2026-06-03T21:36:04+00:00"
+    },
+    {
+      "conference": "OSDI '26",
+      "type": "announcement",
+      "subject": "[OSDI '26] FINAL VERSION INSTRUCTIONS! REGISTER!",
+      "date": "2026-06-09T18:24:51+00:00"
     }
   ],
-  "last_updated": "2026-06-09T00:08:48.784125+00:00",
-  "email_count": 142
+  "last_updated": "2026-06-10T00:08:39.462890+00:00",
+  "email_count": 145
 }
