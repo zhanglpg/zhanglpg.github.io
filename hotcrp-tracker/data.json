@@ -1375,7 +1375,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-06-04T02:13:38+00:00",
+      "last_event": "2026-06-10T08:27:34+00:00",
       "events": [
         {
           "type": "updated",
@@ -1386,17 +1386,29 @@
           "type": "updated",
           "date": "2026-06-04T02:13:38+00:00",
           "subject": "[ATC '26] Updated #75 \"Rethinking Urgent Memory Management in...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-10T08:13:12+00:00",
+          "subject": "[ATC '26] Updated #75 \"Rethinking Urgent Memory Management in...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-06-10T08:27:34+00:00",
+          "subject": "[ATC '26] Submitted #75 \"Rethinking Urgent Memory Management in...\""
         }
       ],
       "counts": {
-        "updates": 2,
+        "updates": 3,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 4
       },
       "message_ids": [
         "<20260603070306.602148F10B2@mail.hotcrp.com>",
-        "<20260604021338.2443D8E3B64@mail.hotcrp.com>"
+        "<20260604021338.2443D8E3B64@mail.hotcrp.com>",
+        "<20260610081312.9E1EE8E3AB5@mail.hotcrp.com>",
+        "<20260610082734.79626916093@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1442,6 +1454,95 @@
         "<20260609134921.B260A93B5A5@mail.hotcrp.com>"
       ],
       "deadline": null,
+      "review_scores": [],
+      "review_mean": null
+    },
+    "ATC '26::#843": {
+      "conference": "ATC '26",
+      "paper_id": "843",
+      "title": "Chorus: GPU–CPU Cooperative LLM Serving for Length-Skewed Decode",
+      "authors": [
+        "Dong Chen",
+        "Yukun Zhou",
+        "Sheng Yao",
+        "Ruichuan Chen",
+        "Binhang Yuan",
+        "Shuai Wang",
+        "Wei Wang",
+        "Luping Wang",
+        "Cheng Huang",
+        "Guodong Yang",
+        "Liping Zhang"
+      ],
+      "site": "https://atc26.hotcrp.com/paper/843",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-06-10T09:30:24+00:00",
+      "last_event": "2026-06-10T09:30:57+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-06-10T09:30:24+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-10T09:30:57+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        }
+      ],
+      "counts": {
+        "updates": 2,
+        "comments": 0,
+        "reviews": 0,
+        "total": 2
+      },
+      "message_ids": [
+        "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
+        "<20260610093057.63C878E3A9F@mail.hotcrp.com>"
+      ],
+      "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
+    },
+    "ATC '26::#471": {
+      "conference": "ATC '26",
+      "paper_id": "471",
+      "title": "TraJudger: Structure-Guided Causal Failure Attribution for LLM-Powered Multi-Agent Systems",
+      "authors": [
+        "Yongxin Zhao",
+        "Shenglin Zhang",
+        "Wenwei Gu",
+        "Zijing Que",
+        "Weiwen Qian",
+        "Yongqian Sun",
+        "Li Shi",
+        "Wei Li",
+        "Liping Zhang",
+        "Dan Pei"
+      ],
+      "site": "https://atc26.hotcrp.com/paper/471",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-06-10T10:07:22+00:00",
+      "last_event": "2026-06-10T10:07:22+00:00",
+      "events": [
+        {
+          "type": "submitted",
+          "date": "2026-06-10T10:07:22+00:00",
+          "subject": "[ATC '26] Submitted #471 \"TraJudger: Structure-Guided Causal...\""
+        }
+      ],
+      "counts": {
+        "updates": 0,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20260610100722.87F3E92D996@mail.hotcrp.com>"
+      ],
+      "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
     }
@@ -1496,8 +1597,8 @@
       "last_event": "2026-05-15T11:59:29+00:00"
     },
     "ATC '26": {
-      "paper_count": 2,
-      "last_event": "2026-06-09T13:49:21+00:00"
+      "paper_count": 4,
+      "last_event": "2026-06-10T10:07:22+00:00"
     }
   },
   "announcements": [
@@ -1598,6 +1699,6 @@
       "date": "2026-06-09T18:24:51+00:00"
     }
   ],
-  "last_updated": "2026-06-10T04:04:19.543520+00:00",
-  "email_count": 147
+  "last_updated": "2026-06-10T12:06:26.500630+00:00",
+  "email_count": 152
 }
