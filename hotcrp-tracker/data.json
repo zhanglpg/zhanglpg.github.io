@@ -1447,7 +1447,7 @@
     "ATC '26::#473": {
       "conference": "ATC '26",
       "paper_id": "473",
-      "title": "Model-as-a-Service in the Wild: Characterizing Production LLM Inference Clusters at 100K-GPU Scale",
+      "title": "Model-as-a-Service in the Wild: Characterizing Production LLM Inference Clusters at Scale",
       "authors": [
         "Yiyun Zheng",
         "Lingyun Yang",
@@ -1460,7 +1460,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-06-09T13:49:21+00:00",
+      "last_event": "2026-06-11T07:56:32+00:00",
       "events": [
         {
           "type": "updated",
@@ -1471,19 +1471,31 @@
           "type": "updated",
           "date": "2026-06-09T13:49:21+00:00",
           "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T04:47:24+00:00",
+          "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-06-11T07:56:32+00:00",
+          "subject": "[ATC '26] Submitted #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
-        "updates": 2,
+        "updates": 3,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 4
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
-        "<20260609134921.B260A93B5A5@mail.hotcrp.com>"
+        "<20260609134921.B260A93B5A5@mail.hotcrp.com>",
+        "<20260611044724.5AFCB90B8F8@mail.hotcrp.com>",
+        "<20260611075632.A9DA690B8E8@mail.hotcrp.com>"
       ],
-      "deadline": null,
+      "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
     },
@@ -1508,7 +1520,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-06-11T02:09:42+00:00",
+      "last_event": "2026-06-11T07:18:26+00:00",
       "events": [
         {
           "type": "updated",
@@ -1539,13 +1551,38 @@
           "type": "updated",
           "date": "2026-06-11T02:09:42+00:00",
           "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T04:23:18+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T04:24:14+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T07:16:14+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T07:16:49+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-06-11T07:18:26+00:00",
+          "subject": "[ATC '26] Submitted #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
-        "updates": 6,
+        "updates": 10,
         "comments": 0,
         "reviews": 0,
-        "total": 6
+        "total": 11
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
@@ -1553,7 +1590,12 @@
         "<20260611020258.5F29090B8D7@mail.hotcrp.com>",
         "<20260611020531.913E090B8DB@mail.hotcrp.com>",
         "<20260611020738.6A90890B8DB@mail.hotcrp.com>",
-        "<20260611020942.96A0490B8DA@mail.hotcrp.com>"
+        "<20260611020942.96A0490B8DA@mail.hotcrp.com>",
+        "<20260611042318.0DF7690B8D7@mail.hotcrp.com>",
+        "<20260611042414.4D4A690B8E3@mail.hotcrp.com>",
+        "<20260611071614.0FD8390B8E9@mail.hotcrp.com>",
+        "<20260611071649.CA33890B8E8@mail.hotcrp.com>",
+        "<20260611071826.038B490B8C4@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1632,7 +1674,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T13:13:51+00:00",
-      "last_event": "2026-06-11T02:20:02+00:00",
+      "last_event": "2026-06-11T05:18:37+00:00",
       "events": [
         {
           "type": "updated",
@@ -1658,20 +1700,26 @@
           "type": "updated",
           "date": "2026-06-11T02:20:02+00:00",
           "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T05:18:37+00:00",
+          "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
         }
       ],
       "counts": {
-        "updates": 5,
+        "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 5
+        "total": 6
       },
       "message_ids": [
         "<20260610131351.6939590A6D8@mail.hotcrp.com>",
         "<20260610131557.6D3228D80E1@mail.hotcrp.com>",
         "<20260611021608.0E15890B8DE@mail.hotcrp.com>",
         "<20260611021635.9CF0890B8DE@mail.hotcrp.com>",
-        "<20260611022002.C543490B8DA@mail.hotcrp.com>"
+        "<20260611022002.C543490B8DA@mail.hotcrp.com>",
+        "<20260611051837.E00A792D9A7@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1729,7 +1777,7 @@
     },
     "ATC '26": {
       "paper_count": 5,
-      "last_event": "2026-06-11T03:39:28+00:00"
+      "last_event": "2026-06-11T07:56:32+00:00"
     }
   },
   "announcements": [
@@ -1830,6 +1878,6 @@
       "date": "2026-06-09T18:24:51+00:00"
     }
   ],
-  "last_updated": "2026-06-11T04:05:22.679920+00:00",
-  "email_count": 168
+  "last_updated": "2026-06-11T08:06:51.596573+00:00",
+  "email_count": 176
 }
