@@ -1375,7 +1375,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-06-10T16:46:56+00:00",
+      "last_event": "2026-06-11T03:39:28+00:00",
       "events": [
         {
           "type": "updated",
@@ -1401,20 +1401,44 @@
           "type": "updated",
           "date": "2026-06-10T16:46:56+00:00",
           "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:45:14+00:00",
+          "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:55:09+00:00",
+          "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T03:23:22+00:00",
+          "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T03:39:28+00:00",
+          "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
         }
       ],
       "counts": {
-        "updates": 4,
+        "updates": 8,
         "comments": 0,
         "reviews": 0,
-        "total": 5
+        "total": 9
       },
       "message_ids": [
         "<20260603070306.602148F10B2@mail.hotcrp.com>",
         "<20260604021338.2443D8E3B64@mail.hotcrp.com>",
         "<20260610081312.9E1EE8E3AB5@mail.hotcrp.com>",
         "<20260610082734.79626916093@mail.hotcrp.com>",
-        "<20260610164656.65EC092D9A1@mail.hotcrp.com>"
+        "<20260610164656.65EC092D9A1@mail.hotcrp.com>",
+        "<20260611024514.528748D80E1@mail.hotcrp.com>",
+        "<20260611025509.BEB1E90B8E3@mail.hotcrp.com>",
+        "<20260611032322.6A39690B8D6@mail.hotcrp.com>",
+        "<20260611033928.2371290B8D6@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1474,17 +1498,17 @@
         "Ruichuan Chen",
         "Binhang Yuan",
         "Shuai Wang",
-        "Wei Wang",
         "Luping Wang",
         "Cheng Huang",
         "Guodong Yang",
-        "Liping Zhang"
+        "Liping Zhang",
+        "Wei Wang"
       ],
       "site": "https://atc26.hotcrp.com/paper/843",
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-06-10T09:30:57+00:00",
+      "last_event": "2026-06-11T02:09:42+00:00",
       "events": [
         {
           "type": "updated",
@@ -1495,17 +1519,41 @@
           "type": "updated",
           "date": "2026-06-10T09:30:57+00:00",
           "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:02:58+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:05:31+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:07:38+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:09:42+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
-        "updates": 2,
+        "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 6
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
-        "<20260610093057.63C878E3A9F@mail.hotcrp.com>"
+        "<20260610093057.63C878E3A9F@mail.hotcrp.com>",
+        "<20260611020258.5F29090B8D7@mail.hotcrp.com>",
+        "<20260611020531.913E090B8DB@mail.hotcrp.com>",
+        "<20260611020738.6A90890B8DB@mail.hotcrp.com>",
+        "<20260611020942.96A0490B8DA@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1531,22 +1579,34 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T10:07:22+00:00",
-      "last_event": "2026-06-10T10:07:22+00:00",
+      "last_event": "2026-06-11T03:20:30+00:00",
       "events": [
         {
           "type": "submitted",
           "date": "2026-06-10T10:07:22+00:00",
           "subject": "[ATC '26] Submitted #471 \"TraJudger: Structure-Guided Causal...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T03:19:59+00:00",
+          "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Causal...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T03:20:30+00:00",
+          "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Causal...\""
         }
       ],
       "counts": {
-        "updates": 0,
+        "updates": 2,
         "comments": 0,
         "reviews": 0,
-        "total": 1
+        "total": 3
       },
       "message_ids": [
-        "<20260610100722.87F3E92D996@mail.hotcrp.com>"
+        "<20260610100722.87F3E92D996@mail.hotcrp.com>",
+        "<20260611031959.D405690B8D7@mail.hotcrp.com>",
+        "<20260611032030.C85CA90B8E5@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1562,16 +1622,17 @@
         "Zizhao Mo",
         "Junlin Chen",
         "Liao Chen",
+        "Huanle Xu",
         "Guoyao Xu",
         "Guodong Yang",
         "Liping Zhang",
-        "Huanle Xu"
+        "ChengZhong Xu"
       ],
       "site": "https://atc26.hotcrp.com/paper/1518",
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T13:13:51+00:00",
-      "last_event": "2026-06-10T13:15:57+00:00",
+      "last_event": "2026-06-11T02:20:02+00:00",
       "events": [
         {
           "type": "updated",
@@ -1582,17 +1643,35 @@
           "type": "updated",
           "date": "2026-06-10T13:15:57+00:00",
           "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:16:08+00:00",
+          "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:16:35+00:00",
+          "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T02:20:02+00:00",
+          "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
         }
       ],
       "counts": {
-        "updates": 2,
+        "updates": 5,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 5
       },
       "message_ids": [
         "<20260610131351.6939590A6D8@mail.hotcrp.com>",
-        "<20260610131557.6D3228D80E1@mail.hotcrp.com>"
+        "<20260610131557.6D3228D80E1@mail.hotcrp.com>",
+        "<20260611021608.0E15890B8DE@mail.hotcrp.com>",
+        "<20260611021635.9CF0890B8DE@mail.hotcrp.com>",
+        "<20260611022002.C543490B8DA@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1650,7 +1729,7 @@
     },
     "ATC '26": {
       "paper_count": 5,
-      "last_event": "2026-06-10T16:46:56+00:00"
+      "last_event": "2026-06-11T03:39:28+00:00"
     }
   },
   "announcements": [
@@ -1751,6 +1830,6 @@
       "date": "2026-06-09T18:24:51+00:00"
     }
   ],
-  "last_updated": "2026-06-11T00:04:10.209964+00:00",
-  "email_count": 155
+  "last_updated": "2026-06-11T04:05:22.679920+00:00",
+  "email_count": 168
 }
