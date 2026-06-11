@@ -1460,7 +1460,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-06-11T07:56:32+00:00",
+      "last_event": "2026-06-11T11:51:26+00:00",
       "events": [
         {
           "type": "updated",
@@ -1481,19 +1481,31 @@
           "type": "submitted",
           "date": "2026-06-11T07:56:32+00:00",
           "subject": "[ATC '26] Submitted #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T10:44:39+00:00",
+          "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T11:51:26+00:00",
+          "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
-        "updates": 3,
+        "updates": 5,
         "comments": 0,
         "reviews": 0,
-        "total": 4
+        "total": 6
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
         "<20260609134921.B260A93B5A5@mail.hotcrp.com>",
         "<20260611044724.5AFCB90B8F8@mail.hotcrp.com>",
-        "<20260611075632.A9DA690B8E8@mail.hotcrp.com>"
+        "<20260611075632.A9DA690B8E8@mail.hotcrp.com>",
+        "<20260611104439.9DE3590B8F6@mail.hotcrp.com>",
+        "<20260611115126.270A392D9BA@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1520,7 +1532,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-06-11T07:18:26+00:00",
+      "last_event": "2026-06-11T11:25:59+00:00",
       "events": [
         {
           "type": "updated",
@@ -1576,13 +1588,33 @@
           "type": "submitted",
           "date": "2026-06-11T07:18:26+00:00",
           "subject": "[ATC '26] Submitted #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T09:49:46+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T10:14:05+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T11:21:18+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T11:25:59+00:00",
+          "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
-        "updates": 10,
+        "updates": 14,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 15
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
@@ -1595,7 +1627,11 @@
         "<20260611042414.4D4A690B8E3@mail.hotcrp.com>",
         "<20260611071614.0FD8390B8E9@mail.hotcrp.com>",
         "<20260611071649.CA33890B8E8@mail.hotcrp.com>",
-        "<20260611071826.038B490B8C4@mail.hotcrp.com>"
+        "<20260611071826.038B490B8C4@mail.hotcrp.com>",
+        "<20260611094946.2337690B8FE@mail.hotcrp.com>",
+        "<20260611101405.C096290B8F6@mail.hotcrp.com>",
+        "<20260611112118.7B1BB90B8FE@mail.hotcrp.com>",
+        "<20260611112559.09C0E90B8FE@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1604,7 +1640,7 @@
     "ATC '26::#471": {
       "conference": "ATC '26",
       "paper_id": "471",
-      "title": "TraJudger: Structure-Guided Causal Failure Attribution for LLM-Powered Multi-Agent Systems",
+      "title": "TraJudger: Structure-Guided Failure Attribution for LLM-Powered Multi-Agent Systems",
       "authors": [
         "Yongxin Zhao",
         "Shenglin Zhang",
@@ -1621,7 +1657,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T10:07:22+00:00",
-      "last_event": "2026-06-11T03:20:30+00:00",
+      "last_event": "2026-06-11T09:57:10+00:00",
       "events": [
         {
           "type": "submitted",
@@ -1637,18 +1673,42 @@
           "type": "updated",
           "date": "2026-06-11T03:20:30+00:00",
           "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Causal...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T09:05:06+00:00",
+          "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Causal...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T09:10:22+00:00",
+          "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Failure...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T09:23:10+00:00",
+          "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Failure...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-11T09:57:10+00:00",
+          "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Failure...\""
         }
       ],
       "counts": {
-        "updates": 2,
+        "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 3
+        "total": 7
       },
       "message_ids": [
         "<20260610100722.87F3E92D996@mail.hotcrp.com>",
         "<20260611031959.D405690B8D7@mail.hotcrp.com>",
-        "<20260611032030.C85CA90B8E5@mail.hotcrp.com>"
+        "<20260611032030.C85CA90B8E5@mail.hotcrp.com>",
+        "<20260611090506.6D94090B8D7@mail.hotcrp.com>",
+        "<20260611091022.2351B90B8D6@mail.hotcrp.com>",
+        "<20260611092310.BD80691608B@mail.hotcrp.com>",
+        "<20260611095710.0D28B90B8F8@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1724,6 +1784,43 @@
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "ATC '26::#2796": {
+      "conference": "ATC '26",
+      "paper_id": "2796",
+      "title": "Relay-EP: Skew-Aware Token-Level Expert Parallel Communication without Collective Buffering",
+      "authors": [
+        "Haoxuan Yu",
+        "Lingyun Yang",
+        "Yinghao Yu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Wei Wang"
+      ],
+      "site": "https://atc26.hotcrp.com/paper/2796",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-06-11T11:52:56+00:00",
+      "last_event": "2026-06-11T11:52:56+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-06-11T11:52:56+00:00",
+          "subject": "[ATC '26] Updated #2796 \"Relay-EP: Skew-Aware Token-Level Expert...\""
+        }
+      ],
+      "counts": {
+        "updates": 1,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20260611115256.7FBEF92D9BB@mail.hotcrp.com>"
+      ],
+      "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -1776,8 +1873,8 @@
       "last_event": "2026-05-15T11:59:29+00:00"
     },
     "ATC '26": {
-      "paper_count": 5,
-      "last_event": "2026-06-11T07:56:32+00:00"
+      "paper_count": 6,
+      "last_event": "2026-06-11T11:52:56+00:00"
     }
   },
   "announcements": [
@@ -1878,6 +1975,6 @@
       "date": "2026-06-09T18:24:51+00:00"
     }
   ],
-  "last_updated": "2026-06-11T08:06:51.596573+00:00",
-  "email_count": 176
+  "last_updated": "2026-06-11T12:11:26.810628+00:00",
+  "email_count": 187
 }
