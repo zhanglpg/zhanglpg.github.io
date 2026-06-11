@@ -1353,7 +1353,7 @@
     "ATC '26::#75": {
       "conference": "ATC '26",
       "paper_id": "75",
-      "title": "Rethinking Urgent Memory Management in the Wild: A Priority-Aware Approach",
+      "title": "Slow Path, Fast Kill: Priority-Aware OOM for Production Memory Stalls",
       "authors": [
         "Kaifu Tian",
         "Kaihao Bai",
@@ -1375,7 +1375,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-06-10T08:27:34+00:00",
+      "last_event": "2026-06-10T16:46:56+00:00",
       "events": [
         {
           "type": "updated",
@@ -1396,19 +1396,25 @@
           "type": "submitted",
           "date": "2026-06-10T08:27:34+00:00",
           "subject": "[ATC '26] Submitted #75 \"Rethinking Urgent Memory Management in...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-10T16:46:56+00:00",
+          "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
         }
       ],
       "counts": {
-        "updates": 3,
+        "updates": 4,
         "comments": 0,
         "reviews": 0,
-        "total": 4
+        "total": 5
       },
       "message_ids": [
         "<20260603070306.602148F10B2@mail.hotcrp.com>",
         "<20260604021338.2443D8E3B64@mail.hotcrp.com>",
         "<20260610081312.9E1EE8E3AB5@mail.hotcrp.com>",
-        "<20260610082734.79626916093@mail.hotcrp.com>"
+        "<20260610082734.79626916093@mail.hotcrp.com>",
+        "<20260610164656.65EC092D9A1@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1545,6 +1551,52 @@
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "ATC '26::#1518": {
+      "conference": "ATC '26",
+      "paper_id": "1518",
+      "title": "Axon: Asynchronous Global KV-Aware Scheduling Across Distributed Instances for Agentic Workloads",
+      "authors": [
+        "Yuqi Qiu",
+        "Jinting Zou",
+        "Zizhao Mo",
+        "Junlin Chen",
+        "Liao Chen",
+        "Guoyao Xu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Huanle Xu"
+      ],
+      "site": "https://atc26.hotcrp.com/paper/1518",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-06-10T13:13:51+00:00",
+      "last_event": "2026-06-10T13:15:57+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-06-10T13:13:51+00:00",
+          "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-06-10T13:15:57+00:00",
+          "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        }
+      ],
+      "counts": {
+        "updates": 2,
+        "comments": 0,
+        "reviews": 0,
+        "total": 2
+      },
+      "message_ids": [
+        "<20260610131351.6939590A6D8@mail.hotcrp.com>",
+        "<20260610131557.6D3228D80E1@mail.hotcrp.com>"
+      ],
+      "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -1597,8 +1649,8 @@
       "last_event": "2026-05-15T11:59:29+00:00"
     },
     "ATC '26": {
-      "paper_count": 4,
-      "last_event": "2026-06-10T10:07:22+00:00"
+      "paper_count": 5,
+      "last_event": "2026-06-10T16:46:56+00:00"
     }
   },
   "announcements": [
@@ -1699,6 +1751,6 @@
       "date": "2026-06-09T18:24:51+00:00"
     }
   ],
-  "last_updated": "2026-06-10T12:06:26.500630+00:00",
-  "email_count": 152
+  "last_updated": "2026-06-11T00:04:10.209964+00:00",
+  "email_count": 155
 }
