@@ -1973,8 +1973,14 @@
       "type": "announcement",
       "subject": "[OSDI '26] FINAL VERSION INSTRUCTIONS! REGISTER!",
       "date": "2026-06-09T18:24:51+00:00"
+    },
+    {
+      "conference": "FSE2026-Industry",
+      "type": "announcement",
+      "subject": "[FSE2026-Industry] Presentation Guidance",
+      "date": "2026-06-12T20:18:11+00:00"
     }
   ],
-  "last_updated": "2026-06-11T12:11:26.810628+00:00",
-  "email_count": 187
+  "last_updated": "2026-06-13T00:05:29.227216+00:00",
+  "email_count": 188
 }
