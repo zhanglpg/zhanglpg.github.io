@@ -131,6 +131,28 @@
           "AP Comp Sci A": 90.01
         }
       }
+    },
+    {
+      "date": "2026-06-16",
+      "captured_at": "2026-06-16T00:03:56.681089+00:00",
+      "grades": {
+        "Glenn": {
+          "AP Chinese Lng/Cul": 96.7,
+          "World Lit/Writ": 97.86,
+          "Chemistry H": 92.24,
+          "AP Calculus BC": 91.0,
+          "AP Comp Sci A": 95.22,
+          "PE 10-12": 94.67
+        },
+        "Sheldon": {
+          "AP Chinese Lng/Cul": 91.42,
+          "World Lit/Writ": 85.0,
+          "Chemistry H": 82.11,
+          "Art 1": 88.74,
+          "AP Calculus BC": 88.0,
+          "AP Comp Sci A": 90.01
+        }
+      }
     }
   ]
 }
