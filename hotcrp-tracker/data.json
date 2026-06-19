@@ -22,7 +22,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-03-30T15:23:12+00:00",
-      "last_event": "2026-05-28T11:23:39+00:00",
+      "last_event": "2026-06-18T13:22:53+00:00",
       "events": [
         {
           "type": "updated",
@@ -38,18 +38,24 @@
           "type": "other",
           "date": "2026-05-28T11:23:39+00:00",
           "subject": "[ASE 2026] Response for #10 \"LLM-Prof: A Hierarchical Cross-Stack...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-06-18T13:22:53+00:00",
+          "subject": "[ASE 2026] Reject Notification #10 \"LLM-Prof: A Hierarchical Cross-Stack...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 3
+        "total": 4
       },
       "message_ids": [
         "<20260330152312.ECCBF9AFEB6@mail.hotcrp.com>",
         "<20260525141402.2C0198FF447@mail.hotcrp.com>",
-        "<20260528112339.B0BD98D8180@mail.hotcrp.com>"
+        "<20260528112339.B0BD98D8180@mail.hotcrp.com>",
+        "<20260618132253.6A50C95955C@mail.hotcrp.com>"
       ],
       "deadline": null,
       "review_scores": [],
@@ -1317,7 +1323,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-25T14:14:14+00:00",
-      "last_event": "2026-05-29T17:31:00+00:00",
+      "last_event": "2026-06-18T13:16:23+00:00",
       "events": [
         {
           "type": "other",
@@ -1333,18 +1339,24 @@
           "type": "submitted",
           "date": "2026-05-29T17:31:00+00:00",
           "subject": "[ASE 2026] Submitted review #3295D \"Bifrost: Empowering Pretrained Language...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-06-18T13:16:23+00:00",
+          "subject": "[ASE 2026] Acceptance Notification #3295 \"Bifrost: Empowering Pretrained Language...\""
         }
       ],
       "counts": {
         "updates": 0,
         "comments": 0,
         "reviews": 0,
-        "total": 3
+        "total": 4
       },
       "message_ids": [
         "<20260525141414.80BF99468FD@mail.hotcrp.com>",
         "<20260527191118.515209163F3@mail.hotcrp.com>",
-        "<20260529173100.A07B68D80C9@mail.hotcrp.com>"
+        "<20260529173100.A07B68D80C9@mail.hotcrp.com>",
+        "<20260618131623.B73509B5F79@mail.hotcrp.com>"
       ],
       "deadline": null,
       "review_scores": [],
@@ -1826,7 +1838,7 @@
   "conferences": {
     "ASE 2026": {
       "paper_count": 2,
-      "last_event": "2026-05-29T17:31:00+00:00"
+      "last_event": "2026-06-18T13:22:53+00:00"
     },
     "MICRO 2026": {
       "paper_count": 1,
@@ -1987,6 +1999,6 @@
       "date": "2026-06-13T23:59:39+00:00"
     }
   ],
-  "last_updated": "2026-06-14T00:07:34.174578+00:00",
-  "email_count": 189
+  "last_updated": "2026-06-19T00:04:19.016751+00:00",
+  "email_count": 191
 }
