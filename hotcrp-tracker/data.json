@@ -2021,8 +2021,14 @@
       "type": "announcement",
       "subject": "[ISCA 2026] Please contact your session chair!",
       "date": "2026-06-26T17:42:08+00:00"
+    },
+    {
+      "conference": "ISCA 2026",
+      "type": "announcement",
+      "subject": "[ISCA 2026] Please note presentation schedule changes!",
+      "date": "2026-06-28T20:59:41+00:00"
     }
   ],
-  "last_updated": "2026-06-27T00:10:43.306912+00:00",
-  "email_count": 195
+  "last_updated": "2026-06-29T00:04:37.051158+00:00",
+  "email_count": 196
 }
