@@ -574,7 +574,7 @@
     "ASE2026 Industry Showcase::#159": {
       "conference": "ASE2026 Industry Showcase",
       "paper_id": "159",
-      "title": "HolmeSRE: Demystifying Scheduling Failures in Hyperscale Clusters with an Agentic Troubleshooter",
+      "title": "HolmeSRE: Demystifying Scheduling...",
       "authors": [
         "Minghua He",
         "Tong Jia",
@@ -593,22 +593,28 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-04-22T04:40:05+00:00",
-      "last_event": "2026-04-22T04:40:05+00:00",
+      "last_event": "2026-07-01T11:45:39+00:00",
       "events": [
         {
           "type": "submitted",
           "date": "2026-04-22T04:40:05+00:00",
           "subject": "[ASE2026 Industry Showcase] Submitted #159 \"HolmeSRE: Demystifying Scheduling...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-07-01T11:45:39+00:00",
+          "subject": "[ASE2026 Industry Showcase] Notification for Submission #159 \"HolmeSRE: Demystifying Scheduling...\""
         }
       ],
       "counts": {
         "updates": 0,
         "comments": 0,
         "reviews": 0,
-        "total": 1
+        "total": 2
       },
       "message_ids": [
-        "<20260422044005.D0FEFAEA956@mail.hotcrp.com>"
+        "<20260422044005.D0FEFAEA956@mail.hotcrp.com>",
+        "<20260701114539.91B64A0A836@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1878,7 +1884,7 @@
     },
     "ASE2026 Industry Showcase": {
       "paper_count": 1,
-      "last_event": "2026-04-22T04:40:05+00:00"
+      "last_event": "2026-07-01T11:45:39+00:00"
     },
     "FSE2026-Industry": {
       "paper_count": 1,
@@ -2029,6 +2035,6 @@
       "date": "2026-06-28T20:59:41+00:00"
     }
   ],
-  "last_updated": "2026-06-29T00:04:37.051158+00:00",
-  "email_count": 196
+  "last_updated": "2026-07-01T12:19:12.390674+00:00",
+  "email_count": 197
 }
