@@ -128,7 +128,7 @@
     "SOSP 2026::#629": {
       "conference": "SOSP 2026",
       "paper_id": "629",
-      "title": "DiFlow: A System for Micro-Serving Text-to-Image Diffusion Workflows",
+      "title": "DiFlow: A System for Micro-Serving...",
       "authors": [
         "Lingyun Yang",
         "Suyi Li",
@@ -148,7 +148,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
-      "last_event": "2026-06-25T07:07:30+00:00",
+      "last_event": "2026-07-03T22:48:56+00:00",
       "events": [
         {
           "type": "updated",
@@ -189,13 +189,18 @@
           "type": "other",
           "date": "2026-06-25T07:07:30+00:00",
           "subject": "[SOSP 2026] Response for #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-07-03T22:48:56+00:00",
+          "subject": "[SOSP 2026] Accepted submission #629 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 5,
         "comments": 0,
         "reviews": 0,
-        "total": 8
+        "total": 9
       },
       "message_ids": [
         "<20260402032219.6D4AE9CF346@mail.hotcrp.com>",
@@ -205,7 +210,8 @@
         "<20260402113009.E6DFF9CF360@mail.hotcrp.com>",
         "<20260402113043.769C59CF378@mail.hotcrp.com>",
         "<20260622135109.B259EB3D88E@mail.hotcrp.com>",
-        "<20260625070730.5D842ADDB2E@mail.hotcrp.com>"
+        "<20260625070730.5D842ADDB2E@mail.hotcrp.com>",
+        "<20260703224856.22190AEF389@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Apr 2, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1864,7 +1870,7 @@
     },
     "SOSP 2026": {
       "paper_count": 1,
-      "last_event": "2026-06-25T07:07:30+00:00"
+      "last_event": "2026-07-03T22:48:56+00:00"
     },
     "OSDI '26": {
       "paper_count": 2,
@@ -2041,6 +2047,6 @@
       "date": "2026-07-02T15:12:56+00:00"
     }
   ],
-  "last_updated": "2026-07-03T00:04:44.431257+00:00",
-  "email_count": 198
+  "last_updated": "2026-07-04T00:05:05.627624+00:00",
+  "email_count": 199
 }
