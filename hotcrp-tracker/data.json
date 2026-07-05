@@ -145,7 +145,7 @@
         "Wei Wang"
       ],
       "site": "https://sosp26.hotcrp.com/paper/629",
-      "status": "submitted",
+      "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
       "last_event": "2026-07-03T22:48:56+00:00",
@@ -191,7 +191,7 @@
           "subject": "[SOSP 2026] Response for #629 \"DiFlow: A System for Micro-Serving...\""
         },
         {
-          "type": "other",
+          "type": "accepted",
           "date": "2026-07-03T22:48:56+00:00",
           "subject": "[SOSP 2026] Accepted submission #629 \"DiFlow: A System for Micro-Serving...\""
         }
