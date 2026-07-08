@@ -511,7 +511,7 @@
     "ASPLOS'27 - April cycle::#59": {
       "conference": "ASPLOS'27 - April cycle",
       "paper_id": "59",
-      "title": "The GPU Resilience Lottery:...",
+      "title": "The GPU Resilience Lottery: Understanding and Taming Real-World Hardware Errors in Heterogeneous AI Infrastructure",
       "authors": [
         "Xinkai Wang",
         "Yunwei Li",
@@ -526,7 +526,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-04-12T12:28:31+00:00",
-      "last_event": "2026-05-28T02:17:57+00:00",
+      "last_event": "2026-07-07T12:47:39+00:00",
       "events": [
         {
           "type": "updated",
@@ -557,13 +557,18 @@
           "type": "submitted",
           "date": "2026-05-28T02:17:57+00:00",
           "subject": "[ASPLOS'27 - April cycle] Submission #59 \"The GPU Resilience Lottery:...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-07T12:47:39+00:00",
+          "subject": "[ASPLOS'27 - April cycle] Submission #59 \"The GPU Resilience Lottery:...\""
         }
       ],
       "counts": {
         "updates": 4,
         "comments": 0,
         "reviews": 0,
-        "total": 6
+        "total": 7
       },
       "message_ids": [
         "<20260412122831.C5740A4E06D@mail.hotcrp.com>",
@@ -571,7 +576,8 @@
         "<20260413115806.4A0519F6D71@mail.hotcrp.com>",
         "<20260416013530.56B77A57416@mail.hotcrp.com>",
         "<20260416085029.B489DA57431@mail.hotcrp.com>",
-        "<20260528021757.6CF64AEF4E7@mail.hotcrp.com>"
+        "<20260528021757.6CF64AEF4E7@mail.hotcrp.com>",
+        "<20260707124739.757A2918476@mail.hotcrp.com>"
       ],
       "deadline": "Wednesday Apr 15, 2026, 11:59 PM AoE",
       "review_scores": [],
@@ -1886,7 +1892,7 @@
     },
     "ASPLOS'27 - April cycle": {
       "paper_count": 1,
-      "last_event": "2026-05-28T02:17:57+00:00"
+      "last_event": "2026-07-07T12:47:39+00:00"
     },
     "ASE2026 Industry Showcase": {
       "paper_count": 1,
@@ -2047,6 +2053,6 @@
       "date": "2026-07-02T15:12:56+00:00"
     }
   ],
-  "last_updated": "2026-07-04T00:05:05.627624+00:00",
-  "email_count": 199
+  "last_updated": "2026-07-08T00:07:22.798335+00:00",
+  "email_count": 200
 }
