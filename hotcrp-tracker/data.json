@@ -148,7 +148,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
-      "last_event": "2026-07-03T22:48:56+00:00",
+      "last_event": "2026-07-08T21:57:32+00:00",
       "events": [
         {
           "type": "updated",
@@ -194,13 +194,28 @@
           "type": "accepted",
           "date": "2026-07-03T22:48:56+00:00",
           "subject": "[SOSP 2026] Accepted submission #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-07-08T14:49:02+00:00",
+          "subject": "[SOSP 2026] Comment for #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-07-08T16:04:04+00:00",
+          "subject": "[SOSP 2026] Comment for #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-07-08T21:57:32+00:00",
+          "subject": "[SOSP 2026] Comment for #629 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 5,
-        "comments": 0,
+        "comments": 3,
         "reviews": 0,
-        "total": 9
+        "total": 12
       },
       "message_ids": [
         "<20260402032219.6D4AE9CF346@mail.hotcrp.com>",
@@ -211,7 +226,10 @@
         "<20260402113043.769C59CF378@mail.hotcrp.com>",
         "<20260622135109.B259EB3D88E@mail.hotcrp.com>",
         "<20260625070730.5D842ADDB2E@mail.hotcrp.com>",
-        "<20260703224856.22190AEF389@mail.hotcrp.com>"
+        "<20260703224856.22190AEF389@mail.hotcrp.com>",
+        "<20260708144902.2B8BA9E002C@mail.hotcrp.com>",
+        "<20260708160404.0B0C19E0029@mail.hotcrp.com>",
+        "<20260708215732.0642C9D2DA0@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Apr 2, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1876,7 +1894,7 @@
     },
     "SOSP 2026": {
       "paper_count": 1,
-      "last_event": "2026-07-03T22:48:56+00:00"
+      "last_event": "2026-07-08T21:57:32+00:00"
     },
     "OSDI '26": {
       "paper_count": 2,
@@ -2053,6 +2071,6 @@
       "date": "2026-07-02T15:12:56+00:00"
     }
   ],
-  "last_updated": "2026-07-08T00:07:22.798335+00:00",
-  "email_count": 200
+  "last_updated": "2026-07-09T00:08:51.129345+00:00",
+  "email_count": 203
 }
