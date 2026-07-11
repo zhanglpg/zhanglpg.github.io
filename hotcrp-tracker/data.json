@@ -1435,7 +1435,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-06-11T03:39:28+00:00",
+      "last_event": "2026-07-11T08:22:44+00:00",
       "events": [
         {
           "type": "updated",
@@ -1481,13 +1481,18 @@
           "type": "updated",
           "date": "2026-06-11T03:39:28+00:00",
           "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-11T08:22:44+00:00",
+          "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
         }
       ],
       "counts": {
-        "updates": 8,
+        "updates": 9,
         "comments": 0,
         "reviews": 0,
-        "total": 9
+        "total": 10
       },
       "message_ids": [
         "<20260603070306.602148F10B2@mail.hotcrp.com>",
@@ -1498,7 +1503,8 @@
         "<20260611024514.528748D80E1@mail.hotcrp.com>",
         "<20260611025509.BEB1E90B8E3@mail.hotcrp.com>",
         "<20260611032322.6A39690B8D6@mail.hotcrp.com>",
-        "<20260611033928.2371290B8D6@mail.hotcrp.com>"
+        "<20260611033928.2371290B8D6@mail.hotcrp.com>",
+        "<20260711082244.485A29430D3@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1934,7 +1940,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-06-11T11:52:56+00:00"
+      "last_event": "2026-07-11T08:22:44+00:00"
     }
   },
   "announcements": [
@@ -2071,6 +2077,6 @@
       "date": "2026-07-02T15:12:56+00:00"
     }
   ],
-  "last_updated": "2026-07-09T00:08:51.129345+00:00",
-  "email_count": 203
+  "last_updated": "2026-07-11T12:14:00.581817+00:00",
+  "email_count": 204
 }
