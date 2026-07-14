@@ -1997,6 +1997,50 @@
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "SOSP '26 Artifact Evaluation::#3": {
+      "conference": "SOSP '26 Artifact Evaluation",
+      "paper_id": "3",
+      "title": "DiFlow: A System for Micro-Serving Text-to-Image Diffusion Workflows",
+      "authors": [
+        "Lingyun Yang",
+        "Suyi Li",
+        "Tianyu Feng",
+        "Xiaoxiao Jiang",
+        "Zhipeng Di",
+        "Weiyi Lu",
+        "Kan Liu",
+        "Yinghao Yu",
+        "Tao Lan",
+        "Guodong Yang",
+        "Lin Qu",
+        "Liping Zhang",
+        "Wei Wang"
+      ],
+      "site": "https://sosp26ae.hotcrp.com/paper/3",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-07-13T16:12:59+00:00",
+      "last_event": "2026-07-13T16:12:59+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-07-13T16:12:59+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Updated #3 \"DiFlow: A System for Micro-Serving...\""
+        }
+      ],
+      "counts": {
+        "updates": 1,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20260713161259.B00839AE3E4@mail.hotcrp.com>"
+      ],
+      "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -2055,6 +2099,10 @@
     "HPCA 2027": {
       "paper_count": 2,
       "last_event": "2026-07-12T16:31:21+00:00"
+    },
+    "SOSP '26 Artifact Evaluation": {
+      "paper_count": 1,
+      "last_event": "2026-07-13T16:12:59+00:00"
     }
   },
   "announcements": [
@@ -2191,6 +2239,6 @@
       "date": "2026-07-02T15:12:56+00:00"
     }
   ],
-  "last_updated": "2026-07-13T00:11:20.812044+00:00",
-  "email_count": 210
+  "last_updated": "2026-07-14T00:07:59.148824+00:00",
+  "email_count": 211
 }
