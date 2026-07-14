@@ -2021,22 +2021,28 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-13T16:12:59+00:00",
-      "last_event": "2026-07-13T16:12:59+00:00",
+      "last_event": "2026-07-14T06:51:34+00:00",
       "events": [
         {
           "type": "updated",
           "date": "2026-07-13T16:12:59+00:00",
           "subject": "[SOSP '26 Artifact Evaluation] Updated #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-14T06:51:34+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Submitted #3 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 1
+        "total": 2
       },
       "message_ids": [
-        "<20260713161259.B00839AE3E4@mail.hotcrp.com>"
+        "<20260713161259.B00839AE3E4@mail.hotcrp.com>",
+        "<20260714065134.C313A9AE3F5@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2102,7 +2108,7 @@
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-07-13T16:12:59+00:00"
+      "last_event": "2026-07-14T06:51:34+00:00"
     }
   },
   "announcements": [
@@ -2239,6 +2245,6 @@
       "date": "2026-07-02T15:12:56+00:00"
     }
   ],
-  "last_updated": "2026-07-14T00:07:59.148824+00:00",
-  "email_count": 211
+  "last_updated": "2026-07-14T08:10:38.399023+00:00",
+  "email_count": 212
 }
