@@ -2243,8 +2243,20 @@
       "type": "announcement",
       "subject": "[ASE 2026] Artifact Evaluation track (deadline July 3rd AoE)",
       "date": "2026-07-02T15:12:56+00:00"
+    },
+    {
+      "conference": "MICRO 2026",
+      "type": "announcement",
+      "subject": "[MICRO 2026] Call for MICRO’26 Artifact Evaluation Committee Nominations",
+      "date": "2026-07-14T16:45:47+00:00"
+    },
+    {
+      "conference": "ASE 2026",
+      "type": "announcement",
+      "subject": "[ASE 2026] Conference Rate Accommodation",
+      "date": "2026-07-14T20:55:02+00:00"
     }
   ],
-  "last_updated": "2026-07-14T08:10:38.399023+00:00",
-  "email_count": 212
+  "last_updated": "2026-07-15T00:09:25.607976+00:00",
+  "email_count": 214
 }
