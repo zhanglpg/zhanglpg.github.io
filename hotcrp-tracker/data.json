@@ -2059,6 +2059,52 @@
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "HPCA 2027::#1013": {
+      "conference": "HPCA 2027",
+      "paper_id": "1013",
+      "title": "RelayServe: Accelerating Serverless LLM Cold Start with CPU-GPU Pipelining",
+      "authors": [
+        "Wenhao Zhang",
+        "Huiyin Wang",
+        "Lingyun Yang",
+        "Yinghao Yu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Yanyan Shen",
+        "Linpeng Huang",
+        "Youmin Chen"
+      ],
+      "site": "https://hpca2027.hotcrp.com/paper/1013",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-07-16T05:31:15+00:00",
+      "last_event": "2026-07-16T06:40:09+00:00",
+      "events": [
+        {
+          "type": "submitted",
+          "date": "2026-07-16T05:31:15+00:00",
+          "subject": "[HPCA 2027] Registered #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-16T06:40:09+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        }
+      ],
+      "counts": {
+        "updates": 1,
+        "comments": 0,
+        "reviews": 0,
+        "total": 2
+      },
+      "message_ids": [
+        "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
+        "<20260716064009.AF340A0DFEA@mail.hotcrp.com>"
+      ],
+      "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -2115,8 +2161,8 @@
       "last_event": "2026-07-11T08:22:44+00:00"
     },
     "HPCA 2027": {
-      "paper_count": 2,
-      "last_event": "2026-07-12T16:31:21+00:00"
+      "paper_count": 3,
+      "last_event": "2026-07-16T06:40:09+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2269,6 +2315,6 @@
       "date": "2026-07-14T20:55:02+00:00"
     }
   ],
-  "last_updated": "2026-07-16T00:07:42.485124+00:00",
-  "email_count": 216
+  "last_updated": "2026-07-16T12:10:16.030789+00:00",
+  "email_count": 218
 }
