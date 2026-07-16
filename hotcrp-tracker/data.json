@@ -1246,7 +1246,7 @@
     "EuroSys '27 Spring::#310": {
       "conference": "EuroSys '27 Spring",
       "paper_id": "310",
-      "title": "RelayServe: Accelerating Serverless LLM Cold Start with CPU-GPU Pipelining",
+      "title": "#310: RelayServe: Accelerating Serverless LLM Cold Start with CPU-GPU Pipelining,",
       "authors": [
         "Wenhao Zhang",
         "Huiyin Wang",
@@ -1262,7 +1262,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T16:44:43+00:00",
-      "last_event": "2026-05-15T11:53:14+00:00",
+      "last_event": "2026-07-15T20:12:53+00:00",
       "events": [
         {
           "type": "updated",
@@ -1333,13 +1333,18 @@
           "type": "updated",
           "date": "2026-05-15T11:53:14+00:00",
           "subject": "[EuroSys '27 Spring] Updated #310 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-07-15T20:12:53+00:00",
+          "subject": "[EuroSys '27 Spring] Rejected paper #310 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
         "updates": 13,
         "comments": 0,
         "reviews": 0,
-        "total": 14
+        "total": 15
       },
       "message_ids": [
         "<20260511164443.C67A08CD569@mail.hotcrp.com>",
@@ -1355,7 +1360,8 @@
         "<20260515113614.65F8A8CD72A@mail.hotcrp.com>",
         "<20260515114310.9EBE88F07C2@mail.hotcrp.com>",
         "<20260515114653.4C63F8F07C2@mail.hotcrp.com>",
-        "<20260515115314.D04A08CD72A@mail.hotcrp.com>"
+        "<20260515115314.D04A08CD72A@mail.hotcrp.com>",
+        "<20260715201253.B3661AEB979@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2102,7 +2108,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-05-15T11:59:29+00:00"
+      "last_event": "2026-07-15T20:12:53+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -2263,6 +2269,6 @@
       "date": "2026-07-14T20:55:02+00:00"
     }
   ],
-  "last_updated": "2026-07-15T04:06:33.651924+00:00",
-  "email_count": 215
+  "last_updated": "2026-07-16T00:07:42.485124+00:00",
+  "email_count": 216
 }
