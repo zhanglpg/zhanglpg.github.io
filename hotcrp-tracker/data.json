@@ -2125,7 +2125,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-17T09:53:46+00:00",
-      "last_event": "2026-07-17T14:49:29+00:00",
+      "last_event": "2026-07-18T05:52:05+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2176,13 +2176,18 @@
           "type": "updated",
           "date": "2026-07-17T14:49:29+00:00",
           "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-18T05:52:05+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
         }
       ],
       "counts": {
-        "updates": 9,
+        "updates": 10,
         "comments": 0,
         "reviews": 0,
-        "total": 10
+        "total": 11
       },
       "message_ids": [
         "<20260717095346.B8469AF027E@mail.hotcrp.com>",
@@ -2194,7 +2199,8 @@
         "<20260717131337.3287D959497@mail.hotcrp.com>",
         "<20260717132630.1A068959497@mail.hotcrp.com>",
         "<20260717132645.AA2B3959496@mail.hotcrp.com>",
-        "<20260717144929.137499329D3@mail.hotcrp.com>"
+        "<20260717144929.137499329D3@mail.hotcrp.com>",
+        "<20260718055205.2F54E959490@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2256,7 +2262,7 @@
     },
     "HPCA 2027": {
       "paper_count": 4,
-      "last_event": "2026-07-17T14:49:29+00:00"
+      "last_event": "2026-07-18T05:52:05+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2415,6 +2421,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-18T00:10:53.118485+00:00",
-  "email_count": 229
+  "last_updated": "2026-07-18T08:09:08.285775+00:00",
+  "email_count": 230
 }
