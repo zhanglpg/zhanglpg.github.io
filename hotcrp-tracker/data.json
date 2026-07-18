@@ -2105,6 +2105,100 @@
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "HPCA 2027::#1182": {
+      "conference": "HPCA 2027",
+      "paper_id": "1182",
+      "title": "WaveWeaver: Wave-aware Bilinear Modeling for Runtime Parameter Configuration of GPU Kernels",
+      "authors": [
+        "Kaixuan Zhang",
+        "Chutong Ding",
+        "Shiyou Qian",
+        "Luping Wang",
+        "Jian Cao",
+        "Guangtao Xue",
+        "Cheng Huang",
+        "Guodong Yang",
+        "Liping Zhang"
+      ],
+      "site": "https://hpca2027.hotcrp.com/paper/1182",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-07-17T09:53:46+00:00",
+      "last_event": "2026-07-17T14:49:29+00:00",
+      "events": [
+        {
+          "type": "submitted",
+          "date": "2026-07-17T09:53:46+00:00",
+          "subject": "[HPCA 2027] Registered #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T09:58:59+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T10:27:04+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T12:04:02+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T12:30:25+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T13:12:07+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T13:13:37+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T13:26:30+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T13:26:45+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-17T14:49:29+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        }
+      ],
+      "counts": {
+        "updates": 9,
+        "comments": 0,
+        "reviews": 0,
+        "total": 10
+      },
+      "message_ids": [
+        "<20260717095346.B8469AF027E@mail.hotcrp.com>",
+        "<20260717095859.E2E0AAF0275@mail.hotcrp.com>",
+        "<20260717102704.92410918563@mail.hotcrp.com>",
+        "<20260717120402.0F9D195949B@mail.hotcrp.com>",
+        "<20260717123025.4674A959493@mail.hotcrp.com>",
+        "<20260717131207.D5923959497@mail.hotcrp.com>",
+        "<20260717131337.3287D959497@mail.hotcrp.com>",
+        "<20260717132630.1A068959497@mail.hotcrp.com>",
+        "<20260717132645.AA2B3959496@mail.hotcrp.com>",
+        "<20260717144929.137499329D3@mail.hotcrp.com>"
+      ],
+      "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -2161,8 +2255,8 @@
       "last_event": "2026-07-11T08:22:44+00:00"
     },
     "HPCA 2027": {
-      "paper_count": 3,
-      "last_event": "2026-07-16T06:40:09+00:00"
+      "paper_count": 4,
+      "last_event": "2026-07-17T14:49:29+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2313,8 +2407,14 @@
       "type": "announcement",
       "subject": "[ASE 2026] Conference Rate Accommodation",
       "date": "2026-07-14T20:55:02+00:00"
+    },
+    {
+      "conference": "ASE 2026",
+      "type": "announcement",
+      "subject": "[ASE 2026] Important Information for Accepted and Major Revision papers",
+      "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-16T12:10:16.030789+00:00",
-  "email_count": 218
+  "last_updated": "2026-07-18T00:10:53.118485+00:00",
+  "email_count": 229
 }
