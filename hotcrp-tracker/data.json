@@ -2079,7 +2079,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-16T06:40:09+00:00",
+      "last_event": "2026-07-19T22:35:29+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2090,17 +2090,23 @@
           "type": "updated",
           "date": "2026-07-16T06:40:09+00:00",
           "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-19T22:35:29+00:00",
+          "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 2
+        "total": 3
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
-        "<20260716064009.AF340A0DFEA@mail.hotcrp.com>"
+        "<20260716064009.AF340A0DFEA@mail.hotcrp.com>",
+        "<20260719223529.C4AD9B3D89C@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2125,7 +2131,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-17T09:53:46+00:00",
-      "last_event": "2026-07-18T05:52:05+00:00",
+      "last_event": "2026-07-19T22:35:30+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2181,13 +2187,38 @@
           "type": "updated",
           "date": "2026-07-18T05:52:05+00:00",
           "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-19T12:45:41+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-19T12:46:14+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-19T12:46:37+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-19T12:51:49+00:00",
+          "subject": "[HPCA 2027] Submitted #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-19T22:35:30+00:00",
+          "subject": "[HPCA 2027] Submission #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
         }
       ],
       "counts": {
-        "updates": 10,
+        "updates": 13,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 16
       },
       "message_ids": [
         "<20260717095346.B8469AF027E@mail.hotcrp.com>",
@@ -2200,7 +2231,12 @@
         "<20260717132630.1A068959497@mail.hotcrp.com>",
         "<20260717132645.AA2B3959496@mail.hotcrp.com>",
         "<20260717144929.137499329D3@mail.hotcrp.com>",
-        "<20260718055205.2F54E959490@mail.hotcrp.com>"
+        "<20260718055205.2F54E959490@mail.hotcrp.com>",
+        "<20260719124541.D90D7952E40@mail.hotcrp.com>",
+        "<20260719124614.C97B7952E40@mail.hotcrp.com>",
+        "<20260719124637.6E700952E40@mail.hotcrp.com>",
+        "<20260719125149.41D65952E40@mail.hotcrp.com>",
+        "<20260719223530.4E3CBA56C10@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2262,7 +2298,7 @@
     },
     "HPCA 2027": {
       "paper_count": 4,
-      "last_event": "2026-07-18T05:52:05+00:00"
+      "last_event": "2026-07-19T22:35:30+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2421,6 +2457,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-18T08:09:08.285775+00:00",
-  "email_count": 230
+  "last_updated": "2026-07-20T00:04:51.543810+00:00",
+  "email_count": 236
 }
