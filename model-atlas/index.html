@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM &amp; Multimodal Architecture Atlas</title>
+<meta name="description" content="A browsable gallery of modern LLM, VLM, and generative-model architectures — model cards with parameters, layers, attention type, MoE details, and architecture diagrams. For researchers and infra engineers." />
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2a3240; --line2:#39424f;
+    --fg:#e6edf3; --dim:#9aa7b4; --dim2:#6e7b89; --accent:#58a6ff; --accent2:#3fb950;
+    --moe:#d29922; --dense:#58a6ff; --mm:#bc8cff; --gen:#f778ba;
+    --chip:#21262d; --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.28);
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--fg); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 20px}
+
+  header.site{padding:26px 0 10px;border-bottom:1px solid var(--line)}
+  header.site h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.2px}
+  header.site .sub{color:var(--dim);margin-top:5px;font-size:13px;max-width:820px}
+  header.site .meta{color:var(--dim2);font-size:12px;margin-top:8px}
+  header.site .meta b{color:var(--fg)}
+
+  .controls{position:sticky;top:0;z-index:20;background:rgba(13,17,23,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:18px}
+  .controls .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .search{flex:1;min-width:220px;position:relative}
+  .search input{width:100%;padding:9px 12px 9px 34px;background:var(--panel);border:1px solid var(--line2);
+    border-radius:8px;color:var(--fg);font-size:14px}
+  .search input:focus{outline:none;border-color:var(--accent)}
+  .search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;fill:var(--dim2)}
+  select,.btn{background:var(--panel);border:1px solid var(--line2);border-radius:8px;color:var(--fg);
+    padding:9px 12px;font-size:13px;cursor:pointer}
+  select:focus{outline:none;border-color:var(--accent)}
+  .btn:hover{border-color:var(--accent)}
+  .btn.active{background:var(--accent);border-color:var(--accent);color:#04121f;font-weight:600}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .fchip{padding:6px 11px;border-radius:16px;border:1px solid var(--line2);background:var(--panel);
+    color:var(--dim);font-size:12px;cursor:pointer;user-select:none;white-space:nowrap}
+  .fchip:hover{border-color:var(--dim)}
+  .fchip.on{color:var(--fg);border-color:currentColor}
+  .fchip.on.t-dense{color:var(--dense)} .fchip.on.t-moe{color:var(--moe)}
+  .fchip.on.t-mm{color:var(--mm)} .fchip.on.t-gen{color:var(--gen)}
+  .count{color:var(--dim2);font-size:12px;margin-left:auto;white-space:nowrap}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding-bottom:60px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px;
+    cursor:pointer;transition:border-color .12s,transform .12s;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .card .accentbar{position:absolute;left:0;top:0;bottom:0;width:3px}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card .nm{font-size:15px;font-weight:650;letter-spacing:-.1px;line-height:1.25}
+  .card .org{color:var(--dim);font-size:11.5px;margin-top:2px}
+  .badge{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap;letter-spacing:.2px}
+  .b-dense{background:rgba(88,166,255,.15);color:#79b8ff} .b-moe{background:rgba(210,153,34,.16);color:#e3b341}
+  .b-mm{background:rgba(188,140,255,.15);color:#d2a8ff} .b-gen{background:rgba(247,120,186,.15);color:#f9a8d4}
+  .b-dit{background:rgba(63,185,80,.14);color:#56d364}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:12px}
+  .stat{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--line);padding-bottom:3px}
+  .stat .k{color:var(--dim2)} .stat .v{color:var(--fg);font-weight:550;text-align:right;font-variant-numeric:tabular-nums}
+  .card .foot{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px}
+  .tag{font-size:10.5px;color:var(--dim);background:var(--chip);padding:2px 7px;border-radius:5px}
+  .tag.attn{color:#7ee787;background:rgba(63,185,80,.10)}
+  .card .rel{color:var(--dim2);font-size:11px;margin-left:auto}
+  .cmpbox{position:absolute;top:12px;right:12px;width:18px;height:18px;border:1.5px solid var(--line2);
+    border-radius:4px;display:none;align-items:center;justify-content:center}
+  body.cmp .cmpbox{display:flex}
+  .card.picked .cmpbox{background:var(--accent);border-color:var(--accent)}
+  .card.picked .cmpbox::after{content:"✓";color:#04121f;font-size:12px;font-weight:800}
+
+  /* detail drawer */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .18s;z-index:40}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(760px,100%);background:var(--panel);
+    border-left:1px solid var(--line);transform:translateX(100%);transition:transform .22s ease;z-index:50;
+    overflow-y:auto;box-shadow:var(--shadow)}
+  .drawer.show{transform:none}
+  .drawer .dh{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);
+    padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;z-index:2}
+  .drawer .dh h2{margin:0;font-size:19px}
+  .drawer .dh .org{color:var(--dim);font-size:13px;margin-top:3px}
+  .xbtn{background:none;border:none;color:var(--dim);font-size:24px;cursor:pointer;line-height:1;padding:0 4px}
+  .xbtn:hover{color:var(--fg)}
+  .dbody{padding:18px 20px 60px}
+  .dsec{margin-bottom:22px}
+  .dsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim2);margin:0 0 10px;font-weight:700}
+  .spectbl{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .spectbl .cell{background:var(--panel);padding:8px 11px;display:flex;justify-content:space-between;gap:10px;font-size:12.5px}
+  .spectbl .cell .k{color:var(--dim2)} .spectbl .cell .v{color:var(--fg);font-weight:550;text-align:right;font-variant-numeric:tabular-nums}
+  .notes{color:var(--dim);font-size:13px;line-height:1.6;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .srcs{display:flex;gap:8px;flex-wrap:wrap}
+  .srcs a{font-size:11.5px;background:var(--chip);padding:4px 9px;border-radius:6px;color:var(--accent)}
+  .conf{font-size:10.5px;padding:2px 7px;border-radius:5px;font-weight:600}
+  .conf.verified{background:rgba(63,185,80,.15);color:#56d364}
+  .conf.partial{background:rgba(210,153,34,.15);color:#e3b341}
+  .conf.estimated{background:rgba(139,148,158,.15);color:var(--dim)}
+
+  /* architecture diagram */
+  .arch{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px}
+  .arch svg{width:100%;height:auto;display:block}
+
+  /* compare view */
+  .cmpbar{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--line2);
+    padding:12px 20px;display:none;justify-content:center;gap:12px;align-items:center;z-index:45;box-shadow:0 -4px 20px rgba(0,0,0,.3)}
+  body.cmp .cmpbar{display:flex}
+  .cmpbar .pill{background:var(--chip);border-radius:16px;padding:5px 12px;font-size:12px;display:flex;gap:8px;align-items:center}
+  .cmpbar .pill button{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px}
+  .cmp-modal{position:fixed;inset:0;background:var(--bg);z-index:60;overflow:auto;display:none}
+  .cmp-modal.show{display:block}
+  .cmp-modal .inner{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+  .cmp-grid{display:grid;gap:16px}
+  .cmp-cols{display:grid;grid-template-columns:180px repeat(var(--n),1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .cmp-cols>div{background:var(--panel);padding:9px 12px;font-size:12.5px}
+  .cmp-cols .rowlabel{color:var(--dim2);font-weight:600}
+  .cmp-cols .hdr{font-weight:700;font-size:13.5px;background:var(--panel2)}
+  .cmp-diffs{background:var(--panel);border-radius:8px}
+  .cmp-archrow{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:14px;margin-top:18px}
+
+  footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim2);font-size:12px;line-height:1.7}
+  footer a{color:var(--dim)}
+  .empty{padding:60px 20px;text-align:center;color:var(--dim2)}
+  @media(max-width:640px){
+    .stats{grid-template-columns:1fr} .spectbl{grid-template-columns:1fr}
+    header.site h1{font-size:19px}
+  }
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <h1>LLM &amp; Multimodal Architecture Atlas</h1>
+  <div class="sub">A browsable gallery of modern language-, vision-language-, and generative-model architectures — parameters, layers, attention type, MoE routing, normalization, and per-model architecture diagrams. Built for researchers and infra engineers doing quick lookups and comparisons.</div>
+  <div class="meta"><b id="mcount">0</b> models · dense · MoE · multimodal · updated <b id="updated">2026</b> · specs from tech reports &amp; open model cards</div>
+</div></header>
+
+<div class="controls"><div class="wrap">
+  <div class="row">
+    <div class="search">
+      <svg viewBox="0 0 16 16"><path d="M11.7 10.3a6 6 0 10-1.4 1.4l3 3a1 1 0 001.4-1.4l-3-3zM3 6.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z"/></svg>
+      <input id="q" type="search" placeholder="Search models, orgs, attention (e.g. MLA, sliding-window, DeepSeek)…" autocomplete="off" />
+    </div>
+    <select id="org"><option value="">All orgs</option></select>
+    <select id="sort">
+      <option value="date">Newest first</option>
+      <option value="date-asc">Oldest first</option>
+      <option value="size">Largest (total)</option>
+      <option value="active">Largest (active)</option>
+      <option value="name">Name A–Z</option>
+    </select>
+    <button class="btn" id="cmpToggle">⇄ Compare</button>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="chips" id="typechips">
+      <span class="fchip t-dense" data-f="type" data-v="Dense">Dense</span>
+      <span class="fchip t-moe" data-f="type" data-v="MoE">MoE</span>
+      <span class="fchip t-mm" data-f="modality" data-v="multimodal">Multimodal</span>
+      <span class="fchip t-gen" data-f="modality" data-v="image-gen">Image/Video Gen</span>
+    </div>
+    <span class="count" id="count"></span>
+  </div>
+</div></div>
+
+<div class="wrap"><div class="grid" id="grid"></div><div class="empty" id="empty" style="display:none">No models match your filters.</div></div>
+
+<footer><div class="wrap">
+  Numbers are compiled from primary sources (HuggingFace <code>config.json</code>, tech reports, official model cards); fields marked <span class="conf estimated">estimated</span> are reasoned approximations for partially-disclosed models. Diagrams are schematic — one representative decoder block, not to scale.
+  Inspired by Sebastian Raschka's <a href="https://sebastianraschka.com/llm-architecture-gallery/" target="_blank" rel="noopener">LLM Architecture Gallery</a>.
+  · <a href="https://zhanglpg.github.io/">zhanglpg.github.io</a>
+</div></footer>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer"></div>
+
+<div class="cmpbar" id="cmpbar">
+  <span style="color:var(--dim);font-size:12px">Compare:</span>
+  <div id="cmppills" style="display:flex;gap:8px"></div>
+  <button class="btn active" id="cmpGo" disabled>View comparison →</button>
+  <button class="btn" id="cmpClear">Clear</button>
+</div>
+<div class="cmp-modal" id="cmpModal"></div>
+
+<script src="models.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
