@@ -34,7 +34,8 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/zai-org/GLM-4.5"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "glm-4-6",
@@ -71,7 +72,8 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/zai-org/GLM-4.6"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "kimi-k2",
@@ -108,7 +110,8 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/moonshotai/Kimi-K2-Instruct"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 1
 },
 {
 "id": "minimax-m2",
@@ -264,7 +267,8 @@ window.MODELS = [
 "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-PT",
 "https://ernie.baidu.com/blog/publication/ERNIE_Technical_Report.pdf"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "glm-5-2",
@@ -301,7 +305,8 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/zai-org/GLM-5.2"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "kimi-k2-7",
@@ -343,7 +348,8 @@ window.MODELS = [
 "sources": [
 "https://www.kimi.com/resources/kimi-k2-7-code"
 ],
-"confidence": "partial"
+"confidence": "partial",
+"dense_first_layers": 1
 },
 {
 "id": "llama-3-3-70b",
@@ -423,7 +429,8 @@ window.MODELS = [
 "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct",
 "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"moe_every": 1
 },
 {
 "id": "llama-4-maverick",
@@ -466,7 +473,8 @@ window.MODELS = [
 "https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct",
 "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"moe_every": 2
 },
 {
 "id": "mistral-small-3-1-24b",
@@ -794,7 +802,8 @@ window.MODELS = [
 "https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct",
 "https://arxiv.org/abs/2504.07491"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 1
 },
 {
 "id": "gpt2-xl",
@@ -1097,7 +1106,8 @@ window.MODELS = [
 "https://huggingface.co/deepseek-ai/DeepSeek-V3/raw/main/config.json",
 "https://arxiv.org/abs/2412.19437"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "deepseek-v3-2-exp",
@@ -1135,7 +1145,8 @@ window.MODELS = [
 "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp/raw/main/config.json",
 "https://github.com/deepseek-ai/DeepSeek-V3.2-Exp"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "deepseek-r1",
@@ -1173,7 +1184,8 @@ window.MODELS = [
 "https://huggingface.co/deepseek-ai/DeepSeek-R1/raw/main/config.json",
 "https://arxiv.org/abs/2501.12948"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "deepseek-v4-pro",
@@ -1330,7 +1342,8 @@ window.MODELS = [
 "https://huggingface.co/zai-org/GLM-5.1",
 "https://docs.z.ai/release-notes/new-released"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 },
 {
 "id": "kimi-k2-6",
@@ -1372,7 +1385,8 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/moonshotai/Kimi-K2.6"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 1
 },
 {
 "id": "minimax-m2-7",
@@ -1452,6 +1466,7 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/MiniMaxAI/MiniMax-M3"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"dense_first_layers": 3
 }
 ];

@@ -102,102 +102,317 @@
   }
 
   // ---------- architecture SVG ----------
+  // Raschka-gallery-style generated diagram: bottom-up main stack (input at bottom, logits at top)
+  // inside a gray model container with a purple repeated-block, proper residual skip lines,
+  // RoPE side box, dotted-leader callouts, and exploded FFN / MoE sub-module diagrams on the right.
   const A_COL = { MHA: '#3fb950', GQA: '#3fb950', MQA: '#3fb950', MLA: '#bc8cff', sparse: '#f0883e', hybrid: '#58a6ff', linear: '#39c5cf', MMDiT: '#f778ba' };
+  const A_NAME = { MHA: 'Multi-Head Attention', GQA: 'Grouped-Query Attention', MQA: 'Multi-Query Attention', MLA: 'Multi-head Latent Attention', sparse: 'Sparse Attention', hybrid: 'Hybrid Attention', linear: 'Linear Attention', MMDiT: 'Joint Attention (MMDiT)' };
   function attnColor(a) { return A_COL[a] || '#3fb950'; }
 
   function archSVG(m) {
-    const W = 380, x = 44, w = 244, cx = x + w / 2; // main column
-    let y = 14; const parts = [];
-    const box = (h, fill, stroke, label, sub, opt = {}) => {
-      const r = opt.r ?? 8, lc = opt.lc || '#e6edf3', fs = opt.fs || 12.5;
-      parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.3"/>`);
-      parts.push(`<text x="${cx}" y="${y + (sub ? h / 2 - 3 : h / 2 + 1)}" text-anchor="middle" fill="${lc}" font-size="${fs}" font-weight="640">${esc(label)}</text>`);
-      if (sub) parts.push(`<text x="${cx}" y="${y + h / 2 + 12}" text-anchor="middle" fill="#9aa7b4" font-size="10.5">${esc(sub)}</text>`);
-      const top = y; y += h; return top;
-    };
-    const arrow = (gap = 13) => { parts.push(`<line x1="${cx}" y1="${y}" x2="${cx}" y2="${y + gap}" stroke="#39424f" stroke-width="1.6" marker-end="url(#ah)"/>`); y += gap; };
-    const norm = (label) => { // thin norm bar
-      parts.push(`<rect x="${x + 26}" y="${y}" width="${w - 52}" height="20" rx="5" fill="#161b22" stroke="#2a3240"/>`);
-      parts.push(`<text x="${cx}" y="${y + 14}" text-anchor="middle" fill="#9aa7b4" font-size="10.5">${esc(label)}</text>`);
-      y += 20;
-    };
-    const gen = isGen(m);
-
-    // Input
-    parts.push(`<text x="${cx}" y="${y + 4}" text-anchor="middle" fill="#6e7b89" font-size="11">${gen ? 'Noised latent patches + text/time cond.' : 'Input token IDs'}</text>`);
-    y += 14; arrow(10);
-    // Embedding
-    box(40, '#1c2230', '#2a3240', gen ? 'Patchify + Embed' : 'Token Embedding', (m.vocab_size ? fmtNum(m.vocab_size) + ' vocab · ' : '') + 'd=' + fmtNum(m.d_model), { fs: 12 });
-    arrow();
-
-    // ---- decoder block container (with stacked-shadow to imply ×N) ----
-    const blkTop = y;
-    const sub = []; // sub-content drawn later; measure height first by drawing into y
-    // draw shadow rects behind (offset) — we know block content height after building; do a two-pass: build inner, compute h.
-    const innerStartY = y + 12;
-    y = innerStartY;
-    // sublayer 1: norm -> attention -> residual
-    const sandwich = m.norm_placement === 'sandwich';
-    norm((sandwich ? 'pre ' : '') + m.norm);
-    const aTop = y;
+    const gen = isGen(m), moe = isMoE(m);
+    const AC = '#6cb2ff', FG = '#e6edf3', DIM = '#9aa7b4', DIM2 = '#8b96a3', LINE = '#3a4352';
+    const W = 1080, cx = 340, skipX = cx + 142, RX = 612, cxA = 828, RW = 436;
+    const P = [];
+    const num = (v) => `<tspan fill="${AC}" font-weight="700">${v}</tspan>`;
+    const plain = (s) => String(s).replace(/<[^>]+>/g, '');
+    const estW = (s, fs) => plain(s).length * fs * 0.6;
+    // tspan-safe wrap: a whole <tspan>…</tspan> is one token (never split inside markup)
+    const wrap = (s, maxW, fs) => { const toks = String(s).match(/<tspan[^>]*>[^<]*<\/tspan>|\S+/g) || []; const out = []; let line = ''; for (const w of toks) { const t = line ? line + ' ' + w : w; if (estW(t, fs) > maxW && line) { out.push(line); line = w; } else line = t; } if (line) out.push(line); return out; };
+    const T = (x, y, s, o = {}) => { const { fs = 12, fill = FG, an = 'middle', fw = 600, fam = '' } = o; P.push(`<text x="${x}" y="${y}" text-anchor="${an}" fill="${fill}" font-size="${fs}" font-weight="${fw}"${fam ? ` font-family="${fam}"` : ''}>${s}</text>`); };
+    const TL = (x, y, arr, o = {}) => { const { lh = 15, ...rest } = o; arr.forEach((l, i) => T(x, y + i * lh, l, rest)); };
+    const R = (x, y, w, h, o = {}) => { const { fill = '#0d1420', stroke = LINE, rx = 9, sw = 1.4, dash = '' } = o; P.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`); };
+    const cbox = (y, w, h, l1, l2, o = {}) => { R(cx - w / 2, y, w, h, o); if (l2) { T(cx, y + h / 2 - 2, l1, { fs: o.fs1 || 13, fill: o.c1 || FG }); T(cx, y + h / 2 + 13.5, l2, { fs: 10.5, fill: DIM, fw: 500 }); } else T(cx, y + h / 2 + 4.5, l1, { fs: o.fs1 || 13, fill: o.c1 || FG }); };
+    const up = (x, yLo, yHi) => P.push(`<line x1="${x}" y1="${yLo}" x2="${x}" y2="${yHi + 8}" stroke="${DIM2}" stroke-width="1.6" marker-end="url(#au)"/>`);
+    const plus = (x, y) => { P.push(`<circle cx="${x}" cy="${y}" r="11" fill="#0d1420" stroke="${DIM2}" stroke-width="1.5"/>`); T(x, y + 4.5, '+', { fs: 15 }); };
+    const otimes = (x, y) => { P.push(`<circle cx="${x}" cy="${y}" r="10" fill="#0d1420" stroke="${DIM2}" stroke-width="1.5"/>`); T(x, y + 3.8, '×', { fs: 13 }); };
+    const dot = (x1, y1, x2, y2) => P.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#5f6975" stroke-width="1.2" stroke-dasharray="2.5 3.5"/>`);
     const aColor = attnColor(m.attention);
-    const attnLabel = m.attention + (m.attention === 'hybrid' ? '' : ' attention');
-    const attnSub = (m.n_heads ? m.n_heads + ' q' + (m.n_kv_heads && m.n_kv_heads !== m.n_heads ? ' / ' + m.n_kv_heads + ' kv' : '') + ' heads · d_h ' + (m.head_dim ?? '?') : m.attention_detail ? '' : '');
-    box(46, aColor + '22', aColor, attnLabel, attnSub, { lc: aColor });
-    if (sandwich) norm('post ' + m.norm);
-    // residual arc 1 (right side)
-    parts.push(`<path d="M ${x + w} ${aTop - 26} q 30 0 30 ${(y - (aTop - 26)) / 2} q 0 ${(y - (aTop - 26)) / 2} -30 ${(y - (aTop - 26)) / 2}" fill="none" stroke="#39424f" stroke-width="1.3" stroke-dasharray="3 3"/>`);
-    parts.push(`<circle cx="${x + w}" cy="${y}" r="7" fill="#161b22" stroke="#39424f"/><text x="${x + w}" y="${y + 3.5}" text-anchor="middle" fill="#9aa7b4" font-size="11">+</text>`);
-    arrow(12);
-    // sublayer 2: norm -> FFN/MoE -> residual
-    norm((sandwich ? 'pre ' : '') + m.norm);
-    const fTop = y;
-    if (isMoE(m)) {
-      // MoE box with expert glyphs
-      const bh = 62; parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${bh}" rx="8" fill="#d2992218" stroke="#d29922" stroke-width="1.3"/>`);
-      parts.push(`<text x="${cx}" y="${y + 15}" text-anchor="middle" fill="#e3b341" font-size="12.5" font-weight="640">MoE FFN · ${esc(m.activation)}</text>`);
-      // router
-      parts.push(`<text x="${x + 12}" y="${y + 34}" fill="#9aa7b4" font-size="9.5">router →</text>`);
-      // expert squares
-      const total = m.n_experts || 8, act = m.active_experts || 1, shared = m.shared_experts || 0;
-      const show = Math.min(total, 11); const sq = 15, gap = 3; const startX = x + 56;
-      for (let i = 0; i < show; i++) {
-        const on = i < act; // first `act` shown as active (schematic)
-        const ex = startX + i * (sq + gap);
-        parts.push(`<rect x="${ex}" y="${y + 26}" width="${sq}" height="${sq}" rx="3" fill="${on ? '#d29922' : '#21262d'}" stroke="${on ? '#f0b429' : '#39424f'}"/>`);
-      }
-      if (total > show) parts.push(`<text x="${startX + show * (sq + gap) + 2}" y="${y + 38}" fill="#9aa7b4" font-size="12">…</text>`);
-      if (shared) parts.push(`<rect x="${x + 18}" y="${y + 26}" width="${sq}" height="${sq}" rx="3" fill="#3fb95033" stroke="#3fb950"/><text x="${x + 25.5}" y="${y + 55}" text-anchor="middle" fill="#7ee787" font-size="8">shared</text>`);
-      parts.push(`<text x="${cx}" y="${y + bh - 4}" text-anchor="middle" fill="#9aa7b4" font-size="10">${total} experts · top-${act}${shared ? ' + ' + shared + ' shared' : ''} · expert d_ff ${fmtNum(m.d_ff_moe)}</text>`);
-      y += bh;
+    const normN = m.norm || 'RMSNorm';
+    const sandwich = m.norm_placement === 'sandwich', postN = m.norm_placement === 'post';
+    const preN = !postN; // pre or sandwich draw the pre-norm
+
+    // ============ MAIN STACK (drawn top-down; data flows bottom-up) ============
+    let y = 16;
+    T(20, y + 20, `${esc(m.name)}  <tspan fill="${DIM}" font-weight="600" font-size="15">(${fmtParams(m.params_total_B)}${moe ? `, ${fmtParams(m.params_active_B)} active` : ''})</tspan>`, { fs: 20, an: 'start', fw: 800 });
+    y += m.context_length ? 96 : 52;   // extra headroom for the top-left context callout
+    // out arrow above output box
+    const outTip = y; y += 16;
+    const yOut = y, hOut = 40; y += hOut;
+    y += 26;
+    const yFN = y, hFN = 32; y += hFN;
+    y += 26;
+    const purpleTop = y; y += 16;
+    // ⊕2 (after FFN/MoE sublayer)
+    const yPlus2 = y + 11; y += 22;
+    // post-norm above MoE (post / sandwich)
+    let yPN2 = null; if (postN || sandwich) { y += 6; yPN2 = y; y += 24; }
+    y += 18;
+    const yMoE = y, hMoE = 46; y += hMoE;
+    // pre-norm below MoE
+    let yN2 = null; if (preN) { y += 20; yN2 = y; y += 28; }
+    y += 18;
+    const yPlus1 = y + 11; y += 22;
+    let yPN1 = null; if (postN || sandwich) { y += 6; yPN1 = y; y += 24; }
+    y += 16;
+    const yAtt = y, hAtt = 48; y += hAtt;
+    let yN1 = null; if (preN) { y += 18; yN1 = y; y += 28; }
+    y += 16;
+    const purpleBot = y;
+    y += 26;
+    const yEmb = y, hEmb = 40; y += hEmb;
+    const contTop = yOut - 18, contBot = y + 16; y = contBot;
+    y += 24;
+    const yTok = y, hTok = 30; y += hTok;
+    y += 34; // input arrow + label
+    const yInputLabel = y; y += 8;
+    let mainBot = y;
+
+    // gray model container + purple block (drawn first = behind)
+    P.push(`<rect x="${cx - 215}" y="${contTop}" width="430" height="${contBot - contTop}" rx="16" fill="#151b28" stroke="#2c3442" stroke-width="1.4"/>`);
+    P.push(`<rect x="${cx - 170}" y="${purpleTop}" width="340" height="${purpleBot - purpleTop}" rx="14" fill="url(#pg)" stroke="#8b5cf6" stroke-width="1.6"/>`);
+
+    // boxes
+    cbox(yOut, 260, hOut, gen ? 'Linear proj → unpatchify' : 'Linear output layer', null, {});
+    cbox(yFN, 200, hFN, gen ? 'Final AdaLN' : `Final ${normN}`, null, { fs1: 12 });
+    // MoE / FFN box
+    if (moe) {
+      cbox(yMoE, 260, hMoE, 'MoE FFN', `${num(m.n_experts)} experts · top-${num(m.active_experts)}${m.shared_experts ? ` + ${num(m.shared_experts)} shared` : ''}`, { fill: 'rgba(210,153,34,.10)', stroke: '#d29922', c1: '#e3b341' });
     } else {
-      box(44, '#58a6ff1e', '#58a6ff', (gen ? 'MLP / AdaLN-mod' : 'FFN') + ' · ' + m.activation, (m.d_ff ? 'd_ff = ' + fmtNum(m.d_ff) : ''), { lc: '#79b8ff' });
+      cbox(yMoE, 260, hMoE, gen ? `MLP · ${esc(m.activation)}` : `FeedForward · ${esc(m.activation)}`, m.d_ff ? `d_ff ${num(fmtNum(m.d_ff))}` : '', { fill: 'rgba(88,166,255,.08)', stroke: '#4a7dbf', c1: '#79b8ff' });
     }
-    if (sandwich) norm('post ' + m.norm);
-    parts.push(`<path d="M ${x + w} ${fTop - 26} q 30 0 30 ${(y - (fTop - 26)) / 2} q 0 ${(y - (fTop - 26)) / 2} -30 ${(y - (fTop - 26)) / 2}" fill="none" stroke="#39424f" stroke-width="1.3" stroke-dasharray="3 3"/>`);
-    parts.push(`<circle cx="${x + w}" cy="${y}" r="7" fill="#161b22" stroke="#39424f"/><text x="${x + w}" y="${y + 3.5}" text-anchor="middle" fill="#9aa7b4" font-size="11">+</text>`);
-    y += 12;
-    const blkBot = y;
-    const blkH = blkBot - blkTop;
-    // container outline + stacked shadow (drawn BEHIND: we insert at front)
-    const shadow = `<rect x="${x - 8}" y="${blkTop + 8}" width="${w + 16}" height="${blkH}" rx="12" fill="#161b22" stroke="#2a3240"/>` +
-                   `<rect x="${x - 4}" y="${blkTop + 4}" width="${w + 8}" height="${blkH}" rx="12" fill="#161b22" stroke="#2a3240"/>`;
-    const container = `<rect x="${x - 12}" y="${blkTop}" width="${w + 24}" height="${blkH}" rx="12" fill="none" stroke="${accentColor(m)}" stroke-width="1.4"/>`;
-    const nlabel = `<text x="${x + w + 16}" y="${blkTop + 16}" fill="${accentColor(m)}" font-size="12" font-weight="700">× ${m.n_layers ?? 'N'}</text>` +
-                   `<text x="${x + w + 16}" y="${blkTop + 30}" fill="#6e7b89" font-size="9.5">layers</text>`;
-    parts.unshift(shadow); parts.push(container, nlabel);
+    if (yN2 != null) cbox(yN2, 190, 28, gen ? 'AdaLN mod' : `${normN} 2`, null, { fs1: 11.5 });
+    if (yPN2 != null) cbox(yPN2, 190, 24, `${normN} (post)`, null, { fs1: 10.5 });
+    // attention box
+    const attTitle = A_NAME[m.attention] || esc(m.attention);
+    const attSub = m.n_heads ? `${num(m.n_heads)} heads${m.n_kv_heads && m.n_kv_heads !== m.n_heads ? ` · ${num(m.n_kv_heads)} KV` : ''} · d_h ${num(m.head_dim ?? '?')}` : '';
+    cbox(yAtt, 260, hAtt, attTitle, attSub, { fill: '#242b3d', stroke: aColor, c1: aColor, fs1: 13.5 });
+    if (yN1 != null) cbox(yN1, 190, 28, gen ? 'AdaLN mod' : `${normN} 1`, null, { fs1: 11.5 });
+    if (yPN1 != null) cbox(yPN1, 190, 24, `${normN} (post)`, null, { fs1: 10.5 });
+    cbox(yEmb, 260, hEmb, gen ? 'Patchify + embed' : 'Token embedding layer', `d_model = ${num(fmtNum(m.d_model))}`, {});
+    cbox(yTok, 190, hTok, gen ? 'Latent patches + text' : 'Tokenized text', null, { fs1: 12 });
+    T(cx, yInputLabel, gen ? 'noised latent · timestep · text cond.' : 'Sample input text', { fs: 12, fill: DIM2, fam: 'ui-monospace,Menlo,monospace', fw: 500 });
 
-    arrow();
-    // final norm + head
-    box(30, '#161b22', '#2a3240', 'Final ' + m.norm, '', { fs: 11.5 });
-    arrow();
-    box(38, '#1c2230', '#2a3240', gen ? 'Unpatchify → denoised latent' : 'LM Head → logits', gen ? '' : ((m.tie_embeddings ? 'tied · ' : '') + fmtNum(m.vocab_size) + ' vocab'), { fs: 12 });
-    y += 8;
+    // residual ⊕ nodes + main arrows (bottom-up)
+    plus(cx, yPlus2); plus(cx, yPlus1);
+    up(cx, yOut, outTip);                                    // logits out
+    up(cx, yFN, yOut + hOut);
+    up(cx, yPlus2 - 11, yFN + hFN);
+    up(cx, yMoE, (yPN2 != null ? yPN2 + 24 : yPlus2 + 11));
+    if (yPN2 != null) up(cx, yPN2, yPlus2 + 11);
+    if (yN2 != null) { up(cx, yN2, yMoE + hMoE); up(cx, yPlus1 - 11, yN2 + 28); }
+    else up(cx, yPlus1 - 11, yMoE + hMoE);
+    up(cx, yAtt, (yPN1 != null ? yPN1 + 24 : yPlus1 + 11));
+    if (yPN1 != null) up(cx, yPN1, yPlus1 + 11);
+    if (yN1 != null) { up(cx, yN1, yAtt + hAtt); up(cx, yEmb, yN1 + 28); }
+    else up(cx, yEmb, yAtt + hAtt);
+    up(cx, yTok, yEmb + hEmb);
+    up(cx, yTok + hTok + 26, yTok + hTok);
 
-    const H = y;
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-      <defs><marker id="ah" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#39424f"/></marker></defs>
-      ${parts.join('')}
+    // residual skip lines (right side, into ⊕ from the right)
+    const skip = (yBranch, yPlusC) => P.push(`<path d="M ${cx} ${yBranch} L ${skipX} ${yBranch} L ${skipX} ${yPlusC} L ${cx + 19} ${yPlusC}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
+    const b1 = (yN1 != null ? yN1 + 28 : yAtt + hAtt) + 9;   // on the segment entering attention sublayer
+    const b2 = (yN2 != null ? yN2 + 28 : yMoE + hMoE) + 9;   // on the segment entering FFN sublayer
+    skip(b1, yPlus1); skip(b2, yPlus2);
+
+    // N× layer count: brace at purple bottom-left (Raschka style) when there's room below the
+    // RoPE box; otherwise (short post-norm blocks) a label in the top-right gutter.
+    const hasRope = /RoPE/i.test(m.pos_encoding || '');
+    const bMid0 = purpleBot - 40;                          // brace label center if we draw the brace
+    const ropeY0 = yAtt + hAtt / 2 - 15, ropeY1 = yAtt + hAtt / 2 + 15;
+    const labelCollides = hasRope && (bMid0 + 18 > ropeY0) && (bMid0 - 18 < ropeY1);
+    if (!labelCollides) {
+      const bx = cx - 182, bTop = purpleBot - 74, bBot = purpleBot - 6, bMid = (bTop + bBot) / 2;
+      P.push(`<path d="M ${bx + 8} ${bTop} Q ${bx} ${bTop} ${bx} ${bTop + 9} L ${bx} ${bMid - 9} Q ${bx} ${bMid} ${bx - 8} ${bMid} Q ${bx} ${bMid} ${bx} ${bMid + 9} L ${bx} ${bBot - 9} Q ${bx} ${bBot} ${bx + 8} ${bBot}" fill="none" stroke="${DIM2}" stroke-width="1.8"/>`);
+      T(bx - 16, bMid - 2, `${num(m.n_layers ?? 'N')} ×`, { fs: 17, an: 'end', fw: 800 });
+      T(bx - 16, bMid + 15, 'blocks', { fs: 10.5, an: 'end', fill: DIM, fw: 500 });
+    } else {
+      T(cx + 178, purpleTop + 20, `${num(m.n_layers ?? 'N')} ×`, { fs: 15, an: 'start', fw: 800 });
+      T(cx + 178, purpleTop + 36, 'blocks', { fs: 10, an: 'start', fill: DIM, fw: 500 });
+    }
+
+    // RoPE side box (RoPE-family) or learned-pos callout
+    const pe = m.pos_encoding || '';
+    if (/RoPE/i.test(pe)) {
+      const rY = yAtt + hAtt / 2 - 15;
+      R(38, rY, 92, 30, { fill: '#0d1420', stroke: LINE });
+      T(84, rY + 19, pe === 'RoPE' ? 'RoPE' : esc(pe), { fs: 11.5 });
+      P.push(`<line x1="130" y1="${rY + 15}" x2="${cx - 138}" y2="${rY + 15}" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
+    } else if (pe === 'learned') {
+      TL(24, yEmb - 32, wrap('Learned absolute positional embeddings', 130, 11), { fs: 11, fill: DIM, an: 'start', fw: 500 });
+      dot(150, yEmb - 26, cx - 132, yEmb + 8);
+    }
+
+    // ---- callouts with dotted leaders ----
+    // vocab → output layer (top right, above the right column modules)
+    if (m.vocab_size) {
+      T(RX, yOut + 6, `Vocabulary size of ${num(fmtNum(m.vocab_size))}`, { fs: 12.5, an: 'start', fill: DIM });
+      dot(cx + 132, yOut + 16, RX - 8, yOut + 2);
+    }
+    // context length (top-left, above the model container — keeps the RoPE/brace zone clear)
+    if (m.context_length) {
+      TL(24, contTop - 26, ['Supported context', `length of ${num(fmtCtx(m.context_length))} tokens`], { fs: 11.5, an: 'start', fill: DIM });
+      dot(122, contTop - 18, cx - 198, contTop + 10);
+    }
+    // attention-pattern callout for hybrid/sparse/linear (left, above RoPE; right-aligned so
+    // lines never cross the container border; honest ellipsis when truncated)
+    if (['hybrid', 'sparse', 'linear', 'MMDiT'].includes(m.attention) && m.attention_detail) {
+      const full = String(m.attention_detail);
+      let short = full.length > 170 ? full.slice(0, 168).replace(/[,;.\s]+\S*$/, '') : full;
+      let ls = wrap(short, 134, 10.5);
+      let trunc = short.length < full.length;
+      if (ls.length > 7) { ls = ls.slice(0, 7); trunc = true; }
+      if (trunc) ls[ls.length - 1] = ls[ls.length - 1].replace(/[,;.(]+$/, '') + ' …';
+      TL(118, yAtt - 30 - ls.length * 13.5, ls, { fs: 10.5, lh: 13.5, an: 'end', fill: '#c8b273', fw: 500 });
+      dot(122, yAtt - 32, cx - 132, yAtt + 6);
+    }
+    // dense-first / moe-interleave note (left column at the embedding row, leader to purple corner)
+    let noteY = yEmb + 4;
+    if (moe && (m.dense_first_layers || m.moe_every === 2)) {
+      const msg = m.dense_first_layers
+        ? `First ${m.dense_first_layers} block${m.dense_first_layers > 1 ? 's use' : ' uses'} a dense FeedForward (d_ff ${fmtNum(m.d_ff)}) instead of MoE`
+        : `MoE alternates with dense FeedForward layers (every 2nd block; dense d_ff ${fmtNum(m.d_ff)})`;
+      const ls = wrap(msg, 172, 11);
+      TL(24, noteY, ls, { fs: 11, lh: 14, an: 'start', fill: DIM, fw: 500 });
+      dot(112, noteY - 10, cx - 172, purpleBot - 2);
+      noteY += ls.length * 14 + 12;
+    }
+    // vision encoder side box (multimodal LMs) — feeds the token sequence horizontally
+    if (m.vision && !gen) {
+      const vY = yTok - 6;
+      const enc = (m.vision.encoder || 'Vision encoder').split('(')[0].trim();
+      const encLines = wrap(esc(enc), 172, 10.5).slice(0, 2);
+      const vH = encLines.length > 1 ? 54 : 40;
+      R(30, vY, 190, vH, { fill: '#1c1530', stroke: '#bc8cff', dash: '5 4' });
+      TL(125, vY + 16, encLines, { fs: 10.5, lh: 12.5, fill: '#d2a8ff' });
+      T(125, vY + vH - 9, `${m.vision.encoder_params_B ? '~' + m.vision.encoder_params_B + 'B · ' : ''}${esc(m.vision.fusion || 'adapter')}`, { fs: 10, fill: DIM, fw: 500 });
+      P.push(`<line x1="222" y1="${vY + vH / 2}" x2="${cx - 103}" y2="${vY + vH / 2}" stroke="#bc8cff" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#au)"/>`);
+      T(125, vY + vH + 15, 'vision tokens', { fs: 10.5, fill: DIM2, fam: 'ui-monospace,Menlo,monospace', fw: 500 });
+      mainBot = Math.max(mainBot, vY + vH + 26);
+    }
+    mainBot = Math.max(mainBot, noteY);
+
+    // ============ RIGHT COLUMN: exploded modules ============
+    let ry = Math.max(130, yOut + 38);
+    // --- FeedForward module ---
+    const gated = /GLU/i.test(m.activation || '');
+    const actName = (m.activation === 'SwiGLU') ? 'SiLU' : (m.activation === 'GeGLU') ? 'GELU' : (m.activation || 'GELU');
+    T(RX, ry, `FeedForward (${esc(m.activation || 'MLP')}) module`, { fs: 14.5, an: 'start', fw: 800 });
+    ry += 12;
+    const fH = gated ? 236 : 210;
+    R(RX, ry, RW, fH, { fill: '#10161f', stroke: '#4a5568', rx: 14, dash: '6 5' });
+    if (gated) {
+      const lX = cxA - 105, rX2 = cxA + 105;
+      // top output linear
+      R(cxA - 85, ry + 22, 170, 34, {}); T(cxA, ry + 43, 'Linear layer', { fs: 12 });
+      // ⊗
+      const mY = ry + 92; otimes(cxA, mY);
+      // SiLU/GELU (left) + up-proj Linear (right)
+      R(lX - 80, mY + 26, 160, 34, {}); T(lX, mY + 47, `${actName} activation`, { fs: 12 });
+      R(rX2 - 80, mY + 26, 160, 34, {}); T(rX2, mY + 47, 'Linear layer', { fs: 12 });
+      // bottom gate linear (left)
+      R(lX - 80, mY + 86, 160, 34, {}); T(lX, mY + 107, 'Linear layer', { fs: 12 });
+      // arrows: input → gate linear & right linear; gate → act; act → ⊗; right → ⊗; ⊗ → out
+      const inY = ry + fH - 8;
+      P.push(`<path d="M ${cxA} ${inY} L ${cxA} ${inY - 6} L ${lX} ${inY - 6} L ${lX} ${mY + 128}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
+      P.push(`<path d="M ${cxA} ${inY - 6} L ${rX2} ${inY - 6} L ${rX2} ${mY + 68}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
+      up(lX, mY + 86, mY + 60);
+      P.push(`<path d="M ${lX} ${mY + 26} L ${lX} ${mY} L ${cxA - 18} ${mY}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
+      P.push(`<path d="M ${rX2} ${mY + 26} L ${rX2} ${mY} L ${cxA + 18} ${mY}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
+      up(cxA, mY - 10, ry + 56);
+    } else {
+      // simple MLP: Linear → act → Linear
+      R(cxA - 85, ry + 22, 170, 34, {}); T(cxA, ry + 43, 'Linear layer', { fs: 12 });
+      R(cxA - 85, ry + 88, 170, 34, {}); T(cxA, ry + 109, `${actName} activation`, { fs: 12 });
+      R(cxA - 85, ry + 154, 170, 34, {}); T(cxA, ry + 175, 'Linear layer', { fs: 12 });
+      up(cxA, ry + 88, ry + 56); up(cxA, ry + 154, ry + 122); up(cxA, ry + fH - 6, ry + 188);
+    }
+    const ffDim = moe ? m.d_ff_moe : m.d_ff;
+    // right-anchored so the panel connector on the left never crosses it
+    T(RX + RW - 8, ry + fH + 22, `Input dim: ${num(fmtNum(m.d_model))}   ·   Intermediate dim: ${num(fmtNum(ffDim ?? '—'))}`, { fs: 12.5, an: 'end', fill: DIM });
+    // leader from main FFN/MoE box to this module
+    dot(cx + 132, yMoE + hMoE / 2, RX - 6, ry + fH / 2);
+    let rBot = ry + fH + 40;
+
+    // --- MoE layer module ---
+    if (moe) {
+      let by = rBot + 22;
+      T(RX, by, 'MoE layer', { fs: 14.5, an: 'start', fw: 800 });
+      by += 12;
+      const bH = 250;
+      R(RX, by, RW, bH, { fill: '#10161f', stroke: '#2f6feb', rx: 14, dash: '6 5' });
+      // ⊕ at top, with its output stub
+      const pY = by + 34; plus(cxA, pY);
+      up(cxA, pY - 11, by + 2);
+      // expert FF boxes
+      const e1x = cxA - 128, e2x = cxA + 128, eY = by + 92;
+      const ff = (x, label, badge, badgeFill) => {
+        R(x - 78, eY, 156, 34, { fill: '#1a2130', stroke: '#d29922' });
+        T(x, eY + 21, label, { fs: 12, fill: '#e3b341' });
+        R(x + 52, eY + 22, 26, 18, { fill: badgeFill, stroke: 'none', rx: 4 });
+        T(x + 65, eY + 35, badge, { fs: 10.5, fill: '#0d1117', fw: 800 });
+      };
+      ff(e1x, 'Feed forward', '1', '#e6edf3');
+      ff(e2x, 'Feed forward', String(m.n_experts ?? 'E'), '#6cb2ff');
+      T(cxA, eY + 22, '· · ·', { fs: 16, fill: DIM });
+      // router
+      const rtY = by + 176;
+      R(cxA - 62, rtY, 124, 34, { fill: '#0d1420', stroke: '#2f6feb' }); T(cxA, rtY + 21, 'Router', { fs: 12.5, fill: '#79b8ff' });
+      // arrows router → experts → ⊕
+      P.push(`<line x1="${cxA - 20}" y1="${rtY + 2}" x2="${e1x + 10}" y2="${eY + 40}" stroke="${DIM2}" stroke-width="1.4" marker-end="url(#au)"/>`);
+      P.push(`<line x1="${cxA + 20}" y1="${rtY + 2}" x2="${e2x - 10}" y2="${eY + 40}" stroke="${DIM2}" stroke-width="1.4" marker-end="url(#au)"/>`);
+      P.push(`<line x1="${e1x + 10}" y1="${eY - 4}" x2="${cxA - 14}" y2="${pY + 12}" stroke="${DIM2}" stroke-width="1.4" marker-end="url(#au)"/>`);
+      P.push(`<line x1="${e2x - 10}" y1="${eY - 4}" x2="${cxA + 14}" y2="${pY + 12}" stroke="${DIM2}" stroke-width="1.4" marker-end="url(#au)"/>`);
+      up(cxA, by + bH - 8, rtY + 34);
+      // shared expert (always-on) — level with ⊕ at far left, clear of the expert→⊕ arrows
+      if (m.shared_experts) {
+        R(RX + 16, pY - 15, 118, 30, { fill: 'rgba(63,185,80,.10)', stroke: '#3fb950' });
+        T(RX + 75, pY - 2, 'Shared expert', { fs: 10.5, fill: '#7ee787' });
+        T(RX + 75, pY + 10, 'always active', { fs: 9, fill: DIM, fw: 500 });
+        P.push(`<line x1="${RX + 136}" y1="${pY}" x2="${cxA - 24}" y2="${pY}" stroke="#3fb950" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#au)"/>`);
+      }
+      // caption OUTSIDE the panel so the router input arrow never crosses it
+      T(RX + 14, by + bH + 18, `each expert = the FeedForward module above (d_ff ${num(fmtNum(m.d_ff_moe))})`, { fs: 10.5, an: 'start', fill: DIM, fw: 500 });
+      // panel-to-panel connector down the clear left corridor
+      dot(RX + 44, ry + fH + 4, RX + 44, by - 4);
+      rBot = by + bH + 30;
+    }
+
+    // --- resource / inference bullets ---
+    let cy = rBot + 26;
+    const bullet = (b) => { const ls = wrap(b, 392, 12); T(RX + 10, cy, '•', { fs: 12, an: 'start', fill: DIM }); TL(RX + 24, cy, ls, { fs: 12, lh: 16, an: 'start', fill: DIM, fw: 500 }); cy += ls.length * 16 + 5; };
+    if (moe) {
+      T(RX, cy, 'Resource savings:', { fs: 13.5, an: 'start', fw: 800, fill: AC }); cy += 20;
+      const bullets = [
+        `Model size is ${num(fmtParams(m.params_total_B))}`,
+        `but only ${num(m.active_experts)} routed${m.shared_experts ? ` + ${num(m.shared_experts)} shared` : ''} of ${num(m.n_experts)} experts are active per token`,
+        `→ only ${num(fmtParams(m.params_active_B))} parameters active per inference step`,
+      ];
+      bullets.forEach(bullet);
+    } else if (!gen) {
+      T(RX, cy, 'Inference notes:', { fs: 13.5, an: 'start', fw: 800, fill: AC }); cy += 20;
+      const bl = [];
+      if (m.attention === 'MLA') bl.push('MLA compresses K/V into low-rank latents → far smaller KV cache than MHA');
+      else if (m.n_kv_heads && m.n_heads && m.n_kv_heads < m.n_heads) {
+        bl.push(`${num(m.n_heads)} query heads share ${num(m.n_kv_heads)} KV heads → ${num(Math.round(m.n_heads / m.n_kv_heads) + '×')} smaller KV cache than MHA`);
+        if (m.head_dim && m.n_layers) bl.push(`KV cache ≈ ${num(fmtNum(Math.round(2 * m.n_kv_heads * m.head_dim * m.n_layers * 2 / 1024)) + ' KB')} per token (bf16)`);
+      } else bl.push('Full multi-head attention: KV cache grows with heads × layers × context');
+      if (m.tie_embeddings) bl.push('Input/output embeddings tied (saves vocab × d_model params)');
+      bl.forEach(bullet);
+    } else {
+      T(RX, cy, 'Design notes:', { fs: 13.5, an: 'start', fw: 800, fill: AC }); cy += 20;
+      bullet(m.attention_detail || m.notes || '');
+    }
+
+    const H = Math.max(mainBot, cy) + 18;
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+      <defs>
+        <marker id="au" markerWidth="8" markerHeight="8" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="${DIM2}"/></marker>
+        <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.20"/><stop offset="1" stop-color="#6d28d9" stop-opacity="0.08"/>
+        </linearGradient>
+      </defs>
+      ${P.join('\n')}
     </svg>`;
   }
 
