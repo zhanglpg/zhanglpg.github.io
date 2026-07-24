@@ -563,8 +563,25 @@
   // ---------- init ----------
   function init() {
     $('#mcount').textContent = MODELS.length;
-    const latest = MODELS.map(m => m.released).sort().pop();
-    $('#updated').textContent = relDate(latest);
+    // last-updated: prefer the maintenance changelog's last run; fall back to newest model date
+    const CLOG = window.ATLAS_CHANGELOG;
+    if (CLOG && CLOG.last_run) $('#updated').textContent = CLOG.last_run;
+    else $('#updated').textContent = relDate(MODELS.map(m => m.released).sort().pop());
+
+    // what's-new modal from the changelog
+    const wn = $('#whatsnew');
+    if (CLOG && CLOG.entries && CLOG.entries.length) {
+      $('#wnList').innerHTML = CLOG.entries.map(e => `
+        <div class="wn-entry">
+          <div class="d">${esc(e.date)}</div>
+          <div>${(e.added || []).map(a => `<span class="wn-chip wn-add">+ ${esc(a)}</span>`).join('')}
+               ${(e.upgraded || []).map(u => `<span class="wn-chip wn-up">↑ ${esc(u)}</span>`).join('')}</div>
+          <div class="note">${esc(e.note)}</div>
+        </div>`).join('');
+      wn.onclick = (ev) => { ev.preventDefault(); $('#wnModal').classList.add('show'); };
+      $('#wnClose').onclick = () => $('#wnModal').classList.remove('show');
+      $('#wnModal').onclick = (ev) => { if (ev.target === $('#wnModal')) $('#wnModal').classList.remove('show'); };
+    } else if (wn) wn.style.display = 'none';
     const orgs = [...new Set(MODELS.map(m => m.org))].sort();
     $('#org').innerHTML = '<option value="">All orgs</option>' + orgs.map(o => `<option>${esc(o)}</option>`).join('');
 
@@ -590,8 +607,10 @@
     $('#scrim').onclick = closeDetail;
     document.onkeydown = (e) => {
       if (e.key !== 'Escape') return;
-      const lb = $('#lightbox');
-      if (lb.classList.contains('show')) { lb.classList.remove('show'); return; }  // innermost layer first
+      for (const id of ['#lightbox', '#wnModal']) {   // innermost layers first
+        const el = $(id);
+        if (el && el.classList.contains('show')) { el.classList.remove('show'); return; }
+      }
       closeDetail(); $('#cmpModal').classList.remove('show');
     };
 
