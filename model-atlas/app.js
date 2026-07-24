@@ -39,7 +39,8 @@
   const accentColor = (m) => isGen(m) ? 'var(--gen)' : isMM(m) ? 'var(--mm)' : isMoE(m) ? 'var(--moe)' : 'var(--dense)';
 
   // ---------- state ----------
-  const state = { q: '', org: '', sort: 'date', types: new Set(), mods: new Set(), cmp: false, picked: [] };
+  const state = { q: '', org: '', sort: 'date', types: new Set(), mods: new Set(), cmp: false, picked: [], detailId: null };
+  const getTheme = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
 
   // ---------- card ----------
   function cardHTML(m) {
@@ -416,8 +417,43 @@
     </svg>`;
   }
 
+  // ---------- themed diagrams ----------
+  // archSVG emits the dark palette; for light mode we remap each dark color to a tuned light
+  // equivalent (exact string substitution — every color below appears only with this meaning).
+  const LIGHT_SVG_MAP = [
+    ['#e6edf3', '#1f2328'],   // primary text (also flips the white expert badge to a dark chip)
+    ['#0d1117', '#ffffff'],   // badge numerals (white on the now-dark chip)
+    ['#0d1420', '#ffffff'],   // box fills
+    ['#151b28', '#f6f8fa'],   // model-container fill
+    ['#10161f', '#fafbfc'],   // module-panel fills
+    ['#242b3d', '#eef1f6'],   // attention box fill
+    ['#1c1530', '#faf5ff'],   // vision box fill
+    ['#1a2130', '#fff8eb'],   // expert feed-forward box fill
+    ['#2c3442', '#d0d7de'],   // container stroke
+    ['#3a4352', '#c7cdd4'],   // box strokes
+    ['#4a5568', '#afb8c1'],   // module dashed strokes
+    ['#5f6975', '#8c959f'],   // dotted leaders
+    ['#8b96a3', '#57606a'],   // arrows / secondary labels
+    ['#9aa7b4', '#57606a'],   // dim text
+    ['#6cb2ff', '#0550ae'],   // accent numbers
+    ['#79b8ff', '#0550ae'],   // blue labels
+    ['#e3b341', '#9a6700'],   // amber labels
+    ['#c8b273', '#7d5a00'],   // attention-pattern callout
+    ['#7ee787', '#1a7f37'],   // green labels
+    ['#d2a8ff', '#8250df'],   // purple labels
+    ['#bc8cff', '#8250df'],   // purple strokes
+    ['#8b5cf6', '#8250df'],   // purple block stroke + gradient stop
+    ['#6d28d9', '#a879f7'],   // gradient lower stop
+  ];
+  function themedSVG(m) {
+    let s = archSVG(m);
+    if (getTheme() === 'light') for (const [d, l] of LIGHT_SVG_MAP) s = s.split(d).join(l);
+    return s;
+  }
+
   // ---------- detail drawer ----------
   function openDetail(m) {
+    state.detailId = m.id;
     const vis = m.vision ? `<div class="dsec"><h3>Vision / Multimodal</h3><div class="notes">
       <b>Encoder:</b> ${esc(m.vision.encoder)}${m.vision.encoder_params_B ? ' (~' + m.vision.encoder_params_B + 'B)' : ''} · <b>Fusion:</b> ${esc(m.vision.fusion)}<br>${esc(m.vision.notes)}</div></div>` : '';
     $('#drawer').innerHTML = `
@@ -426,8 +462,9 @@
         <button class="xbtn" id="dx">×</button>
       </div>
       <div class="dbody">
-        <div class="dsec"><h3>Architecture diagram</h3><div class="arch">${archSVG(m)}</div>
-          <div style="color:#6e7b89;font-size:11px;margin-top:6px">Schematic: one representative decoder block, repeated ×${m.n_layers ?? 'N'}. ${esc(m.attention_detail || '')}</div>
+        <div class="dsec"><h3>Architecture diagram</h3>
+          <div class="arch" data-mid="${esc(m.id)}">${themedSVG(m)}<span class="zoomhint">⤢ click to enlarge</span></div>
+          <div style="color:var(--dim2);font-size:11px;margin-top:6px">Schematic: one representative decoder block, repeated ×${m.n_layers ?? 'N'}. ${esc(m.attention_detail || '')}</div>
         </div>
         <div class="dsec"><h3>Specifications</h3><div class="spectbl">${specRows(m)}</div></div>
         ${vis}
@@ -461,7 +498,7 @@
       rows += `<div class="rowlabel">${label}</div>` + vals.map(v => `<div style="${diff ? 'color:#e6edf3' : 'color:#9aa7b4'}">${v == null ? '—' : v}</div>`).join('');
     }
     rows += '</div>';
-    const archs = `<div class="cmp-archrow" style="--n:${n}">${ms.map(m => `<div><div style="text-align:center;font-weight:640;margin-bottom:6px">${esc(m.name)}</div><div class="arch">${archSVG(m)}</div></div>`).join('')}</div>`;
+    const archs = `<div class="cmp-archrow" style="--n:${n}">${ms.map(m => `<div><div style="text-align:center;font-weight:640;margin-bottom:6px">${esc(m.name)}</div><div class="arch" data-mid="${esc(m.id)}">${themedSVG(m)}<span class="zoomhint">⤢ click to enlarge</span></div></div>`).join('')}</div>`;
     $('#cmpModal').innerHTML = `<div class="inner">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
         <h2 style="margin:0">Architecture comparison</h2><button class="btn" id="cmpClose">Close ×</button></div>
@@ -551,7 +588,40 @@
     $('#cmpGo').onclick = renderCompare;
     $('#cmpClear').onclick = () => { state.picked = []; renderPills(); render(); };
     $('#scrim').onclick = closeDetail;
-    document.onkeydown = (e) => { if (e.key === 'Escape') { closeDetail(); $('#cmpModal').classList.remove('show'); } };
+    document.onkeydown = (e) => {
+      if (e.key !== 'Escape') return;
+      const lb = $('#lightbox');
+      if (lb.classList.contains('show')) { lb.classList.remove('show'); return; }  // innermost layer first
+      closeDetail(); $('#cmpModal').classList.remove('show');
+    };
+
+    // theme toggle — re-render any open diagram views so the SVG palette follows
+    const tbtn = $('#themeToggle');
+    const themeIcon = () => { tbtn.textContent = getTheme() === 'light' ? '🌙' : '☀️'; };
+    themeIcon();
+    tbtn.onclick = () => {
+      const next = getTheme() === 'light' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('atlas-theme', next); } catch (e) {}
+      themeIcon();
+      $('#lightbox').classList.remove('show');
+      if ($('#drawer').classList.contains('show') && state.detailId) {
+        const m = MODELS.find(x => x.id === state.detailId); if (m) openDetail(m);
+      }
+      if ($('#cmpModal').classList.contains('show')) renderCompare();
+    };
+
+    // diagram lightbox — click any .arch (drawer or compare) to enlarge
+    document.addEventListener('click', (e) => {
+      const a = e.target && e.target.closest ? e.target.closest('.arch') : null;
+      if (!a || !a.dataset.mid) return;
+      const m = MODELS.find(x => x.id === a.dataset.mid);
+      if (!m) return;
+      $('#lbSvg').innerHTML = themedSVG(m);
+      $('#lightbox').classList.add('show');
+    });
+    $('#lbClose').onclick = () => $('#lightbox').classList.remove('show');
+    $('#lightbox').onclick = (e) => { if (e.target === $('#lightbox')) $('#lightbox').classList.remove('show'); };
     render();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

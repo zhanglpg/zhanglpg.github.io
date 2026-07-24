@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LLM &amp; Multimodal Architecture Atlas</title>
 <meta name="description" content="A browsable gallery of modern LLM, VLM, and generative-model architectures — model cards with parameters, layers, attention type, MoE details, and architecture diagrams. For researchers and infra engineers." />
+<script>
+  // set theme before first paint: ?theme= override → saved choice → OS preference
+  (function () {
+    var q = null;
+    try { q = new URLSearchParams(location.search).get('theme'); } catch (e) {}
+    var t = q || (function () { try { return localStorage.getItem('atlas-theme'); } catch (e) { return null; } })();
+    if (!t) t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.dataset.theme = (t === 'light') ? 'light' : 'dark';
+  }());
+</script>
 <style>
   :root{
     --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2a3240; --line2:#39424f;
@@ -126,6 +136,42 @@
   footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim2);font-size:12px;line-height:1.7}
   footer a{color:var(--dim)}
   .empty{padding:60px 20px;text-align:center;color:var(--dim2)}
+
+  /* ---------- light theme ---------- */
+  html[data-theme="light"]{
+    --bg:#f6f8fa; --panel:#ffffff; --panel2:#f6f8fa; --line:#d0d7de; --line2:#afb8c1;
+    --fg:#1f2328; --dim:#57606a; --dim2:#6e7781; --accent:#0969da; --accent2:#1a7f37;
+    --moe:#9a6700; --dense:#0969da; --mm:#8250df; --gen:#bf3989;
+    --chip:#eaeef2; --shadow:0 1px 3px rgba(140,149,160,.22),0 8px 24px rgba(140,149,160,.22);
+  }
+  html[data-theme="light"] .controls{background:rgba(246,248,250,.92)}
+  html[data-theme="light"] .b-dense{background:rgba(9,105,218,.10);color:#0550ae}
+  html[data-theme="light"] .b-moe{background:rgba(154,103,0,.12);color:#9a6700}
+  html[data-theme="light"] .b-mm{background:rgba(130,80,223,.10);color:#8250df}
+  html[data-theme="light"] .b-gen{background:rgba(191,57,137,.10);color:#bf3989}
+  html[data-theme="light"] .b-dit{background:rgba(26,127,55,.12);color:#1a7f37}
+  html[data-theme="light"] .tag.attn{color:#1a7f37;background:rgba(26,127,55,.08)}
+  html[data-theme="light"] .conf.verified{background:rgba(26,127,55,.12);color:#1a7f37}
+  html[data-theme="light"] .conf.partial{background:rgba(154,103,0,.12);color:#9a6700}
+  html[data-theme="light"] .btn.active{color:#fff}
+  html[data-theme="light"] .card.picked .cmpbox::after{color:#fff}
+  html[data-theme="light"] .scrim{background:rgba(31,35,40,.42)}
+
+  /* ---------- diagram zoom / lightbox ---------- */
+  .arch{cursor:zoom-in;position:relative}
+  .arch .zoomhint{position:absolute;top:8px;right:10px;font-size:10.5px;color:var(--dim2);background:var(--chip);
+    border-radius:5px;padding:2px 7px;opacity:0;transition:opacity .15s;pointer-events:none}
+  .arch:hover .zoomhint{opacity:1}
+  .lightbox{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px}
+  html[data-theme="light"] .lightbox{background:rgba(31,35,40,.55)}
+  .lightbox.show{display:flex}
+  .lb-box{position:relative;background:var(--panel2);border:1px solid var(--line);border-radius:14px;
+    max-width:min(1560px,97vw);max-height:95vh;overflow:auto;padding:14px 22px 20px;box-shadow:var(--shadow)}
+  .lb-box svg{width:min(1480px,92vw);height:auto;display:block}
+  .lb-close{position:sticky;top:0;float:right;background:var(--chip);border:1px solid var(--line2);color:var(--fg);
+    border-radius:8px;font-size:18px;line-height:1;padding:4px 10px;cursor:pointer;z-index:2}
+  .lb-close:hover{border-color:var(--accent)}
+
   @media(max-width:640px){
     .stats{grid-template-columns:1fr} .spectbl{grid-template-columns:1fr}
     header.site h1{font-size:19px}
@@ -154,6 +200,7 @@
       <option value="name">Name A–Z</option>
     </select>
     <button class="btn" id="cmpToggle">⇄ Compare</button>
+    <button class="btn" id="themeToggle" title="Toggle dark / light theme">☀️</button>
   </div>
   <div class="row" style="margin-top:10px">
     <div class="chips" id="typechips">
@@ -185,7 +232,14 @@
 </div>
 <div class="cmp-modal" id="cmpModal"></div>
 
-<script src="models.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<div class="lightbox" id="lightbox">
+  <div class="lb-box">
+    <button class="lb-close" id="lbClose" title="Close (Esc)">×</button>
+    <div id="lbSvg"></div>
+  </div>
+</div>
+
+<script src="models.js?v=5"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
