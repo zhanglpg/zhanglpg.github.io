@@ -236,7 +236,7 @@
     if (/RoPE/i.test(pe)) {
       const rY = yAtt + hAtt / 2 - 15;
       R(38, rY, 92, 30, { fill: '#0d1420', stroke: LINE });
-      T(84, rY + 19, pe === 'RoPE' ? 'RoPE' : esc(pe), { fs: 11.5 });
+      T(84, rY + 19, esc(pe.length > 12 ? 'MRoPE' : pe), { fs: 11.5 });
       P.push(`<line x1="130" y1="${rY + 15}" x2="${cx - 138}" y2="${rY + 15}" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
     } else if (pe === 'learned') {
       TL(24, yEmb - 32, wrap('Learned absolute positional embeddings', 130, 11), { fs: 11, fill: DIM, an: 'start', fw: 500 });
