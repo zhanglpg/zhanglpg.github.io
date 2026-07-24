@@ -2299,6 +2299,43 @@
       "deadline": null,
       "review_scores": [],
       "review_mean": null
+    },
+    "HPCA 2027::#1655": {
+      "conference": "HPCA 2027",
+      "paper_id": "1655",
+      "title": "MAX: Cost-Efficient Orchestration of Microservices and AMX-Accelerated LLM Inference",
+      "authors": [
+        "Liao Chen",
+        "Yuqi Qiu",
+        "Huanle Xu",
+        "Guoyao Xu",
+        "Liping Zhang",
+        "ChengZhong Xu"
+      ],
+      "site": "https://hpca2027.hotcrp.com/paper/1655",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-07-24T04:02:33+00:00",
+      "last_event": "2026-07-24T04:02:33+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-07-24T04:02:33+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Cost-Efficient Orchestration of...\""
+        }
+      ],
+      "counts": {
+        "updates": 1,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20260724040233.C9F2CA09760@mail.hotcrp.com>"
+      ],
+      "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -2355,8 +2392,8 @@
       "last_event": "2026-07-11T08:22:44+00:00"
     },
     "HPCA 2027": {
-      "paper_count": 4,
-      "last_event": "2026-07-19T22:35:30+00:00"
+      "paper_count": 5,
+      "last_event": "2026-07-24T04:02:33+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2519,6 +2556,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-24T00:04:00.719103+00:00",
-  "email_count": 239
+  "last_updated": "2026-07-24T04:04:37.221279+00:00",
+  "email_count": 240
 }
