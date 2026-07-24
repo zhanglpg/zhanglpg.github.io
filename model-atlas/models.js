@@ -119,7 +119,7 @@ window.MODELS = [
 "org": "MiniMax",
 "family": "MiniMax",
 "released": "2025-10",
-"license": "MIT",
+"license": "Modified MIT",
 "modality": "text",
 "decoder_type": "MoE",
 "params_total_B": 230,
@@ -293,7 +293,7 @@ window.MODELS = [
 "n_experts": 256,
 "active_experts": 8,
 "shared_experts": 1,
-"vocab_size": 151552,
+"vocab_size": 154880,
 "context_length": 1048576,
 "norm": "RMSNorm",
 "norm_placement": "pre",
@@ -301,7 +301,7 @@ window.MODELS = [
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "GLM-5.2 moves the GLM line from GQA to DeepSeek-style MLA + DSA sparse attention (top-2048 keys) — the shift that enables its 1M-token context; 744B/40B, 256 experts top-8 + 1 shared.",
+"notes": "GLM-5.2 continues the GLM-5 line's DeepSeek-style MLA + DSA sparse attention (top-2048 keys; the GQA-to-MLA+DSA shift happened at GLM-5, which is what enables the 1M-token context); 744B/40B, 256 experts top-8 + 1 shared.",
 "sources": [
 "https://huggingface.co/zai-org/GLM-5.2"
 ],
@@ -659,7 +659,7 @@ window.MODELS = [
 "context_length": 128000,
 "norm": "RMSNorm",
 "norm_placement": "pre",
-"pos_encoding": "2D-RoPE",
+"pos_encoding": "M-RoPE",
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": {
@@ -702,14 +702,14 @@ window.MODELS = [
 "context_length": 262144,
 "norm": "RMSNorm",
 "norm_placement": "pre",
-"pos_encoding": "2D-RoPE",
+"pos_encoding": "Interleaved-MRoPE",
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": {
 "encoder": "Redesigned ViT (depth 27, hidden 1152)",
-"encoder_params_B": 0.65,
+"encoder_params_B": 0.58,
 "fusion": "adapter",
-"notes": "MLP merger (2x2) + DeepStack: multi-level ViT features injected at LLM layers 8/16/24; native dynamic resolution."
+"notes": "MLP merger (2x2) plus DeepStack: features extracted from ViT layers 8/16/24 and injected into the first three LLM decoder layers; native dynamic resolution."
 },
 "notes": "Qwen3-235B-A22B MoE backbone (128 experts / 8 active, no shared) fused with a ViT via DeepStack multi-level feature injection and Interleaved-MRoPE; 256K native context extendable to 1M.",
 "sources": [
@@ -945,7 +945,7 @@ window.MODELS = [
 "context_length": null,
 "norm": "AdaLN",
 "norm_placement": "pre",
-"pos_encoding": "learned",
+"pos_encoding": "2D-sincos (fixed)",
 "activation": "GeLU",
 "tie_embeddings": false,
 "vision": null,
@@ -1179,7 +1179,7 @@ window.MODELS = [
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "Reasoning model with the SAME architecture as DeepSeek-V3 (MLA + fine-grained MoE, 256+1 experts, top-8); trained from V3-Base via large-scale RL. Config byte-identical to V3.",
+"notes": "Reasoning model with the SAME architecture as DeepSeek-V3 (MLA + fine-grained MoE, 256+1 experts, top-8); trained from V3-Base via large-scale RL. Config architecturally identical to V3 (differs only in transformers_version).",
 "sources": [
 "https://huggingface.co/deepseek-ai/DeepSeek-R1/raw/main/config.json",
 "https://arxiv.org/abs/2501.12948"
@@ -1218,7 +1218,7 @@ window.MODELS = [
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "MoE flagship (1.6T/49B). Replaces V3's MLA with a CSA+HCA sparse-attention stack and swaps residuals for Manifold-Constrained Hyper-Connections; first 3 MoE layers bootstrapped by a frozen Hash-MoE table with sqrtsoftplus routing. Ships fp8. 1M context.",
+"notes": "MoE flagship (1.6T/49B). Replaces V3's MLA with a CSA+HCA sparse-attention stack and swaps residuals for Manifold-Constrained Hyper-Connections; the first 3 MoE layers use Hash routing (a fixed hash of the input token ID picks the experts, replacing V3's dense first layers), and learned top-k routing uses Sqrt(Softplus) affinity scoring. Ships FP4+FP8 mixed (MoE expert weights FP4, most other params FP8). 1M context.",
 "sources": [
 "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
 "https://arxiv.org/abs/2606.19348"
@@ -1244,7 +1244,7 @@ window.MODELS = [
 "n_kv_heads": 1,
 "head_dim": 512,
 "attention": "sparse",
-"attention_detail": "Same CSA+HCA hybrid sparse stack as Pro over a shared K=V MQA backbone (n_kv=1), sliding-window 128, Lightning Indexer top-512; partial-RoPE on 64 of 512 head dims.",
+"attention_detail": "CSA+HCA hybrid sparse stack over a shared K=V MQA backbone (n_kv=1), sliding-window 128, Lightning Indexer top-512; partial-RoPE on 64 of 512 head dims. First two layers are pure sliding-window (Pro uses HCA there); q compression 1024 vs Pro's 1536.",
 "n_experts": 256,
 "active_experts": 6,
 "shared_experts": 1,
@@ -1256,7 +1256,7 @@ window.MODELS = [
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "Smaller/faster MoE sibling of V4-Pro with identical architecture (CSA+HCA sparse attention, hyper-connections, Hash-MoE bootstrap), scaled down in width/depth/experts. 284B/13B active, fp8, 1M context.",
+"notes": "Smaller/faster MoE sibling of V4-Pro: same CSA+HCA sparse-attention family, hyper-connections, Hash routing for the first 3 MoE layers, scaled down in width/depth/experts. Unlike Pro (first two layers HCA), Flash's first two layers are pure sliding-window attention. 284B/13B active, FP4+FP8 mixed, 1M context.",
 "sources": [
 "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
 "https://arxiv.org/abs/2606.19348"
@@ -1296,7 +1296,7 @@ window.MODELS = [
 "vision": {
 "encoder": "SigLIP2-so400m-class ViT (depth 27, hidden 1152)",
 "encoder_params_B": 0.4,
-"fusion": "early-fusion",
+"fusion": "adapter",
 "notes": "Native multimodal (image+video, temporal_patch 2); ViT projects to d_model 4096 via 2x2 spatial merge."
 },
 "notes": "Qwen3.5 open-weight flagship: a natively multimodal MoE with a Gated-DeltaNet + full-attention 3:1 hybrid backbone (like Qwen3-Next scaled up), 512 experts (10 active + 1 shared), MRoPE, and an MTP head; native 262K context extensible to ~1M.",
@@ -1316,7 +1316,7 @@ window.MODELS = [
 "modality": "text",
 "decoder_type": "MoE",
 "params_total_B": 744,
-"params_active_B": 41,
+"params_active_B": 40,
 "n_layers": 78,
 "d_model": 6144,
 "d_ff": 12288,
@@ -1337,7 +1337,7 @@ window.MODELS = [
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "GLM-5.1 (744B/41B) shares the GLM-5 architecture: MLA + DSA sparse attention, first 3 dense layers then 256 experts top-8 + 1 shared, plus an MTP layer. Lineage GLM-4.6 → 4.7 → GLM-5 → GLM-5.1 → GLM-5.2. A continued-training/RL refresh of GLM-5.",
+"notes": "GLM-5.1 (744B/40B) shares the GLM-5 architecture: MLA + DSA sparse attention, first 3 dense layers then 256 experts top-8 + 1 shared, plus an MTP layer. Lineage GLM-4.6 → 4.7 → GLM-5 → GLM-5.1 → GLM-5.2. A continued-training/RL refresh of GLM-5.",
 "sources": [
 "https://huggingface.co/zai-org/GLM-5.1",
 "https://docs.z.ai/release-notes/new-released"
@@ -1372,7 +1372,7 @@ window.MODELS = [
 "context_length": 262144,
 "norm": "RMSNorm",
 "norm_placement": "pre",
-"pos_encoding": "partial-RoPE",
+"pos_encoding": "RoPE",
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": {
@@ -1394,7 +1394,7 @@ window.MODELS = [
 "org": "MiniMax",
 "family": "MiniMax",
 "released": "2026-04",
-"license": "MiniMax Model License",
+"license": "Non-commercial (MiniMax)",
 "modality": "text",
 "decoder_type": "MoE",
 "params_total_B": 229,
