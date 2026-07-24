@@ -2322,7 +2322,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-24T04:02:33+00:00",
-      "last_event": "2026-07-24T07:28:02+00:00",
+      "last_event": "2026-07-24T09:39:48+00:00",
       "events": [
         {
           "type": "updated",
@@ -2378,13 +2378,23 @@
           "type": "updated",
           "date": "2026-07-24T07:28:02+00:00",
           "subject": "[HPCA 2027] Updated #1655 \"MAX: Cost-Efficient Orchestration of...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-24T09:39:28+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Cost-Efficient Orchestration of...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-24T09:39:48+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Cost-Efficient Orchestration of...\""
         }
       ],
       "counts": {
-        "updates": 11,
+        "updates": 13,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 13
       },
       "message_ids": [
         "<20260724040233.C9F2CA09760@mail.hotcrp.com>",
@@ -2397,7 +2407,9 @@
         "<20260724055251.C9B75826013@mail.hotcrp.com>",
         "<20260724063307.94794A09769@mail.hotcrp.com>",
         "<20260724072048.482F9A09774@mail.hotcrp.com>",
-        "<20260724072802.0A768A09770@mail.hotcrp.com>"
+        "<20260724072802.0A768A09770@mail.hotcrp.com>",
+        "<20260724093928.DA684A1EC4E@mail.hotcrp.com>",
+        "<20260724093948.451F3A09766@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2459,7 +2471,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-24T07:28:02+00:00"
+      "last_event": "2026-07-24T09:39:48+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2622,6 +2634,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-24T08:05:05.340705+00:00",
-  "email_count": 251
+  "last_updated": "2026-07-24T12:06:14.382293+00:00",
+  "email_count": 253
 }
