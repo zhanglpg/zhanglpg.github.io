@@ -346,9 +346,11 @@ window.MODELS = [
 },
 "notes": "Kimi K2.7-Code: 1T/32B MoE on the DeepSeek-V3 MLA backbone (61 layers, 384 experts top-8 + 1 shared), now multimodal via a 400M MoonViT encoder; 256K context.",
 "sources": [
-"https://www.kimi.com/resources/kimi-k2-7-code"
+"https://www.kimi.com/resources/kimi-k2-7-code",
+"https://huggingface.co/moonshotai/Kimi-K2.7-Code",
+"https://huggingface.co/moonshotai/Kimi-K2.7-Code/raw/main/config.json"
 ],
-"confidence": "partial",
+"confidence": "verified",
 "dense_first_layers": 1
 },
 {
@@ -1401,7 +1403,7 @@ window.MODELS = [
 "params_active_B": 10,
 "n_layers": 62,
 "d_model": 3072,
-"d_ff": 8192,
+"d_ff": null,
 "d_ff_moe": 1536,
 "n_heads": 48,
 "n_kv_heads": 8,
@@ -1419,12 +1421,13 @@ window.MODELS = [
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "Text-only agentic coding/reasoning MoE (229B/~10B), successor to M2/M2.5, full softmax attention throughout; fp8, 3 MTP modules. Superseded by MiniMax-M3.",
+"notes": "Text-only agentic coding/reasoning MoE (229B/~10B), successor to M2/M2.5, full softmax attention throughout; fp8, 3 MTP modules. Superseded by MiniMax-M3. All 62 layers are MoE; config discloses no dense FFN width (M2's vestigial mlp_intermediate_size is absent in M2.7). Non-commercial license verified from HF LICENSE file.",
 "sources": [
 "https://huggingface.co/MiniMaxAI/MiniMax-M2.7",
+"https://huggingface.co/MiniMaxAI/MiniMax-M2.7/raw/main/config.json",
 "https://www.minimax.io/news/minimax-m27-en"
 ],
-"confidence": "partial"
+"confidence": "verified"
 },
 {
 "id": "minimax-m3",
