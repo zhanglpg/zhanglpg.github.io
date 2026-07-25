@@ -1,3 +1,7 @@
 # Tracker parser state — internal dedup (Message-IDs), don't expose to GitHub Pages
 schoology-tracker/.state.json
 hotcrp-tracker/.state.json
+
+# COROS dashboard — raw personal fitness data (HR, GPS, laps) stays local;
+# only the processed data.js is published.
+coros-dashboard/raw/
