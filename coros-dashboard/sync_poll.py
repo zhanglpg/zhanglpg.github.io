@@ -116,8 +116,23 @@ def mcp_call(tok, name, arguments, req_id=1, _retried=False):
         raise RuntimeError(f"MCP error from {name}: {obj['error']}")
     for c in obj["result"]["content"]:
         if c.get("type") == "text":
-            return c["text"]
+            return _unwrap_text(c["text"])
     return json.dumps(obj["result"]["content"])
+
+
+def _unwrap_text(text):
+    """Some tools (querySportRecords) return their report JSON-string-encoded:
+    a leading quote and literal \\n escapes. Unwrap one level so downstream
+    parsers (update.py, fetch_laps.py) see real newlines. Lap results start
+    with '{' and are untouched."""
+    if text[:1] == '"':
+        try:
+            u = json.loads(text)
+            if isinstance(u, str):
+                return u
+        except ValueError:
+            pass
+    return text
 
 
 # --------------------------------------------------------------------------- #
@@ -227,7 +242,23 @@ def main():
         run([sys.executable, "segments.py"])
     run([sys.executable, "update.py"])
 
-    # publish (data.js only; raw/ is gitignored)
+    # verify the new activities actually landed on the dashboard
+    after = dashboard_label_ids()
+    still_missing = [lid for (lid, st) in new if lid not in after]
+    if still_missing:
+        log(f"WARNING: still absent from data.js after update: {still_missing} "
+            "— records parsing likely failed; will NOT loop-commit")
+
+    # publish only on substantive change (ignore the regeneration timestamp)
+    strip = lambda s: re.sub(r'"generated":"[^"]*"', '', s)
+    head = subprocess.run(["git", "show", "HEAD:coros-dashboard/data.js"],
+                          cwd=REPO, capture_output=True, text=True).stdout
+    now_ = open(os.path.join(BASE, "data.js"), encoding="utf-8").read()
+    if strip(head) == strip(now_):
+        run(["git", "checkout", "--", "coros-dashboard/data.js"], cwd=REPO)
+        log("no substantive data.js change; commit skipped")
+        return 0
+
     run(["git", "add", "coros-dashboard/data.js"], cwd=REPO)
     diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO)
     if diff.returncode != 0:
