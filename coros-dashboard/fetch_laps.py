@@ -20,7 +20,7 @@ LAPS = os.path.join(BASE, "raw", "laps")
 RECORDS = os.path.join(BASE, "raw", "records")
 TOKEN_FILE = os.path.expanduser("~/.hermes/mcp-tokens/coros.json")
 URL = "https://mcp.coros.com/mcp"
-FLAT_RUN_TYPES = {100, 101, 103}
+ALL_RUN_TYPES = {100, 101, 102, 103}
 
 
 def load_token():
@@ -64,7 +64,7 @@ def detect_missing():
             if not lid or not st:
                 continue
             st = int(st.group(1))
-            if st in FLAT_RUN_TYPES:
+            if st in ALL_RUN_TYPES:
                 runs[lid.group(1)] = st
     return [(lid, st) for lid, st in runs.items() if lid not in have]
 

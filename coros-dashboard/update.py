@@ -99,6 +99,8 @@ def parse_records_file(path):
         label_id = grab(r"LabelId:\s*(\d+)")
         if not label_id:
             continue
+        lat = grab(r"Start Coordinates:\s*([\d.-]+)", float)
+        lon = grab(r"Start Coordinates:\s*[\d.-]+,\s*([\d.-]+)", float)
         acts.append({
             "labelId": label_id,
             "sportType": grab(r"SportType:\s*(\d+)", int, 0),
@@ -114,6 +116,8 @@ def parse_records_file(path):
             "paceSec": parse_pace(grab(r"Average Pace:\s*([\d:]+)\s*/km")),
             "speedKmh": grab(r"Average Speed:\s*([\d.]+)\s*km/h", float),
             "location": (grab(r"Location:\s*(.+)") or "").strip(),
+            "lat": lat,
+            "lon": lon,
         })
     return acts
 
@@ -181,6 +185,98 @@ def compute_pbs_and_segments(runs_with_laps):
     for i, s in enumerate(segments):
         s["rank"] = i + 1
     return pbs, segments[:10]
+
+
+def _haversine_m(a, b):
+    """Great-circle distance in metres between two (lat, lon) tuples."""
+    import math
+    la1, lo1 = a
+    la2, lo2 = b
+    p1, p2 = math.radians(la1), math.radians(la2)
+    dp = math.radians(la2 - la1)
+    dl = math.radians(lo2 - lo1)
+    h = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * 6371000 * math.asin(math.sqrt(h))
+
+
+def build_route_segments(runs, laps):
+    """Cluster outdoor runs by start location into "routes", then compute the
+    best time for each whole-kilometre segment of each route.
+
+    Segments are aligned from the common start point: segment k covers
+    distance (k-1)..k km along the route. Because the runs in a route share a
+    start, these are honest comparisons of the same stretch of road/trail.
+    """
+    # Only outdoor runs (road + trail) with a start coordinate and lap data.
+    eligible = [r for r in runs
+                if r["sportType"] in (100, 102)
+                and r.get("lat") is not None and r.get("lon") is not None
+                and r["labelId"] in laps]
+
+    # Greedy clustering by start coordinate (200 m radius).
+    clusters = []
+    for r in eligible:
+        pt = (r["lat"], r["lon"])
+        placed = False
+        for c in clusters:
+            if _haversine_m(c["center"], pt) < 200:
+                c["members"].append(r)
+                placed = True
+                break
+        if not placed:
+            clusters.append({"center": pt, "members": [r]})
+
+    routes = []
+    for c in clusters:
+        members = c["members"]
+        if len(members) < 2:
+            continue  # a "route" needs at least two efforts to compare
+
+        # Per-run full 1K splits (aligned from start).
+        run_splits = []
+        for r in members:
+            full = [l["time"] for l in laps[r["labelId"]]["laps"] if l["distCm"] >= 99000]
+            if full:
+                run_splits.append((r, full))
+        if len(run_splits) < 2:
+            continue
+
+        max_k = max(len(s) for _, s in run_splits)
+        segs = []
+        for k in range(max_k):
+            # best effort that covers segment k (i.e. has at least k+1 splits)
+            best = None
+            for r, splits in run_splits:
+                if len(splits) <= k:
+                    continue
+                t = splits[k]
+                if best is None or t < best["seconds"]:
+                    best = {
+                        "km": k + 1, "seconds": round(t, 1), "pace": fmt_pace(t),
+                        "date": r["date"], "labelId": r["labelId"],
+                    }
+            if best:
+                segs.append(best)
+
+        dists = [r["distKm"] for r in members if r["distKm"]]
+        # Route name: most common location label among members.
+        from collections import Counter
+        loc_counts = Counter((r["location"] or "Run") for r in members)
+        name = loc_counts.most_common(1)[0][0]
+
+        routes.append({
+            "id": f"{c['center'][0]:.4f},{c['center'][1]:.4f}",
+            "name": name,
+            "lat": round(c["center"][0], 5),
+            "lon": round(c["center"][1], 5),
+            "efforts": len(members),
+            "minKm": round(min(dists), 1) if dists else None,
+            "maxKm": round(max(dists), 1) if dists else None,
+            "segments": segs,
+        })
+
+    routes.sort(key=lambda r: -r["efforts"])
+    return routes
 
 
 def build_strength_groups(strength):
@@ -251,10 +347,16 @@ def main():
         lap = laps.get(a["labelId"])
         best1k = None
         elev = None
+        splits = []
         if lap:
-            full = [l["time"] for l in lap["laps"] if l["distCm"] >= 99000]
-            best1k = round(min(full), 1) if full else None
+            full = [l for l in lap["laps"] if l["distCm"] >= 99000]
+            times = [l["time"] for l in full]
+            best1k = round(min(times), 1) if times else None
             elev = lap["elevGain"]
+            splits = [{
+                "km": i + 1, "seconds": round(l["time"], 1), "pace": fmt_pace(l["time"]),
+                "hr": l.get("hr"), "elevGain": l.get("elevGain", 0),
+            } for i, l in enumerate(full)]
         runs.append({
             "labelId": a["labelId"], "sportType": a["sportType"],
             "sportName": a["sportName"], "category": SPORT_META.get(a["sportType"], ("Other", "other"))[1],
@@ -263,12 +365,16 @@ def main():
             "paceSec": a["paceSec"], "pace": fmt_pace(a["paceSec"]),
             "hr": a["hr"], "cal": a["cal"], "elevGain": elev,
             "location": a["location"], "best1k": best1k, "best1kPace": fmt_pace(best1k),
+            "lat": a.get("lat"), "lon": a.get("lon"), "splits": splits,
         })
 
     # PBs & segments from flat runs that have lap data ---------------------- #
     flat_with_laps = [(r, laps[r["labelId"]]) for r in runs
                       if r["sportType"] in FLAT_RUN_TYPES and r["labelId"] in laps]
     pbs, segments = compute_pbs_and_segments(flat_with_laps)
+
+    # Route-based segments (outdoor runs clustered by start location) ------- #
+    routes = build_route_segments(runs, laps)
 
     # Run trend (chronological) + monthly volume ---------------------------- #
     chrono = sorted(runs, key=lambda r: r["ts"] or 0)
@@ -325,6 +431,7 @@ def main():
         },
         "pbs": pbs,
         "segments": segments,
+        "routes": routes,
         "runs": runs,
         "runTrend": run_trend,
         "monthlyVolume": monthly_volume,
@@ -341,7 +448,7 @@ def main():
 
     print(f"Wrote {OUT}")
     print(f"  activities={len(acts)} runs={len(runs)} "
-          f"runs_with_laps={len(flat_with_laps)} strength={len(strength)}")
+          f"runs_with_laps={len(flat_with_laps)} strength={len(strength)} routes={len(routes)}")
     print(f"  pbs={[ (p['dist'], p['pace']) for p in pbs ]}")
 
 

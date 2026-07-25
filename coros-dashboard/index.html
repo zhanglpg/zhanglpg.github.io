@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Liping Zhang · Training Log</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,164 +13,115 @@
 <script src="data.js"></script>
 <style>
   :root{
-    --bg:#0e1014;
-    --bg-2:#12151c;
-    --card:#161a22;
-    --card-2:#1b202b;
-    --line:#242b38;
-    --line-2:#2e3748;
-    --txt:#e9edf4;
-    --txt-2:#a7b0c0;
-    --txt-3:#6f7a8d;
-    --run:#ff6b35;
-    --run-soft:rgba(255,107,53,.14);
-    --strength:#3ddc84;
-    --strength-soft:rgba(61,220,132,.13);
-    --seg:#4cc9f0;
-    --seg-soft:rgba(76,201,240,.13);
-    --hike:#ffc857;
-    --hike-soft:rgba(255,200,87,.13);
+    --bg:#0e1014; --bg-2:#12151c; --card:#161a22; --card-2:#1b202b;
+    --line:#242b38; --line-2:#2e3748;
+    --txt:#e9edf4; --txt-2:#a7b0c0; --txt-3:#6f7a8d;
+    --run:#ff6b35; --run-soft:rgba(255,107,53,.14);
+    --strength:#3ddc84; --strength-soft:rgba(61,220,132,.13);
+    --seg:#4cc9f0; --seg-soft:rgba(76,201,240,.13);
+    --hike:#ffc857; --hike-soft:rgba(255,200,87,.13);
     --row:#b388ff;
-    --good:#3ddc84;
-    --bad:#ff5d5d;
-    --disp:'Bebas Neue',sans-serif;
-    --body:'Space Grotesk',sans-serif;
+    --good:#3ddc84; --bad:#ff5d5d;
+    --disp:'Bebas Neue',sans-serif; --body:'Space Grotesk',sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    font-family:var(--body);
-    background:var(--bg);
-    color:var(--txt);
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  /* layered ambient background */
-  body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:
-      radial-gradient(900px 500px at 8% -6%, rgba(255,107,53,.09), transparent 60%),
-      radial-gradient(800px 520px at 100% 0%, rgba(76,201,240,.07), transparent 55%),
-      radial-gradient(700px 600px at 50% 110%, rgba(61,220,132,.06), transparent 60%);
-  }
-  body::after{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-    background-image:
-      linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
-    background-size:44px 44px;
-    mask-image:linear-gradient(180deg,#000 0%,transparent 70%);
-  }
+  body{font-family:var(--body);background:var(--bg);color:var(--txt);min-height:100vh;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(900px 500px at 8% -6%,rgba(255,107,53,.09),transparent 60%),
+      radial-gradient(800px 520px at 100% 0%,rgba(76,201,240,.07),transparent 55%),
+      radial-gradient(700px 600px at 50% 110%,rgba(61,220,132,.06),transparent 60%)}
+  body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:linear-gradient(180deg,#000 0%,transparent 70%)}
   #root{position:relative;z-index:1}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  /* ---------- top bar ---------- */
+  .topbar{border-bottom:1px solid var(--line);background:rgba(14,16,20,.7)}
+  .topbar .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:10px;padding-bottom:10px}
+  .home-link{font-size:13px;font-weight:600;color:var(--txt-2);text-decoration:none;letter-spacing:.02em;
+    display:inline-flex;align-items:center;gap:7px;transition:color .2s}
+  .home-link:hover{color:var(--run)}
+  .home-link .arr{transition:transform .2s}
+  .home-link:hover .arr{transform:translateX(-3px)}
+  .topbar-right{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-3)}
 
   /* ---------- header ---------- */
-  header{
-    padding:44px 0 26px;
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-  }
+  header{padding:40px 0 24px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
   .id-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .who .eyebrow{
-    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--run);
-    font-weight:600;display:flex;align-items:center;gap:8px;
-  }
+  .who .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--run);
+    font-weight:600;display:flex;align-items:center;gap:8px}
   .who .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--run);
     box-shadow:0 0 0 0 rgba(255,107,53,.5);animation:pulse 2.2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,107,53,.45)}70%{box-shadow:0 0 0 9px rgba(255,107,53,0)}100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}}
-  .who h1{
-    font-family:var(--disp);font-weight:400;
-    font-size:clamp(46px,7vw,76px);line-height:.95;letter-spacing:.01em;margin-top:8px;
-  }
+  .who h1{font-family:var(--disp);font-weight:400;font-size:clamp(44px,7vw,76px);line-height:.95;letter-spacing:.01em;margin-top:8px}
   .who h1 .accent{color:var(--run)}
   .who .meta{color:var(--txt-2);font-size:14px;margin-top:10px;display:flex;gap:16px;flex-wrap:wrap}
   .who .meta b{color:var(--txt);font-weight:600}
-
-  .assess{
-    display:flex;gap:0;background:var(--card);border:1px solid var(--line);
-    border-radius:14px;overflow:hidden;min-width:320px;
-  }
-  .assess .cell{padding:16px 20px;text-align:center;position:relative}
+  .assess{display:flex;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .assess .cell{padding:14px 20px;text-align:center}
   .assess .cell + .cell{border-left:1px solid var(--line)}
   .assess .k{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);font-weight:600}
-  .assess .v{font-family:var(--disp);font-size:34px;line-height:1.05;margin-top:4px}
-  .assess .v small{font-size:15px;color:var(--txt-3);letter-spacing:.06em}
+  .assess .v{font-family:var(--disp);font-size:32px;line-height:1.05;margin-top:4px}
+  .assess .v small{font-size:14px;color:var(--txt-3);letter-spacing:.06em}
   .assess .v.o{color:var(--run)} .assess .v.g{color:var(--strength)} .assess .v.b{color:var(--seg)}
 
   /* ---------- tabs ---------- */
-  nav.tabs{
-    position:sticky;top:0;z-index:20;background:rgba(14,16,20,.86);
-    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
-  }
-  .tabs .inner{display:flex;gap:4px;overflow-x:auto}
-  .tab{
-    appearance:none;background:none;border:none;cursor:pointer;color:var(--txt-2);
-    font-family:var(--body);font-weight:600;font-size:14px;letter-spacing:.02em;
-    padding:16px 18px;position:relative;white-space:nowrap;transition:color .2s;
-  }
+  nav.tabs{position:sticky;top:0;z-index:20;background:rgba(14,16,20,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .tabs .inner{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{appearance:none;background:none;border:none;cursor:pointer;color:var(--txt-2);font-family:var(--body);
+    font-weight:600;font-size:14px;letter-spacing:.02em;padding:16px 18px;position:relative;white-space:nowrap;transition:color .2s}
   .tab:hover{color:var(--txt)}
   .tab.active{color:var(--txt)}
-  .tab.active::after{
-    content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;
-    background:var(--run);border-radius:3px 3px 0 0;
-  }
+  .tab.active::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;background:var(--run);border-radius:3px 3px 0 0}
   .tab .n{font-size:11px;color:var(--txt-3);margin-left:6px;font-weight:500}
 
   /* ---------- sections ---------- */
-  main{padding:34px 0 80px}
+  main{padding:32px 0 70px}
   .panel{display:none}
   .panel.active{display:block;animation:fadeUp .45s cubic-bezier(.22,.8,.3,1) both}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:6px 0 20px;flex-wrap:wrap}
-  .sec-head h2{font-family:var(--disp);font-weight:400;font-size:34px;letter-spacing:.02em}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:4px 0 20px;flex-wrap:wrap}
+  .sec-head h2{font-family:var(--disp);font-weight:400;font-size:clamp(28px,4vw,34px);letter-spacing:.02em}
   .sec-head .sub{color:var(--txt-3);font-size:13px}
-
   .grid{display:grid;gap:18px}
-  .g4{grid-template-columns:repeat(4,1fr)}
-  .g3{grid-template-columns:repeat(3,1fr)}
-  .g2{grid-template-columns:repeat(2,1fr)}
-  @media(max-width:960px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
-  @media(max-width:560px){.g4{grid-template-columns:1fr}}
-
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:20px;transition:transform .25s cubic-bezier(.22,.8,.3,1),border-color .25s,box-shadow .25s;
-  }
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;
+    transition:transform .25s cubic-bezier(.22,.8,.3,1),border-color .25s,box-shadow .25s}
   .card:hover{transform:translateY(-3px);border-color:var(--line-2);box-shadow:0 12px 32px rgba(0,0,0,.35)}
   .card .label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-3);font-weight:600}
-  .card .big{font-family:var(--disp);font-size:44px;line-height:1.05;margin-top:8px;font-variant-numeric:tabular-nums}
+  .card .big{font-family:var(--disp);font-size:clamp(34px,4.5vw,44px);line-height:1.05;margin-top:8px;font-variant-numeric:tabular-nums}
   .card .sub{color:var(--txt-2);font-size:13px;margin-top:6px}
-
-  /* reveal on scroll */
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.22,.8,.3,1)}
   .reveal.in{opacity:1;transform:none}
 
   /* ---------- PB cards ---------- */
-  .pb{position:relative;overflow:hidden}
-  .pb .dist{font-family:var(--disp);font-size:64px;line-height:1;color:var(--run)}
-  .pb .pace{font-family:var(--disp);font-size:40px;margin-top:6px;font-variant-numeric:tabular-nums}
+  .pb{position:relative;overflow:hidden;cursor:pointer}
+  .pb .dist{font-family:var(--disp);font-size:clamp(48px,6vw,64px);line-height:1;color:var(--run)}
+  .pb .pace{font-family:var(--disp);font-size:clamp(30px,4vw,40px);margin-top:6px;font-variant-numeric:tabular-nums}
   .pb .pace small{font-size:16px;color:var(--txt-3)}
   .pb .when{color:var(--txt-2);font-size:13px;margin-top:10px}
-  .pb .trophy{position:absolute;top:14px;right:16px;font-size:20px;opacity:.9}
+  .pb .trophy{position:absolute;top:14px;right:16px;font-size:20px}
   .pb::after{content:"";position:absolute;inset:auto -30px -30px auto;width:120px;height:120px;border-radius:50%;
     background:radial-gradient(circle,var(--run-soft),transparent 70%)}
-  .pb .ribbon{
-    position:absolute;top:16px;left:-34px;transform:rotate(-45deg);
-    background:var(--run);color:#fff;font-size:10px;font-weight:700;letter-spacing:.12em;
-    padding:4px 40px;text-transform:uppercase;
-  }
+  .pb .ribbon{position:absolute;top:16px;left:-34px;transform:rotate(-45deg);background:var(--run);color:#fff;
+    font-size:10px;font-weight:700;letter-spacing:.12em;padding:4px 40px;text-transform:uppercase}
 
   /* ---------- tables ---------- */
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  th{
-    text-align:left;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--txt-3);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);
-  }
-  td{padding:12px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;vertical-align:middle}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+  th{text-align:left;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);
+    font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:12px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;vertical-align:middle;white-space:nowrap}
   tr:last-child td{border-bottom:none}
   tbody tr{transition:background .18s}
   tbody tr:hover{background:rgba(255,255,255,.03)}
+  tr.click{cursor:pointer}
   .rank{font-family:var(--disp);font-size:20px;color:var(--txt-3);width:34px}
   .rank.r1{color:var(--run)} .rank.r2{color:var(--seg)} .rank.r3{color:var(--hike)}
   .mono{font-variant-numeric:tabular-nums;font-weight:600}
@@ -181,46 +132,56 @@
   .chip.hike{background:var(--hike-soft);color:var(--hike)}
   .chip.row{background:rgba(179,136,255,.14);color:var(--row)}
   .chip.cardio{background:var(--seg-soft);color:var(--seg)}
+  .chev{color:var(--txt-3);font-size:13px;transition:transform .2s,color .2s}
+  tr.click:hover .chev{transform:translateX(3px);color:var(--run)}
 
   /* ---------- strength ---------- */
-  .routine{padding:0;overflow:hidden}
-  .routine .top{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:18px 20px;border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg,rgba(61,220,132,.05),transparent);
-  }
-  .routine .top h3{font-family:var(--disp);font-weight:400;font-size:24px;letter-spacing:.02em}
+  .routine{padding:0;overflow:hidden;cursor:pointer}
+  .routine .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;
+    border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(61,220,132,.05),transparent)}
+  .routine .top h3{font-family:var(--disp);font-weight:400;font-size:clamp(20px,3vw,24px);letter-spacing:.02em}
   .routine .top .cnt{color:var(--txt-3);font-size:12px}
-  .routine .body{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;gap:0}
-  @media(max-width:820px){.routine .body{grid-template-columns:1fr 1fr}}
+  .routine .body{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr}
   .metric{padding:16px 20px;border-right:1px solid var(--line)}
   .metric:last-child{border-right:none}
-  @media(max-width:820px){.metric{border-bottom:1px solid var(--line)}}
   .metric .mk{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);font-weight:600}
-  .metric .mv{font-family:var(--disp);font-size:30px;margin-top:6px;font-variant-numeric:tabular-nums}
+  .metric .mv{font-family:var(--disp);font-size:clamp(24px,3vw,30px);margin-top:6px;font-variant-numeric:tabular-nums}
   .metric .mv small{font-size:14px;color:var(--txt-3)}
   .delta{font-size:12px;font-weight:600;margin-left:8px}
   .delta.up{color:var(--good)} .delta.down{color:var(--bad)} .delta.flat{color:var(--txt-3)}
   .spark{padding:16px 20px}
 
+  /* ---------- routes ---------- */
+  .route-card{padding:0;overflow:hidden}
+  .route-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .route-head .rn{display:flex;align-items:center;gap:12px}
+  .route-head .ric{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .route-head h3{font-family:var(--disp);font-weight:400;font-size:clamp(20px,3vw,24px)}
+  .route-head .rmeta{color:var(--txt-3);font-size:12px;margin-top:2px}
+  .route-body{display:grid;grid-template-columns:280px 1fr;gap:0}
+  .route-profile{padding:18px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+  .route-segs{padding:4px 0}
+  .seg-row{display:flex;align-items:center;gap:14px;padding:9px 20px;transition:background .18s;cursor:pointer}
+  .seg-row:hover{background:rgba(255,255,255,.03)}
+  .seg-row .km{font-family:var(--disp);font-size:18px;color:var(--txt-3);width:52px;flex-shrink:0}
+  .seg-row .sp{font-family:var(--disp);font-size:22px;font-variant-numeric:tabular-nums;width:88px;flex-shrink:0}
+  .seg-row .best .sp{color:var(--run)}
+  .seg-row .sd{color:var(--txt-3);font-size:12px;flex:1;text-align:right}
+  .seg-row .crown{font-size:14px}
+
   /* ---------- feed ---------- */
-  .feed-item{
-    display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);
-    transition:background .18s;cursor:default;
-  }
+  .feed-item{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);
+    transition:background .18s;cursor:pointer}
   .feed-item:last-child{border-bottom:none}
   .feed-item:hover{background:rgba(255,255,255,.03)}
-  .feed-item .icon{
-    width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    font-size:19px;flex-shrink:0;
-  }
+  .feed-item .icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
   .feed-item .mid{flex:1;min-width:0}
   .feed-item .title{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .feed-item .detail{color:var(--txt-3);font-size:12px;margin-top:3px}
   .feed-item .stats{display:flex;gap:20px;text-align:right;flex-shrink:0}
   .feed-item .stats .sv{font-family:var(--disp);font-size:22px;font-variant-numeric:tabular-nums}
   .feed-item .stats .sk{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-3)}
-  @media(max-width:640px){.feed-item .stats{gap:12px}.feed-item .stats .sv{font-size:18px}}
 
   .chart-card{padding:22px}
   .chart-card h3{font-family:var(--disp);font-weight:400;font-size:22px;margin-bottom:4px}
@@ -230,15 +191,68 @@
   @keyframes draw{to{stroke-dashoffset:0}}
   .bar{transform-origin:bottom;animation:grow .8s cubic-bezier(.22,.8,.3,1) both}
   @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-
   .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px}
   .legend span{font-size:12px;color:var(--txt-2);display:flex;align-items:center;gap:7px}
   .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
-
   .empty{color:var(--txt-3);font-size:14px;padding:30px;text-align:center}
-  footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--txt-3);font-size:12px}
-  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  /* ---------- modal ---------- */
+  .modal-overlay{position:fixed;inset:0;z-index:50;background:rgba(8,10,14,.72);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .25s ease both}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{background:var(--bg-2);border:1px solid var(--line-2);border-radius:18px;width:100%;max-width:640px;
+    max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);animation:popUp .35s cubic-bezier(.22,.9,.3,1.2) both}
+  @keyframes popUp{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+  .modal-head{position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+    padding:22px 24px 16px;background:linear-gradient(180deg,var(--bg-2) 78%,transparent);border-bottom:1px solid var(--line)}
+  .modal-head .mh-title{font-family:var(--disp);font-weight:400;font-size:clamp(26px,4vw,32px);line-height:1}
+  .modal-head .mh-sub{color:var(--txt-3);font-size:13px;margin-top:6px}
+  .modal-close{appearance:none;background:var(--card-2);border:1px solid var(--line-2);color:var(--txt-2);
+    width:38px;height:38px;border-radius:10px;font-size:17px;cursor:pointer;flex-shrink:0;transition:all .2s;line-height:1}
+  .modal-close:hover{color:var(--txt);border-color:var(--run);transform:rotate(90deg)}
+  .modal-body{padding:20px 24px 26px}
+  .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .mstat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .mstat .mk{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);font-weight:600}
+  .mstat .mv{font-family:var(--disp);font-size:clamp(24px,3.4vw,30px);margin-top:5px;font-variant-numeric:tabular-nums}
+  .mstat .mv small{font-size:13px;color:var(--txt-3)}
+  .mstat.hero{border-color:var(--run);background:linear-gradient(160deg,var(--run-soft),var(--card))}
+  .mstat.hero .mv{color:var(--run)}
+  .msec{margin-top:22px}
+  .msec h4{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-3);font-weight:600;margin-bottom:12px}
+  .mnote{color:var(--txt-3);font-size:13px;padding:14px 0}
+
+  footer{border-top:1px solid var(--line);padding:24px 0 38px;color:var(--txt-3);font-size:12px}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+  footer a{color:var(--txt-2);text-decoration:none;font-weight:600;transition:color .2s}
+  footer a:hover{color:var(--run)}
   .countup{font-variant-numeric:tabular-nums}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:960px){
+    .g4{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:1fr} .g2{grid-template-columns:1fr}
+    .route-body{grid-template-columns:1fr}
+    .route-profile{border-right:none;border-bottom:1px solid var(--line)}
+    .routine .body{grid-template-columns:1fr 1fr}
+    .metric{border-bottom:1px solid var(--line)}
+  }
+  @media(max-width:640px){
+    .wrap{padding:0 16px}
+    .g4{grid-template-columns:1fr 1fr}
+    .id-row{flex-direction:column;align-items:stretch}
+    .assess{width:100%} .assess .cell{flex:1;padding:12px 8px}
+    .assess .v{font-size:26px}
+    .feed-item .stats{gap:12px} .feed-item .stats .sv{font-size:18px}
+    .feed-item .stats>div:nth-child(3){display:none}
+    .mstats{grid-template-columns:repeat(2,1fr)}
+    .modal-overlay{padding:0;align-items:flex-end}
+    .modal{max-width:100%;max-height:94vh;border-radius:18px 18px 0 0}
+    .seg-row .sd{display:none}
+    .topbar-right{display:none}
+    .routine .body{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:400px){ .g4{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -247,98 +261,81 @@
 <script type="text/plain" id="app-code">
 const { useState, useEffect, useRef, useMemo } = React;
 
-/* ------------------------------ utils ------------------------------ */
 const D = (typeof DATA !== "undefined") ? DATA : null;
+const HOME = "https://zhanglpg.github.io/";
 
 const SPORT_ICON = { run:"🏃", trail:"⛰️", strength:"🏋️", hike:"🥾", row:"🚣", cardio:"🫀" };
-const SPORT_COLOR = { run:"var(--run)", trail:"var(--hike)", strength:"var(--strength)",
-                      hike:"var(--hike)", row:"var(--row)", cardio:"var(--seg)" };
 const SPORT_BG = { run:"var(--run-soft)", trail:"var(--hike-soft)", strength:"var(--strength-soft)",
                    hike:"var(--hike-soft)", row:"rgba(179,136,255,.14)", cardio:"var(--seg-soft)" };
 
-function fmtDate(iso){
-  if(!iso) return "";
-  const d = new Date(iso + "T12:00:00");
-  return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+/* activity lookup index for the detail modal */
+const ACT = {};
+const GROUP_BY_ROUTINE = {};
+if (D) {
+  D.runs.forEach(r => ACT[r.labelId] = Object.assign({}, r, {_type:"run"}));
+  D.strength.forEach(s => ACT[s.labelId] = Object.assign({}, s, {_type:"strength"}));
+  D.others.forEach(o => ACT[o.labelId] = Object.assign({}, o, {_type:"other"}));
+  D.strengthGroups.forEach(g => GROUP_BY_ROUTINE[g.routine] = g);
 }
-function shortDate(iso){
-  if(!iso) return "";
-  const d = new Date(iso + "T12:00:00");
-  return d.toLocaleDateString("en-US",{month:"short",day:"numeric"});
-}
+let _openDetail = null;
+function openDetail(id){ if(_openDetail && ACT[id]) _openDetail(ACT[id]); }
 
-/* animated counter */
+function fmtDate(iso){ if(!iso) return "";
+  return new Date(iso+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+function shortDate(iso){ if(!iso) return "";
+  return new Date(iso+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"}); }
+function fmtSec(sec){ if(sec==null) return "—"; sec=Math.round(sec);
+  return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); }
+
 function useCountUp(target, dur=900){
   const [v,setV]=useState(0);
-  useEffect(()=>{
-    if(target==null) return;
-    let raf, start=null;
-    const step=(t)=>{ if(start==null) start=t;
-      const p=Math.min((t-start)/dur,1);
-      const e=1-Math.pow(1-p,3);
-      setV(target*e);
-      if(p<1) raf=requestAnimationFrame(step);
-    };
-    raf=requestAnimationFrame(step);
-    return ()=>cancelAnimationFrame(raf);
+  useEffect(()=>{ if(target==null) return;
+    let raf,start=null;
+    const step=t=>{ if(start==null) start=t;
+      const p=Math.min((t-start)/dur,1), e=1-Math.pow(1-p,3);
+      setV(target*e); if(p<1) raf=requestAnimationFrame(step); };
+    raf=requestAnimationFrame(step); return ()=>cancelAnimationFrame(raf);
   },[target]);
   return v;
 }
-
-/* scroll reveal */
 function useReveal(){
   useEffect(()=>{
     const els=document.querySelectorAll(".reveal:not(.in)");
-    const io=new IntersectionObserver((es)=>{
-      es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} });
-    },{threshold:.12});
-    els.forEach(el=>io.observe(el));
-    return ()=>io.disconnect();
+    const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);} }); },{threshold:.1});
+    els.forEach(el=>io.observe(el)); return ()=>io.disconnect();
   });
 }
 
-/* ------------------------------ charts ------------------------------ */
+/* ---------------- charts ---------------- */
 function PaceTrend({points}){
   const W=760,H=240,P={l:46,r:14,t:14,b:28};
   const pts=points.filter(p=>p.paceSec);
   if(pts.length<2) return <div className="empty">Not enough runs yet.</div>;
   const paces=pts.map(p=>p.paceSec);
-  let min=Math.min(...paces), max=Math.max(...paces);
+  let min=Math.min(...paces),max=Math.max(...paces);
   const pad=(max-min)*0.12||30; min-=pad; max+=pad;
   const x=i=>P.l+(W-P.l-P.r)*(i/(pts.length-1));
-  const y=v=>P.t+(H-P.t-P.b)*((v-min)/(max-min)); // low pace = low on chart; we invert below
-  const yInv=v=>P.t+(H-P.t-P.b)*(1-(v-min)/(max-min)); // faster (lower) = higher
+  const yInv=v=>P.t+(H-P.t-P.b)*(1-(v-min)/(max-min));
   const path=pts.map((p,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${yInv(p.paceSec).toFixed(1)}`).join(" ");
   const area=path+` L${x(pts.length-1).toFixed(1)},${H-P.b} L${x(0).toFixed(1)},${H-P.b} Z`;
-  const ticks=[min+pad, (min+max)/2, max-pad].map(v=>Math.round(v));
-  const fmt=v=>`${Math.floor(v/60)}:${String(Math.round(v%60)).padStart(2,"0")}`;
+  const ticks=[min+pad,(min+max)/2,max-pad].map(v=>Math.round(v));
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
-      <defs>
-        <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--run)" stopOpacity=".28"/>
-          <stop offset="100%" stopColor="var(--run)" stopOpacity="0"/>
-        </linearGradient>
-      </defs>
-      {ticks.map((t,i)=>(
-        <g key={i}>
-          <line x1={P.l} x2={W-P.r} y1={yInv(t)} y2={yInv(t)} stroke="var(--line)" strokeDasharray="3 4"/>
-          <text x={P.l-8} y={yInv(t)+4} textAnchor="end" fontSize="10" fill="var(--txt-3)">{fmt(t)}</text>
-        </g>
-      ))}
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="var(--run)" stopOpacity=".28"/>
+        <stop offset="100%" stopColor="var(--run)" stopOpacity="0"/></linearGradient></defs>
+      {ticks.map((t,i)=>(<g key={i}>
+        <line x1={P.l} x2={W-P.r} y1={yInv(t)} y2={yInv(t)} stroke="var(--line)" strokeDasharray="3 4"/>
+        <text x={P.l-8} y={yInv(t)+4} textAnchor="end" fontSize="10" fill="var(--txt-3)">{fmtSec(t)}</text></g>))}
       <path d={area} fill="url(#pg)"/>
       <path d={path} fill="none" stroke="var(--run)" strokeWidth="2.4" strokeLinejoin="round" className="drawline"/>
-      {pts.map((p,i)=>(
-        <circle key={i} cx={x(i)} cy={yInv(p.paceSec)} r="3" fill="var(--bg)" stroke="var(--run)" strokeWidth="1.6">
-          <title>{fmtDate(p.date)} · {fmt(p.paceSec)} /km · {p.distKm} km</title>
-        </circle>
-      ))}
+      {pts.map((p,i)=>(<circle key={i} cx={x(i)} cy={yInv(p.paceSec)} r="3" fill="var(--bg)" stroke="var(--run)" strokeWidth="1.6">
+        <title>{fmtDate(p.date)} · {fmtSec(p.paceSec)} /km · {p.distKm} km</title></circle>))}
       <text x={P.l} y={H-8} fontSize="10" fill="var(--txt-3)">{shortDate(pts[0].date)}</text>
       <text x={W-P.r} y={H-8} textAnchor="end" fontSize="10" fill="var(--txt-3)">{shortDate(pts[pts.length-1].date)}</text>
     </svg>
   );
 }
-
 function MonthlyBars({data}){
   const W=760,H=220,P={l:40,r:10,t:16,b:26};
   if(!data.length) return <div className="empty">No volume yet.</div>;
@@ -346,71 +343,180 @@ function MonthlyBars({data}){
   const bw=(W-P.l-P.r)/data.length;
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
-      {data.map((d,i)=>{
-        const h=(H-P.t-P.b)*(d.km/max);
-        const isLast=i===data.length-1;
-        return (
-          <g key={d.month}>
-            <rect className="bar" style={{animationDelay:`${i*40}ms`}}
-              x={P.l+i*bw+bw*0.18} y={H-P.b-h} width={bw*0.64} height={h} rx="3"
-              fill={isLast?"var(--run)":"var(--seg)"} opacity={isLast?1:0.55}>
-              <title>{d.month} · {d.km} km · {d.runs} runs</title>
-            </rect>
-            {(i%2===0||isLast) && (
-              <text x={P.l+i*bw+bw/2} y={H-8} textAnchor="middle" fontSize="9.5" fill="var(--txt-3)">
-                {d.month.slice(5)}
-              </text>
-            )}
-          </g>
-        );
-      })}
+      {data.map((d,i)=>{ const h=(H-P.t-P.b)*(d.km/max); const isLast=i===data.length-1;
+        return (<g key={d.month}>
+          <rect className="bar" style={{animationDelay:`${i*40}ms`}} x={P.l+i*bw+bw*0.18} y={H-P.b-h}
+            width={bw*0.64} height={h} rx="3" fill={isLast?"var(--run)":"var(--seg)"} opacity={isLast?1:0.55}>
+            <title>{d.month} · {d.km} km · {d.runs} runs</title></rect>
+          {(i%2===0||isLast) && <text x={P.l+i*bw+bw/2} y={H-8} textAnchor="middle" fontSize="9.5" fill="var(--txt-3)">{d.month.slice(5)}</text>}
+        </g>); })}
       <text x={P.l-6} y={P.t+4} textAnchor="end" fontSize="10" fill="var(--txt-3)">{Math.round(max)}km</text>
       <line x1={P.l} x2={W-P.r} y1={H-P.b} y2={H-P.b} stroke="var(--line)"/>
     </svg>
   );
 }
-
 function Sparkline({values,color="var(--strength)",height=44}){
   const W=160,H=height,P=4;
   if(!values||values.length<2) return null;
-  const min=Math.min(...values),max=Math.max(...values);
-  const rng=(max-min)||1;
+  const min=Math.min(...values),max=Math.max(...values),rng=(max-min)||1;
   const x=i=>P+(W-2*P)*(i/(values.length-1));
   const y=v=>P+(H-2*P)*(1-(v-min)/rng);
   const path=values.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:180,height:"auto"}}>
-      <path d={path} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" className="drawline"/>
-      <circle cx={x(values.length-1)} cy={y(values[values.length-1])} r="3" fill={color}/>
-    </svg>
-  );
+  return (<svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:180,height:"auto"}}>
+    <path d={path} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" className="drawline"/>
+    <circle cx={x(values.length-1)} cy={y(values[values.length-1])} r="3" fill={color}/></svg>);
+}
+function SplitsChart({splits,accent}){
+  if(!splits||splits.length===0) return null;
+  const W=680,H=190,P={l:10,r:10,t:20,b:24};
+  const secs=splits.map(s=>s.seconds);
+  const minS=Math.min(...secs),bestIdx=secs.indexOf(minS);
+  const spd=secs.map(s=>1/s);
+  const minSpd=Math.min(...spd),maxSpd=Math.max(...spd);
+  const n=splits.length,bw=(W-P.l-P.r)/n;
+  const hOf=s=>{ const sp=1/s; const t=(maxSpd===minSpd)?1:(sp-minSpd)/(maxSpd-minSpd);
+    return 24+t*(H-P.t-P.b-24); };
+  return (<svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
+    {splits.map((s,i)=>{ const bh=hOf(s.seconds); const isBest=i===bestIdx;
+      return (<g key={i}>
+        <rect className="bar" style={{animationDelay:`${i*45}ms`}} x={P.l+i*bw+bw*0.16} y={H-P.b-bh}
+          width={bw*0.68} height={bh} rx="3" fill={isBest?accent:"var(--line-2)"} opacity={isBest?1:0.8}>
+          <title>{`km ${s.km}: ${s.pace}/km${s.hr?` · ${s.hr} bpm`:""}${s.elevGain?` · +${Math.round(s.elevGain)}m`:""}`}</title></rect>
+        <text x={P.l+i*bw+bw/2} y={H-P.b-bh-6} textAnchor="middle" fontSize={n>10?"8.5":"10"}
+          fill={isBest?accent:"var(--txt-2)"} fontWeight={isBest?700:500}>{s.pace}</text>
+        <text x={P.l+i*bw+bw/2} y={H-7} textAnchor="middle" fontSize="9.5" fill="var(--txt-3)">{s.km}</text>
+      </g>); })}
+  </svg>);
+}
+function RouteProfile({segs,color}){
+  if(!segs||segs.length<2) return null;
+  const W=260,H=80,P=8;
+  const spd=segs.map(s=>1/s.seconds);
+  const min=Math.min(...spd),max=Math.max(...spd),rng=(max-min)||1;
+  const x=i=>P+(W-2*P)*(i/(segs.length-1));
+  const y=sp=>P+(H-2*P)*(1-(sp-min)/rng);
+  const path=spd.map((sp,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(sp).toFixed(1)}`).join(" ");
+  const area=path+` L${x(spd.length-1).toFixed(1)},${H-P} L${x(0).toFixed(1)},${H-P} Z`;
+  return (<svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
+    <path d={area} fill={color} opacity=".12"/>
+    <path d={path} fill="none" stroke={color} strokeWidth="2.2" strokeLinejoin="round" className="drawline"/>
+    {spd.map((sp,i)=>(<circle key={i} cx={x(i)} cy={y(sp)} r="2.6" fill="var(--bg-2)" stroke={color} strokeWidth="1.5">
+      <title>{`km ${i+1}: ${segs[i].pace}/km`}</title></circle>))}
+  </svg>);
 }
 
-/* ------------------------------ pieces ------------------------------ */
+/* ---------------- pieces ---------------- */
 function StatCard({label,value,sub,color,delay=0}){
   const v=useCountUp(typeof value==="number"?value:0);
   const isNum=typeof value==="number";
-  return (
-    <div className="card reveal" style={{transitionDelay:`${delay}ms`}}>
-      <div className="label">{label}</div>
-      <div className="big countup" style={color?{color}:null}>
-        {isNum? Math.round(v).toLocaleString() : value}
-      </div>
-      {sub && <div className="sub">{sub}</div>}
-    </div>
-  );
+  return (<div className="card reveal" style={{transitionDelay:`${delay}ms`}}>
+    <div className="label">{label}</div>
+    <div className="big countup" style={color?{color}:null}>{isNum?Math.round(v).toLocaleString():value}</div>
+    {sub && <div className="sub">{sub}</div>}</div>);
 }
-
 function Delta({now,prev,unit="",invert=false}){
   if(prev==null||now==null) return null;
   const d=now-prev;
   if(Math.abs(d)<1e-9) return <span className="delta flat">—</span>;
-  const good = invert ? d<0 : d>0;
-  const arrow = d>0?"▲":"▼";
+  const good=invert?d<0:d>0, arrow=d>0?"▲":"▼";
   return <span className={`delta ${good?"up":"down"}`}>{arrow} {Math.abs(Math.round(d*10)/10)}{unit}</span>;
 }
 
-/* ------------------------------ sections ------------------------------ */
+/* ---------------- detail modal ---------------- */
+function MStat({k,v,unit,hero}){
+  return (<div className={"mstat"+(hero?" hero":"")}>
+    <div className="mk">{k}</div><div className="mv">{v}{unit?<small> {unit}</small>:null}</div></div>);
+}
+function RunDetail({a}){
+  const accent = a.category==="trail" ? "var(--hike)" : "var(--run)";
+  return (<div>
+    <div className="mstats">
+      <MStat k="Distance" v={a.distKm!=null?a.distKm:"—"} unit="km" hero/>
+      <MStat k="Time" v={a.duration||"—"}/>
+      <MStat k="Avg Pace" v={a.pace||"—"} unit="/km"/>
+      <MStat k="Avg HR" v={a.hr||"—"} unit="bpm"/>
+      <MStat k="Calories" v={a.cal||"—"} unit="kcal"/>
+      <MStat k="Elev Gain" v={a.elevGain!=null?Math.round(a.elevGain):"—"} unit="m"/>
+    </div>
+    {a.splits && a.splits.length>0 ? (
+      <div className="msec">
+        <h4>Kilometre splits · fastest highlighted</h4>
+        <SplitsChart splits={a.splits} accent={accent}/>
+        <div className="table-scroll" style={{marginTop:14}}>
+          <table style={{minWidth:420}}>
+            <thead><tr><th>KM</th><th>Pace</th><th>HR</th><th>Elev</th></tr></thead>
+            <tbody>{a.splits.map(s=>(<tr key={s.km}>
+              <td className="mono">{s.km}</td>
+              <td className="mono" style={{fontWeight:700}}>{s.pace} /km</td>
+              <td className="mono" style={{color:"var(--txt-2)"}}>{s.hr||"—"}</td>
+              <td className="mono" style={{color:"var(--txt-3)"}}>{s.elevGain?`+${Math.round(s.elevGain)}m`:"—"}</td>
+            </tr>))}</tbody>
+          </table>
+        </div>
+      </div>
+    ) : (<div className="msec"><div className="mnote">No lap data for this run.</div></div>)}
+    {a.best1kPace && (<div className="msec"><div className="mnote">Best 1K split: <b style={{color:accent}}>{a.best1kPace} /km</b></div></div>)}
+  </div>);
+}
+function StrengthDetail({a}){
+  const g=GROUP_BY_ROUTINE[a.routine];
+  return (<div>
+    <div className="mstats">
+      <MStat k="Sets" v={a.sets||"—"} hero/>
+      <MStat k="Duration" v={a.duration||"—"}/>
+      <MStat k="Avg HR" v={a.hr||"—"} unit="bpm"/>
+      <MStat k="Calories" v={a.cal||"—"} unit="kcal"/>
+    </div>
+    {g && (<div className="msec">
+      <h4>vs routine average · {g.count} sessions</h4>
+      <div className="mstats">
+        <MStat k="Sets vs avg" v={g.avg.sets!=null?Math.round(g.avg.sets):"—"}/>
+        <MStat k="Duration vs avg" v={g.avg.durationSec!=null?Math.round(g.avg.durationSec/60)+"m":"—"}/>
+        <MStat k="Cal vs avg" v={g.avg.cal!=null?Math.round(g.avg.cal):"—"}/>
+      </div>
+      <div className="mnote">Routine “{a.routine}” · {shortDate(g.firstDate)} → {shortDate(g.latestDate)}</div>
+    </div>)}
+  </div>);
+}
+function OtherDetail({a}){
+  return (<div>
+    <div className="mstats">
+      {a.distKm!=null && <MStat k="Distance" v={a.distKm} unit="km" hero/>}
+      <MStat k="Time" v={a.duration||"—"} hero={a.distKm==null}/>
+      {a.speedKmh!=null && <MStat k="Avg Speed" v={a.speedKmh} unit="km/h"/>}
+      {a.hr!=null && <MStat k="Avg HR" v={a.hr} unit="bpm"/>}
+      {a.cal!=null && <MStat k="Calories" v={a.cal} unit="kcal"/>}
+    </div>
+  </div>);
+}
+function DetailModal({a,onClose}){
+  useEffect(()=>{ const h=e=>{ if(e.key==="Escape") onClose(); };
+    window.addEventListener("keydown",h); document.body.style.overflow="hidden";
+    return ()=>{ window.removeEventListener("keydown",h); document.body.style.overflow=""; }; },[]);
+  const cat=a._type==="run"?a.category:(a._type==="strength"?"strength":a.category);
+  const title=a._type==="strength"?(a.routine||"Strength"):(a.sportName||cat);
+  return (<div className="modal-overlay" onClick={e=>{ if(e.target===e.currentTarget) onClose(); }}>
+    <div className="modal" role="dialog" aria-modal="true">
+      <div className="modal-head">
+        <div>
+          <div className="mh-title">{SPORT_ICON[cat]||"🏅"} {title}</div>
+          <div className="mh-sub">
+            <span className={`chip ${cat}`} style={{marginRight:8}}>{cat}</span>
+            {fmtDate(a.date)}{a.location?` · ${a.location}`:""}
+          </div>
+        </div>
+        <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
+      </div>
+      <div className="modal-body">
+        {a._type==="run" && <RunDetail a={a}/>}
+        {a._type==="strength" && <StrengthDetail a={a}/>}
+        {a._type==="other" && <OtherDetail a={a}/>}
+      </div>
+    </div>
+  </div>);
+}
+
+/* ---------------- sections ---------------- */
 function Overview(){
   const t=D.totals;
   const recent=[
@@ -418,279 +524,225 @@ function Overview(){
     ...D.strength.map(s=>({...s,category:"strength",sportName:"Strength",location:s.routine,_cat:"strength"})),
     ...D.others.map(o=>({...o,_cat:o.category})),
   ].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,14);
-
-  return (
-    <div>
-      <div className="sec-head">
-        <h2>Overview</h2>
-        <div className="sub">{t.activities} activities · {t.firstDate} → {t.latestDate}</div>
-      </div>
-      <div className="grid g4">
-        <StatCard label="Total Runs" value={t.runs} sub={`${t.runKm.toLocaleString()} km covered`} color="var(--run)"/>
-        <StatCard label="Strength Sessions" value={t.strength} sub="rehab → build phase" color="var(--strength)" delay={60}/>
-        <StatCard label="Hikes" value={t.hikes} sub="weekend mountains" color="var(--hike)" delay={120}/>
-        <StatCard label="Calories Burned" value={t.calories} sub="all disciplines" color="var(--seg)" delay={180}/>
-      </div>
-
-      <div className="grid g2" style={{marginTop:18}}>
-        <div className="card chart-card reveal">
-          <h3>Run Pace Trend</h3>
-          <div className="csub">Average pace per run · higher line = faster</div>
-          <PaceTrend points={D.runTrend}/>
-          <div className="legend">
-            <span><i style={{background:"var(--run)"}}></i>avg pace /km</span>
-            <span style={{color:"var(--txt-3)"}}>flat runs · trail excluded</span>
-          </div>
-        </div>
-        <div className="card chart-card reveal">
-          <h3>Monthly Running Volume</h3>
-          <div className="csub">Kilometres per calendar month</div>
-          <MonthlyBars data={D.monthlyVolume}/>
-        </div>
-      </div>
-
-      <div className="card reveal" style={{marginTop:18,padding:0,overflow:"hidden"}}>
-        <div style={{padding:"18px 20px 10px"}}><h3 style={{fontFamily:"var(--disp)",fontWeight:400,fontSize:22}}>Recent Activities</h3></div>
-        {recent.map((a,i)=>{
-          const cat=a._cat||"run";
-          const main = cat==="strength"
-            ? <span className="sv">{a.sets}<span style={{fontSize:12,color:"var(--txt-3)"}}> sets</span></span>
-            : (a.distKm? <span className="sv">{a.distKm}<span style={{fontSize:12,color:"var(--txt-3)"}}> km</span></span>
-                       : <span className="sv">{a.duration}</span>);
-          return (
-            <div className="feed-item" key={a.labelId+i}>
-              <div className="icon" style={{background:SPORT_BG[cat]}}>{SPORT_ICON[cat]}</div>
-              <div className="mid">
-                <div className="title">{a.sportName||a.routine||cat} <span className={`chip ${cat}`} style={{marginLeft:6}}>{cat}</span></div>
-                <div className="detail">{fmtDate(a.date)} · {a.location||""}</div>
-              </div>
-              <div className="stats">
-                <div>{main}<div className="sk">{cat==="strength"?"volume":"distance"}</div></div>
-                {a.durationSec && cat!=="strength" && <div><span className="sv">{a.duration}</span><div className="sk">time</div></div>}
-                {a.pace && <div><span className="sv">{a.pace}</span><div className="sk">/km</div></div>}
-                {a.hr && <div><span className="sv">{a.hr}</span><div className="sk">bpm</div></div>}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+  return (<div>
+    <div className="sec-head"><h2>Overview</h2>
+      <div className="sub">{t.activities} activities · {t.firstDate} → {t.latestDate}</div></div>
+    <div className="grid g4">
+      <StatCard label="Total Runs" value={t.runs} sub={`${t.runKm.toLocaleString()} km covered`} color="var(--run)"/>
+      <StatCard label="Strength Sessions" value={t.strength} sub="rehab → build phase" color="var(--strength)" delay={60}/>
+      <StatCard label="Hikes" value={t.hikes} sub="weekend mountains" color="var(--hike)" delay={120}/>
+      <StatCard label="Calories Burned" value={t.calories} sub="all disciplines" color="var(--seg)" delay={180}/>
     </div>
-  );
+    <div className="grid g2" style={{marginTop:18}}>
+      <div className="card chart-card reveal"><h3>Run Pace Trend</h3>
+        <div className="csub">Average pace per run · higher line = faster</div>
+        <PaceTrend points={D.runTrend}/>
+        <div className="legend"><span><i style={{background:"var(--run)"}}></i>avg pace /km</span>
+          <span style={{color:"var(--txt-3)"}}>tap a recent activity below for details</span></div></div>
+      <div className="card chart-card reveal"><h3>Monthly Running Volume</h3>
+        <div className="csub">Kilometres per calendar month</div><MonthlyBars data={D.monthlyVolume}/></div>
+    </div>
+    <div className="card reveal" style={{marginTop:18,padding:0,overflow:"hidden"}}>
+      <div style={{padding:"18px 20px 10px"}}><h3 style={{fontFamily:"var(--disp)",fontWeight:400,fontSize:22}}>Recent Activities</h3></div>
+      {recent.map((a,i)=>{ const cat=a._cat||"run";
+        const main = cat==="strength"
+          ? <span className="sv">{a.sets}<span style={{fontSize:12,color:"var(--txt-3)"}}> sets</span></span>
+          : (a.distKm? <span className="sv">{a.distKm}<span style={{fontSize:12,color:"var(--txt-3)"}}> km</span></span>
+                     : <span className="sv">{a.duration}</span>);
+        return (<div className="feed-item" key={a.labelId+i} onClick={()=>openDetail(a.labelId)}>
+          <div className="icon" style={{background:SPORT_BG[cat]}}>{SPORT_ICON[cat]}</div>
+          <div className="mid">
+            <div className="title">{a.sportName||a.routine||cat} <span className={`chip ${cat}`} style={{marginLeft:6}}>{cat}</span></div>
+            <div className="detail">{fmtDate(a.date)}{a.location?` · ${a.location}`:""}</div>
+          </div>
+          <div className="stats">
+            <div>{main}<div className="sk">{cat==="strength"?"volume":"distance"}</div></div>
+            {a.durationSec && cat!=="strength" && <div><span className="sv">{a.duration}</span><div className="sk">time</div></div>}
+            {a.pace && <div><span className="sv">{a.pace}</span><div className="sk">/km</div></div>}
+            {a.hr && <div><span className="sv">{a.hr}</span><div className="sk">bpm</div></div>}
+          </div>
+        </div>); })}
+    </div>
+  </div>);
 }
-
 function PBs(){
-  return (
-    <div>
-      <div className="sec-head">
-        <h2>Personal Bests</h2>
-        <div className="sub">Fastest rolling splits from flat runs (road + track)</div>
-      </div>
-      <div className="grid g4">
-        {D.pbs.map((pb,i)=>(
-          <div className="card pb reveal" key={pb.dist} style={{transitionDelay:`${i*70}ms`}}>
-            {i===0 && <div className="ribbon">Fastest</div>}
-            <div className="trophy">{["🥇","🥈","🥉","🏅"][i]||"🏅"}</div>
-            <div className="dist">{pb.dist}</div>
-            <div className="pace">{pb.pace}<small> /km</small></div>
-            <div className="when">{fmtDate(pb.date)} · {pb.runName}</div>
-            <div className="when" style={{color:"var(--txt-3)",marginTop:2}}>
-              {Math.floor(pb.seconds/60)}:{String(Math.round(pb.seconds%60)).padStart(2,"0")} total
+  return (<div>
+    <div className="sec-head"><h2>Personal Bests</h2>
+      <div className="sub">Fastest rolling splits from flat runs (road + track) · tap a run for splits</div></div>
+    <div className="grid g4">
+      {D.pbs.map((pb,i)=>(<div className="card pb reveal" key={pb.dist} style={{transitionDelay:`${i*70}ms`}}
+          onClick={()=>openDetail(pb.labelId)}>
+        {i===0 && <div className="ribbon">Fastest</div>}
+        <div className="trophy">{["🥇","🥈","🥉","🏅"][i]||"🏅"}</div>
+        <div className="dist">{pb.dist}</div>
+        <div className="pace">{pb.pace}<small> /km</small></div>
+        <div className="when">{fmtDate(pb.date)} · {pb.runName}</div>
+        <div className="when" style={{color:"var(--txt-3)",marginTop:2}}>{fmtSec(pb.seconds)} total</div>
+      </div>))}
+    </div>
+    {D.pbs.length===0 && <div className="card empty">No lap data yet — PBs appear once runs sync.</div>}
+    <div className="card reveal" style={{marginTop:22,padding:0,overflow:"hidden"}}>
+      <div style={{padding:"18px 20px 6px"}}><h3 style={{fontFamily:"var(--disp)",fontWeight:400,fontSize:22}}>All Runs</h3>
+        <div className="csub" style={{color:"var(--txt-3)",fontSize:12}}>Newest first · tap a row for the full split breakdown</div></div>
+      <div className="table-scroll"><table>
+        <thead><tr><th></th><th>Date</th><th>Type</th><th>Distance</th><th>Time</th><th>Avg Pace</th><th>Best 1K</th><th>HR</th><th>Elev</th></tr></thead>
+        <tbody>{D.runs.map(r=>(<tr key={r.labelId} className="click" onClick={()=>openDetail(r.labelId)}>
+          <td className="chev">›</td>
+          <td className="mono">{shortDate(r.date)} <span style={{color:"var(--txt-3)",fontSize:11}}>{r.date.slice(0,4)}</span></td>
+          <td><span className={`chip ${r.category}`}>{r.sportName}</span></td>
+          <td className="mono">{r.distKm} km</td>
+          <td className="mono">{r.duration}</td>
+          <td className="mono" style={{fontWeight:700}}>{r.pace||"—"}</td>
+          <td className="mono" style={{color:"var(--run)"}}>{r.best1kPace||"—"}</td>
+          <td className="mono" style={{color:"var(--txt-2)"}}>{r.hr||"—"}</td>
+          <td className="mono" style={{color:"var(--txt-3)"}}>{r.elevGain?`${Math.round(r.elevGain)}m`:"—"}</td>
+        </tr>))}</tbody>
+      </table></div>
+    </div>
+  </div>);
+}
+function Routes(){
+  return (<div>
+    <div className="sec-head"><h2>Route Segments</h2>
+      <div className="sub">Outdoor runs clustered by start location · best time for each kilometre of the route · tap a segment to open that run</div></div>
+    <div className="grid" style={{gap:18}}>
+      {D.routes.map((rt,i)=>{ const trail=/trail/i.test(rt.name);
+        const color=trail?"var(--hike)":"var(--run)";
+        const bestSeg=rt.segments.reduce((b,s)=>(s.seconds<b.seconds?s:b),rt.segments[0]);
+        return (<div className="card route-card reveal" key={rt.id} style={{transitionDelay:`${i*60}ms`}}>
+          <div className="route-head">
+            <div className="rn">
+              <div className="ric" style={{background:trail?"var(--hike-soft)":"var(--run-soft)"}}>{trail?"⛰️":"🏃"}</div>
+              <div>
+                <h3>{rt.name}</h3>
+                <div className="rmeta">{rt.efforts} efforts · {rt.minKm}–{rt.maxKm} km · {rt.segments.length} segments
+                  · best 1K <b style={{color}}>{bestSeg?bestSeg.pace:"—"}</b></div>
+              </div>
+            </div>
+            <span className={`chip ${trail?"trail":"run"}`}>{trail?"trail":"road"}</span>
+          </div>
+          <div className="route-body">
+            <div className="route-profile">
+              <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:"var(--txt-3)",fontWeight:600,marginBottom:8}}>
+                Best pace by km</div>
+              <RouteProfile segs={rt.segments} color={color}/>
+            </div>
+            <div className="route-segs">
+              {rt.segments.map(s=>{ const isBest=s.seconds===bestSeg.seconds;
+                return (<div className={"seg-row"+(isBest?" best":"")} key={s.km} onClick={()=>openDetail(s.labelId)}>
+                  <span className="km">KM {s.km}</span>
+                  <span className="sp" style={isBest?{color}:{}}>{s.pace}</span>
+                  {isBest && <span className="crown">👑</span>}
+                  <span className="sd">{fmtDate(s.date)}</span>
+                  <span className="chev">›</span>
+                </div>); })}
             </div>
           </div>
-        ))}
-      </div>
-      {D.pbs.length===0 && <div className="card empty">No lap data yet — PBs appear once runs sync.</div>}
-
-      <div className="card reveal" style={{marginTop:22,padding:0,overflow:"hidden"}}>
-        <div style={{padding:"18px 20px 6px"}}>
-          <h3 style={{fontFamily:"var(--disp)",fontWeight:400,fontSize:22}}>All Runs</h3>
-          <div className="csub" style={{color:"var(--txt-3)",fontSize:12}}>Newest first · best 1K split shown where lap data exists</div>
-        </div>
-        <div style={{overflowX:"auto"}}>
-        <table>
-          <thead><tr>
-            <th>Date</th><th>Type</th><th>Distance</th><th>Time</th><th>Avg Pace</th>
-            <th>Best 1K</th><th>HR</th><th>Elev</th>
-          </tr></thead>
-          <tbody>
-            {D.runs.map(r=>(
-              <tr key={r.labelId}>
-                <td className="mono">{shortDate(r.date)} <span style={{color:"var(--txt-3)",fontSize:11}}>{r.date.slice(0,4)}</span></td>
-                <td><span className={`chip ${r.category}`}>{r.sportName}</span></td>
-                <td className="mono">{r.distKm} km</td>
-                <td className="mono">{r.duration}</td>
-                <td className="mono" style={{fontWeight:700}}>{r.pace||"—"}</td>
-                <td className="mono" style={{color:"var(--run)"}}>{r.best1kPace||"—"}</td>
-                <td className="mono" style={{color:"var(--txt-2)"}}>{r.hr||"—"}</td>
-                <td className="mono" style={{color:"var(--txt-3)"}}>{r.elevGain?`${Math.round(r.elevGain)}m`:"—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        </div>
-      </div>
+        </div>); })}
     </div>
-  );
-}
-
-function Segments(){
-  return (
-    <div>
-      <div className="sec-head">
-        <h2>Segment Bests</h2>
-        <div className="sub">Fastest individual 1K efforts across all flat runs</div>
-      </div>
-      <div className="card reveal" style={{padding:0,overflow:"hidden"}}>
-        <div style={{overflowX:"auto"}}>
-        <table>
-          <thead><tr>
-            <th>#</th><th>1K Time</th><th>Pace</th><th>Run</th><th>Date</th><th>Lap</th><th>HR</th>
-          </tr></thead>
-          <tbody>
-            {D.segments.map(s=>(
-              <tr key={s.labelId+"-"+s.lapIndex}>
-                <td className={`rank ${s.rank<=3?"r"+s.rank:""}`}>{s.rank}</td>
-                <td className="mono" style={{fontWeight:700,color:s.rank===1?"var(--run)":"var(--txt)"}}>
-                  {Math.floor(s.seconds/60)}:{String(Math.round(s.seconds%60)).padStart(2,"0")}
-                </td>
-                <td className="mono">{s.pace} /km</td>
-                <td style={{color:"var(--txt-2)"}}>{s.runName}</td>
-                <td className="mono" style={{color:"var(--txt-2)"}}>{shortDate(s.date)}</td>
-                <td className="mono" style={{color:"var(--txt-3)"}}>#{s.lapIndex}</td>
-                <td className="mono" style={{color:"var(--txt-3)"}}>{s.hr||"—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        </div>
-        {D.segments.length===0 && <div className="empty">No segment data yet.</div>}
-      </div>
-      <div className="sub" style={{color:"var(--txt-3)",fontSize:12,marginTop:12}}>
-        Segments are 1K splits auto-detected by the watch. Trail runs are excluded (elevation skews pace).
-      </div>
+    {D.routes.length===0 && <div className="card empty">No repeated outdoor routes yet.</div>}
+    <div className="sub" style={{color:"var(--txt-3)",fontSize:12,marginTop:12}}>
+      A “route” = runs starting within ~200 m of each other. Segment times are the best per-kilometre splits
+      from the shared start, so each kilometre compares the same stretch of road or trail.
     </div>
-  );
+  </div>);
 }
-
 function Strength(){
-  return (
-    <div>
-      <div className="sec-head">
-        <h2>Strength</h2>
-        <div className="sub">Latest session vs previous vs routine average · grouped by workout</div>
-      </div>
-      <div className="grid" style={{gap:18}}>
-        {D.strengthGroups.map((g,i)=>{
-          const l=g.latest,p=g.prev;
-          const durDelta = p&&p.durationSec&&l.durationSec ? l.durationSec-p.durationSec : null;
-          return (
-            <div className="card routine reveal" key={g.routine} style={{transitionDelay:`${i*60}ms`}}>
-              <div className="top">
-                <div>
-                  <h3>{g.routine}</h3>
-                  <div className="cnt">{g.count} sessions · {shortDate(g.firstDate)} → {shortDate(g.latestDate)}</div>
-                </div>
-                <span className="chip strength">strength</span>
-              </div>
-              <div className="body">
-                <div className="metric">
-                  <div className="mk">Latest · Sets</div>
-                  <div className="mv">{l.sets??"—"}<small> sets</small>
-                    <Delta now={l.sets} prev={p?p.sets:null}/>
-                  </div>
-                  <div style={{fontSize:11,color:"var(--txt-3)",marginTop:4}}>avg {g.avg.sets}</div>
-                </div>
-                <div className="metric">
-                  <div className="mk">Latest · Duration</div>
-                  <div className="mv">{l.duration||"—"}
-                    {durDelta!=null && <span className={`delta ${Math.abs(durDelta)<60?"flat":durDelta>0?"up":"down"}`}>
-                      {durDelta>0?"▲":"▼"} {Math.abs(Math.round(durDelta/60))}m</span>}
-                  </div>
-                  <div style={{fontSize:11,color:"var(--txt-3)",marginTop:4}}>avg {Math.round((g.avg.durationSec||0)/60)}m</div>
-                </div>
-                <div className="metric">
-                  <div className="mk">Latest · Calories</div>
-                  <div className="mv">{l.cal??"—"}<small> kcal</small>
-                    <Delta now={l.cal} prev={p?p.cal:null}/>
-                  </div>
-                  <div style={{fontSize:11,color:"var(--txt-3)",marginTop:4}}>avg {Math.round(g.avg.cal||0)}</div>
-                </div>
-                <div className="spark">
-                  <div className="mk" style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:"var(--txt-3)",fontWeight:600}}>Calories · trend</div>
-                  <div style={{marginTop:8}}><Sparkline values={g.trend.map(x=>x.cal).filter(Boolean)}/></div>
-                  <div style={{fontSize:11,color:"var(--txt-3)",marginTop:6}}>HR avg {Math.round(g.avg.hr||0)} bpm</div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {D.strengthGroups.length===0 && <div className="card empty">No repeated strength routines yet.</div>}
+  return (<div>
+    <div className="sec-head"><h2>Strength</h2>
+      <div className="sub">Latest session vs previous vs routine average · tap a routine to open its latest session</div></div>
+    <div className="grid" style={{gap:18}}>
+      {D.strengthGroups.map((g,i)=>{ const l=g.latest,p=g.prev;
+        const durDelta=p&&p.durationSec&&l.durationSec?l.durationSec-p.durationSec:null;
+        return (<div className="card routine reveal" key={g.routine} style={{transitionDelay:`${i*60}ms`}}
+            onClick={()=>openDetail(l.labelId)}>
+          <div className="top">
+            <div><h3>{g.routine}</h3>
+              <div className="cnt">{g.count} sessions · {shortDate(g.firstDate)} → {shortDate(g.latestDate)}</div></div>
+            <span className="chip strength">strength</span>
+          </div>
+          <div className="body">
+            <div className="metric"><div className="mk">Latest · Sets</div>
+              <div className="mv">{l.sets??"—"}<small> sets</small><Delta now={l.sets} prev={p?p.sets:null}/></div>
+              <div style={{fontSize:11,color:"var(--txt-3)",marginTop:4}}>avg {g.avg.sets}</div></div>
+            <div className="metric"><div className="mk">Latest · Duration</div>
+              <div className="mv">{l.duration||"—"}
+                {durDelta!=null && <span className={`delta ${Math.abs(durDelta)<60?"flat":durDelta>0?"up":"down"}`}>
+                  {durDelta>0?"▲":"▼"} {Math.abs(Math.round(durDelta/60))}m</span>}</div>
+              <div style={{fontSize:11,color:"var(--txt-3)",marginTop:4}}>avg {Math.round((g.avg.durationSec||0)/60)}m</div></div>
+            <div className="metric"><div className="mk">Latest · Calories</div>
+              <div className="mv">{l.cal??"—"}<small> kcal</small><Delta now={l.cal} prev={p?p.cal:null}/></div>
+              <div style={{fontSize:11,color:"var(--txt-3)",marginTop:4}}>avg {Math.round(g.avg.cal||0)}</div></div>
+            <div className="spark">
+              <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:"var(--txt-3)",fontWeight:600}}>Calories · trend</div>
+              <div style={{marginTop:8}}><Sparkline values={g.trend.map(x=>x.cal).filter(Boolean)}/></div>
+              <div style={{fontSize:11,color:"var(--txt-3)",marginTop:6}}>HR avg {Math.round(g.avg.hr||0)} bpm</div></div>
+          </div>
+        </div>); })}
     </div>
-  );
+    {D.strengthGroups.length===0 && <div className="card empty">No repeated strength routines yet.</div>}
+  </div>);
 }
 
-/* ------------------------------ app ------------------------------ */
+/* ---------------- app ---------------- */
 function App(){
   const [tab,setTab]=useState("overview");
+  const [detail,setDetail]=useState(null);
+  useEffect(()=>{ _openDetail=setDetail; },[]);
   useReveal();
   if(!D) return <div className="empty" style={{padding:80}}>Loading data… (data.js missing)</div>;
   const tabs=[
     {id:"overview",label:"Overview",n:D.totals.activities},
     {id:"pbs",label:"Personal Bests",n:D.pbs.length},
-    {id:"segments",label:"Segments",n:D.segments.length},
+    {id:"routes",label:"Route Segments",n:D.routes.length},
     {id:"strength",label:"Strength",n:D.strengthGroups.length},
   ];
   const a=D.assessment;
-  return (
-    <div>
-      <header>
-        <div className="wrap id-row">
-          <div className="who">
-            <div className="eyebrow"><span className="dot"></span>Training Log · COROS synced</div>
-            <h1>LIPING <span className="accent">ZHANG</span></h1>
-            <div className="meta">
-              <span>📍 {D.athlete.location}</span>
-              <span>Updated <b>{D.generated.replace("T"," ").slice(0,16)}</b></span>
-            </div>
-          </div>
-          <div className="assess">
-            <div className="cell"><div className="k">VO₂max</div><div className="v o">{a.vo2max}</div></div>
-            <div className="cell"><div className="k">Threshold</div><div className="v b">{a.thresholdPace}<small>/km</small></div></div>
-            <div className="cell"><div className="k">5K Pred</div><div className="v g">{a.pred5k}</div></div>
-          </div>
-        </div>
-      </header>
+  return (<div>
+    <div className="topbar"><div className="wrap">
+      <a className="home-link" href={HOME}><span className="arr">←</span> zhanglpg.github.io</a>
+      <span className="topbar-right">COROS · personal training log</span>
+    </div></div>
 
-      <nav className="tabs"><div className="wrap inner">
-        {tabs.map(t=>(
-          <button key={t.id} className={`tab ${tab===t.id?"active":""}`} onClick={()=>setTab(t.id)}>
-            {t.label}<span className="n">{t.n}</span>
-          </button>
-        ))}
-      </div></nav>
+    <header><div className="wrap id-row">
+      <div className="who">
+        <div className="eyebrow"><span className="dot"></span>Training Log · COROS synced</div>
+        <h1>LIPING <span className="accent">ZHANG</span></h1>
+        <div className="meta"><span>📍 {D.athlete.location}</span>
+          <span>Updated <b>{D.generated.replace("T"," ").slice(0,16)}</b></span></div>
+      </div>
+      <div className="assess">
+        <div className="cell"><div className="k">VO₂max</div><div className="v o">{a.vo2max}</div></div>
+        <div className="cell"><div className="k">Threshold</div><div className="v b">{a.thresholdPace}<small>/km</small></div></div>
+        <div className="cell"><div className="k">5K Pred</div><div className="v g">{a.pred5k}</div></div>
+      </div>
+    </div></header>
 
-      <main><div className="wrap">
-        <div className={`panel ${tab==="overview"?"active":""}`}><Overview/></div>
-        <div className={`panel ${tab==="pbs"?"active":""}`}><PBs/></div>
-        <div className={`panel ${tab==="segments"?"active":""}`}><Segments/></div>
-        <div className={`panel ${tab==="strength"?"active":""}`}><Strength/></div>
-      </div></main>
+    <nav className="tabs"><div className="wrap inner">
+      {tabs.map(t=>(<button key={t.id} className={`tab ${tab===t.id?"active":""}`} onClick={()=>setTab(t.id)}>
+        {t.label}<span className="n">{t.n}</span></button>))}
+    </div></nav>
 
-      <footer><div className="wrap">
-        <span>Liping Zhang · personal training dashboard</span>
-        <span>Data: COROS · auto-refreshed on new activity</span>
-      </div></footer>
-    </div>
-  );
+    <main><div className="wrap">
+      <div className={`panel ${tab==="overview"?"active":""}`}><Overview/></div>
+      <div className={`panel ${tab==="pbs"?"active":""}`}><PBs/></div>
+      <div className={`panel ${tab==="routes"?"active":""}`}><Routes/></div>
+      <div className={`panel ${tab==="strength"?"active":""}`}><Strength/></div>
+    </div></main>
+
+    <footer><div className="wrap">
+      <span>Liping Zhang · personal training dashboard</span>
+      <a href={HOME}>← back to zhanglpg.github.io</a>
+      <span>Data: COROS · auto-refreshed on new activity</span>
+    </div></footer>
+
+    {detail && <DetailModal a={detail} onClose={()=>setDetail(null)}/>}
+  </div>);
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 <script>
-  // Transform the app with the CLASSIC JSX runtime (React.createElement) so it
-  // works with the UMD React build. The automatic runtime would emit
-  // `import ... from "react/jsx-runtime"`, which fails in a classic script.
   (function () {
     var src = document.getElementById("app-code").textContent;
     try {
