@@ -40,13 +40,25 @@ coros-dashboard/
 
 ## How it updates
 
-A Hermes cron job (`coros-dashboard-sync`, daily 21:00 GMT+8) watches for new
-COROS activities. When new ones appear it:
+**Fast path — `sync_poll.py` (launchd, every 5 minutes).** A deterministic
+poller (`com.lipingzhang.coros-sync`, logs to `~/Library/Logs/coros-sync.log`)
+asks the COROS MCP endpoint for the last 7 days of sport records — one cheap
+HTTP call — and exits quietly if every labelId is already in `data.js`. When a
+new activity appears it:
 
-1. Fetches the last 14 days of sport records → `raw/records/sync_latest.txt`
-2. Fetches lap data for any run missing `raw/laps/<labelId>.json`
-3. Runs `python3 update.py` to regenerate `data.js`
-4. Commits and pushes so GitHub Pages redeploys
+1. Archives the records text → `raw/records/poll_<timestamp>.txt`
+2. Fetches lap data for new runs (`fetch_laps.py`)
+3. Downloads FIT files for new outdoor runs (GPS) and re-mines
+   `segments.py` geo segments
+4. Regenerates `data.js` and commits + pushes so GitHub Pages redeploys
+
+It refreshes the shared OAuth token itself (same file Hermes uses), so no
+LLM is in the loop. Net latency: watch sync → dashboard ≈ poll interval +
+Pages build (~1 min) + browser cache (≤10 min).
+
+**Backstop — Hermes cron** (`coros-dashboard-sync`, daily 21:00 GMT+8): the
+original agent-driven sync with a 14-day window; catches anything the fast
+path missed during downtime.
 
 `update.py` is idempotent — it dedupes activities by `labelId`, so overlapping
 record files and repeated runs are safe.
