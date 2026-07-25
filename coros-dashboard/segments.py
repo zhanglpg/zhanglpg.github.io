@@ -14,9 +14,10 @@ out-and-back run, resampled to even spacing). Every run is projected onto that
 centerline, giving each GPS point an arc-length position ``s`` along the route.
 Directed segments are then intervals of ``s``:
 
-  * core forward  [0 -> L]   the favourite out-segment (everyone runs it)
-  * core return   [L -> 0]   the way back (out-and-back runs only)
-  * extension     [L -> max] the "go forward" branch (runs that continue past L)
+  * core forward  [0 -> L]      the favourite out-segment (everyone runs it)
+  * core return   [L -> 0]      the way back (out-and-back runs only)
+  * round trip    [0 -> L -> 0] the full out-and-back, door to door
+  * extension     [L -> max]    the "go forward" branch (runs continuing past L)
 
 Traversals are timed by detecting when the projected ``s`` crosses the segment
 endpoints in the relevant direction. This is robust to GPS jitter because
@@ -269,6 +270,33 @@ def time_return(series, L, hr_at=None):
     return time_segment(tail, L - GATE_M, GATE_M, -1, hr_at)
 
 
+def time_roundtrip(series, L, hr_at=None):
+    """Time the full out-and-back: from the rising crossing of s = GATE_M on
+    the way out to the falling crossing of s = GATE_M after the turnaround.
+
+    Unlike the two single-leg segments, dwell at the turnaround is *included* —
+    a round trip is door-to-door elapsed time. The run must still reach the
+    turnaround zone (peak s >= L - GATE_M). Returns (seconds, avg_hr) or None."""
+    if not series:
+        return None
+    peak_idx = max(range(len(series)), key=lambda i: series[i][1])
+    if series[peak_idx][1] < L - GATE_M:
+        return None
+    t_a = crossing_time(series, GATE_M, +1)
+    if t_a is None:
+        return None
+    t_b = crossing_time(series[peak_idx:], GATE_M, -1)
+    if t_b is None or t_b <= t_a:
+        return None
+    secs = t_b - t_a
+    avg_hr = None
+    if hr_at is not None:
+        hrs = [hr for (t, s, hr) in hr_at if t_a <= t <= t_b and hr is not None]
+        if hrs:
+            avg_hr = round(sum(hrs) / len(hrs))
+    return (round(secs, 1), avg_hr)
+
+
 # --------------------------------------------------------------------------- #
 # Cluster + segment discovery
 # --------------------------------------------------------------------------- #
@@ -396,6 +424,20 @@ def discover_cluster_segments(members, plane, cluster_start):
             rev_path = list(reversed(core_path))
             segments.append(_mk_segment("core-return", "Return · turnaround → start",
                                         rev_path, core_len, rev_efforts, direction="return"))
+
+        # ---- core round trip [0 -> L -> 0] ----
+        rt_efforts = []
+        for pr in projected_runs:
+            res = time_roundtrip(pr["series"], L, pr["hr"])
+            if res:
+                secs, hr = res
+                rt_efforts.append({"labelId": pr["labelId"], "date": pr["date"],
+                                   "seconds": secs, "avgHr": hr})
+        if len(rt_efforts) >= MIN_EFFORTS:
+            rt_path = core_path + list(reversed(core_path))
+            segments.append(_mk_segment("core-roundtrip", "Round trip · start → turnaround → start",
+                                        rt_path, 2 * (L - GATE_M), rt_efforts,
+                                        direction="roundtrip"))
 
     # ---- extension [L -> max_s] ("go forward" branch) ----
     ext_efforts = []
