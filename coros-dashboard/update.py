@@ -421,6 +421,14 @@ def main():
         "latestDate": acts[0]["date"] if acts else None,
     }
 
+    # Load geo segments if available (from segments.py)
+    geo_segments = []
+    geo_path = os.path.join(RAW, "geo_segments.json")
+    if os.path.exists(geo_path):
+        with open(geo_path, encoding="utf-8") as f:
+            geo_data = json.load(f)
+            geo_segments = geo_data.get("segments", [])
+
     data = {
         "generated": datetime.now(TZ).isoformat(timespec="seconds"),
         "athlete": {"name": "Liping Zhang", "location": "Hangzhou, China"},
@@ -432,6 +440,7 @@ def main():
         "pbs": pbs,
         "segments": segments,
         "routes": routes,
+        "geoSegments": geo_segments,
         "runs": runs,
         "runTrend": run_trend,
         "monthlyVolume": monthly_volume,

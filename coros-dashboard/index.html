@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -170,6 +172,31 @@
   .seg-row .sd{color:var(--txt-3);font-size:12px;flex:1;text-align:right}
   .seg-row .crown{font-size:14px}
 
+  /* ---------- geo segments / map ---------- */
+  .geo-card{padding:0;overflow:hidden}
+  .geo-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .geo-head .gn{display:flex;align-items:center;gap:12px}
+  .geo-head .gic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .geo-head h3{font-family:var(--disp);font-weight:400;font-size:clamp(20px,3vw,24px)}
+  .geo-head .gmeta{color:var(--txt-3);font-size:12px;margin-top:2px}
+  .geo-body{display:grid;grid-template-columns:1fr 300px;gap:0}
+  .geo-map{height:340px;background:#1a1e26;position:relative;z-index:0}
+  .geo-map .leaflet-container{background:#1a1e26}
+  .geo-efforts{border-left:1px solid var(--line);display:flex;flex-direction:column}
+  .geo-efforts .eh{padding:14px 18px 8px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);font-weight:600}
+  .effort-row{display:flex;align-items:center;gap:12px;padding:10px 18px;transition:background .18s;cursor:pointer;border-bottom:1px solid var(--line)}
+  .effort-row:last-child{border-bottom:none}
+  .effort-row:hover{background:rgba(255,255,255,.03)}
+  .effort-row .rk{font-family:var(--disp);font-size:20px;color:var(--txt-3);width:28px;flex-shrink:0}
+  .effort-row .rk.r1{color:var(--run)} .effort-row .rk.r2{color:var(--seg)} .effort-row .rk.r3{color:var(--hike)}
+  .effort-row .et{font-family:var(--disp);font-size:22px;font-variant-numeric:tabular-nums;flex:1}
+  .effort-row .r1 .et,.effort-row.r1 .et{color:var(--run)}
+  .effort-row .ed{color:var(--txt-3);font-size:12px}
+  .effort-row .ehr{color:var(--txt-3);font-size:12px}
+  .effort-row .chev{color:var(--txt-3);font-size:13px}
+  .geo-empty{padding:30px;text-align:center;color:var(--txt-3);font-size:14px}
+
   /* ---------- feed ---------- */
   .feed-item{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);
     transition:background .18s;cursor:pointer}
@@ -236,6 +263,9 @@
     .route-profile{border-right:none;border-bottom:1px solid var(--line)}
     .routine .body{grid-template-columns:1fr 1fr}
     .metric{border-bottom:1px solid var(--line)}
+    .geo-body{grid-template-columns:1fr}
+    .geo-efforts{border-left:none;border-top:1px solid var(--line)}
+    .geo-map{height:280px}
   }
   @media(max-width:640px){
     .wrap{padding:0 16px}
@@ -601,49 +631,76 @@ function PBs(){
     </div>
   </div>);
 }
-function Routes(){
+function GeoSegmentMap({seg}){
+  const ref=useRef(null);
+  const mapRef=useRef(null);
+  useEffect(()=>{
+    if(!ref.current||!seg.path||seg.path.length<2) return;
+    if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; }
+    const map=L.map(ref.current,{zoomControl:true,attributionControl:false,scrollWheelZoom:false});
+    mapRef.current=map;
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{
+      maxZoom:19,subdomains:"abcd"
+    }).addTo(map);
+    const latlngs=seg.path.map(p=>[p[0],p[1]]);
+    const color=seg.id==="extension"?"var(--hike)":seg.id==="core-return"?"var(--seg)":"var(--run)";
+    const hex=seg.id==="extension"?"#ffc857":seg.id==="core-return"?"#4cc9f0":"#ff6b35";
+    L.polyline(latlngs,{color:hex,weight:5,opacity:.9}).addTo(map);
+    // start marker
+    L.circleMarker(latlngs[0],{radius:7,color:"#3ddc84",fillColor:"#3ddc84",fillOpacity:1,weight:2})
+      .addTo(map).bindTooltip("Start",{direction:"top",offset:[0,-8]});
+    // end marker
+    L.circleMarker(latlngs[latlngs.length-1],{radius:7,color:"#ff5d5d",fillColor:"#ff5d5d",fillOpacity:1,weight:2})
+      .addTo(map).bindTooltip("End",{direction:"top",offset:[0,-8]});
+    map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
+    return ()=>{ if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; } };
+  },[seg]);
+  return <div className="geo-map" ref={ref}></div>;
+}
+function GeoSegments(){
+  const segs=D.geoSegments||[];
   return (<div>
     <div className="sec-head"><h2>Route Segments</h2>
-      <div className="sub">Outdoor runs clustered by start location · best time for each kilometre of the route · tap a segment to open that run</div></div>
+      <div className="sub">Common trail segments discovered from GPS tracks · best traversal times · tap an effort to open that run</div></div>
     <div className="grid" style={{gap:18}}>
-      {D.routes.map((rt,i)=>{ const trail=/trail/i.test(rt.name);
-        const color=trail?"var(--hike)":"var(--run)";
-        const bestSeg=rt.segments.reduce((b,s)=>(s.seconds<b.seconds?s:b),rt.segments[0]);
-        return (<div className="card route-card reveal" key={rt.id} style={{transitionDelay:`${i*60}ms`}}>
-          <div className="route-head">
-            <div className="rn">
-              <div className="ric" style={{background:trail?"var(--hike-soft)":"var(--run-soft)"}}>{trail?"⛰️":"🏃"}</div>
+      {segs.map((s,i)=>{
+        const icon=s.id==="extension"?"⛰️":s.id==="core-return"?"↩️":"🏃";
+        const chip=s.id==="extension"?"trail":s.id==="core-return"?"row":"run";
+        const best=s.efforts[0];
+        return (<div className="card geo-card reveal" key={s.id} style={{transitionDelay:`${i*60}ms`}}>
+          <div className="geo-head">
+            <div className="gn">
+              <div className="gic" style={{background:s.id==="extension"?"var(--hike-soft)":s.id==="core-return"?"var(--seg-soft)":"var(--run-soft)"}}>{icon}</div>
               <div>
-                <h3>{rt.name}</h3>
-                <div className="rmeta">{rt.efforts} efforts · {rt.minKm}–{rt.maxKm} km · {rt.segments.length} segments
-                  · best 1K <b style={{color}}>{bestSeg?bestSeg.pace:"—"}</b></div>
+                <h3>{s.name}</h3>
+                <div className="gmeta">{(s.lengthM/1000).toFixed(1)} km · {s.effortCount} effort{s.effortCount!==1?"s":""}
+                  · best <b style={{color:s.id==="extension"?"var(--hike)":s.id==="core-return"?"var(--seg)":"var(--run)"}}>{fmtSec(best?best.seconds:null)}</b></div>
               </div>
             </div>
-            <span className={`chip ${trail?"trail":"run"}`}>{trail?"trail":"road"}</span>
+            <span className={`chip ${chip}`}>{s.direction}</span>
           </div>
-          <div className="route-body">
-            <div className="route-profile">
-              <div style={{fontSize:10,letterSpacing:".16em",textTransform:"uppercase",color:"var(--txt-3)",fontWeight:600,marginBottom:8}}>
-                Best pace by km</div>
-              <RouteProfile segs={rt.segments} color={color}/>
-            </div>
-            <div className="route-segs">
-              {rt.segments.map(s=>{ const isBest=s.seconds===bestSeg.seconds;
-                return (<div className={"seg-row"+(isBest?" best":"")} key={s.km} onClick={()=>openDetail(s.labelId)}>
-                  <span className="km">KM {s.km}</span>
-                  <span className="sp" style={isBest?{color}:{}}>{s.pace}</span>
-                  {isBest && <span className="crown">👑</span>}
-                  <span className="sd">{fmtDate(s.date)}</span>
+          <div className="geo-body">
+            <GeoSegmentMap seg={s}/>
+            <div className="geo-efforts">
+              <div className="eh">Top performances</div>
+              {s.efforts.map((e,idx)=>(
+                <div className={"effort-row"+(idx===0?" r1":"")} key={e.labelId+idx} onClick={()=>openDetail(e.labelId)}>
+                  <span className={"rk"+(idx<3?" r"+(idx+1):"")}>{idx+1}</span>
+                  <span className="et">{fmtSec(e.seconds)}</span>
+                  <span className="ed">{fmtDate(e.date)}</span>
+                  {e.avgHr && <span className="ehr">♥ {e.avgHr}</span>}
                   <span className="chev">›</span>
-                </div>); })}
+                </div>
+              ))}
             </div>
           </div>
-        </div>); })}
+        </div>);
+      })}
     </div>
-    {D.routes.length===0 && <div className="card empty">No repeated outdoor routes yet.</div>}
+    {segs.length===0 && <div className="card geo-empty">No geographic segments discovered yet. Add more trail runs with GPS data.</div>}
     <div className="sub" style={{color:"var(--txt-3)",fontSize:12,marginTop:12}}>
-      A “route” = runs starting within ~200 m of each other. Segment times are the best per-kilometre splits
-      from the shared start, so each kilometre compares the same stretch of road or trail.
+      Segments are mined from GPS tracks: runs sharing a trailhead are aligned onto a common corridor,
+      and the favourite out-segment, its return, and any "go forward" extension are timed separately.
     </div>
   </div>);
 }
@@ -694,7 +751,7 @@ function App(){
   const tabs=[
     {id:"overview",label:"Overview",n:D.totals.activities},
     {id:"pbs",label:"Personal Bests",n:D.pbs.length},
-    {id:"routes",label:"Route Segments",n:D.routes.length},
+    {id:"routes",label:"Route Segments",n:(D.geoSegments||[]).length},
     {id:"strength",label:"Strength",n:D.strengthGroups.length},
   ];
   const a=D.assessment;
@@ -726,7 +783,7 @@ function App(){
     <main><div className="wrap">
       <div className={`panel ${tab==="overview"?"active":""}`}><Overview/></div>
       <div className={`panel ${tab==="pbs"?"active":""}`}><PBs/></div>
-      <div className={`panel ${tab==="routes"?"active":""}`}><Routes/></div>
+      <div className={`panel ${tab==="routes"?"active":""}`}><GeoSegments/></div>
       <div className={`panel ${tab==="strength"?"active":""}`}><Strength/></div>
     </div></main>
 
