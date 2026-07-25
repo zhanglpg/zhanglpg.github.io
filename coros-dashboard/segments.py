@@ -27,6 +27,7 @@ import os
 import glob
 import json
 import math
+import time
 import warnings
 from collections import defaultdict
 
@@ -374,6 +375,7 @@ def discover_cluster_segments(members, plane, cluster_start):
             continue
         run_max_s = max(s for (t, s) in series)
         projected_runs.append({"labelId": r["labelId"], "date": r["date"],
+                               "sportType": r.get("sportType"),
                                "series": series, "hr": hr_series,
                                "max_s": run_max_s, "pts": pts, "proj": proj,
                                "is_oab": r["labelId"] in oab_ids})
@@ -406,6 +408,7 @@ def discover_cluster_segments(members, plane, cluster_start):
         if res:
             secs, hr = res
             fwd_efforts.append({"labelId": pr["labelId"], "date": pr["date"],
+                                "sportType": pr.get("sportType"),
                                 "seconds": secs, "avgHr": hr})
     if len(fwd_efforts) >= MIN_EFFORTS:
         segments.append(_mk_segment("core-out", "Outbound · start → turnaround",
@@ -419,6 +422,7 @@ def discover_cluster_segments(members, plane, cluster_start):
             if res:
                 secs, hr = res
                 rev_efforts.append({"labelId": pr["labelId"], "date": pr["date"],
+                                    "sportType": pr.get("sportType"),
                                     "seconds": secs, "avgHr": hr})
         if len(rev_efforts) >= MIN_EFFORTS:
             rev_path = list(reversed(core_path))
@@ -432,6 +436,7 @@ def discover_cluster_segments(members, plane, cluster_start):
             if res:
                 secs, hr = res
                 rt_efforts.append({"labelId": pr["labelId"], "date": pr["date"],
+                                   "sportType": pr.get("sportType"),
                                    "seconds": secs, "avgHr": hr})
         if len(rt_efforts) >= MIN_EFFORTS:
             rt_path = core_path + list(reversed(core_path))
@@ -448,6 +453,7 @@ def discover_cluster_segments(members, plane, cluster_start):
             if res:
                 secs, hr = res
                 ext_efforts.append({"labelId": pr["labelId"], "date": pr["date"],
+                                    "sportType": pr.get("sportType"),
                                     "seconds": secs, "avgHr": hr})
                 ext_max = max(ext_max, pr["max_s"])
     if ext_efforts:
@@ -513,6 +519,69 @@ def _mk_segment(sid, name, path, length_m, efforts, direction):
 
 
 # --------------------------------------------------------------------------- #
+# POI naming (reverse geocoding via Nominatim, cached, offline-safe)
+# --------------------------------------------------------------------------- #
+def poi_label(lat, lon, cache):
+    """Best-effort short place label for a coordinate. Cached by ~11 m cell;
+    returns None on any failure so callers can keep generic names."""
+    import urllib.request
+    key = f"{lat:.4f},{lon:.4f}"
+    if key in cache:
+        return cache[key]
+    url = ("https://nominatim.openstreetmap.org/reverse?format=jsonv2"
+           f"&lat={lat}&lon={lon}&zoom=17")
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "coros-dashboard/1.0 (personal training dashboard)"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            j = json.load(r)
+    except Exception:
+        cache[key] = None
+        return None
+    name = j.get("name") or ""
+    addr = j.get("address") or {}
+    if not name:
+        for k in ("tourism", "leisure", "park", "amenity", "natural", "water",
+                  "peak", "building", "road", "pedestrian", "footway",
+                  "neighbourhood", "suburb", "village", "hamlet"):
+            if addr.get(k):
+                name = addr[k]
+                break
+    cache[key] = name or None
+    time.sleep(1.1)  # Nominatim politeness: max ~1 req/s
+    return cache[key]
+
+
+def apply_poi_names(all_segments, base):
+    """Rename segments to '<start POI> -> <end POI>' where geocoding succeeds;
+    keep the generic directional names as fallback."""
+    cache_path = os.path.join(base, "raw", "poi_cache.json")
+    try:
+        cache = json.load(open(cache_path, encoding="utf-8"))
+    except Exception:
+        cache = {}
+    for s in all_segments:
+        if not s["path"]:
+            continue
+        a = s["path"][0]
+        b = s["path"][-1]
+        if s.get("kind") == "core-roundtrip":
+            b = s["path"][len(s["path"]) // 2]   # loop closes; name via turnaround
+        pa = poi_label(a[0], a[1], cache)
+        pb = poi_label(b[0], b[1], cache)
+        if pa and pb and pa != pb:
+            arrow = "⇄" if s.get("kind") == "core-roundtrip" else "→"
+            s["name"] = f"{pa} {arrow} {pb}"
+        elif pa and pb:  # both endpoints resolve to the same place
+            word = {"core-roundtrip": "loop", "core-out": "outbound",
+                    "core-return": "return", "extension": "extension"}.get(s.get("kind"))
+            s["name"] = f"{pa} · {word}" if word else pa
+    os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+    with open(cache_path, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False)
+
+
+# --------------------------------------------------------------------------- #
 # Main
 # --------------------------------------------------------------------------- #
 def main():
@@ -529,7 +598,7 @@ def main():
     if os.path.exists(data_path):
         txt = open(data_path, encoding="utf-8").read()
         data = json.loads(txt[len("const DATA = "):].rstrip(";\n"))
-        for r in data["runs"]:
+        for r in data["runs"] + data.get("others", []):
             runs_meta[r["labelId"]] = r
 
     # parse all FITs
@@ -566,9 +635,21 @@ def main():
         segs = discover_cluster_segments(c["members"], plane, c["start"])
         for s in segs:
             s["cluster"] = ci
+            s["kind"] = s["id"]                      # core-out / core-return / ...
+            s["id"] = f"c{ci}-{s['id']}"             # unique across clusters
             s["clusterStart"] = [round(c["start"][0], 6), round(c["start"][1], 6)]
         all_segments.extend(segs)
         print(f"  cluster {ci} @ {c['start']}: {len(c['members'])} runs -> {len(segs)} segments")
+
+    # strongest clusters first (by best-supported segment), segments of a
+    # cluster kept together in discovery order (out, return, round trip, ext)
+    strength = {}
+    for s in all_segments:
+        strength[s["cluster"]] = max(strength.get(s["cluster"], 0), s["effortCount"])
+    order = {ci: i for i, ci in enumerate(sorted(strength, key=lambda c: -strength[c]))}
+    all_segments.sort(key=lambda s: order[s["cluster"]])
+
+    apply_poi_names(all_segments, base)
 
     out = {"refLat": plane.ref_lat, "refLon": plane.ref_lon, "segments": all_segments}
     with open(os.path.join(base, "raw", "geo_segments.json"), "w", encoding="utf-8") as f:

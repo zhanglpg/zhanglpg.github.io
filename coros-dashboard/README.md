@@ -14,7 +14,9 @@ Live at: `https://zhanglpg.github.io/coros-dashboard/`
 - **Personal Bests** — fastest rolling 1K/3K/5K/10K splits from flat runs
   (road + track; trail excluded). Tap a PB or any run row for the full
   kilometre-split breakdown.
-- **Route Segments** — outdoor runs clustered by start location (~200 m).
+- **Route Segments** — GPS activities (road runs, trail runs, hikes)
+  clustered by start location (~200 m); segments named after OpenStreetMap
+  places at their endpoints.
   Each repeated route shows the best time for every kilometre of the route,
   so each segment compares the same stretch of road/trail across efforts.
   Tap a segment to open the run that set it.

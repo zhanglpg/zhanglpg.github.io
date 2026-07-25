@@ -13,8 +13,11 @@ Token handling: reads the same OAuth token Hermes uses
 client_id + token_endpoint when it is near expiry or a call returns 401,
 writing the file back atomically in the same format.
 
-Usage: python3 sync_poll.py [--dry-run]
-  --dry-run: poll + report what would happen; no writes, no commit.
+Usage: python3 sync_poll.py [--dry-run | --backfill]
+  --dry-run:  poll + report what would happen; no writes, no commit.
+  --backfill: one-shot — fetch FIT files for EVERY GPS activity (road run,
+              trail run, hike) found in raw/records/ that lacks one, then
+              re-mine segments, regenerate data.js, commit and push.
 """
 import os
 import re
@@ -39,7 +42,7 @@ META_FILE = os.path.expanduser("~/.hermes/mcp-tokens/coros.meta.json")
 URL = "https://mcp.coros.com/mcp"
 
 RUN_TYPES = {100, 101, 102, 103}      # lap files fetched for these
-OUTDOOR_TYPES = {100, 102}            # FIT files (GPS) fetched for these
+GPS_TYPES = {100, 102, 104}           # FIT files fetched: road run, trail run, hike
 WINDOW_DAYS = 7
 REFRESH_MARGIN_S = 3 * 86400          # refresh token when < 3 days of life left
 
@@ -171,10 +174,16 @@ def parse_records(text):
     return out
 
 
+class RateLimited(RuntimeError):
+    """COROS caps FIT downloads (~50/day); callers should stop for the day."""
+
+
 def fetch_fit(tok, lid, st):
     """Download the FIT file for one activity into raw/fits/<lid>.fit."""
     text = mcp_call(tok, "queryActivityFitFileDownloadUrls",
                     {"labelId": lid, "sportType": st})
+    if "daily limit" in text.lower():
+        raise RateLimited(text.strip()[:100])
     urls = re.findall(r"https?://\S+", text)
     if not urls:
         log(f"  no FIT url for {lid}")
@@ -195,6 +204,87 @@ def run(cmd, cwd=BASE):
     return r.stdout
 
 
+def backfill():
+    """Fetch missing FITs for all GPS activities across all records files."""
+    import glob as _glob
+    tok = get_token()
+    pairs = {}
+    for f in _glob.glob(os.path.join(RECORDS, "*.txt")):
+        for lid, st in parse_records(open(f, encoding="utf-8").read()):
+            pairs[lid] = st
+    targets = [(lid, st) for lid, st in sorted(pairs.items())
+               if st in GPS_TYPES and not os.path.exists(os.path.join(FITS, f"{lid}.fit"))]
+    log(f"backfill: {len(targets)} missing FITs")
+    os.makedirs(FITS, exist_ok=True)
+    got = 0
+    for i, (lid, st) in enumerate(targets, 1):
+        try:
+            if fetch_fit(tok, lid, st):
+                got += 1
+        except RateLimited as e:
+            log(f"  {e} — stopping; re-run tomorrow or let the daily drain finish")
+            break
+        except Exception as e:
+            log(f"  fetch failed {lid}: {e}")
+        if i % 10 == 0:
+            log(f"  progress {i}/{len(targets)} (ok={got})")
+        time.sleep(0.5)
+    log(f"backfill: downloaded {got}/{len(targets)}")
+    if got:
+        run([sys.executable, "segments.py"])
+        run([sys.executable, "update.py"])
+        run(["git", "add", "coros-dashboard/data.js"], cwd=REPO)
+        diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO)
+        if diff.returncode != 0:
+            run(["git", "commit", "-q", "-m",
+                 f"coros-dashboard: FIT backfill ({got} tracks) + segment re-mine [auto]"], cwd=REPO)
+            run(["git", "push", "-q", "origin", "HEAD"], cwd=REPO)
+            log("backfill: pushed")
+    return 0
+
+
+DRAIN_STATE = os.path.join(BASE, "raw", ".fit_drain.json")
+DRAIN_MAX_PER_DAY = 40
+
+
+def drain_fit_debt(tok):
+    """Once per day, fetch up to DRAIN_MAX_PER_DAY missing FIT files for GPS
+    activities anywhere in raw/records/ (newest first). COROS caps FIT
+    downloads at ~50/day, so a large backlog drains over several days without
+    starving same-day syncs of quota."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    try:
+        if json.load(open(DRAIN_STATE)).get("date") == today:
+            return 0
+    except Exception:
+        pass
+    import glob as _glob
+    pairs = {}
+    for f in _glob.glob(os.path.join(RECORDS, "*.txt")):
+        for lid, st in parse_records(open(f, encoding="utf-8").read()):
+            pairs[lid] = st
+    targets = [(lid, st) for lid, st in sorted(pairs.items(), reverse=True)
+               if st in GPS_TYPES and not os.path.exists(os.path.join(FITS, f"{lid}.fit"))]
+    with open(DRAIN_STATE, "w") as f:
+        json.dump({"date": today}, f)   # one attempt per day, whatever happens
+    if not targets:
+        return 0
+    got = 0
+    os.makedirs(FITS, exist_ok=True)
+    for lid, st in targets[:DRAIN_MAX_PER_DAY]:
+        try:
+            if fetch_fit(tok, lid, st):
+                got += 1
+                time.sleep(0.5)
+        except RateLimited:
+            log("daily FIT download limit reached; resuming tomorrow")
+            break
+        except Exception as e:
+            log(f"  fit fetch failed {lid}: {e}")
+    log(f"fit-debt drain: downloaded {got} (remaining {len(targets) - got})")
+    return got
+
+
 def main():
     # single instance
     lockf = open(LOCK_FILE, "w")
@@ -210,6 +300,11 @@ def main():
     known = dashboard_label_ids()
     new = [(lid, st) for (lid, st) in pairs if lid not in known]
     if not new:
+        drained = drain_fit_debt(tok)
+        if drained:
+            run([sys.executable, "segments.py"])
+            run([sys.executable, "update.py"])
+            publish(f"coros-dashboard: FIT backfill drain ({drained} tracks) [auto]")
         log(f"quiet ({len(pairs)} recent, all known)")
         return 0
 
@@ -228,14 +323,20 @@ def main():
     if any(st in RUN_TYPES for (_, st) in new):
         log(run([sys.executable, "fetch_laps.py"]).strip().splitlines()[-1])
 
-    # FIT files for new outdoor runs
+    # FIT files for GPS activities (runs, trail runs, hikes). Scan the whole
+    # recent window, not just `new`, so gaps left by the daily backstop or a
+    # past failure self-heal whenever any new activity triggers a sync.
     new_fits = 0
     os.makedirs(FITS, exist_ok=True)
-    for lid, st in new:
-        if st in OUTDOOR_TYPES and not os.path.exists(os.path.join(FITS, f"{lid}.fit")):
-            if fetch_fit(tok, lid, st):
-                new_fits += 1
-                log(f"  FIT downloaded: {lid}")
+    for lid, st in pairs:
+        if st in GPS_TYPES and not os.path.exists(os.path.join(FITS, f"{lid}.fit")):
+            try:
+                if fetch_fit(tok, lid, st):
+                    new_fits += 1
+                    log(f"  FIT downloaded: {lid}")
+            except RateLimited:
+                log("daily FIT download limit reached; remaining tracks drain tomorrow")
+                break
 
     # regenerate
     if new_fits:
@@ -249,7 +350,12 @@ def main():
         log(f"WARNING: still absent from data.js after update: {still_missing} "
             "— records parsing likely failed; will NOT loop-commit")
 
-    # publish only on substantive change (ignore the regeneration timestamp)
+    publish(f"coros-dashboard: sync {len(new)} new activities [auto]")
+    return 0
+
+
+def publish(msg):
+    """Commit + push data.js only if it changed beyond the generated timestamp."""
     strip = lambda s: re.sub(r'"generated":"[^"]*"', '', s)
     head = subprocess.run(["git", "show", "HEAD:coros-dashboard/data.js"],
                           cwd=REPO, capture_output=True, text=True).stdout
@@ -257,24 +363,22 @@ def main():
     if strip(head) == strip(now_):
         run(["git", "checkout", "--", "coros-dashboard/data.js"], cwd=REPO)
         log("no substantive data.js change; commit skipped")
-        return 0
-
+        return False
     run(["git", "add", "coros-dashboard/data.js"], cwd=REPO)
     diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO)
-    if diff.returncode != 0:
-        msg = f"coros-dashboard: sync {len(new)} new activities [auto]"
-        run(["git", "commit", "-q", "-m",
-             msg + "\n\nCo-Authored-By: coros-sync (launchd) <noreply@local>"], cwd=REPO)
-        run(["git", "push", "-q", "origin", "HEAD"], cwd=REPO)
-        log(f"pushed: {msg}")
-    else:
+    if diff.returncode == 0:
         log("no data.js change after regeneration")
-    return 0
+        return False
+    run(["git", "commit", "-q", "-m",
+         msg + "\n\nCo-Authored-By: coros-sync (launchd) <noreply@local>"], cwd=REPO)
+    run(["git", "push", "-q", "origin", "HEAD"], cwd=REPO)
+    log(f"pushed: {msg}")
+    return True
 
 
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        sys.exit(backfill() if "--backfill" in sys.argv else main())
     except Exception as e:
         log(f"ERROR: {e}")
         sys.exit(1)

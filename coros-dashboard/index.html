@@ -643,7 +643,8 @@ function GeoSegmentMap({seg}){
       maxZoom:19,subdomains:"abcd"
     }).addTo(map);
     const latlngs=seg.path.map(p=>[p[0],p[1]]);
-    const hex=seg.id==="extension"?"#ffc857":seg.id==="core-return"?"#4cc9f0":seg.id==="core-roundtrip"?"#b388ff":"#ff6b35";
+    const kind=seg.kind||seg.id;
+    const hex=kind==="extension"?"#ffc857":kind==="core-return"?"#4cc9f0":kind==="core-roundtrip"?"#b388ff":"#ff6b35";
     L.polyline(latlngs,{color:hex,weight:5,opacity:.9}).addTo(map);
     // start marker
     L.circleMarker(latlngs[0],{radius:7,color:"#3ddc84",fillColor:"#3ddc84",fillOpacity:1,weight:2})
@@ -671,17 +672,18 @@ function GeoSegments(){
       <div className="sub">Common trail segments discovered from GPS tracks · best traversal times · tap an effort to open that run</div></div>
     <div className="grid" style={{gap:18}}>
       {segs.map((s,i)=>{
-        const icon=s.id==="extension"?"⛰️":s.id==="core-return"?"↩️":s.id==="core-roundtrip"?"🔁":"🏃";
-        const chip=s.id==="extension"?"trail":s.id==="core-return"?"cardio":s.id==="core-roundtrip"?"row":"run";
+        const kind=s.kind||s.id;
+        const icon=kind==="extension"?"⛰️":kind==="core-return"?"↩️":kind==="core-roundtrip"?"🔁":"🏃";
+        const chip=kind==="extension"?"trail":kind==="core-return"?"cardio":kind==="core-roundtrip"?"row":"run";
         const best=s.efforts[0];
         return (<div className="card geo-card reveal" key={s.id} style={{transitionDelay:`${i*60}ms`}}>
           <div className="geo-head">
             <div className="gn">
-              <div className="gic" style={{background:s.id==="extension"?"var(--hike-soft)":s.id==="core-return"?"var(--seg-soft)":s.id==="core-roundtrip"?"rgba(179,136,255,.14)":"var(--run-soft)"}}>{icon}</div>
+              <div className="gic" style={{background:kind==="extension"?"var(--hike-soft)":kind==="core-return"?"var(--seg-soft)":kind==="core-roundtrip"?"rgba(179,136,255,.14)":"var(--run-soft)"}}>{icon}</div>
               <div>
                 <h3>{s.name}</h3>
                 <div className="gmeta">{(s.lengthM/1000).toFixed(1)} km · {s.effortCount} effort{s.effortCount!==1?"s":""}
-                  · best <b style={{color:s.id==="extension"?"var(--hike)":s.id==="core-return"?"var(--seg)":s.id==="core-roundtrip"?"#b388ff":"var(--run)"}}>{fmtSec(best?best.seconds:null)}</b></div>
+                  · best <b style={{color:kind==="extension"?"var(--hike)":kind==="core-return"?"var(--seg)":kind==="core-roundtrip"?"#b388ff":"var(--run)"}}>{fmtSec(best?best.seconds:null)}</b></div>
               </div>
             </div>
             <span className={`chip ${chip}`}>{s.direction}</span>
@@ -694,7 +696,7 @@ function GeoSegments(){
                 <div className={"effort-row"+(idx===0?" r1":"")} key={e.labelId+idx} onClick={()=>openDetail(e.labelId)}>
                   <span className={"rk"+(idx<3?" r"+(idx+1):"")}>{idx+1}</span>
                   <span className="et">{fmtSec(e.seconds)}</span>
-                  <span className="ed">{fmtDate(e.date)}</span>
+                  <span className="ed">{e.sportType===104?"🥾 ":e.sportType===102?"⛰️ ":""}{fmtDate(e.date)}</span>
                   {e.avgHr && <span className="ehr">♥ {e.avgHr}</span>}
                   <span className="chev">›</span>
                 </div>
@@ -706,10 +708,11 @@ function GeoSegments(){
     </div>
     {segs.length===0 && <div className="card geo-empty">No geographic segments discovered yet. Add more trail runs with GPS data.</div>}
     <div className="sub" style={{color:"var(--txt-3)",fontSize:12,marginTop:12}}>
-      Segments are mined from GPS tracks: runs sharing a trailhead are aligned onto a common corridor,
-      and the favourite out-segment, its return, the full round trip, and any "go forward" extension are
-      timed separately. Single-leg times exclude rest at the turnaround; the round trip, being
-      door-to-door, includes it.
+      Segments are mined from the GPS tracks of road runs, trail runs, and hikes (🥾 hike · ⛰️ trail in
+      the effort lists): activities sharing a trailhead are aligned onto a common corridor, and the
+      favourite out-segment, its return, the full round trip, and any "go forward" extension are timed
+      separately. Single-leg times exclude rest at the turnaround; the round trip, being door-to-door,
+      includes it. Segment names come from OpenStreetMap places at the route's endpoints.
     </div>
   </div>);
 }
