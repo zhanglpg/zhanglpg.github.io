@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Geographic route-segment mining from COROS FIT files.
+"""Geographic route-segment mining from COROS FIT files (trail runs + hikes).
 
 Discovers *common route segments* — stretches of trail/road the athlete repeats
 — directly from GPS tracks, then ranks the top performances (fastest
@@ -36,6 +36,7 @@ warnings.filterwarnings("ignore")
 CLUSTER_RADIUS_M = 200.0   # group runs whose starts are within this distance
 CORRIDOR_WIDTH_M = 70.0    # a point counts as "on the corridor" within this perp dist
 RESAMPLE_M = 30.0          # centerline vertex spacing
+SEGMENT_TYPES = {102, 104}  # activities mined for segments: trail run, hike
 MIN_EFFORTS = 2            # a segment needs at least this many timed efforts
 GATE_M = 30.0              # timing gates sit this far inside the segment ends
 TOP_N = 5
@@ -613,6 +614,8 @@ def main():
         if len(pts) < 10:
             continue
         meta = runs_meta.get(lid, {})
+        if meta.get("sportType") not in SEGMENT_TYPES:
+            continue  # road runs and unknown types are excluded from segments
         runs.append({
             "labelId": lid, "pts": pts,
             "lat": pts[0][0], "lon": pts[0][1],

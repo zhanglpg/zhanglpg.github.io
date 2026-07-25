@@ -5,7 +5,7 @@ Runs every few minutes from launchd. Cheaply asks the COROS MCP endpoint for
 recent sport records; if every labelId is already on the dashboard (data.js),
 exits quietly. When new activities appear it archives the records text,
 fetches missing lap files (via fetch_laps.py), downloads FIT files for new
-outdoor runs, re-mines geo segments if needed, regenerates data.js, and
+trail runs and hikes, re-mines geo segments if needed, regenerates data.js, and
 commits + pushes so GitHub Pages redeploys.
 
 Token handling: reads the same OAuth token Hermes uses
@@ -15,8 +15,8 @@ writing the file back atomically in the same format.
 
 Usage: python3 sync_poll.py [--dry-run | --backfill]
   --dry-run:  poll + report what would happen; no writes, no commit.
-  --backfill: one-shot — fetch FIT files for EVERY GPS activity (road run,
-              trail run, hike) found in raw/records/ that lacks one, then
+  --backfill: one-shot — fetch FIT files for EVERY segment-eligible activity
+              (trail run, hike) found in raw/records/ that lacks one, then
               re-mine segments, regenerate data.js, commit and push.
 """
 import os
@@ -42,7 +42,7 @@ META_FILE = os.path.expanduser("~/.hermes/mcp-tokens/coros.meta.json")
 URL = "https://mcp.coros.com/mcp"
 
 RUN_TYPES = {100, 101, 102, 103}      # lap files fetched for these
-GPS_TYPES = {100, 102, 104}           # FIT files fetched: road run, trail run, hike
+GPS_TYPES = {102, 104}                # FIT files fetched: trail run, hike (road runs excluded)
 WINDOW_DAYS = 7
 REFRESH_MARGIN_S = 3 * 86400          # refresh token when < 3 days of life left
 
@@ -323,7 +323,7 @@ def main():
     if any(st in RUN_TYPES for (_, st) in new):
         log(run([sys.executable, "fetch_laps.py"]).strip().splitlines()[-1])
 
-    # FIT files for GPS activities (runs, trail runs, hikes). Scan the whole
+    # FIT files for segment-eligible activities (trail runs, hikes). Scan the whole
     # recent window, not just `new`, so gaps left by the daily backstop or a
     # past failure self-heal whenever any new activity triggers a sync.
     new_fits = 0
