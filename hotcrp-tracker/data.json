@@ -2097,7 +2097,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-19T22:35:29+00:00",
+      "last_event": "2026-07-24T14:50:11+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2113,18 +2113,24 @@
           "type": "submitted",
           "date": "2026-07-19T22:35:29+00:00",
           "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-24T14:50:11+00:00",
+          "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 3
+        "total": 4
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
         "<20260716064009.AF340A0DFEA@mail.hotcrp.com>",
-        "<20260719223529.C4AD9B3D89C@mail.hotcrp.com>"
+        "<20260719223529.C4AD9B3D89C@mail.hotcrp.com>",
+        "<20260724145011.F1B13AF5AA3@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2149,7 +2155,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-17T09:53:46+00:00",
-      "last_event": "2026-07-19T22:35:30+00:00",
+      "last_event": "2026-07-24T14:50:13+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2230,13 +2236,18 @@
           "type": "submitted",
           "date": "2026-07-19T22:35:30+00:00",
           "subject": "[HPCA 2027] Submission #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-24T14:50:13+00:00",
+          "subject": "[HPCA 2027] Submission #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
         }
       ],
       "counts": {
         "updates": 13,
         "comments": 0,
         "reviews": 0,
-        "total": 16
+        "total": 17
       },
       "message_ids": [
         "<20260717095346.B8469AF027E@mail.hotcrp.com>",
@@ -2254,7 +2265,8 @@
         "<20260719124614.C97B7952E40@mail.hotcrp.com>",
         "<20260719124637.6E700952E40@mail.hotcrp.com>",
         "<20260719125149.41D65952E40@mail.hotcrp.com>",
-        "<20260719223530.4E3CBA56C10@mail.hotcrp.com>"
+        "<20260719223530.4E3CBA56C10@mail.hotcrp.com>",
+        "<20260724145013.71EF9AF6558@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2322,7 +2334,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-24T04:02:33+00:00",
-      "last_event": "2026-07-24T09:39:48+00:00",
+      "last_event": "2026-07-24T14:50:17+00:00",
       "events": [
         {
           "type": "updated",
@@ -2388,13 +2400,18 @@
           "type": "updated",
           "date": "2026-07-24T09:39:48+00:00",
           "subject": "[HPCA 2027] Updated #1655 \"MAX: Cost-Efficient Orchestration of...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-24T14:50:17+00:00",
+          "subject": "[HPCA 2027] Submission #1655 \"MAX: Cost-Efficient Orchestration of...\""
         }
       ],
       "counts": {
         "updates": 13,
         "comments": 0,
         "reviews": 0,
-        "total": 13
+        "total": 14
       },
       "message_ids": [
         "<20260724040233.C9F2CA09760@mail.hotcrp.com>",
@@ -2409,7 +2426,8 @@
         "<20260724072048.482F9A09774@mail.hotcrp.com>",
         "<20260724072802.0A768A09770@mail.hotcrp.com>",
         "<20260724093928.DA684A1EC4E@mail.hotcrp.com>",
-        "<20260724093948.451F3A09766@mail.hotcrp.com>"
+        "<20260724093948.451F3A09766@mail.hotcrp.com>",
+        "<20260724145017.22D4AB23A09@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2471,7 +2489,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-24T09:39:48+00:00"
+      "last_event": "2026-07-24T14:50:17+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2634,6 +2652,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-24T12:06:14.382293+00:00",
-  "email_count": 253
+  "last_updated": "2026-07-25T00:02:37.626177+00:00",
+  "email_count": 256
 }
