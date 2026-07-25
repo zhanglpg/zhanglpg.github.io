@@ -2321,7 +2321,7 @@
     "HPCA 2027::#1655": {
       "conference": "HPCA 2027",
       "paper_id": "1655",
-      "title": "MAX: Cost-Efficient Orchestration of Microservices and AMX-Accelerated LLM Inference",
+      "title": "MAX: Multiplexing Microservices and AMX‑Accelerated LLM Inference for Resource‑Efficient Cloud Systems",
       "authors": [
         "Liao Chen",
         "Yuqi Qiu",
@@ -2334,7 +2334,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-24T04:02:33+00:00",
-      "last_event": "2026-07-24T14:50:17+00:00",
+      "last_event": "2026-07-25T10:24:43+00:00",
       "events": [
         {
           "type": "updated",
@@ -2405,13 +2405,28 @@
           "type": "submitted",
           "date": "2026-07-24T14:50:17+00:00",
           "subject": "[HPCA 2027] Submission #1655 \"MAX: Cost-Efficient Orchestration of...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-25T09:51:05+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-25T10:21:08+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-25T10:24:43+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
         }
       ],
       "counts": {
-        "updates": 13,
+        "updates": 16,
         "comments": 0,
         "reviews": 0,
-        "total": 14
+        "total": 17
       },
       "message_ids": [
         "<20260724040233.C9F2CA09760@mail.hotcrp.com>",
@@ -2427,7 +2442,10 @@
         "<20260724072802.0A768A09770@mail.hotcrp.com>",
         "<20260724093928.DA684A1EC4E@mail.hotcrp.com>",
         "<20260724093948.451F3A09766@mail.hotcrp.com>",
-        "<20260724145017.22D4AB23A09@mail.hotcrp.com>"
+        "<20260724145017.22D4AB23A09@mail.hotcrp.com>",
+        "<20260725095105.E6863A3752B@mail.hotcrp.com>",
+        "<20260725102108.932C6A37535@mail.hotcrp.com>",
+        "<20260725102443.B0583A37533@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2489,7 +2507,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-24T14:50:17+00:00"
+      "last_event": "2026-07-25T10:24:43+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2652,6 +2670,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-25T00:02:37.626177+00:00",
-  "email_count": 256
+  "last_updated": "2026-07-25T12:06:36.670427+00:00",
+  "email_count": 259
 }
