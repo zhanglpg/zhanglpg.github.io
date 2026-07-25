@@ -35,6 +35,7 @@ CLUSTER_RADIUS_M = 200.0   # group runs whose starts are within this distance
 CORRIDOR_WIDTH_M = 70.0    # a point counts as "on the corridor" within this perp dist
 RESAMPLE_M = 30.0          # centerline vertex spacing
 MIN_EFFORTS = 2            # a segment needs at least this many timed efforts
+GATE_M = 30.0              # timing gates sit this far inside the segment ends
 TOP_N = 5
 _M_PER_DEG_LAT = 111320.0
 
@@ -250,30 +251,22 @@ def time_segment(series, s_start, s_end, direction, hr_at=None):
 
 
 def time_return(series, L, hr_at=None):
-    """Time the return leg: from the turnaround (peak s near L) back to s=0.
+    """Time the return leg through fixed gates: from the falling crossing of
+    s = L - GATE_M (leaving the turnaround zone) to the falling crossing of
+    s = GATE_M (back at the start), both interpolated.
+
+    Two properties matter. Searching only after the run's peak keeps outbound
+    jitter around the far gate from matching. And starting the clock at the
+    gate crossing — not at the farthest GPS point — keeps any rest at the
+    turnaround out of the return time (it lands between the legs, in neither).
     Returns (seconds, avg_hr) or None."""
     if not series:
         return None
-    # find the peak s (turnaround)
     peak_idx = max(range(len(series)), key=lambda i: series[i][1])
-    peak_s = series[peak_idx][1]
-    if peak_s < L * 0.8:  # didn't reach the turnaround
+    if series[peak_idx][1] < L - GATE_M:  # never reached the turnaround zone
         return None
-    t_peak = series[peak_idx][0]
-    # find where s reaches near 0 after the peak (within 50m of start)
-    for i in range(peak_idx + 1, len(series)):
-        if series[i][1] <= 50:
-            t_end = series[i][0]
-            secs = t_end - t_peak
-            if secs <= 0:
-                return None
-            avg_hr = None
-            if hr_at is not None:
-                hrs = [hr for (t, s, hr) in hr_at if t_peak <= t <= t_end and hr is not None]
-                if hrs:
-                    avg_hr = round(sum(hrs) / len(hrs))
-            return (round(secs, 1), avg_hr)
-    return None
+    tail = series[peak_idx:]
+    return time_segment(tail, L - GATE_M, GATE_M, -1, hr_at)
 
 
 # --------------------------------------------------------------------------- #
@@ -374,18 +367,21 @@ def discover_cluster_segments(members, plane, cluster_start):
     if not core_path:
         core_path = [plane.to_latlon(centerline[0][0], centerline[0][1])]
     fwd_efforts = []
+    core_len = max(L - 2 * GATE_M, 0.0)  # timed span between the two gates
     for pr in projected_runs:
-        target = min(L, pr["max_s"])
-        if target < L * 0.95:
-            continue  # didn't reach the turnaround
-        res = time_segment(pr["series"], 0.0, target, +1, pr["hr"])
+        if pr["max_s"] < L - GATE_M:
+            continue  # never reached the turnaround zone
+        # Fixed gates for every run: rising crossing of GATE_M, then of
+        # L - GATE_M. Ending at the far gate (not the peak) keeps dwell at the
+        # turnaround out of the outbound time, mirroring time_return.
+        res = time_segment(pr["series"], GATE_M, L - GATE_M, +1, pr["hr"])
         if res:
             secs, hr = res
             fwd_efforts.append({"labelId": pr["labelId"], "date": pr["date"],
                                 "seconds": secs, "avgHr": hr})
     if len(fwd_efforts) >= MIN_EFFORTS:
         segments.append(_mk_segment("core-out", "Outbound · start → turnaround",
-                                    core_path, L, fwd_efforts, direction="forward"))
+                                    core_path, core_len, fwd_efforts, direction="forward"))
 
     # ---- core return [L -> 0] (out-and-backs) ----
     if is_oab:
@@ -399,7 +395,7 @@ def discover_cluster_segments(members, plane, cluster_start):
         if len(rev_efforts) >= MIN_EFFORTS:
             rev_path = list(reversed(core_path))
             segments.append(_mk_segment("core-return", "Return · turnaround → start",
-                                        rev_path, L, rev_efforts, direction="return"))
+                                        rev_path, core_len, rev_efforts, direction="return"))
 
     # ---- extension [L -> max_s] ("go forward" branch) ----
     ext_efforts = []
@@ -423,28 +419,38 @@ def discover_cluster_segments(members, plane, cluster_start):
 
 
 def _extension_path(projected_runs, centerline, plane, L):
-    """Reconstruct the geographic path beyond L from the run that went farthest,
-    using its raw points whose projected s > L (in order). Decimated to ~30m."""
+    """Reconstruct the geographic path beyond L from the run that went farthest.
+
+    Uses only the OUTBOUND portion of that run (track order up to its farthest
+    on-corridor sample) so the return leg — whose points also project to s > L
+    — cannot be swept into the path. Anchored at the turnaround vertex (the
+    centerline vertex at arc length ~L); the centerline itself spans the full
+    corridor, so its last vertex is the far end, not the turnaround."""
     best = max(projected_runs, key=lambda pr: pr["max_s"])
     pts = best["pts"]
     proj = best["proj"]
-    # collect on-corridor points beyond L, in track order
-    beyond = [(p, s) for (p, (s, d)) in zip(pts, proj)
-              if d <= CORRIDOR_WIDTH_M and s > L - 50]
+    # index of the farthest on-corridor sample — the outbound portion ends here
+    far_i, far_s = None, -1.0
+    for i, (s, d) in enumerate(proj):
+        if d <= CORRIDOR_WIDTH_M and s > far_s:
+            far_s, far_i = s, i
+    if far_i is None:
+        return None
+    beyond = [(pts[i], proj[i][0]) for i in range(far_i + 1)
+              if proj[i][1] <= CORRIDOR_WIDTH_M and proj[i][0] > L - 50]
     if len(beyond) < 2:
         return None
-    # include the turnaround point (last centerline vertex) as the anchor start
-    anchor = plane.to_latlon(centerline[-1][0], centerline[-1][1])
-    path = [anchor]
+    # anchor at the turnaround vertex: first centerline vertex at arc length >= L
+    anchor_v = next((c for c in centerline if c[2] >= L), centerline[-1])
+    path = [plane.to_latlon(anchor_v[0], anchor_v[1])]
     # decimate to ~30m spacing
     last_s = L - 50
     for (p, s) in beyond:
         if s - last_s >= 30:
             path.append((p[0], p[1]))
             last_s = s
-    # always include the last point
-    if beyond:
-        path.append((beyond[-1][0][0], beyond[-1][0][1]))
+    # always include the farthest point
+    path.append((beyond[-1][0][0], beyond[-1][0][1]))
     return path
 
 

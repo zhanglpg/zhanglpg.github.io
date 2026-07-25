@@ -652,8 +652,16 @@ function GeoSegmentMap({seg}){
     // end marker
     L.circleMarker(latlngs[latlngs.length-1],{radius:7,color:"#ff5d5d",fillColor:"#ff5d5d",fillOpacity:1,weight:2})
       .addTo(map).bindTooltip("End",{direction:"top",offset:[0,-8]});
-    map.fitBounds(L.latLngBounds(latlngs).pad(0.15));
-    return ()=>{ if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; } };
+    const bounds=L.latLngBounds(latlngs).pad(0.15);
+    map.fitBounds(bounds);
+    // The Routes panel is display:none until its tab is active, so Leaflet
+    // initializes inside a 0x0 container and renders broken tiles/bounds.
+    // Re-measure and re-fit whenever the map actually becomes visible.
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ map.invalidateSize(); map.fitBounds(bounds); } });
+    },{threshold:.05});
+    io.observe(ref.current);
+    return ()=>{ io.disconnect(); if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; } };
   },[seg]);
   return <div className="geo-map" ref={ref}></div>;
 }
