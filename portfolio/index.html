@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio · BABA / GOOG</title>
+<script>
+/* Theme bootstrap (before first paint). Resolution: URL ?theme= > localStorage > OS. */
+(function () {
+  var t = null;
+  try { t = new URLSearchParams(location.search).get('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = null;
+    try { t = localStorage.getItem('portfolio-theme'); } catch (e) {}
+  }
+  if (t !== 'light' && t !== 'dark') {
+    t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel-2: #1c2129;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --baba: #ff6f3c;
+  --goog: #4c8bf5;
+  --pos: #3fb950;
+  --neg: #f85149;
+  --amber: #d29922;
+  --chart-grid: rgba(230, 237, 243, 0.13);
+  --chart-tick: #8b949e;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+html[data-theme="light"] {
+  --bg: #f6f8fa;
+  --panel: #ffffff;
+  --panel-2: #f0f3f6;
+  --border: #d0d7de;
+  --text: #1f2328;
+  --muted: #57606a;
+  --baba: #e05a26;
+  --goog: #1d6fd6;
+  --pos: #1a7f37;
+  --neg: #cf222e;
+  --amber: #9a6700;
+  --chart-grid: rgba(31, 35, 40, 0.12);
+  --chart-tick: #57606a;
+  --shadow: 0 8px 30px rgba(140, 149, 159, 0.25);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--goog); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.wrap { max-width: 1640px; margin: 0 auto; padding: 0 16px 24px; }
+
+/* ---------- error banner ---------- */
+#error-banner {
+  background: var(--neg); color: #fff; padding: 10px 16px; font-weight: 600;
+  border-radius: 8px; margin: 12px 0;
+}
+[hidden] { display: none !important; }
+
+/* ---------- header ---------- */
+header.topbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;
+  padding: 14px 0 12px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+.topbar h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.2px; }
+.topbar h1 .baba { color: var(--baba); }
+.topbar h1 .goog { color: var(--goog); }
+#freshness { color: var(--muted); font-size: 12.5px; }
+.topbar .spacer { flex: 1; }
+
+.seg {
+  display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  background: var(--panel);
+}
+.seg button {
+  background: transparent; color: var(--muted); border: 0; padding: 5px 12px;
+  font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+}
+/* active segment: solid inverted fill (same language as .btn.primary / active
+   range pill) — the selected state must be unambiguous at a glance */
+.seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.seg button + button { border-left: 1px solid var(--border); }
+
+.btn {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 12px; font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover { background: var(--panel-2); }
+/* neutral primary — GOOG blue is reserved as a company identity color */
+.btn.primary { background: var(--text); border-color: var(--text); color: var(--bg); }
+.btn.primary:hover { background: var(--muted); border-color: var(--muted); }
+.btn.danger { color: var(--neg); }
+
+/* ---------- generic cards / sections ---------- */
+.card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px;
+}
+.card.baba-key { border-top: 2px solid var(--baba); }
+.card.goog-key { border-top: 2px solid var(--goog); }
+.sec-title {
+  font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  font-weight: 700; margin: 22px 0 10px;
+}
+.panel-title {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+  font-weight: 700; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.panel-title .note { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 11.5px; }
+.chart-box { position: relative; height: 200px; }
+.chart-box.tall { height: 340px; }
+
+/* legend chips */
+.chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 6px; font-size: 11.5px; color: var(--muted); }
+.chip { display: inline-flex; align-items: center; gap: 5px; }
+.chip i { width: 10px; height: 3px; border-radius: 2px; display: inline-block; }
+.chip i.sq { width: 9px; height: 9px; border-radius: 2px; }
+.chip i.dot { width: 8px; height: 8px; border-radius: 50%; } /* markers-only series (dividends) */
+.chip i.dash { background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 6px); height: 2px; }
+/* balanced legend rows for long segment legends (3+3, no orphaned last chip) */
+.chips.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, auto)); justify-content: start; gap: 3px 12px; }
+@media (max-width: 560px) { .chips.grid3 { grid-template-columns: repeat(2, minmax(0, auto)); } }
+/* monochrome inline lock icon (emoji renders as a toy-like color glyph) */
+.lock-ico { vertical-align: -1px; margin-right: 3px; }
+
+/* ---------- portfolio strip ---------- */
+.strip { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 12px; }
+/* grid/flex children must be allowed to shrink below content width (mobile overflow fix) */
+.strip > *, .cmp-grid > *, .company-grid > *, .company-col, .company-col > * { min-width: 0; }
+.chart-box canvas { max-width: 100%; }
+.big-num { font-size: 30px; font-weight: 600; line-height: 1.15; }
+.kv { display: flex; justify-content: space-between; gap: 2px 10px; font-size: 13px; padding: 2px 0; flex-wrap: wrap; }
+.kv .k { color: var(--muted); }
+.pos { color: var(--pos); }
+.neg { color: var(--neg); }
+.zero { color: var(--muted); } /* exactly-zero P&L: neutral, never gain-green */
+/* muted secondary-text amber, lowercase, no border/fill — a quiet caveat that
+   must not out-shout the portfolio value it sits next to */
+.badge-placeholder {
+  display: inline-block; color: var(--amber);
+  font-size: 11px; font-weight: 500; text-transform: none; letter-spacing: 0;
+  margin-left: 8px; vertical-align: middle;
+}
+.alloc-bar {
+  display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0 4px;
+  border: 1px solid var(--border);
+}
+.alloc-bar .a { background: var(--baba); }
+.alloc-bar .b { background: var(--goog); }
+.alloc-legend { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.privacy-note { color: var(--muted); font-size: 11.5px; margin-top: 10px; }
+.pcard-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2px 10px; }
+.pcard-head .ticker { font-size: 16px; font-weight: 700; }
+.pcard-head .px { font-size: 16px; font-weight: 600; }
+.pcard-sub { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+.stat-row { color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 8px; padding-top: 7px; }
+/* ticker cards are height-matched to the portfolio card: distribute rows so the
+   52w/PE stat row anchors the card bottom instead of leaving a hollow band */
+#pcard-BABA, #pcard-GOOG { display: flex; flex-direction: column; justify-content: space-between; }
+#pcard-BABA .stat-row, #pcard-GOOG .stat-row { margin-top: auto; }
+
+/* ---------- modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 50;
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.modal {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: var(--shadow); width: 420px; max-width: 100%; padding: 18px;
+}
+.modal h2 { margin: 0 0 4px; font-size: 16px; }
+.modal .privacy-note { margin: 0 0 12px; }
+.modal fieldset { border: 1px solid var(--border); border-radius: 8px; margin: 0 0 10px; padding: 8px 12px 12px; }
+.modal legend { font-size: 12.5px; font-weight: 700; padding: 0 4px; }
+.modal .frow { display: flex; gap: 10px; }
+.modal label { flex: 1; font-size: 12px; color: var(--muted); display: block; }
+.modal input {
+  width: 100%; margin-top: 3px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+/* saved values render full-strength (--text); faded gray is strictly the
+   empty-state suggestion, and the modal says so via #modal-mode-note */
+.modal input::placeholder { color: var(--muted); opacity: 0.55; }
+.modal .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 6px; }
+
+/* ---------- price section ---------- */
+.pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pills button {
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  border-radius: 999px; padding: 3px 11px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.pills button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.price-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.stat-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.stat-chip { background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 12px; }
+.stat-chip b { font-size: 13px; }
+.stat-chip .row { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 2px; color: var(--muted); }
+
+/* ---------- comparative + company grids ---------- */
+.cmp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.company-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.company-col { display: flex; flex-direction: column; gap: 12px; }
+/* keep the mirrored BABA/GOOG cards vertically aligned row-by-row */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 861px) {
+    .company-col { display: grid; grid-template-rows: subgrid; grid-row: span 7; }
+  }
+}
+.col-head { font-size: 14px; font-weight: 700; display: flex; align-items: baseline; gap: 8px; }
+.col-head .full { color: var(--muted); font-weight: 400; font-size: 12px; }
+
+/* ---------- earnings table ---------- */
+.tbl-wrap { overflow-x: auto; }
+table.earn { border-collapse: collapse; width: 100%; font-size: 12px; white-space: nowrap; }
+table.earn th, table.earn td { padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--border); }
+table.earn th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+table.earn th:first-child, table.earn td:first-child { text-align: left; }
+table.earn td.yoy-pos { color: var(--pos); }
+table.earn td.yoy-neg { color: var(--neg); }
+table.earn a.src { color: var(--muted); }
+table.earn a.src:hover { color: var(--text); }
+table.earn td.neg { color: var(--neg); }
+/* footnote daggers must not inflate line-height or drop the cell off the row baseline */
+table.earn sup { font-size: 9px; line-height: 0; }
+.tbl-note { color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+/* ---------- footer ---------- */
+footer { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 14px; color: var(--muted); font-size: 12px; }
+footer p { margin: 4px 0; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1100px) {
+  .cmp-grid { grid-template-columns: 1fr 1fr; }
+  .strip { grid-template-columns: 1fr; }
+}
+@media (max-width: 860px) {
+  .company-grid { grid-template-columns: 1fr; }
+  .cmp-grid { grid-template-columns: 1fr; }
+  .stat-chips { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  /* nowrap earnings tables have ~670px min-content: scroll inside the card
+     instead of blowing out the layout on phones */
+  table.earn { display: block; overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="error-banner" hidden></div>
+
+  <!-- 1. Header -->
+  <header class="topbar">
+    <div>
+      <h1>Portfolio · <span class="baba">BABA</span> / <span class="goog">GOOG</span></h1>
+      <div id="freshness">loading…</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="seg" id="ccy-toggle" role="group" aria-label="Currency">
+      <button data-ccy="USD" aria-pressed="true">USD</button>
+      <button data-ccy="NATIVE" aria-pressed="false">Native</button>
+    </div>
+    <div class="seg" id="theme-toggle" role="group" aria-label="Theme">
+      <button data-theme-opt="dark" aria-pressed="true">Dark</button>
+      <button data-theme-opt="light" aria-pressed="false">Light</button>
+    </div>
+  </header>
+
+  <!-- 2. Portfolio strip -->
+  <section class="strip" id="portfolio-strip">
+    <div class="card">
+      <div class="panel-title">Portfolio <span id="ph-badge" class="badge-placeholder" hidden>placeholder — edit holdings</span></div>
+      <div class="big-num" id="pf-total">—</div>
+      <div class="kv"><span class="k">Today’s P&amp;L</span><span id="pf-day">—</span></div>
+      <div class="kv"><span class="k">Total P&amp;L vs cost</span><span id="pf-total-pnl">—</span></div>
+      <div class="alloc-bar"><div class="a" id="alloc-a"></div><div class="b" id="alloc-b"></div></div>
+      <div class="alloc-legend"><span id="alloc-a-lbl">BABA —</span><span id="alloc-b-lbl">GOOG —</span></div>
+      <div style="margin-top:10px"><button class="btn" id="edit-holdings">Edit holdings</button></div>
+      <div class="privacy-note"><svg class="lock-ico" width="10" height="10" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V6h-.5A1.5 1.5 0 0 0 2.5 7.5v5A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 12 6h-.5V4.5A3.5 3.5 0 0 0 8 1zm2 5H6V4.5a2 2 0 1 1 4 0V6z"/></svg>holdings stored locally in your browser only</div>
+    </div>
+    <div class="card baba-key" id="pcard-BABA"></div>
+    <div class="card goog-key" id="pcard-GOOG"></div>
+  </section>
+
+  <!-- 3. Price performance -->
+  <div class="sec-title">Price performance — indexed to 100</div>
+  <section class="card">
+    <div class="price-head">
+      <div class="chips">
+        <span class="chip"><i style="background:var(--baba)"></i>BABA</span>
+        <span class="chip"><i style="background:var(--goog)"></i>GOOG</span>
+      </div>
+      <div class="pills" id="range-pills">
+        <button data-range="1M">1M</button>
+        <button data-range="6M">6M</button>
+        <button data-range="YTD">YTD</button>
+        <button data-range="1Y" aria-pressed="true">1Y</button>
+        <button data-range="3Y">3Y</button>
+        <button data-range="5Y">5Y</button>
+        <button data-range="MAX">10Y/Max</button>
+      </div>
+    </div>
+    <div class="chart-box tall"><canvas id="priceChart"></canvas></div>
+    <div class="stat-chips">
+      <div class="stat-chip" id="chip-BABA"></div>
+      <div class="stat-chip" id="chip-GOOG"></div>
+    </div>
+  </section>
+
+  <!-- 4. Comparative fundamentals -->
+  <div class="sec-title">Fundamentals — BABA vs GOOG (quarterly)</div>
+  <section class="cmp-grid">
+    <div class="card">
+      <div class="panel-title">Revenue YoY growth <span class="note">as reported, native ccy</span></div>
+      <div class="chips">
+        <span class="chip"><i style="background:var(--baba)"></i>BABA</span>
+        <span class="chip"><i style="background:var(--goog)"></i>GOOG</span>
+      </div>
+      <div class="chart-box"><canvas id="cmpRevYoy"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="panel-title">Operating margin</div>
+      <div class="chips">
+        <span class="chip"><i style="background:var(--baba)"></i>BABA</span>
+        <span class="chip"><i style="background:var(--goog)"></i>GOOG</span>
+      </div>
+      <div class="chart-box"><canvas id="cmpOpMargin"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="panel-title">TTM P/E <span class="note">price ÷ TTM EPS · BABA EPS @ latest FX</span></div>
+      <div class="chips">
+        <span class="chip"><i style="background:var(--baba)"></i>BABA</span>
+        <span class="chip"><i style="background:var(--goog)"></i>GOOG</span>
+      </div>
+      <div class="chart-box"><canvas id="cmpPE"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="panel-title">TTM FCF &amp; capex <span class="note" id="cmpFCF-note"></span></div>
+      <div class="chips">
+        <span class="chip"><i style="background:var(--baba)"></i>BABA FCF</span>
+        <span class="chip"><i style="background:var(--goog)"></i>GOOG FCF</span>
+        <span class="chip" style="color:var(--baba)"><i class="dash"></i><span style="color:var(--muted)">BABA capex</span></span>
+        <span class="chip" style="color:var(--goog)"><i class="dash"></i><span style="color:var(--muted)">GOOG capex</span></span>
+      </div>
+      <div class="chart-box"><canvas id="cmpFCF"></canvas></div>
+    </div>
+  </section>
+
+  <!-- 5. Per-company deep panels -->
+  <div class="sec-title">Company deep dive</div>
+  <section class="company-grid">
+
+    <div class="company-col" id="col-BABA">
+      <div class="col-head" style="color:var(--baba)">BABA <span class="full">Alibaba Group · fiscal year ends Mar 31 · reports in CNY</span></div>
+
+      <div class="card baba-key">
+        <div class="panel-title">Revenue trend
+          <span class="spacer" style="flex:1"></span>
+          <span class="seg" data-revmode="BABA">
+            <button data-mode="Q" aria-pressed="true">Quarterly</button>
+            <button data-mode="A" aria-pressed="false">Annual</button>
+          </span>
+        </div>
+        <div class="chips">
+          <span class="chip"><i class="sq" style="background:var(--baba)"></i>Revenue</span>
+          <span class="chip" id="BABA-ttm-chip"><i style="background:var(--text)"></i>TTM revenue</span>
+        </div>
+        <div class="chart-box"><canvas id="BABARev"></canvas></div>
+      </div>
+
+      <div class="card baba-key">
+        <div class="panel-title">Profitability — margins <span class="note" id="BABA-margins-note"></span></div>
+        <div class="chips">
+          <span class="chip"><i style="background:var(--baba)"></i>Gross</span>
+          <span class="chip" style="color:var(--baba)"><i class="dash"></i><span style="color:var(--muted)">Operating</span></span>
+          <span class="chip"><i style="background:#8b949e"></i>Net</span>
+        </div>
+        <div class="chart-box"><canvas id="BABAMargins"></canvas></div>
+      </div>
+
+      <div class="card baba-key">
+        <div class="panel-title">EPS <span class="note" id="BABA-eps-ccy">US$ per ADS, diluted</span> <span class="note" id="BABA-eps-note"></span></div>
+        <div class="chips">
+          <span class="chip"><i class="sq" style="background:var(--baba)"></i>GAAP</span>
+          <span class="chip"><i style="background:var(--text)"></i>Non-GAAP</span>
+        </div>
+        <div class="chart-box"><canvas id="BABAEPS"></canvas></div>
+      </div>
+
+      <div class="card baba-key">
+        <div class="panel-title">Segment revenue <span class="note" id="BABA-seg-note"></span></div>
+        <div class="chips" id="BABA-seg-chips"></div>
+        <div class="chart-box"><canvas id="BABASegments"></canvas></div>
+      </div>
+
+      <div class="card baba-key">
+        <div class="panel-title">Capital returns <span class="note">buybacks US$B · dividend US$/ADS</span></div>
+        <div class="chips">
+          <span class="chip"><i class="sq" style="background:var(--baba)"></i>Buybacks</span>
+          <span class="chip"><i class="dot" style="background:var(--pos)"></i>Dividend / unit</span>
+        </div>
+        <div class="chart-box"><canvas id="BABACapret"></canvas></div>
+      </div>
+
+      <div class="card baba-key">
+        <div class="panel-title">Earnings — last 8 quarters</div>
+        <div class="tbl-wrap" id="BABATable"></div>
+      </div>
+    </div>
+
+    <div class="company-col" id="col-GOOG">
+      <div class="col-head" style="color:var(--goog)">GOOG <span class="full">Alphabet Inc. · calendar fiscal year · reports in USD</span></div>
+
+      <div class="card goog-key">
+        <div class="panel-title">Revenue trend
+          <span class="spacer" style="flex:1"></span>
+          <span class="seg" data-revmode="GOOG">
+            <button data-mode="Q" aria-pressed="true">Quarterly</button>
+            <button data-mode="A" aria-pressed="false">Annual</button>
+          </span>
+        </div>
+        <div class="chips">
+          <span class="chip"><i class="sq" style="background:var(--goog)"></i>Revenue</span>
+          <span class="chip" id="GOOG-ttm-chip"><i style="background:var(--text)"></i>TTM revenue</span>
+        </div>
+        <div class="chart-box"><canvas id="GOOGRev"></canvas></div>
+      </div>
+
+      <div class="card goog-key">
+        <div class="panel-title">Profitability — margins <span class="note" id="GOOG-margins-note"></span></div>
+        <div class="chips">
+          <span class="chip"><i style="background:var(--goog)"></i>Gross</span>
+          <span class="chip" style="color:var(--goog)"><i class="dash"></i><span style="color:var(--muted)">Operating</span></span>
+          <span class="chip"><i style="background:#8b949e"></i>Net</span>
+        </div>
+        <div class="chart-box"><canvas id="GOOGMargins"></canvas></div>
+      </div>
+
+      <div class="card goog-key">
+        <div class="panel-title">EPS <span class="note">USD per diluted share</span> <span class="note" id="GOOG-eps-note"></span></div>
+        <div class="chips">
+          <span class="chip"><i class="sq" style="background:var(--goog)"></i>GAAP</span>
+        </div>
+        <div class="chart-box"><canvas id="GOOGEPS"></canvas></div>
+      </div>
+
+      <div class="card goog-key">
+        <div class="panel-title">Segment revenue <span class="note" id="GOOG-seg-note"></span></div>
+        <div class="chips" id="GOOG-seg-chips"></div>
+        <div class="chart-box"><canvas id="GOOGSegments"></canvas></div>
+      </div>
+
+      <div class="card goog-key">
+        <div class="panel-title">Capital returns <span class="note">buybacks US$B · dividend US$/share</span></div>
+        <div class="chips">
+          <span class="chip"><i class="sq" style="background:var(--goog)"></i>Buybacks</span>
+          <span class="chip"><i class="dot" style="background:var(--pos)"></i>Dividend / unit</span>
+        </div>
+        <div class="chart-box"><canvas id="GOOGCapret"></canvas></div>
+      </div>
+
+      <div class="card goog-key">
+        <div class="panel-title">Earnings — last 8 quarters</div>
+        <div class="tbl-wrap" id="GOOGTable"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- 6. Footer -->
+  <footer id="footer"></footer>
+</div>
+
+<!-- Edit-holdings modal -->
+<div class="modal-overlay" id="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <h2 id="modal-title">Edit holdings</h2>
+    <p class="privacy-note"><svg class="lock-ico" width="10" height="10" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V6h-.5A1.5 1.5 0 0 0 2.5 7.5v5A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 12 6h-.5V4.5A3.5 3.5 0 0 0 8 1zm2 5H6V4.5a2 2 0 1 1 4 0V6z"/></svg>stored only in this browser’s localStorage — never uploaded.</p>
+    <p class="privacy-note" id="modal-mode-note" hidden>Gray values are placeholder suggestions (50/50 of $5M at last close) — nothing is saved until you enter numbers and press Save.</p>
+    <fieldset>
+      <legend style="color:var(--baba)">BABA</legend>
+      <div class="frow">
+        <label>Shares (ADS)<input id="in-BABA-shares" type="number" min="0" step="any" inputmode="decimal"></label>
+        <label>Avg cost (US$)<input id="in-BABA-cost" type="number" min="0" step="any" inputmode="decimal"></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend style="color:var(--goog)">GOOG</legend>
+      <div class="frow">
+        <label>Shares<input id="in-GOOG-shares" type="number" min="0" step="any" inputmode="decimal"></label>
+        <label>Avg cost (US$)<input id="in-GOOG-cost" type="number" min="0" step="any" inputmode="decimal"></label>
+      </div>
+    </fieldset>
+    <div class="actions">
+      <button class="btn danger" id="modal-clear">Clear</button>
+      <span style="flex:1"></span>
+      <button class="btn" id="modal-cancel">Cancel</button>
+      <button class="btn primary" id="modal-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="chart.umd.min.js"></script>
+<script src="prices.js"></script>
+<script src="financials.js?v=1"></script>
+<script src="app.js?v=3"></script>
+</body>
+</html>
