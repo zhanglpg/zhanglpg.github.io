@@ -2097,7 +2097,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-24T14:50:11+00:00",
+      "last_event": "2026-07-25T14:53:00+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2118,19 +2118,25 @@
           "type": "submitted",
           "date": "2026-07-24T14:50:11+00:00",
           "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-25T14:53:00+00:00",
+          "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 4
+        "total": 5
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
         "<20260716064009.AF340A0DFEA@mail.hotcrp.com>",
         "<20260719223529.C4AD9B3D89C@mail.hotcrp.com>",
-        "<20260724145011.F1B13AF5AA3@mail.hotcrp.com>"
+        "<20260724145011.F1B13AF5AA3@mail.hotcrp.com>",
+        "<20260725145300.8DF02A56C16@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2507,7 +2513,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-25T10:24:43+00:00"
+      "last_event": "2026-07-25T14:53:00+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2670,6 +2676,6 @@
       "date": "2026-07-17T14:03:43+00:00"
     }
   ],
-  "last_updated": "2026-07-25T12:06:36.670427+00:00",
-  "email_count": 259
+  "last_updated": "2026-07-26T00:04:28.896310+00:00",
+  "email_count": 260
 }
