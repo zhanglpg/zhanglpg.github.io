@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-07-27 09:38",
+  "last_run": "2026-07-28 12:00",
   "entries": [
+    {
+      "date": "2026-07-28",
+      "added": ["kimi-k3"],
+      "upgraded": [],
+      "note": "Kimi K3 tech report + open weights dropped — no longer the 'upcoming release' placeholder we'd been skipping. Added as verified against HF config.json: 2.8T/104B Stable LatentMoE (896 experts top-16 + 2 shared, latent dim 3584) on a Kimi Delta Attention backbone — 93 layers, 69 KDA linear + 24 gated-MLA full attention with Attention Residuals, SiTU-GLU activation, native multimodal (MoonViT), 1M context. World's first open 3T-class model."
+    },
     {
       "date": "2026-07-27",
       "added": ["inkling", "solar-open2-250b", "laguna-s-2-1"],
