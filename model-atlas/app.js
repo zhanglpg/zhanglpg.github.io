@@ -106,8 +106,8 @@
   // Raschka-gallery-style generated diagram: bottom-up main stack (input at bottom, logits at top)
   // inside a gray model container with a purple repeated-block, proper residual skip lines,
   // RoPE side box, dotted-leader callouts, and exploded FFN / MoE sub-module diagrams on the right.
-  const A_COL = { MHA: '#3fb950', GQA: '#3fb950', MQA: '#3fb950', MLA: '#bc8cff', sparse: '#f0883e', hybrid: '#58a6ff', linear: '#39c5cf', MMDiT: '#f778ba' };
-  const A_NAME = { MHA: 'Multi-Head Attention', GQA: 'Grouped-Query Attention', MQA: 'Multi-Query Attention', MLA: 'Multi-head Latent Attention', sparse: 'Sparse Attention', hybrid: 'Hybrid Attention', linear: 'Linear Attention', MMDiT: 'Joint Attention (MMDiT)' };
+  const A_COL = { MHA: '#3fb950', GQA: '#3fb950', MQA: '#3fb950', MLA: '#bc8cff', sparse: '#f0883e', hybrid: '#58a6ff', linear: '#39c5cf', sliding: '#f0883e', global: '#3fb950', CSA: '#f0883e', HCA: '#f778ba', SW: '#f0883e', MMDiT: '#f778ba' };
+  const A_NAME = { MHA: 'Multi-Head Attention', GQA: 'Grouped-Query Attention', MQA: 'Multi-Query Attention', MLA: 'Multi-head Latent Attention', sparse: 'Sparse Attention', hybrid: 'Hybrid Attention', linear: 'Linear Attention', sliding: 'Sliding-Window Attention', global: 'Global Attention', CSA: 'Compressed Sparse Attention', HCA: 'Heavily Compressed Attention', SW: 'Sliding Window', MMDiT: 'Joint Attention (MMDiT)' };
   function attnColor(a) { return A_COL[a] || '#3fb950'; }
 
   function archSVG(m) {
@@ -184,37 +184,49 @@
     }
     if (yN2 != null) cbox(yN2, 190, 28, gen ? 'AdaLN mod' : `${normN} 2`, null, { fs1: 11.5 });
     if (yPN2 != null) cbox(yPN2, 190, 24, `${normN} (post)`, null, { fs1: 10.5 });
-    // attention box — single, or a two-type split (e.g. Kimi K3: KDA linear + gated-MLA)
+    // attention box — single, or an N-type split (e.g. Kimi K3 KDA+MLA, gpt-oss sliding+full,
+    // DeepSeek-V4 CSA+HCA). Split boxes label each attention type; the strip below shows the
+    // true per-layer interleave order.
     if (m.attention_split) {
       const sp = m.attention_split;
       const parts = sp.parts || [];
-      const nA = parts[0] ? parts[0].n : 0, nB = parts[1] ? parts[1].n : 0;
-      const nAB = nA + nB || 1;
-      const wA = Math.max(118, Math.round(336 * nA / nAB)), wB = 336 - wA;
-      const xA = cx - 168, xB = xA + wA;
-      const rowY = yAtt + 10, rowH = 42;
-      const partBox = (x, w, p) => {
-        const col = attnColor(p.type);
-        R(x, rowY, w, rowH, { fill: '#242b3d', stroke: col });
-        T(x + w / 2, rowY + 17, `${p.n}× ${esc(p.name)}`, { fs: 11.5, fill: col, fw: 700 });
-        T(x + w / 2, rowY + 32, esc(p.sub || ''), { fs: 9, fill: DIM, fw: 500 });
-      };
-      partBox(xA, wA, parts[0]);
-      if (parts[1]) partBox(xB, wB, parts[1]);
+      const total = parts.reduce((s, p) => s + p.n, 0) || 1;
+      const rowY = yAtt + 10, rowH = 42, sW = 336, x0 = cx - 168;
+      // proportional widths with a per-part minimum so labels stay legible; any space taken
+      // by the minimums is redistributed across the larger parts so relative order stays honest
+      const minW = parts.length >= 3 ? 60 : 118;
+      let widths = parts.map(p => sW * p.n / total);
+      for (let it = 0; it < 6; it++) {
+        const deficit = widths.reduce((s, w) => s + (w < minW ? minW - w : 0), 0);
+        const above = widths.filter(w => w >= minW).length;
+        if (deficit <= 0.01 || above === 0) break;
+        widths = widths.map(w => (w < minW ? minW : w - deficit / above));
+      }
+      widths = widths.map(w => Math.round(w));
+      const wSum = widths.reduce((a, b) => a + b, 0);
+      if (wSum !== sW) widths[widths.indexOf(Math.max(...widths))] += sW - wSum;
+      let xCur = x0;
+      parts.forEach((p, i) => {
+        const w = widths[i], col = attnColor(p.type);
+        R(xCur, rowY, w, rowH, { fill: '#242b3d', stroke: col });
+        T(xCur + w / 2, rowY + 17, `${p.n}× ${esc(p.name)}`, { fs: 11.5, fill: col, fw: 700 });
+        if (p.sub) T(xCur + w / 2, rowY + 32, esc(p.sub), { fs: 9, fill: DIM, fw: 500 });
+        xCur += w;
+      });
       // layer-pattern strip: one tick per layer, in true interleaved order
       const pat = sp.pattern || '';
       const map = sp.pattern_map || {};
-      const sY = yAtt + 60, sH = 14, sW = 336;
-      R(xA, sY, sW, sH, { fill: '#0d1420', stroke: LINE, rx: 5 });
+      const sY = yAtt + 60, sH = 14;
+      R(x0, sY, sW, sH, { fill: '#0d1420', stroke: LINE, rx: 5 });
       if (pat) {
         const tw = sW / pat.length;
         for (let i = 0; i < pat.length; i++) {
           const col = attnColor(map[pat[i]] || 'hybrid');
-          P.push(`<rect x="${(xA + i * tw + 0.35).toFixed(1)}" y="${sY + 2.5}" width="${(tw - 0.7).toFixed(2)}" height="${sH - 5}" rx="1" fill="${col}" opacity="0.9"/>`);
+          P.push(`<rect x="${(x0 + i * tw + 0.35).toFixed(1)}" y="${sY + 2.5}" width="${(tw - 0.7).toFixed(2)}" height="${sH - 5}" rx="1" fill="${col}" opacity="0.9"/>`);
         }
       }
-      T(xA, sY + sH + 13, 'layer order · bottom = first', { fs: 9, an: 'start', fill: DIM2, fw: 500 });
-      T(xA + sW, sY + sH + 13, `${num(sp.parts ? sp.parts.map(p => p.n).join(' + ') : '')} = ${num(m.n_layers ?? nAB)} layers`, { fs: 9, an: 'end', fill: DIM2, fw: 500 });
+      T(x0, sY + sH + 13, 'layer order · bottom = first', { fs: 9, an: 'start', fill: DIM2, fw: 500 });
+      T(x0 + sW, sY + sH + 13, `${num(parts.map(p => p.n).join(' + '))} = ${num(m.n_layers ?? total)} layers`, { fs: 9, an: 'end', fill: DIM2, fw: 500 });
     } else {
       const attTitle = A_NAME[m.attention] || esc(m.attention);
       const attSub = m.n_heads ? `${num(m.n_heads)} heads${m.n_kv_heads && m.n_kv_heads !== m.n_heads ? ` · ${num(m.n_kv_heads)} KV` : ''} · d_h ${num(m.head_dim ?? '?')}` : '';
