@@ -18,6 +18,14 @@ window.MODELS = [
 "n_kv_heads": 96,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "KDA", "n": 69, "type": "linear", "sub": "delta rule · conv k4 · gated"},
+{"name": "Gated MLA", "n": 24, "type": "MLA", "sub": "latent KV · NoPE"},
+],
+"pattern": "kkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmm",
+"pattern_map": {"k": "linear", "m": "MLA"}
+},
 "attention_detail": "69 KDA (Kimi Delta Attention) linear-attention layers interleaved with 24 gated-MLA full-attention layers (full_attn_layers every 4th, 4/8/.../92 plus final layer 93). KDA: 96 heads, head_dim 128, short-conv kernel 4, full-rank output gate (lower bound -5). Gated MLA: q_lora 1536, kv_lora 512, qk_nope 128 + qk_rope 64, v 128, NoPE + output gate; attn_res_block_size 12 (Attention Residuals).",
 "n_experts": 896,
 "active_experts": 16,
