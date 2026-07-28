@@ -156,7 +156,7 @@
     const yPlus1 = y + 11; y += 22;
     let yPN1 = null; if (postN || sandwich) { y += 6; yPN1 = y; y += 24; }
     y += 16;
-    const yAtt = y, hAtt = 48; y += hAtt;
+    const yAtt = y, hAtt = m.attention_split ? 96 : 48; y += hAtt;
     let yN1 = null; if (preN) { y += 18; yN1 = y; y += 28; }
     y += 16;
     const purpleBot = y;
@@ -184,10 +184,42 @@
     }
     if (yN2 != null) cbox(yN2, 190, 28, gen ? 'AdaLN mod' : `${normN} 2`, null, { fs1: 11.5 });
     if (yPN2 != null) cbox(yPN2, 190, 24, `${normN} (post)`, null, { fs1: 10.5 });
-    // attention box
-    const attTitle = A_NAME[m.attention] || esc(m.attention);
-    const attSub = m.n_heads ? `${num(m.n_heads)} heads${m.n_kv_heads && m.n_kv_heads !== m.n_heads ? ` · ${num(m.n_kv_heads)} KV` : ''} · d_h ${num(m.head_dim ?? '?')}` : '';
-    cbox(yAtt, 260, hAtt, attTitle, attSub, { fill: '#242b3d', stroke: aColor, c1: aColor, fs1: 13.5 });
+    // attention box — single, or a two-type split (e.g. Kimi K3: KDA linear + gated-MLA)
+    if (m.attention_split) {
+      const sp = m.attention_split;
+      const parts = sp.parts || [];
+      const nA = parts[0] ? parts[0].n : 0, nB = parts[1] ? parts[1].n : 0;
+      const nAB = nA + nB || 1;
+      const wA = Math.max(118, Math.round(336 * nA / nAB)), wB = 336 - wA;
+      const xA = cx - 168, xB = xA + wA;
+      const rowY = yAtt + 10, rowH = 42;
+      const partBox = (x, w, p) => {
+        const col = attnColor(p.type);
+        R(x, rowY, w, rowH, { fill: '#242b3d', stroke: col });
+        T(x + w / 2, rowY + 17, `${p.n}× ${esc(p.name)}`, { fs: 11.5, fill: col, fw: 700 });
+        T(x + w / 2, rowY + 32, esc(p.sub || ''), { fs: 9, fill: DIM, fw: 500 });
+      };
+      partBox(xA, wA, parts[0]);
+      if (parts[1]) partBox(xB, wB, parts[1]);
+      // layer-pattern strip: one tick per layer, in true interleaved order
+      const pat = sp.pattern || '';
+      const map = sp.pattern_map || {};
+      const sY = yAtt + 60, sH = 14, sW = 336;
+      R(xA, sY, sW, sH, { fill: '#0d1420', stroke: LINE, rx: 5 });
+      if (pat) {
+        const tw = sW / pat.length;
+        for (let i = 0; i < pat.length; i++) {
+          const col = attnColor(map[pat[i]] || 'hybrid');
+          P.push(`<rect x="${(xA + i * tw + 0.35).toFixed(1)}" y="${sY + 2.5}" width="${(tw - 0.7).toFixed(2)}" height="${sH - 5}" rx="1" fill="${col}" opacity="0.9"/>`);
+        }
+      }
+      T(xA, sY + sH + 13, 'layer order · bottom = first', { fs: 9, an: 'start', fill: DIM2, fw: 500 });
+      T(xA + sW, sY + sH + 13, `${num(sp.parts ? sp.parts.map(p => p.n).join(' + ') : '')} = ${num(m.n_layers ?? nAB)} layers`, { fs: 9, an: 'end', fill: DIM2, fw: 500 });
+    } else {
+      const attTitle = A_NAME[m.attention] || esc(m.attention);
+      const attSub = m.n_heads ? `${num(m.n_heads)} heads${m.n_kv_heads && m.n_kv_heads !== m.n_heads ? ` · ${num(m.n_kv_heads)} KV` : ''} · d_h ${num(m.head_dim ?? '?')}` : '';
+      cbox(yAtt, 260, hAtt, attTitle, attSub, { fill: '#242b3d', stroke: aColor, c1: aColor, fs1: 13.5 });
+    }
     if (yN1 != null) cbox(yN1, 190, 28, gen ? 'AdaLN mod' : `${normN} 1`, null, { fs1: 11.5 });
     if (yPN1 != null) cbox(yPN1, 190, 24, `${normN} (post)`, null, { fs1: 10.5 });
     cbox(yEmb, 260, hEmb, gen ? 'Patchify + embed' : 'Token embedding layer', `d_model = ${num(fmtNum(m.d_model))}`, {});
