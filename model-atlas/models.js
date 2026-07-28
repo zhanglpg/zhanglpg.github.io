@@ -72,6 +72,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Local SWA", "n": 55, "type": "sliding", "sub": "win 512"},
+{"name": "Global", "n": 11, "type": "global", "sub": "8 KV · rel-pos"}
+],
+"pattern": "lllllglllllglllllglllllglllllglllllglllllglllllglllllglllllglllllg",
+"pattern_map": {"l": "sliding", "g": "global"}
+},
 "attention_detail": "55 local sliding-window layers (window 512) + 11 global, 5:1 pattern; GQA 64 heads, 8 KV global, 16 KV local; no RoPE — learned relative-position logits (d_rel 16, extent 1024) with log-length attention scaling (floor 128K); short conv (kernel 4); 8 multi-token-prediction layers.",
 "n_experts": 256,
 "active_experts": 6,
@@ -116,6 +124,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Softmax GQA", "n": 12, "type": "GQA", "sub": "64/8 · gated"},
+{"name": "KDA", "n": 36, "type": "linear", "sub": "delta · conv k4"}
+],
+"pattern": "slllslllslllslllslllslllslllslllslllslllslllslll",
+"pattern_map": {"s": "GQA", "l": "linear"}
+},
 "attention_detail": "[Softmax x1, Linear x3] x12: 12 softmax GQA layers (64Q/8KV, elementwise sigmoid output gate) interleaved with 36 KDA (Kimi Delta Attention) linear-attention layers (64 heads, short-conv kernel 4, negative-eigenvalue extension beta=2*sigmoid in (0,2)); NoPE — no positional encoding anywhere.",
 "n_experts": 320,
 "active_experts": 8,
@@ -155,6 +171,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Full", "n": 12, "type": "global", "sub": "48h · YaRN"},
+{"name": "Sliding", "n": 36, "type": "sliding", "sub": "72h · win 512"}
+],
+"pattern": "fsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsss",
+"pattern_map": {"f": "global", "s": "sliding"}
+},
 "attention_detail": "12 full-attention layers (48 heads, partial-rotary 0.5 YaRN theta 500K factor 128: 8K->1M) interleaved 1:3 with 36 sliding-window layers (window 512, 72 heads, full-rotary RoPE theta 10K); 8 KV heads throughout; per-head softplus output gate on every attention layer.",
 "n_experts": 256,
 "active_experts": 10,
@@ -346,6 +370,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Lightning", "n": 70, "type": "linear", "sub": "linear attn"},
+{"name": "Softmax GQA", "n": 10, "type": "GQA", "sub": "64/8 · RoPE"}
+],
+"pattern": "lllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllf",
+"pattern_map": {"l": "linear", "f": "GQA"}
+},
 "attention_detail": "Lightning (linear) attention in 7 of every 8 layers + 1 softmax GQA layer (7:1); softmax layers use partial RoPE (rotary_dim 64).",
 "n_experts": 32,
 "active_experts": 2,
@@ -384,6 +416,14 @@ window.MODELS = [
 "n_kv_heads": 16,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Local SWA", "n": 52, "type": "sliding", "sub": "win 1024"},
+{"name": "Global", "n": 10, "type": "global", "sub": "RoPE 1M"}
+],
+"pattern": "lllllglllllglllllglllllglllllglllllglllllglllllglllllglllllgll",
+"pattern_map": {"l": "sliding", "g": "global"}
+},
 "attention_detail": "GQA 32 Q / 16 KV heads with QK-norm; 5 local sliding-window (1024) layers per 1 global layer; local RoPE base 10K, global RoPE base 1M.",
 "n_experts": null,
 "active_experts": null,
@@ -586,6 +626,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Local", "n": 36, "type": "sliding", "sub": "chunk 8192"},
+{"name": "Global NoPE", "n": 12, "type": "global", "sub": "every 4th"}
+],
+"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllg",
+"pattern_map": {"l": "sliding", "g": "global"}
+},
 "attention_detail": "iRoPE: interleaved chunked local attention (chunk 8192) with global NoPE layers every 4th layer; QK-norm on RoPE layers; GQA 40/8; temperature-scaled attention for extrapolation to 10M context.",
 "n_experts": 16,
 "active_experts": 1,
@@ -630,6 +678,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Local", "n": 36, "type": "sliding", "sub": "chunk 8192"},
+{"name": "Global NoPE", "n": 12, "type": "global", "sub": "every 4th"}
+],
+"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllg",
+"pattern_map": {"l": "sliding", "g": "global"}
+},
 "attention_detail": "iRoPE: chunked local attention (chunk 8192) interleaved with global NoPE layers every 4th layer; GQA 40/8; no QK-norm. MoE alternates with dense layers (interleave step 2).",
 "n_experts": 128,
 "active_experts": 1,
@@ -754,6 +810,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 64,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Sliding", "n": 18, "type": "sliding", "sub": "win 128"},
+{"name": "Full", "n": 18, "type": "global", "sub": "attn sinks"}
+],
+"pattern": "sfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsf",
+"pattern_map": {"s": "sliding", "f": "global"}
+},
 "attention_detail": "Alternating banded sliding-window (window 128) and full attention layers; learned per-head attention sinks; GQA 64/8; YaRN RoPE (theta 150000, factor 32) to 131K.",
 "n_experts": 128,
 "active_experts": 4,
@@ -792,6 +856,14 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 64,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "Sliding", "n": 12, "type": "sliding", "sub": "win 128"},
+{"name": "Full", "n": 12, "type": "global", "sub": "attn sinks"}
+],
+"pattern": "sfsfsfsfsfsfsfsfsfsfsfsf",
+"pattern_map": {"s": "sliding", "f": "global"}
+},
 "attention_detail": "Alternating banded sliding-window (window 128) and full attention; learned per-head attention sinks; GQA 64/8; YaRN RoPE to 131K.",
 "n_experts": 32,
 "active_experts": 4,
@@ -1230,6 +1302,14 @@ window.MODELS = [
 "n_kv_heads": 2,
 "head_dim": 256,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "DeltaNet", "n": 36, "type": "linear", "sub": "gated linear"},
+{"name": "Full GQA", "n": 12, "type": "GQA", "sub": "16/2 · RoPE"}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {"l": "linear", "f": "GQA"}
+},
 "attention_detail": "3:1 hybrid — 36 Gated DeltaNet linear-attn layers + 12 full Gated Attention layers (16 q / 2 KV, head_dim 256, partial RoPE 0.25); full_attention_interval=4",
 "n_experts": 512,
 "active_experts": 10,
@@ -1385,6 +1465,14 @@ window.MODELS = [
 "n_kv_heads": 1,
 "head_dim": 512,
 "attention": "sparse",
+"attention_split": {
+"parts": [
+{"name": "CSA", "n": 30, "type": "CSA", "sub": "top-1024"},
+{"name": "HCA", "n": 31, "type": "HCA", "sub": "ratio 128"}
+],
+"pattern": "HHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
+"pattern_map": {"C": "CSA", "H": "HCA"}
+},
 "attention_detail": "Hybrid CSA (Compressed Sparse Attention, Lightning Indexer top-1024) + HCA (Heavily Compressed Attention) over a shared K=V MQA backbone (n_kv=1) plus a local sliding-window (128) branch; partial-RoPE on 64 of 512 head dims.",
 "n_experts": 384,
 "active_experts": 6,
@@ -1423,6 +1511,15 @@ window.MODELS = [
 "n_kv_heads": 1,
 "head_dim": 512,
 "attention": "sparse",
+"attention_split": {
+"parts": [
+{"name": "CSA", "n": 21, "type": "CSA", "sub": "top-512"},
+{"name": "HCA", "n": 20, "type": "HCA", "sub": "ratio 128"},
+{"name": "SW", "n": 2, "type": "SW", "sub": "win 128"}
+],
+"pattern": "??CHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
+"pattern_map": {"C": "CSA", "H": "HCA", "?": "SW"}
+},
 "attention_detail": "CSA+HCA hybrid sparse stack over a shared K=V MQA backbone (n_kv=1), sliding-window 128, Lightning Indexer top-512; partial-RoPE on 64 of 512 head dims. First two layers are pure sliding-window (Pro uses HCA there); q compression 1024 vs Pro's 1536.",
 "n_experts": 256,
 "active_experts": 6,
@@ -1461,6 +1558,14 @@ window.MODELS = [
 "n_kv_heads": 2,
 "head_dim": 256,
 "attention": "hybrid",
+"attention_split": {
+"parts": [
+{"name": "DeltaNet", "n": 45, "type": "linear", "sub": "gated linear"},
+{"name": "Full GQA", "n": 15, "type": "GQA", "sub": "32/2 · RoPE"}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {"l": "linear", "f": "GQA"}
+},
 "attention_detail": "3:1 hybrid — Gated DeltaNet linear attention (64 V / 16 QK heads, head_dim 128) in 3 of every 4 layers + gated full attention (GQA 32 Q / 2 KV, head_dim 256) every 4th layer.",
 "n_experts": 512,
 "active_experts": 10,
@@ -1625,6 +1730,14 @@ window.MODELS = [
 "n_kv_heads": 4,
 "head_dim": 128,
 "attention": "sparse",
+"attention_split": {
+"parts": [
+{"name": "Full", "n": 3, "type": "global", "sub": "warmup"},
+{"name": "MSA", "n": 57, "type": "sparse", "sub": "block top-16"}
+],
+"pattern": "fffsssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+"pattern_map": {"f": "global", "s": "sparse"}
+},
 "attention_detail": "MiniMax Sparse Attention (MSA): top-k block-sparse (16 blocks of 128, 4 index heads) on all but the first 3 dense-warmup layers.",
 "n_experts": 128,
 "active_experts": 4,

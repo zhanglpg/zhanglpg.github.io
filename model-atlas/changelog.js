@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-07-28 12:00",
+  "last_run": "2026-07-28 14:00",
   "entries": [
+    {
+      "date": "2026-07-28",
+      "added": [],
+      "upgraded": ["solar-open2-250b", "inkling", "laguna-s-2-1", "minimax-text-01", "gemma-3-27b", "llama-4-scout", "llama-4-maverick", "gpt-oss-120b", "gpt-oss-20b", "qwen3-next-80b-a3b", "qwen3-5-397b-a17b", "deepseek-v4-pro", "deepseek-v4-flash", "minimax-m3"],
+      "note": "Rolled out the K3-style split-attention diagram to all 14 heterogeneous models. The decoder block now shows each attention type as a labeled box (width ∝ layer count) plus a per-layer tick strip of the true interleave order — sliding-window vs full (gpt-oss, Gemma 3, Llama 4, Inkling, Laguna), linear vs softmax (Solar Open 2, MiniMax Text-01, Qwen3-Next/3.5), and DeepSeek-V4's CSA vs HCA compressed-attention alternation (from config compress_ratios; Flash adds 2 sliding warmup layers). Patterns verified against HF config.json layer lists."
+    },
     {
       "date": "2026-07-28",
       "added": ["kimi-k3"],
