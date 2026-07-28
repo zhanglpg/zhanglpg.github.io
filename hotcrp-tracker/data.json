@@ -2692,8 +2692,14 @@
       "type": "announcement",
       "subject": "[ASE 2026] Important Information for Accepted and Major Revision papers",
       "date": "2026-07-17T14:03:43+00:00"
+    },
+    {
+      "conference": "SOSP 2026",
+      "type": "announcement",
+      "subject": "[SOSP 2026] registration open and check your paper title/authors",
+      "date": "2026-07-27T17:38:56+00:00"
     }
   ],
-  "last_updated": "2026-07-27T12:04:07.411966+00:00",
-  "email_count": 263
+  "last_updated": "2026-07-28T00:04:15.340608+00:00",
+  "email_count": 264
 }
