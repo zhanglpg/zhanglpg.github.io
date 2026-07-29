@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-07-28 14:00",
+  "last_run": "2026-07-29 12:00",
   "entries": [
+    {
+      "date": "2026-07-29",
+      "added": [],
+      "upgraded": ["deepseek-v4-pro", "deepseek-v4-flash", "kimi-k3", "deepseek-v3", "deepseek-r1", "kimi-k2", "kimi-k2-6", "kimi-k2-7", "kimi-vl-a3b", "deepseek-v3-2-exp", "glm-5-1", "glm-5-2", "qwen3-next-80b-a3b", "qwen3-5-397b-a17b", "minimax-text-01", "minimax-m2", "minimax-m2-7", "minimax-m3", "gpt-oss-120b", "gpt-oss-20b", "gemma-3-27b", "llama-4-scout", "llama-4-maverick", "inkling", "laguna-s-2-1", "solar-open2-250b", "flux1-dev", "stable-diffusion-3-5-large"],
+      "note": "Diagrams now open up the attention mechanism itself, not just its name. Each model gets exploded per-mechanism panels showing the real internal dataflow with verified dimensions: MLA latent compression (c_KV/k_R cache, decoupled RoPE, weight absorption), DeepSeek-V4's CSA/HCA compressed-sparse stacks over a shared-K=V MQA backbone with the Lightning Indexer, DSA token top-k (+ GLM-5.2 IndexShare cross-layer reuse), Kimi K3's KDA delta-rule linear attention and AttnRes snapshot-bank residuals, Gated DeltaNet, MiniMax Lightning/MSA block-sparse, sliding/chunk/full spans, GQA head-grouping, MMDiT joint attention, and DeepSeek-V4's mHC hyper-connection residual stream. Every number was re-verified against HF configs + tech reports (9-family research pass with adversarial fact-checking) and the diagrams passed a multi-agent visual review. Corrected a few dataset labels the sources contradicted: Kimi K3 is NoPE (not RoPE), Kimi-VL-A3B uses V2-Lite MLA with no query compression, GLM-5.2 runs IndexShare, DeepSeek-V3.2 is partial-RoPE."
+    },
     {
       "date": "2026-07-28",
       "added": [],

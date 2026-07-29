@@ -1,59 +1,5 @@
 window.MODELS = [
 {
-"id": "kimi-k3",
-"name": "Kimi K3",
-"org": "Moonshot",
-"family": "Kimi",
-"released": "2026-07",
-"license": "Kimi K3 License",
-"modality": "multimodal",
-"decoder_type": "MoE",
-"params_total_B": 2800,
-"params_active_B": 104,
-"n_layers": 93,
-"d_model": 7168,
-"d_ff": 33792,
-"d_ff_moe": 3072,
-"n_heads": 96,
-"n_kv_heads": 96,
-"head_dim": 128,
-"attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "KDA", "n": 69, "type": "linear", "sub": "delta rule · conv k4 · gated"},
-{"name": "Gated MLA", "n": 24, "type": "MLA", "sub": "latent KV · NoPE"},
-],
-"pattern": "kkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmm",
-"pattern_map": {"k": "linear", "m": "MLA"}
-},
-"attention_detail": "69 KDA (Kimi Delta Attention) linear-attention layers interleaved with 24 gated-MLA full-attention layers (full_attn_layers every 4th, 4/8/.../92 plus final layer 93). KDA: 96 heads, head_dim 128, short-conv kernel 4, full-rank output gate (lower bound -5). Gated MLA: q_lora 1536, kv_lora 512, qk_nope 128 + qk_rope 64, v 128, NoPE + output gate; attn_res_block_size 12 (Attention Residuals).",
-"n_experts": 896,
-"active_experts": 16,
-"shared_experts": 2,
-"vocab_size": 163840,
-"context_length": 1048576,
-"norm": "RMSNorm",
-"norm_placement": "pre",
-"pos_encoding": "RoPE",
-"activation": "SiTU-GLU",
-"tie_embeddings": false,
-"vision": {
-"encoder": "MoonViT (27L/1024d)",
-"encoder_params_B": 0.4,
-"fusion": "adapter",
-"notes": "27-layer, 1024-dim (12-head) vision tower, patch 14, divided-fixed positional embeddings, sd2_tpool patch merger (2x2) projecting into the 7168-dim decoder; native text/image/video input."
-},
-"notes": "World's first open 3T-class model: 2.8T/104B Stable LatentMoE on a Kimi Delta Attention backbone — 896 experts top-16 + 2 shared (latent dim 3584, expert d_ff 3072), first layer dense (d_ff 33792). 93 layers split 69 KDA linear + 24 gated-MLA full attention with Attention Residuals (AttnRes); SiTU-GLU activation (situ beta 4.0); noaux_tc routing. ~2.5x scaling-efficiency gain over Kimi K2. Native multimodal, 1M context. HF release is MXFP4-quantized (compressed-tensors; attention, shared experts, and vision tower kept at full precision).",
-"sources": [
-"https://github.com/MoonshotAI/Kimi-K3/blob/main/k3_tech_report.pdf",
-"https://www.kimi.com/blog/kimi-k3",
-"https://huggingface.co/moonshotai/Kimi-K3",
-"https://huggingface.co/moonshotai/Kimi-K3/raw/main/config.json"
-],
-"confidence": "verified",
-"dense_first_layers": 1
-},
-{
 "id": "inkling",
 "name": "Inkling",
 "org": "Thinking Machines",
@@ -72,15 +18,7 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Local SWA", "n": 55, "type": "sliding", "sub": "win 512"},
-{"name": "Global", "n": 11, "type": "global", "sub": "8 KV · rel-pos"}
-],
-"pattern": "lllllglllllglllllglllllglllllglllllglllllglllllglllllglllllglllllg",
-"pattern_map": {"l": "sliding", "g": "global"}
-},
-"attention_detail": "55 local sliding-window layers (window 512) + 11 global, 5:1 pattern; GQA 64 heads, 8 KV global, 16 KV local; no RoPE — learned relative-position logits (d_rel 16, extent 1024) with log-length attention scaling (floor 128K); short conv (kernel 4); 8 multi-token-prediction layers.",
+"attention_detail": "55 local sliding-window layers (window 512) + 11 global, 5:1 pattern; GQA 64 heads, 8 KV global, 16 KV local; no RoPE — learned relative-position logits (d_rel 16, extent 1024 global / 512 local) with log-length attention scaling (floor 128K); short conv (kernel 4); 8 multi-token-prediction layers.",
 "n_experts": 256,
 "active_experts": 6,
 "shared_experts": 2,
@@ -103,7 +41,63 @@ window.MODELS = [
 "https://huggingface.co/thinkingmachines/Inkling/resolve/main/config.json",
 "https://raw.githubusercontent.com/huggingface/transformers/main/src/transformers/models/inkling/modeling_inkling.py"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Local SWA",
+"n": 55,
+"type": "sliding",
+"sub": "win 512"
+},
+{
+"name": "Global",
+"n": 11,
+"type": "global",
+"sub": "8 KV · rel-pos"
+}
+],
+"pattern": "lllllglllllglllllglllllglllllglllllglllllglllllglllllglllllglllllg",
+"pattern_map": {
+"l": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "5:1 sliding / global with relative-position logits (no RoPE)",
+"p": {
+"variants": [
+{
+"n": 55,
+"name": "local sliding 512",
+"type": "sliding",
+"span": "win",
+"frac": 0.25,
+"spanLabel": "window 512",
+"sub1": "64Q/16KV ×128 — more KV on local",
+"sub2": "rel-bias extent 512"
+},
+{
+"n": 11,
+"name": "global",
+"type": "global",
+"span": "full",
+"spanLabel": "full 1M",
+"sub1": "64Q/8KV ×128 · rel-extent 1024",
+"sub2": "log-len temp ×(1+0.1·ln(pos/128K))"
+}
+],
+"common": [
+"NoPE: query-conditioned rel-pos bias (r_proj → 16 dims/head)",
+"K and V (not Q) pass a depthwise causal conv (k=4)",
+"per-head RMS-normed Q,K → softmax scale 1/128 (1/d)"
+],
+"cache": "global: 2,048 el/token unbounded · local capped at 512 × 16 KV heads"
+}
+}
+]
 },
 {
 "id": "solar-open2-250b",
@@ -124,14 +118,6 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Softmax GQA", "n": 12, "type": "GQA", "sub": "64/8 · gated"},
-{"name": "KDA", "n": 36, "type": "linear", "sub": "delta · conv k4"}
-],
-"pattern": "slllslllslllslllslllslllslllslllslllslllslllslll",
-"pattern_map": {"s": "GQA", "l": "linear"}
-},
 "attention_detail": "[Softmax x1, Linear x3] x12: 12 softmax GQA layers (64Q/8KV, elementwise sigmoid output gate) interleaved with 36 KDA (Kimi Delta Attention) linear-attention layers (64 heads, short-conv kernel 4, negative-eigenvalue extension beta=2*sigmoid in (0,2)); NoPE — no positional encoding anywhere.",
 "n_experts": 320,
 "active_experts": 8,
@@ -150,7 +136,73 @@ window.MODELS = [
 "https://arxiv.org/abs/2607.20062",
 "https://huggingface.co/upstage/Solar-Open2-250B/resolve/main/config.json"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Softmax GQA",
+"n": 12,
+"type": "GQA",
+"sub": "64/8 · gated"
+},
+{
+"name": "KDA",
+"n": 36,
+"type": "linear",
+"sub": "delta · conv k4"
+}
+],
+"pattern": "slllslllslllslllslllslllslllslllslllslllslllslll",
+"pattern_map": {
+"s": "GQA",
+"l": "linear"
+}
+},
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Softmax GQA + output gate (12 layers — first of each block of 4)",
+"p": {
+"d": 4096,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "NoPE (no pos. encoding)",
+"gate": "σ(g_proj h) elementwise",
+"cache": "2,048 el/token/layer × 12 GQA layers — the only sequence-growing memory"
+},
+"notes": [
+"softmax-FIRST S-L-L-L — unlike Kimi Linear / Qwen3.5’s L-L-L-S",
+"ablation: softmax-first ≈ +1.5% token efficiency",
+"sigmoid output gate suppresses the attention-sink pathology"
+]
+},
+{
+"kind": "deltanet",
+"title": "KDA linear attention (36 layers)",
+"p": {
+"d": 4096,
+"kh": 64,
+"vh": 64,
+"dh": 128,
+"conv": 4,
+"proj": "q / k / v_proj 4096 → 8192",
+"projSub": "MHA-style 64 heads — no KV grouping",
+"qsub": "L2 norm",
+"vsub": "64 × 128",
+"update": "S ← (I − β·kkᵀ)(Diag(a)·S) + β·kvᵀ",
+"decayName": "per-channel decay Diag(a)",
+"decaySub": "f_a(128) → f_b(8192) low-rank",
+"beta": "β = 2σ(b) ∈ (0,2) — negative-eigenvalue extension",
+"out": "o = Sᵀq → RMSNorm(128) ⊗ σ(g_b(g_a h))",
+"outSub": "low-rank output gate → o_proj 8192 → 4096",
+"cacheline": "no KV cache — state 64 × 128 × 128 ≈ 1.05 M el + conv states per layer; position carried by the recurrence"
+},
+"notes": [
+"same KDA operator as Kimi (fla kernels; A_log, dt_bias, f_a/f_b, b_proj weights)"
+]
+}
+]
 },
 {
 "id": "laguna-s-2-1",
@@ -171,15 +223,7 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Full", "n": 12, "type": "global", "sub": "48h · YaRN"},
-{"name": "Sliding", "n": 36, "type": "sliding", "sub": "72h · win 512"}
-],
-"pattern": "fsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsss",
-"pattern_map": {"f": "global", "s": "sliding"}
-},
-"attention_detail": "12 full-attention layers (48 heads, partial-rotary 0.5 YaRN theta 500K factor 128: 8K->1M) interleaved 1:3 with 36 sliding-window layers (window 512, 72 heads, full-rotary RoPE theta 10K); 8 KV heads throughout; per-head softplus output gate on every attention layer.",
+"attention_detail": "12 full-attention layers (48 heads, partial-rotary 0.5 YaRN theta 500K factor 128: 8K->1M) interleaved 1:3 with 36 sliding-window layers (window 512, 72 heads, full-rotary RoPE theta 10K); 8 KV heads throughout; QK-norm (RMSNorm per head, pre-RoPE) on every layer; per-head softplus output gate on every attention layer.",
 "n_experts": 256,
 "active_experts": 10,
 "shared_experts": 1,
@@ -198,7 +242,200 @@ window.MODELS = [
 "https://huggingface.co/poolside/Laguna-S-2.1/resolve/main/configuration_laguna.py"
 ],
 "confidence": "verified",
-"dense_first_layers": 1
+"dense_first_layers": 1,
+"attention_split": {
+"parts": [
+{
+"name": "Full",
+"n": 12,
+"type": "global",
+"sub": "48h · YaRN"
+},
+{
+"name": "Sliding",
+"n": 36,
+"type": "sliding",
+"sub": "72h · win 512"
+}
+],
+"pattern": "fsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsss",
+"pattern_map": {
+"f": "global",
+"s": "sliding"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "1:3 full / sliding with head widening + softplus gates",
+"p": {
+"variants": [
+{
+"n": 12,
+"name": "full attention",
+"type": "global",
+"span": "full",
+"spanLabel": "full 1M",
+"sub1": "48 heads × 128 · partial RoPE 0.5",
+"sub2": "YaRN θ 500K ×128 (8K → 1M)"
+},
+{
+"n": 36,
+"name": "sliding window 512",
+"type": "sliding",
+"span": "win",
+"frac": 0.25,
+"spanLabel": "window 512",
+"sub1": "72 heads ×128 — 9216 > d_model",
+"sub2": "full-rotary RoPE θ 10K"
+}
+],
+"common": [
+"per-head softplus output gate on every layer (unbounded ≥ 0)",
+"QK-norm (RMSNorm/head) pre-RoPE on every layer",
+"8 KV heads throughout — KV cache identical for both head widths"
+],
+"cache": "full layers: 2,048 el/token unbounded · sliding capped at 512"
+}
+}
+]
+},
+{
+"id": "kimi-k3",
+"name": "Kimi K3",
+"org": "Moonshot",
+"family": "Kimi",
+"released": "2026-07",
+"license": "Kimi K3 License",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 2800,
+"params_active_B": 104,
+"n_layers": 93,
+"d_model": 7168,
+"d_ff": 33792,
+"d_ff_moe": 3072,
+"n_heads": 96,
+"n_kv_heads": 96,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "69 KDA (Kimi Delta Attention) linear-attention layers interleaved with 24 gated-MLA full-attention layers (full_attn_layers every 4th, 4/8/.../92 plus final layer 93). KDA: 96 heads, head_dim 128, short-conv kernel 4, per-channel safe decay gate bounded in (-5,0), full-rank sigmoid output gate. Gated MLA: q_lora 1536, kv_lora 512, qk_nope 128 + qk_rope 64, v 128, NoPE (rotary never applied; the 64-dim rope slot is unrotated) + sigmoid output gate; attn_res_block_size 12 (Attention Residuals).",
+"n_experts": 896,
+"active_experts": 16,
+"shared_experts": 2,
+"vocab_size": 163840,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "NoPE",
+"activation": "SiTU-GLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "MoonViT (27L/1024d)",
+"encoder_params_B": 0.4,
+"fusion": "adapter",
+"notes": "27-layer, 1024-dim (12-head) vision tower, patch 14, divided-fixed positional embeddings, sd2_tpool patch merger (2x2) projecting into the 7168-dim decoder; native text/image/video input."
+},
+"notes": "World's first open 3T-class model: 2.8T/104B Stable LatentMoE on a Kimi Delta Attention backbone — 896 experts top-16 + 2 shared (latent dim 3584, expert d_ff 3072), first layer dense (d_ff 33792). 93 layers split 69 KDA linear + 24 gated-MLA full attention with Attention Residuals (AttnRes); SiTU-GLU activation (situ beta 4.0); noaux_tc routing. ~2.5x scaling-efficiency gain over Kimi K2. Native multimodal, 1M context. HF release is MXFP4-quantized (compressed-tensors; attention, shared experts, and vision tower kept at full precision).",
+"sources": [
+"https://github.com/MoonshotAI/Kimi-K3/blob/main/k3_tech_report.pdf",
+"https://www.kimi.com/blog/kimi-k3",
+"https://huggingface.co/moonshotai/Kimi-K3",
+"https://huggingface.co/moonshotai/Kimi-K3/raw/main/config.json"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"moe_latent_dim": 3584,
+"attention_split": {
+"parts": [
+{
+"name": "KDA",
+"n": 69,
+"type": "linear",
+"sub": "delta rule · conv k4 · gated"
+},
+{
+"name": "Gated MLA",
+"n": 24,
+"type": "MLA",
+"sub": "latent KV · NoPE"
+}
+],
+"pattern": "kkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmm",
+"pattern_map": {
+"k": "linear",
+"m": "MLA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "KDA — Kimi Delta Attention (69 layers)",
+"p": {
+"d": 7168,
+"kh": 96,
+"vh": 96,
+"dh": 128,
+"conv": 4,
+"proj": "q / k / v / g projections 7168 → 12288",
+"projSub": "β: b_proj → 96 · decay: f_a(128) → f_b(12288)",
+"qsub": "L2 norm",
+"vsub": "96 × 128",
+"update": "S ← Diag(e^g)·S + β·k⊗(v − (Diag(e^g)S)ᵀk)",
+"decayName": "per-channel decay Diag(e^g)",
+"decaySub": "g = −5·σ(·) ∈ (−5, 0)",
+"beta": "β = σ(b) per head ∈ (0,1)",
+"out": "o = Sᵀq → RMSNorm(128) ⊗ σ(g_proj h)",
+"outSub": "full-rank output gate → o_proj 12288 → 7168",
+"cacheline": "no KV cache — recurrent state 96 × 128 × 128 ≈ 1.57 M el + 3 conv states (12288 × 4) per layer"
+},
+"notes": [
+"per-channel (diagonal) decay — vs Gated DeltaNet’s per-head scalar",
+"safe decay gate: g = −5·σ(e^A(f + dt_bias))",
+"RMSNorm weight (128) shared across all 96 heads (one FusedRMSNormGated)",
+"position comes from the recurrence — the whole decoder is NoPE"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA, NoPE (24 layers — every 4th + final)",
+"p": {
+"d": 7168,
+"nh": 96,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": true,
+"gate": "σ(g_proj h)",
+"cache": "architecturally 576 el/token × 24 MLA layers ≈ 27 KB/token (HF reference caches expanded per-head K/V — kernel-dependent)"
+},
+"notes": [
+"NoPE: rotary never applied — the 64-dim slot stays unrotated",
+"softmax scale 192⁻⁰·⁵ — no YaRN temperature",
+"full-rank sigmoid output gate (7168 → 12288) before o_proj"
+]
+},
+{
+"kind": "attnres",
+"title": "AttnRes — Attention Residuals",
+"p": {
+"d": 7168,
+"block": 12,
+"snapshots": 8,
+"mixes": 187
+}
+}
+],
+"residual": {
+"kind": "attnres",
+"note": "AttnRes: stream snapshots every 12 layers; every sublayer input is a softmax mix over {bank ∪ stream} — see panel"
+},
+"attn_bullets": [
+"KDA layers carry constant-size state (no per-token growth); only the 24 MLA layers cache latents",
+"93-layer NoPE decoder: position is implicit in KDA recurrence + short conv"
+]
 },
 {
 "id": "glm-4-5",
@@ -236,7 +473,27 @@ window.MODELS = [
 "https://huggingface.co/zai-org/GLM-4.5"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 5120,
+"nq": 96,
+"nkv": 8,
+"dh": 128,
+"rope": "partial RoPE 64/128",
+"qknorm": "QK-RMSNorm per head",
+"cache": "2,048 el/token/layer × 92"
+},
+"notes": [
+"attention bias on q/k/v (rare in 2025) — o_proj bias-free",
+"96 heads: attention width 12288 = 2.4× d_model",
+"+1 MTP layer"
+]
+}
+]
 },
 {
 "id": "glm-4-6",
@@ -274,7 +531,26 @@ window.MODELS = [
 "https://huggingface.co/zai-org/GLM-4.6"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 5120,
+"nq": 96,
+"nkv": 8,
+"dh": 128,
+"rope": "partial RoPE 64/128",
+"qknorm": "QK-RMSNorm per head",
+"cache": "2,048 el/token/layer × 92"
+},
+"notes": [
+"config identical to GLM-4.5 except context (198K)",
+"attention bias on q/k/v · QK-norm · partial RoPE trio"
+]
+}
+]
 },
 {
 "id": "kimi-k2",
@@ -312,7 +588,29 @@ window.MODELS = [
 "https://huggingface.co/moonshotai/Kimi-K2-Instruct"
 ],
 "confidence": "verified",
-"dense_first_layers": 1
+"dense_first_layers": 1,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (MLA) module",
+"p": {
+"d": 7168,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "mscale² 1.81",
+"cache": "KV cache: 576 el/token/layer × 61 ≈ 68.6 KB/token — identical to DeepSeek-V3 despite half the heads (cache is head-count independent)"
+},
+"notes": [
+"64 heads (½ of DeepSeek-V3): q_b / kv_b / o_proj halve, cache unchanged",
+"RoPE θ 50000 · YaRN ×32 with unusual β_fast = β_slow = 1",
+"runs on DeepSeek-V3 modeling code (auto_map)"
+]
+}
+]
 },
 {
 "id": "minimax-m2",
@@ -349,7 +647,28 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/MiniMaxAI/MiniMax-M2"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Full softmax GQA (all 62 layers)",
+"p": {
+"d": 3072,
+"nq": 48,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE 64/128 · θ 5e6",
+"qknorm": "per-layer QK-RMSNorm (whole projection)",
+"cache": "2 × 8 × 128 = 2,048 el/token/layer × 62"
+},
+"notes": [
+"design reversal: dropped M1/Text-01’s linear attention entirely",
+"why (blog): multi-hop reasoning · numerical precision · immature infra",
+"QK-norm OLMo2-style: whole projection pre-head-split, not per head",
+"3 MTP modules for speculative decoding"
+]
+}
+]
 },
 {
 "id": "minimax-text-01",
@@ -370,14 +689,6 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Lightning", "n": 70, "type": "linear", "sub": "linear attn"},
-{"name": "Softmax GQA", "n": 10, "type": "GQA", "sub": "64/8 · RoPE"}
-],
-"pattern": "lllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllf",
-"pattern_map": {"l": "linear", "f": "GQA"}
-},
 "attention_detail": "Lightning (linear) attention in 7 of every 8 layers + 1 softmax GQA layer (7:1); softmax layers use partial RoPE (rotary_dim 64).",
 "n_experts": 32,
 "active_experts": 2,
@@ -395,7 +706,74 @@ window.MODELS = [
 "https://huggingface.co/MiniMaxAI/MiniMax-Text-01",
 "https://arxiv.org/pdf/2501.08313"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Lightning",
+"n": 70,
+"type": "linear",
+"sub": "linear attn"
+},
+{
+"name": "Softmax GQA",
+"n": 10,
+"type": "GQA",
+"sub": "64/8 · RoPE"
+}
+],
+"pattern": "lllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllflllllllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Lightning Attention (70 layers)",
+"p": {
+"d": 6144,
+"kh": 64,
+"vh": 64,
+"dh": 128,
+"conv": null,
+"proj": "qkv_proj 6144 → 24576 → SiLU",
+"projSub": "64 heads × 128",
+"qsub": "SiLU",
+"vsub": "SiLU",
+"update": "S ← e^{−slope}·S + kᵀv",
+"decayName": "per-head ALiBi-slope decay",
+"decaySub": "layer scale ×(1 − l/79 + ε)",
+"out": "o = q·S → RMSNorm(8192) ⊗ σ(W_g h)",
+"outSub": "→ out_proj 8192 → 6144",
+"cacheline": "constant state 64 × 128 × 128 fp32 (4 MiB/layer) — no per-token cache; lightning layers have NO positional encoding"
+},
+"notes": [
+"O(1) decode via the right-product kernel trick (TransNormer lineage)",
+"deeper layers decay slower → longer memory"
+]
+},
+{
+"kind": "gqa",
+"title": "Softmax GQA (every 8th layer — 10 layers)",
+"p": {
+"d": 6144,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE 64/128 · θ 1e7",
+"cache": "2,048 el/token/layer — only the 10 softmax layers"
+},
+"notes": [
+"plain GQA: no QK-norm, no gate"
+]
+}
+],
+"residual": {
+"kind": "deepnorm",
+"note": "Post-norm residual: h → α·LN(h) + F(LN(h)), α = 3.557 = (2·80)^¼ (DeepNorm)"
+}
 },
 {
 "id": "gemma-3-27b",
@@ -416,14 +794,6 @@ window.MODELS = [
 "n_kv_heads": 16,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Local SWA", "n": 52, "type": "sliding", "sub": "win 1024"},
-{"name": "Global", "n": 10, "type": "global", "sub": "RoPE 1M"}
-],
-"pattern": "lllllglllllglllllglllllglllllglllllglllllglllllglllllglllllgll",
-"pattern_map": {"l": "sliding", "g": "global"}
-},
 "attention_detail": "GQA 32 Q / 16 KV heads with QK-norm; 5 local sliding-window (1024) layers per 1 global layer; local RoPE base 10K, global RoPE base 1M.",
 "n_experts": null,
 "active_experts": null,
@@ -446,7 +816,63 @@ window.MODELS = [
 "https://huggingface.co/google/gemma-3-27b-it",
 "https://arxiv.org/html/2503.19786v1"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Local SWA",
+"n": 52,
+"type": "sliding",
+"sub": "win 1024"
+},
+{
+"name": "Global",
+"n": 10,
+"type": "global",
+"sub": "RoPE 1M"
+}
+],
+"pattern": "lllllglllllglllllglllllglllllglllllglllllglllllglllllglllllgll",
+"pattern_map": {
+"l": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "5:1 local / global attention with dual RoPE",
+"p": {
+"variants": [
+{
+"n": 52,
+"name": "local sliding 1024",
+"type": "sliding",
+"span": "win",
+"frac": 0.3,
+"spanLabel": "window 1024",
+"sub1": "GQA 32Q / 16KV × 128 · QK-norm",
+"sub2": "RoPE θ 10K (local frequency)"
+},
+{
+"n": 10,
+"name": "global",
+"type": "global",
+"span": "full",
+"spanLabel": "full 128K",
+"sub1": "RoPE θ 1M · 8× linear interp",
+"sub2": "1 global after every 5 local"
+}
+],
+"common": [
+"softmax scale 1/√168 (query_pre_attn_scalar), not 1/√head_dim",
+"QK-norm replaces Gemma-2 soft-capping",
+"sandwich RMSNorm around both sublayers"
+],
+"cache": "global layers: 4,096 el/token unbounded · local capped at 1024 tokens"
+}
+}
+]
 },
 {
 "id": "ernie-4-5-300b-a47b",
@@ -485,7 +911,26 @@ window.MODELS = [
 "https://ernie.baidu.com/blog/publication/ERNIE_Technical_Report.pdf"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 8192,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ 500K",
+"cache": "2,048 el/token/layer × 54"
+},
+"notes": [
+"bias-free projections everywhere (use_bias false)",
+"FlashMask is training infra — inference attention is plain GQA",
+"+1 MTP layer"
+]
+}
+]
 },
 {
 "id": "glm-5-2",
@@ -506,7 +951,7 @@ window.MODELS = [
 "n_kv_heads": 64,
 "head_dim": 256,
 "attention": "sparse",
-"attention_detail": "DeepSeek-style MLA + DSA sparse attention (index_topk 2048); q_lora 2048, kv_lora 512, qk_nope 192 + qk_rope 64 = 256, v 256.",
+"attention_detail": "DeepSeek-style MLA + DSA sparse attention (index_topk 2048; IndexShare: only 21 of 78 layers run the indexer, the rest reuse the nearest top-k); q_lora 2048, kv_lora 512, qk_nope 192 + qk_rope 64 = 256, v 256.",
 "n_experts": 256,
 "active_experts": 8,
 "shared_experts": 1,
@@ -523,7 +968,75 @@ window.MODELS = [
 "https://huggingface.co/zai-org/GLM-5.2"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "dsaidx",
+"title": "DSA indexer + IndexShare (cross-layer top-k reuse)",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"keynorm": "LN",
+"note": "fp32 scoring · interleaved indexer RoPE",
+"share": {
+"full": 21,
+"shared": 57,
+"total": 78,
+"layers": [
+0,
+1,
+2,
+6,
+10,
+14,
+18,
+22,
+26,
+30,
+34,
+38,
+42,
+46,
+50,
+54,
+58,
+62,
+66,
+70,
+74
+]
+},
+"cache": "k^I cached only on the 21 indexer layers — 57 shared layers cache nothing"
+},
+"notes": [
+"IndexShare: shared layers reuse the nearest preceding top-k verbatim",
+"README: 2.9× per-token FLOP cut at 1M ctx · MTP keeps its own indexer",
+"indexers distilled against the averaged attention of served layers"
+]
+},
+{
+"kind": "mla",
+"title": "MLA base (GLM-wide variant)",
+"p": {
+"d": 6144,
+"nh": 64,
+"qlora": 2048,
+"kvlora": 512,
+"nope": 192,
+"rope": 64,
+"v": 256,
+"cache": "KV cache: c_KV 512 + k_R 64 = 576 el/token/layer × 78 ≈ 87.8 KB/token bf16",
+"yarn": null
+},
+"notes": [
+"wider MLA: q/k 256 (192 nope + 64 rope) · v 256 · 64 heads",
+"GLM-5 report: bigger head dim, fewer heads than DeepSeek",
+"plain RoPE — no YaRN temperature",
+"1M context via RoPE θ 8e6 (no YaRN)"
+]
+}
+]
 },
 {
 "id": "kimi-k2-7",
@@ -568,7 +1081,28 @@ window.MODELS = [
 "https://huggingface.co/moonshotai/Kimi-K2.7-Code/raw/main/config.json"
 ],
 "confidence": "verified",
-"dense_first_layers": 1
+"dense_first_layers": 1,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (MLA) module",
+"p": {
+"d": 7168,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "mscale² 2.0",
+"cache": "KV cache: 576 el/token/layer × 61 ≈ 68.6 KB/token bf16"
+},
+"notes": [
+"attention identical to K2.6 (key-by-key diff) — only quantization differs",
+"MoonViT 400M vision tower unchanged from K2.6"
+]
+}
+]
 },
 {
 "id": "llama-3-3-70b",
@@ -605,7 +1139,24 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 8192,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ500K · llama3 ×8",
+"cache": "2,048 el/token/layer × 80"
+},
+"notes": [
+"the plain-GQA reference design: no QK-norm, no bias, no window"
+]
+}
+]
 },
 {
 "id": "llama-4-scout",
@@ -626,14 +1177,6 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Local", "n": 36, "type": "sliding", "sub": "chunk 8192"},
-{"name": "Global NoPE", "n": 12, "type": "global", "sub": "every 4th"}
-],
-"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllg",
-"pattern_map": {"l": "sliding", "g": "global"}
-},
 "attention_detail": "iRoPE: interleaved chunked local attention (chunk 8192) with global NoPE layers every 4th layer; QK-norm on RoPE layers; GQA 40/8; temperature-scaled attention for extrapolation to 10M context.",
 "n_experts": 16,
 "active_experts": 1,
@@ -657,7 +1200,63 @@ window.MODELS = [
 "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
 ],
 "confidence": "verified",
-"moe_every": 1
+"moe_every": 1,
+"attention_split": {
+"parts": [
+{
+"name": "Local",
+"n": 36,
+"type": "sliding",
+"sub": "chunk 8192"
+},
+{
+"name": "Global NoPE",
+"n": 12,
+"type": "global",
+"sub": "every 4th"
+}
+],
+"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllg",
+"pattern_map": {
+"l": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "iRoPE — chunked-local RoPE + global NoPE",
+"p": {
+"variants": [
+{
+"n": 36,
+"name": "chunked local (RoPE)",
+"type": "sliding",
+"span": "chunk",
+"frac": 0.4,
+"spanLabel": "8192-token chunks (block-diagonal)",
+"sub1": "GQA 40Q / 8KV × 128",
+"sub2": "RoPE θ 500K · llama3 ×16",
+"sub3": "L2 QK-norm after RoPE"
+},
+{
+"n": 12,
+"name": "global NoPE",
+"type": "global",
+"span": "full",
+"spanLabel": "full 10M",
+"sub1": "no positional encoding — every 4th layer",
+"sub2": "inference: Q × (1 + 0.1·log1p(pos/8192))"
+}
+],
+"common": [
+"chunked ≠ rolling window: attention resets at each 8192 boundary",
+"Scout: weightless L2 QK-norm on RoPE layers"
+],
+"cache": "NoPE layers: 2,048 el/token unbounded · chunked layers capped at 8192"
+}
+}
+]
 },
 {
 "id": "llama-4-maverick",
@@ -678,14 +1277,6 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 128,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Local", "n": 36, "type": "sliding", "sub": "chunk 8192"},
-{"name": "Global NoPE", "n": 12, "type": "global", "sub": "every 4th"}
-],
-"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllg",
-"pattern_map": {"l": "sliding", "g": "global"}
-},
 "attention_detail": "iRoPE: chunked local attention (chunk 8192) interleaved with global NoPE layers every 4th layer; GQA 40/8; no QK-norm. MoE alternates with dense layers (interleave step 2).",
 "n_experts": 128,
 "active_experts": 1,
@@ -709,7 +1300,63 @@ window.MODELS = [
 "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
 ],
 "confidence": "verified",
-"moe_every": 2
+"moe_every": 2,
+"attention_split": {
+"parts": [
+{
+"name": "Local",
+"n": 36,
+"type": "sliding",
+"sub": "chunk 8192"
+},
+{
+"name": "Global NoPE",
+"n": 12,
+"type": "global",
+"sub": "every 4th"
+}
+],
+"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllg",
+"pattern_map": {
+"l": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "iRoPE — chunked-local RoPE + global NoPE",
+"p": {
+"variants": [
+{
+"n": 36,
+"name": "chunked local (RoPE)",
+"type": "sliding",
+"span": "chunk",
+"frac": 0.4,
+"spanLabel": "8192-token chunks (block-diagonal)",
+"sub1": "GQA 40Q / 8KV × 128",
+"sub2": "RoPE θ 500K · no scaling",
+"sub3": "no QK-norm"
+},
+{
+"n": 12,
+"name": "global NoPE",
+"type": "global",
+"span": "full",
+"spanLabel": "full 1M",
+"sub1": "no positional encoding — every 4th layer",
+"sub2": "inference: Q × (1 + 0.1·log1p(pos/8192))"
+}
+],
+"common": [
+"chunked ≠ rolling window: attention resets at each 8192 boundary",
+"Maverick: NO QK-norm (the Scout differentiator)"
+],
+"cache": "NoPE layers: 2,048 el/token unbounded · chunked layers capped at 8192"
+}
+}
+]
 },
 {
 "id": "mistral-small-3-1-24b",
@@ -751,7 +1398,26 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 5120,
+"nq": 32,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ 1e9",
+"cache": "2,048 el/token/layer × 40"
+},
+"notes": [
+"attention inner dim 4096 < d_model 5120 — q_proj down-projects",
+"θ 1e9 for 128K, no scaling, no window",
+"Pixtral ViT: 2D RoPE, full attention"
+]
+}
+]
 },
 {
 "id": "mixtral-8x22b",
@@ -789,7 +1455,24 @@ window.MODELS = [
 "https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1",
 "https://mistral.ai/news/mixtral-8x22b/"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 6144,
+"nq": 48,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ 1e6",
+"cache": "2,048 el/token/layer × 56"
+},
+"notes": [
+"dropped the Mistral-7B-era 4K sliding window — pure full attention"
+]
+}
+]
 },
 {
 "id": "gpt-oss-120b",
@@ -810,14 +1493,6 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 64,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Sliding", "n": 18, "type": "sliding", "sub": "win 128"},
-{"name": "Full", "n": 18, "type": "global", "sub": "attn sinks"}
-],
-"pattern": "sfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsf",
-"pattern_map": {"s": "sliding", "f": "global"}
-},
 "attention_detail": "Alternating banded sliding-window (window 128) and full attention layers; learned per-head attention sinks; GQA 64/8; YaRN RoPE (theta 150000, factor 32) to 131K.",
 "n_experts": 128,
 "active_experts": 4,
@@ -835,7 +1510,64 @@ window.MODELS = [
 "https://huggingface.co/openai/gpt-oss-120b",
 "https://openai.com/index/introducing-gpt-oss/"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Sliding",
+"n": 18,
+"type": "sliding",
+"sub": "win 128"
+},
+{
+"name": "Full",
+"n": 18,
+"type": "global",
+"sub": "attn sinks"
+}
+],
+"pattern": "sfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsfsf",
+"pattern_map": {
+"s": "sliding",
+"f": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "Alternating sliding / full attention with sinks",
+"p": {
+"variants": [
+{
+"n": 18,
+"name": "sliding window 128",
+"type": "sliding",
+"span": "win",
+"frac": 0.18,
+"spanLabel": "window 128",
+"sub1": "GQA 64Q / 8KV × 64 · biased q/k/v/o",
+"sub2": "YaRN RoPE θ 150K ×32 (every layer)"
+},
+{
+"n": 18,
+"name": "full attention",
+"type": "global",
+"span": "full",
+"spanLabel": "full context 131K",
+"sub1": "same GQA heads + sinks",
+"sub2": "order S,F,S,F,… — layer 0 sliding"
+}
+],
+"common": [
+"learned per-head sink logit — softmax mass can be < 1",
+"head_dim 64: attention width 4096 > d_model 2880"
+],
+"sink": true,
+"cache": "full layers: 1,024 el/token unbounded · sliding layers capped at 128 tokens"
+},
+"notes": []
+}
+]
 },
 {
 "id": "gpt-oss-20b",
@@ -856,14 +1588,6 @@ window.MODELS = [
 "n_kv_heads": 8,
 "head_dim": 64,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "Sliding", "n": 12, "type": "sliding", "sub": "win 128"},
-{"name": "Full", "n": 12, "type": "global", "sub": "attn sinks"}
-],
-"pattern": "sfsfsfsfsfsfsfsfsfsfsfsf",
-"pattern_map": {"s": "sliding", "f": "global"}
-},
 "attention_detail": "Alternating banded sliding-window (window 128) and full attention; learned per-head attention sinks; GQA 64/8; YaRN RoPE to 131K.",
 "n_experts": 32,
 "active_experts": 4,
@@ -881,7 +1605,64 @@ window.MODELS = [
 "https://huggingface.co/openai/gpt-oss-20b",
 "https://openai.com/index/introducing-gpt-oss/"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Sliding",
+"n": 12,
+"type": "sliding",
+"sub": "win 128"
+},
+{
+"name": "Full",
+"n": 12,
+"type": "global",
+"sub": "attn sinks"
+}
+],
+"pattern": "sfsfsfsfsfsfsfsfsfsfsfsf",
+"pattern_map": {
+"s": "sliding",
+"f": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "Alternating sliding / full attention with sinks",
+"p": {
+"variants": [
+{
+"n": 12,
+"name": "sliding window 128",
+"type": "sliding",
+"span": "win",
+"frac": 0.18,
+"spanLabel": "window 128",
+"sub1": "GQA 64Q / 8KV × 64 · biased q/k/v/o",
+"sub2": "YaRN RoPE θ 150K ×32 (every layer)"
+},
+{
+"n": 12,
+"name": "full attention",
+"type": "global",
+"span": "full",
+"spanLabel": "full context 131K",
+"sub1": "same GQA heads + sinks",
+"sub2": "order S,F,S,F,… — layer 0 sliding"
+}
+],
+"common": [
+"learned per-head sink logit — softmax mass can be < 1",
+"head_dim 64: attention width 4096 > d_model 2880"
+],
+"sink": true,
+"cache": "full layers: 1,024 el/token unbounded · sliding layers capped at 128 tokens"
+},
+"notes": []
+}
+]
 },
 {
 "id": "qwen2.5-vl-72b",
@@ -924,7 +1705,26 @@ window.MODELS = [
 "https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct",
 "https://arxiv.org/abs/2502.13923"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "GQA + chunked M-RoPE module",
+"p": {
+"d": 8192,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "M-RoPE [16t|24h|24w]",
+"cache": "2,048 el/token/layer × 80"
+},
+"notes": [
+"QKV bias (Qwen2 era) · no QK-norm",
+"video: temporal axis advances with real time (2 tokens/s)",
+"ViT: 112-px window attention in 28 of 32 blocks"
+]
+}
+]
 },
 {
 "id": "qwen3-vl-235b-a22b",
@@ -967,7 +1767,27 @@ window.MODELS = [
 "https://huggingface.co/Qwen/Qwen3-VL-235B-A22B-Instruct",
 "https://arxiv.org/abs/2511.21631"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "GQA + Interleaved-MRoPE module",
+"p": {
+"d": 4096,
+"nq": 64,
+"nkv": 4,
+"dh": 128,
+"rope": "iMRoPE [24t,20h,20w]",
+"qknorm": "QK-RMSNorm per head",
+"cache": "1,024 el/token/layer × 94"
+},
+"notes": [
+"MRoPE interleaved T,H,W,… — every axis spans the full spectrum",
+"DeepStack: ViT layer-8/16/24 features added into decoder layers 0–2",
+"ViT: 27 blocks, all full attention (no windows)"
+]
+}
+]
 },
 {
 "id": "internvl3-78b",
@@ -1010,7 +1830,26 @@ window.MODELS = [
 "https://huggingface.co/OpenGVLab/InternVL3-78B",
 "https://arxiv.org/abs/2504.10479"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module (Qwen2.5-72B LLM)",
+"p": {
+"d": 8192,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ1e6 · dyn-NTK ×2",
+"cache": "2,048 el/token/layer × 80"
+},
+"notes": [
+"QKV bias (Qwen2.5 heritage) · no QK-norm",
+"InternViT-6B: QK-norm + RMSNorm inside the ViT (25 × 128 heads)",
+"pixel-shuffle: 1024 → 256 visual tokens per 448-px tile"
+]
+}
+]
 },
 {
 "id": "kimi-vl-a3b",
@@ -1031,7 +1870,7 @@ window.MODELS = [
 "n_kv_heads": 16,
 "head_dim": 192,
 "attention": "MLA",
-"attention_detail": "MLA (DeepSeek-V3 style): kv_lora_rank 512, decoupled RoPE qk_nope 128 + qk_rope 64 (=192), v_head_dim 128.",
+"attention_detail": "MLA (DeepSeek-V2-Lite style: direct full-rank q_proj, no query latent — q_lora_rank null): kv_lora_rank 512, decoupled RoPE qk_nope 128 + qk_rope 64 (=192), v_head_dim 128.",
 "n_experts": 64,
 "active_experts": 6,
 "shared_experts": 2,
@@ -1054,7 +1893,28 @@ window.MODELS = [
 "https://arxiv.org/abs/2504.07491"
 ],
 "confidence": "verified",
-"dense_first_layers": 1
+"dense_first_layers": 1,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "MLA module — no query compression (V2-Lite form)",
+"p": {
+"d": 2048,
+"nh": 16,
+"qlora": null,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"cache": "KV cache: 576 el/token/layer × 27 ≈ 30.4 KB/token bf16 — ~7.1× smaller than 16-head MHA"
+},
+"notes": [
+"q_lora_rank null → full-rank q_proj (2048→3072); no c_Q latent",
+"long context via RoPE θ 800000 — no YaRN (unique in this family)",
+"attention code is a verbatim copy of DeepseekV3Attention"
+]
+}
+]
 },
 {
 "id": "gpt2-xl",
@@ -1092,7 +1952,26 @@ window.MODELS = [
 "https://huggingface.co/openai-community/gpt2-xl",
 "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Multi-Head Attention module (canonical GPT-2)",
+"p": {
+"d": 1600,
+"nq": 25,
+"nkv": 25,
+"dh": 64,
+"rope": "learned abs. positions",
+"cache": "2 × 25 × 64 = 3,200 el/token/layer × 48"
+},
+"notes": [
+"fused QKV as Conv1D with bias on every projection",
+"odd head count: 25 = 1600 / 64",
+"pre-LN + final LayerNorm · GELU(tanh) · dropout 0.1"
+]
+}
+]
 },
 {
 "id": "llama-2-70b",
@@ -1130,7 +2009,24 @@ window.MODELS = [
 "https://huggingface.co/meta-llama/Llama-2-70b-hf",
 "https://arxiv.org/abs/2307.09288"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 8192,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ 10K · 4K context",
+"cache": "2,048 el/token/layer × 80"
+},
+"notes": [
+"the GQA anchor: only 70B in the Llama-2 family uses GQA (7B/13B are MHA)"
+]
+}
+]
 },
 {
 "id": "flux1-dev",
@@ -1167,7 +2063,36 @@ window.MODELS = [
 "sources": [
 "https://huggingface.co/black-forest-labs/FLUX.1-dev"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "mmdit",
+"title": "Double-stream MMDiT block (×19)",
+"p": {
+"d": 3072,
+"mods": 6,
+"pos": "3-axis RoPE [16,56,56] θ 10K — txt ids 0 (unrotated), img (row, col)",
+"cap": "no mask, no KV cache — full bidirectional attention recomputed each denoising step"
+},
+"notes": [
+"24 heads × 128 · QK-RMSNorm per head",
+"streams share only the attention op — all weights separate"
+]
+},
+{
+"kind": "sstream",
+"title": "Single-stream parallel block (×38)",
+"p": {
+"d": 3072,
+"l1": 21504,
+"qkv": 9216,
+"mlp": 12288,
+"nh": 24,
+"dh": 128,
+"cap": "ViT-22B-style parallel attention + MLP: one fused input and one fused output projection"
+}
+}
+]
 },
 {
 "id": "stable-diffusion-3-5-large",
@@ -1200,12 +2125,29 @@ window.MODELS = [
 "activation": "GeLU",
 "tie_embeddings": false,
 "vision": null,
-"notes": "8B improved-MMDiT rectified-flow text-to-image model. Three text encoders (CLIP-L + OpenCLIP-bigG + T5-XXL); 16-ch VAE, patch_size 2, learned patch pos emb; QK-RMSNorm added over SD3 for stable high-res training.",
+"notes": "8B improved-MMDiT rectified-flow text-to-image model. Three text encoders (CLIP-L + OpenCLIP-bigG + T5-XXL); 16-ch VAE, patch_size 2, fixed 2D-sincos patch pos emb; QK-RMSNorm added over SD3 for stable high-res training.",
 "sources": [
 "https://huggingface.co/stabilityai/stable-diffusion-3.5-large",
 "https://arxiv.org/abs/2403.03206"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "mmdit",
+"title": "MMDiT joint block (×38)",
+"p": {
+"d": 2432,
+"mods": 6,
+"pos": "fixed 2D-sincos pos-emb added at patch embed (192×192 grid) — no RoPE",
+"cap": "final block: context stream is pre_only — it feeds joint attention but its output is discarded"
+},
+"notes": [
+"38 heads × 64 (heads = depth scaling rule)",
+"QK-RMSNorm added in SD3.5 for bf16 hi-res stability",
+"no MMDiT-X dual attention in Large (Medium only)"
+]
+}
+]
 },
 {
 "id": "qwen3-32b",
@@ -1243,7 +2185,27 @@ window.MODELS = [
 "https://huggingface.co/Qwen/Qwen3-32B/raw/main/config.json",
 "https://arxiv.org/abs/2505.09388"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 5120,
+"nq": 64,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ 1e6",
+"qknorm": "QK-RMSNorm / head (Qwen3)",
+"cache": "2,048 el/token/layer × 64"
+},
+"notes": [
+"dropped Qwen2.5’s QKV bias",
+"attention width 8192 > d_model 5120",
+"native 32K context; 131K via YaRN"
+]
+}
+]
 },
 {
 "id": "qwen3-235b-a22b",
@@ -1281,7 +2243,26 @@ window.MODELS = [
 "https://huggingface.co/Qwen/Qwen3-235B-A22B/raw/main/config.json",
 "https://arxiv.org/abs/2505.09388"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Grouped-Query Attention module",
+"p": {
+"d": 4096,
+"nq": 64,
+"nkv": 4,
+"dh": 128,
+"rope": "RoPE θ 1e6",
+"qknorm": "QK-RMSNorm per head",
+"cache": "2 × 4 × 128 = 1,024 el/token/layer × 94"
+},
+"notes": [
+"largest GQA ratio in the atlas: 16 Q heads per KV head",
+"native 32K context; 131K via YaRN"
+]
+}
+]
 },
 {
 "id": "qwen3-next-80b-a3b",
@@ -1302,14 +2283,6 @@ window.MODELS = [
 "n_kv_heads": 2,
 "head_dim": 256,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "DeltaNet", "n": 36, "type": "linear", "sub": "gated linear"},
-{"name": "Full GQA", "n": 12, "type": "GQA", "sub": "16/2 · RoPE"}
-],
-"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllf",
-"pattern_map": {"l": "linear", "f": "GQA"}
-},
 "attention_detail": "3:1 hybrid — 36 Gated DeltaNet linear-attn layers + 12 full Gated Attention layers (16 q / 2 KV, head_dim 256, partial RoPE 0.25); full_attention_interval=4",
 "n_experts": 512,
 "active_experts": 10,
@@ -1327,7 +2300,74 @@ window.MODELS = [
 "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct/raw/main/config.json",
 "https://vllm.ai/blog/2025-09-11-qwen3-next"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 36,
+"type": "linear",
+"sub": "gated linear"
+},
+{
+"name": "Full GQA",
+"n": 12,
+"type": "GQA",
+"sub": "16/2 · RoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (36 layers)",
+"p": {
+"d": 2048,
+"kh": 16,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkvz 2048 → 12288 (fused)",
+"projSub": "interleaved per K-head group · in_proj_ba → β, α",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 4096 → 2048",
+"cacheline": "no KV cache on linear layers — state 32 × 128 × 128 ≈ 524 K el + conv state 8192 × 4 per layer"
+},
+"notes": [
+"q,k L2-normalized in kernel · chunked prefill (chunk 64)",
+"zero-centered RMSNorm throughout the model"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (12 layers — every 4th)",
+"p": {
+"d": 2048,
+"nq": 16,
+"nkv": 2,
+"dh": 256,
+"rope": "partial RoPE 64/256",
+"qknorm": "zero-centered QK-norm / head",
+"gate": "σ(gate) per head",
+"cache": "2 × 2 × 256 = 1,024 el/token/layer — only these 12 layers cache anything"
+},
+"notes": [
+"q_proj emits [query | gate] per head (double width)",
+"output gate suppresses attention sinks / massive activations"
+]
+}
+]
 },
 {
 "id": "deepseek-v3",
@@ -1366,7 +2406,35 @@ window.MODELS = [
 "https://arxiv.org/abs/2412.19437"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (MLA) module",
+"p": {
+"d": 7168,
+"nh": 128,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "mscale² 1.87",
+"cache": "KV cache: c_KV 512 + k_R 64 = 576 el/token/layer — head-count independent; × 61 layers ≈ 68.6 KB/token bf16 → 56.9× smaller than 128-head MHA (= GQA with 2.25 groups)"
+},
+"notes": [
+"RMSNorm on both latents (c_Q, c_KV) — k_R not normed",
+"k_R shared by all 128 heads (MQA-style)",
+"decode: W_UK absorbed into query → attends on the 576-el cache",
+"YaRN ×40 (4K→160K): softmax × mscale² ≈ 1.87",
+"no bias · no QK-norm · no gate"
+]
+}
+],
+"attn_bullets": [
+"MLA cache 576 el/token/layer: only the two latents are stored; per-head K/V are re-expanded (prefill) or absorbed (decode)",
+"1 MTP module (a full MLA block) for speculative decoding"
+]
 },
 {
 "id": "deepseek-v3-2-exp",
@@ -1395,7 +2463,7 @@ window.MODELS = [
 "context_length": 163840,
 "norm": "RMSNorm",
 "norm_placement": "pre",
-"pos_encoding": "RoPE",
+"pos_encoding": "partial-RoPE",
 "activation": "SwiGLU",
 "tie_embeddings": false,
 "vision": null,
@@ -1405,7 +2473,44 @@ window.MODELS = [
 "https://github.com/deepseek-ai/DeepSeek-V3.2-Exp"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "dsaidx",
+"title": "DSA — lightning indexer (top-k token selection)",
+"p": {
+"iheads": 64,
+"idim": 128,
+"topk": 2048,
+"keynorm": "LN",
+"note": "FP8 kernel · Hadamard rotation · scale 64⁻⁰·⁵·128⁻⁰·⁵",
+"cache": "adds k^I (128, FP8) per token on every layer, beside the 576-el MLA latent"
+},
+"notes": [
+"indexer trained by KL-distilling the dense attention distribution",
+"indexer RoPE non-interleaved · MLA RoPE interleaved (bugfix note)",
+"prefill: MHA mode (expand c_KV) · decode: MQA on the latent cache"
+]
+},
+{
+"kind": "mla",
+"title": "MLA base (identical to DeepSeek-V3)",
+"p": {
+"d": 7168,
+"nh": 128,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "mscale² 1.87",
+"cache": "576 el/token/layer × 61 — DSA masks it to the top-2048 selected tokens per query"
+}
+}
+],
+"attn_bullets": [
+"attention cost O(L·k) with k = 2048 — the indexer scores all tokens, MLA attends to the winners"
+]
 },
 {
 "id": "deepseek-r1",
@@ -1444,7 +2549,31 @@ window.MODELS = [
 "https://arxiv.org/abs/2501.12948"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (MLA) module",
+"p": {
+"d": 7168,
+"nh": 128,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "mscale² 1.87",
+"cache": "KV cache: 576 el/token/layer × 61 ≈ 68.6 KB/token bf16 — 56.9× smaller than MHA"
+},
+"notes": [
+"attention bit-identical to DeepSeek-V3 — R1 differs only in weights (RL)",
+"YaRN ×40 · softmax × mscale² ≈ 1.87"
+]
+}
+],
+"attn_bullets": [
+"Same MLA cache economics as V3: 35,136 el/token total"
+]
 },
 {
 "id": "deepseek-v4-pro",
@@ -1465,14 +2594,6 @@ window.MODELS = [
 "n_kv_heads": 1,
 "head_dim": 512,
 "attention": "sparse",
-"attention_split": {
-"parts": [
-{"name": "CSA", "n": 30, "type": "CSA", "sub": "top-1024"},
-{"name": "HCA", "n": 31, "type": "HCA", "sub": "ratio 128"}
-],
-"pattern": "HHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
-"pattern_map": {"C": "CSA", "H": "HCA"}
-},
 "attention_detail": "Hybrid CSA (Compressed Sparse Attention, Lightning Indexer top-1024) + HCA (Heavily Compressed Attention) over a shared K=V MQA backbone (n_kv=1) plus a local sliding-window (128) branch; partial-RoPE on 64 of 512 head dims.",
 "n_experts": 384,
 "active_experts": 6,
@@ -1490,7 +2611,86 @@ window.MODELS = [
 "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
 "https://arxiv.org/abs/2606.19348"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "CSA",
+"n": 30,
+"type": "CSA",
+"sub": "top-1024"
+},
+{
+"name": "HCA",
+"n": 31,
+"type": "HCA",
+"sub": "ratio 128"
+}
+],
+"pattern": "HHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
+"pattern_map": {
+"C": "CSA",
+"H": "HCA"
+}
+},
+"attn_modules": [
+{
+"kind": "csa",
+"title": "CSA — Compressed Sparse Attention (30 layers)",
+"p": {
+"d": 7168,
+"nh": 128,
+"qlora": 1536,
+"m": 4,
+"topk": 1024,
+"win": 128,
+"og": 16,
+"olora": 1024,
+"cache": "CSA cache/token: C_comp ~128 el + indexer ~32 el amortized + 128 × 512 ring — FP8 (RoPE dims BF16)"
+},
+"notes": [
+"indexer scores 4:1-compressed blocks, not raw tokens (V3.2-DSA lineage)",
+"shared K=V: each 512-dim entry serves as both key and value (n_kv = 1)",
+"query latent shared by main attention and indexer",
+"output RoPE(−i): outputs carry relative, not absolute, position"
+]
+},
+{
+"kind": "hca",
+"title": "HCA — Heavily Compressed Attention (31 layers)",
+"p": {
+"d": 7168,
+"nh": 128,
+"qlora": 1536,
+"m": 128,
+"win": 128,
+"og": 16,
+"olora": 1024,
+"cache": "HCA cache/token: ~4 el amortized + ring — this is what shrinks the total cache to ~10% of V3.2"
+},
+"notes": [
+"alternates with CSA — near-free global context on half the stack",
+"same query path, sinks, grouped W_O as CSA; only KV compression differs"
+]
+},
+{
+"kind": "mhc",
+"title": "mHC — Manifold-Constrained Hyper-Connections",
+"p": {
+"sinkhorn": 20,
+"cap": "x_{l+1} = H_res·x_l + H_postᵀ·F(H_pre·x_l) — each mapping = static + input-dynamic part · ~6.7% train overhead"
+}
+}
+],
+"residual": {
+"kind": "mhc",
+"note": "Residuals: 4-stream Manifold-Constrained Hyper-Connections (mHC), doubly-stochastic mixing — see panel"
+},
+"attn_bullets": [
+"per-head sink logits: a head can attend to nothing (softmax mass < 1)",
+"KV cache FP8 with the 64 RoPE dims in BF16 — total ≈ 10% of V3.2’s cache",
+"first 3 MoE layers Hash-routed (token-id hash picks the experts) · Sqrt(Softplus) affinity scoring"
+]
 },
 {
 "id": "deepseek-v4-flash",
@@ -1511,15 +2711,6 @@ window.MODELS = [
 "n_kv_heads": 1,
 "head_dim": 512,
 "attention": "sparse",
-"attention_split": {
-"parts": [
-{"name": "CSA", "n": 21, "type": "CSA", "sub": "top-512"},
-{"name": "HCA", "n": 20, "type": "HCA", "sub": "ratio 128"},
-{"name": "SW", "n": 2, "type": "SW", "sub": "win 128"}
-],
-"pattern": "??CHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
-"pattern_map": {"C": "CSA", "H": "HCA", "?": "SW"}
-},
 "attention_detail": "CSA+HCA hybrid sparse stack over a shared K=V MQA backbone (n_kv=1), sliding-window 128, Lightning Indexer top-512; partial-RoPE on 64 of 512 head dims. First two layers are pure sliding-window (Pro uses HCA there); q compression 1024 vs Pro's 1536.",
 "n_experts": 256,
 "active_experts": 6,
@@ -1537,7 +2728,95 @@ window.MODELS = [
 "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
 "https://arxiv.org/abs/2606.19348"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "CSA",
+"n": 21,
+"type": "CSA",
+"sub": "top-512"
+},
+{
+"name": "HCA",
+"n": 20,
+"type": "HCA",
+"sub": "ratio 128"
+},
+{
+"name": "SW",
+"n": 2,
+"type": "SW",
+"sub": "win 128"
+}
+],
+"pattern": "??CHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
+"pattern_map": {
+"C": "CSA",
+"H": "HCA",
+"?": "SW"
+}
+},
+"attn_modules": [
+{
+"kind": "csa",
+"title": "CSA — Compressed Sparse Attention (21 layers)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1024,
+"m": 4,
+"topk": 512,
+"win": 128,
+"og": 8,
+"olora": 1024,
+"cache": "CSA cache/token: C_comp ~128 el + indexer ~32 el amortized + 128 × 512 ring — FP8 (RoPE dims BF16)"
+},
+"notes": [
+"indexer scores 4:1-compressed blocks, not raw tokens (V3.2-DSA lineage)",
+"shared K=V: each 512-dim entry serves as both key and value (n_kv = 1)",
+"query latent shared by main attention and indexer",
+"output RoPE(−i): outputs carry relative, not absolute, position",
+"vs Pro: top-512, q_lora 1024, 64 heads, 8 output groups"
+]
+},
+{
+"kind": "hca",
+"title": "HCA — Heavily Compressed Attention (20 layers)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1024,
+"m": 128,
+"win": 128,
+"og": 8,
+"olora": 1024,
+"cache": "HCA cache/token: ~4 el amortized + ring"
+},
+"notes": [
+"alternates with CSA — near-free global context on half the stack",
+"same query path, sinks, grouped W_O as CSA; only KV compression differs",
+"first 2 layers: pure 128-token sliding window (compress_ratio 0; inferred)"
+]
+},
+{
+"kind": "mhc",
+"title": "mHC — Manifold-Constrained Hyper-Connections",
+"p": {
+"sinkhorn": 20,
+"cap": "x_{l+1} = H_res·x_l + H_postᵀ·F(H_pre·x_l) — each mapping = static + input-dynamic part · ~6.7% train overhead"
+}
+}
+],
+"residual": {
+"kind": "mhc",
+"note": "Residuals: 4-stream Manifold-Constrained Hyper-Connections (mHC), doubly-stochastic mixing — see panel"
+},
+"attn_bullets": [
+"per-head sink logits: a head can attend to nothing (softmax mass < 1)",
+"KV cache FP8 with the 64 RoPE dims in BF16 — total ≈ 10% of V3.2’s cache",
+"first 3 MoE layers Hash-routed (token-id hash picks the experts) · Sqrt(Softplus) affinity scoring"
+]
 },
 {
 "id": "qwen3-5-397b-a17b",
@@ -1558,14 +2837,6 @@ window.MODELS = [
 "n_kv_heads": 2,
 "head_dim": 256,
 "attention": "hybrid",
-"attention_split": {
-"parts": [
-{"name": "DeltaNet", "n": 45, "type": "linear", "sub": "gated linear"},
-{"name": "Full GQA", "n": 15, "type": "GQA", "sub": "32/2 · RoPE"}
-],
-"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllflllflllflllf",
-"pattern_map": {"l": "linear", "f": "GQA"}
-},
 "attention_detail": "3:1 hybrid — Gated DeltaNet linear attention (64 V / 16 QK heads, head_dim 128) in 3 of every 4 layers + gated full attention (GQA 32 Q / 2 KV, head_dim 256) every 4th layer.",
 "n_experts": 512,
 "active_experts": 10,
@@ -1588,7 +2859,73 @@ window.MODELS = [
 "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
 "https://github.com/QwenLM/Qwen3.5"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 45,
+"type": "linear",
+"sub": "gated linear"
+},
+{
+"name": "Full GQA",
+"n": 15,
+"type": "GQA",
+"sub": "32/2 · RoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (45 layers)",
+"p": {
+"d": 4096,
+"kh": 16,
+"vh": 64,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 4096 → 12288 · in_proj_z → 8192",
+"projSub": "split projections (vs Next’s fused) · in_proj_b / a → β, α",
+"qsub": "L2 norm",
+"vsub": "64 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 8192 → 4096",
+"cacheline": "no KV cache on linear layers — state 64 × 128 × 128 ≈ 1.05 M el (fp32) + conv state 12288 × 4 per layer"
+},
+"notes": [
+"64 v-heads / 16 qk-heads — doubled value width vs Qwen3-Next"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (15 layers — every 4th)",
+"p": {
+"d": 4096,
+"nq": 32,
+"nkv": 2,
+"dh": 256,
+"rope": "iMRoPE 64/256",
+"qknorm": "zero-centered QK-norm / head",
+"gate": "σ(gate) per head",
+"cache": "1,024 el/token/layer × 15 full-attention layers"
+},
+"notes": [
+"attention module byte-identical to Qwen3-Next’s (subclassed)",
+"text-only input degenerates to standard partial RoPE"
+]
+}
+]
 },
 {
 "id": "glm-5-1",
@@ -1627,7 +2964,46 @@ window.MODELS = [
 "https://docs.z.ai/release-notes/new-released"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "dsaidx",
+"title": "DSA — lightning indexer (top-k token selection)",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"keynorm": "LN",
+"note": "fp32 scoring · scale 32⁻⁰·⁵ · interleaved indexer RoPE",
+"cache": "k^I (128) cached per token on all 78 layers"
+},
+"notes": [
+"every layer owns its own indexer (vs GLM-5.2 IndexShare)",
+"indexer frozen during RL (GLM-5 report)"
+]
+},
+{
+"kind": "mla",
+"title": "MLA base (GLM-wide variant)",
+"p": {
+"d": 6144,
+"nh": 64,
+"qlora": 2048,
+"kvlora": 512,
+"nope": 192,
+"rope": 64,
+"v": 256,
+"cache": "KV cache: c_KV 512 + k_R 64 = 576 el/token/layer × 78 ≈ 87.8 KB/token bf16",
+"yarn": null
+},
+"notes": [
+"wider MLA: q/k 256 (192 nope + 64 rope) · v 256 · 64 heads",
+"GLM-5 report: bigger head dim, fewer heads than DeepSeek",
+"plain RoPE — no YaRN temperature",
+"RoPE θ 1e6 · 198K context"
+]
+}
+]
 },
 {
 "id": "kimi-k2-6",
@@ -1670,7 +3046,29 @@ window.MODELS = [
 "https://huggingface.co/moonshotai/Kimi-K2.6"
 ],
 "confidence": "verified",
-"dense_first_layers": 1
+"dense_first_layers": 1,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (MLA) module",
+"p": {
+"d": 7168,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "mscale² 2.0",
+"cache": "KV cache: 576 el/token/layer × 61 ≈ 68.6 KB/token bf16"
+},
+"notes": [
+"YaRN ×64 → 256K context (β_fast back to 32)",
+"attention excluded from the int4 checkpoint quantization",
+"MoonViT vision tokens enter the same MLA layers via projector"
+]
+}
+]
 },
 {
 "id": "minimax-m2-7",
@@ -1709,7 +3107,27 @@ window.MODELS = [
 "https://huggingface.co/MiniMaxAI/MiniMax-M2.7/raw/main/config.json",
 "https://www.minimax.io/news/minimax-m27-en"
 ],
-"confidence": "verified"
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Full softmax GQA (all 62 layers)",
+"p": {
+"d": 3072,
+"nq": 48,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE 64/128 · θ 5e6",
+"qknorm": "per-layer QK-RMSNorm (whole projection)",
+"cache": "2 × 8 × 128 = 2,048 el/token/layer × 62"
+},
+"notes": [
+"attention identical to M2 · context 196K → 200K",
+"QK-norm per-layer (whole projection) · partial RoPE 64/128",
+"3 MTP modules"
+]
+}
+]
 },
 {
 "id": "minimax-m3",
@@ -1730,14 +3148,6 @@ window.MODELS = [
 "n_kv_heads": 4,
 "head_dim": 128,
 "attention": "sparse",
-"attention_split": {
-"parts": [
-{"name": "Full", "n": 3, "type": "global", "sub": "warmup"},
-{"name": "MSA", "n": 57, "type": "sparse", "sub": "block top-16"}
-],
-"pattern": "fffsssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-"pattern_map": {"f": "global", "s": "sparse"}
-},
 "attention_detail": "MiniMax Sparse Attention (MSA): top-k block-sparse (16 blocks of 128, 4 index heads) on all but the first 3 dense-warmup layers.",
 "n_experts": 128,
 "active_experts": 4,
@@ -1760,6 +3170,52 @@ window.MODELS = [
 "https://huggingface.co/MiniMaxAI/MiniMax-M3"
 ],
 "confidence": "verified",
-"dense_first_layers": 3
+"dense_first_layers": 3,
+"attention_split": {
+"parts": [
+{
+"name": "Full",
+"n": 3,
+"type": "global",
+"sub": "warmup"
+},
+{
+"name": "MSA",
+"n": 57,
+"type": "sparse",
+"sub": "block top-16"
+}
+],
+"pattern": "fffsssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+"pattern_map": {
+"f": "global",
+"s": "sparse"
+}
+},
+"attn_modules": [
+{
+"kind": "msa",
+"title": "MSA — MiniMax Sparse Attention (57 layers)",
+"p": {
+"d": 6144,
+"nq": 64,
+"nkv": 4,
+"dh": 128,
+"iheads": 4,
+"idim": 128,
+"block": 128,
+"topk": 16,
+"budget": 2048,
+"qsub": "per-head Gemma QK-norm · RoPE first 64",
+"cache": "full KV cache retained (1,024 el/token/layer, all 60 layers) + 128-el idx key on 57 sparse layers — MSA cuts compute, not memory"
+},
+"notes": [
+"4 index-query heads map 1:1 onto the 4 GQA groups",
+"16 Q heads per group share one block selection",
+"local block always force-included · raw fp32 scores, no softmax",
+"first 3 layers: dense full-attention warm-up (see layer strip)"
+]
+}
+]
 }
 ];
