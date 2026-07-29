@@ -2033,7 +2033,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-13T16:12:59+00:00",
-      "last_event": "2026-07-27T01:56:51+00:00",
+      "last_event": "2026-07-29T06:13:28+00:00",
       "events": [
         {
           "type": "updated",
@@ -2074,13 +2074,18 @@
           "type": "comment",
           "date": "2026-07-27T01:56:51+00:00",
           "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-07-29T06:13:28+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 1,
-        "comments": 5,
+        "comments": 6,
         "reviews": 0,
-        "total": 8
+        "total": 9
       },
       "message_ids": [
         "<20260713161259.B00839AE3E4@mail.hotcrp.com>",
@@ -2090,7 +2095,8 @@
         "<20260723150819.4D66AA1EC47@mail.hotcrp.com>",
         "<20260724060903.5738AA09772@mail.hotcrp.com>",
         "<20260726165048.6760699ABED@mail.hotcrp.com>",
-        "<20260727015651.95987A06346@mail.hotcrp.com>"
+        "<20260727015651.95987A06346@mail.hotcrp.com>",
+        "<20260729061328.B847FA085C8@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2115,7 +2121,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-28T21:20:27+00:00",
+      "last_event": "2026-07-29T02:56:29+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2181,13 +2187,43 @@
           "type": "submitted",
           "date": "2026-07-28T21:20:27+00:00",
           "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-29T02:05:28+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-29T02:06:06+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-29T02:24:10+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-29T02:31:48+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-29T02:48:03+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-29T02:56:29+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
-        "updates": 8,
+        "updates": 14,
         "comments": 0,
         "reviews": 0,
-        "total": 13
+        "total": 19
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
@@ -2202,7 +2238,13 @@
         "<20260728103421.49C298E9ED8@mail.hotcrp.com>",
         "<20260728112320.A2C228E9ED8@mail.hotcrp.com>",
         "<20260728163547.572E099ABC5@mail.hotcrp.com>",
-        "<20260728212027.66A7DA085F0@mail.hotcrp.com>"
+        "<20260728212027.66A7DA085F0@mail.hotcrp.com>",
+        "<20260729020528.416E4A085D3@mail.hotcrp.com>",
+        "<20260729020606.C6E8AA085DB@mail.hotcrp.com>",
+        "<20260729022410.2B2DF8E9C48@mail.hotcrp.com>",
+        "<20260729023148.AC089A085DB@mail.hotcrp.com>",
+        "<20260729024803.D25D9A085D9@mail.hotcrp.com>",
+        "<20260729025629.CB144959483@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2597,11 +2639,11 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-28T21:20:32+00:00"
+      "last_event": "2026-07-29T02:56:29+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-07-27T01:56:51+00:00"
+      "last_event": "2026-07-29T06:13:28+00:00"
     },
     "NSDI '27 Spring": {
       "paper_count": 1,
@@ -2766,6 +2808,6 @@
       "date": "2026-07-27T17:38:56+00:00"
     }
   ],
-  "last_updated": "2026-07-29T00:04:29.423739+00:00",
-  "email_count": 275
+  "last_updated": "2026-07-29T08:08:08.455027+00:00",
+  "email_count": 282
 }
