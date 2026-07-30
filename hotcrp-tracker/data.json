@@ -2133,7 +2133,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-29T10:13:33+00:00",
+      "last_event": "2026-07-30T07:13:14+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2239,13 +2239,33 @@
           "type": "updated",
           "date": "2026-07-29T10:13:33+00:00",
           "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-30T06:36:17+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-30T06:36:41+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-30T06:41:20+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-30T07:13:14+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
-        "updates": 16,
+        "updates": 20,
         "comments": 0,
         "reviews": 0,
-        "total": 21
+        "total": 25
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
@@ -2268,7 +2288,11 @@
         "<20260729024803.D25D9A085D9@mail.hotcrp.com>",
         "<20260729025629.CB144959483@mail.hotcrp.com>",
         "<20260729100004.308788E9C44@mail.hotcrp.com>",
-        "<20260729101333.C23EFA085C8@mail.hotcrp.com>"
+        "<20260729101333.C23EFA085C8@mail.hotcrp.com>",
+        "<20260730063617.29CAE9DD81B@mail.hotcrp.com>",
+        "<20260730063641.8D0549DD81B@mail.hotcrp.com>",
+        "<20260730064120.C3BA89DD81B@mail.hotcrp.com>",
+        "<20260730071314.79FD08E9C50@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2293,7 +2317,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-17T09:53:46+00:00",
-      "last_event": "2026-07-28T21:20:29+00:00",
+      "last_event": "2026-07-30T06:09:35+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2389,13 +2413,18 @@
           "type": "submitted",
           "date": "2026-07-28T21:20:29+00:00",
           "subject": "[HPCA 2027] Submission #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-30T06:09:35+00:00",
+          "subject": "[HPCA 2027] Updated #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
         }
       ],
       "counts": {
-        "updates": 14,
+        "updates": 15,
         "comments": 0,
         "reviews": 0,
-        "total": 19
+        "total": 20
       },
       "message_ids": [
         "<20260717095346.B8469AF027E@mail.hotcrp.com>",
@@ -2416,7 +2445,8 @@
         "<20260719223530.4E3CBA56C10@mail.hotcrp.com>",
         "<20260724145013.71EF9AF6558@mail.hotcrp.com>",
         "<20260727061402.E516499ABC7@mail.hotcrp.com>",
-        "<20260728212029.00DF4A57798@mail.hotcrp.com>"
+        "<20260728212029.00DF4A57798@mail.hotcrp.com>",
+        "<20260730060935.056B3A0E774@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2663,7 +2693,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-29T10:13:33+00:00"
+      "last_event": "2026-07-30T07:13:14+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2832,6 +2862,6 @@
       "date": "2026-07-27T17:38:56+00:00"
     }
   ],
-  "last_updated": "2026-07-30T00:03:44.377189+00:00",
-  "email_count": 286
+  "last_updated": "2026-07-30T08:07:42.219145+00:00",
+  "email_count": 291
 }
