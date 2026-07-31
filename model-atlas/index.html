@@ -98,6 +98,16 @@
   .drawer .dh .org{color:var(--dim);font-size:13px;margin-top:3px}
   .xbtn{background:none;border:none;color:var(--dim);font-size:24px;cursor:pointer;line-height:1;padding:0 4px}
   .xbtn:hover{color:var(--fg)}
+  .dhbtns{display:flex;gap:4px;align-items:center;flex-shrink:0}
+  .dhbtns .ntbtn{font-size:16px;padding:3px 5px 0}
+  .dhbtns .ntbtn:hover{text-decoration:none}
+  .dh a.btn{text-decoration:none;white-space:nowrap}
+
+  /* standalone model page (?model=<id>) */
+  body.standalone .controls,body.standalone .grid,body.standalone #empty,body.standalone .scrim,body.standalone .cmpbar{display:none}
+  body.standalone .drawer{position:static;transform:none;width:min(860px,calc(100% - 24px));height:auto;
+    margin:16px auto 40px;border:1px solid var(--line);border-radius:var(--radius);overflow:visible}
+  body.standalone .drawer .dh{border-radius:var(--radius) var(--radius) 0 0}
   .dbody{padding:18px 20px 60px}
   .dsec{margin-bottom:22px}
   .dsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim2);margin:0 0 10px;font-weight:700}
@@ -260,7 +270,7 @@
 </div>
 
 <script src="changelog.js"></script>
-<script src="models.js?v=12"></script>
-<script src="app.js?v=12"></script>
+<script src="models.js?v=13"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>
