@@ -41,6 +41,7 @@
   // ---------- state ----------
   const state = { q: '', org: '', sort: 'date', types: new Set(), mods: new Set(), cmp: false, picked: [], detailId: null };
   const getTheme = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+  let standalone = false;   // ?model=<id> — render one model's detail as its own page
 
   // ---------- card ----------
   function cardHTML(m) {
@@ -998,10 +999,13 @@
     state.detailId = m.id;
     const vis = m.vision ? `<div class="dsec"><h3>Vision / Multimodal</h3><div class="notes">
       <b>Encoder:</b> ${esc(m.vision.encoder)}${m.vision.encoder_params_B ? ' (~' + m.vision.encoder_params_B + 'B)' : ''} · <b>Fusion:</b> ${esc(m.vision.fusion)}<br>${esc(m.vision.notes)}</div></div>` : '';
+    const hbtns = standalone
+      ? `<a class="btn backbtn" href="./">← All models</a>`
+      : `<span class="dhbtns"><a class="xbtn ntbtn" href="?model=${encodeURIComponent(m.id)}" target="_blank" rel="noopener" title="Open in a separate tab">⧉</a><button class="xbtn" id="dx" title="Close">×</button></span>`;
     $('#drawer').innerHTML = `
       <div class="dh">
         <div><h2>${esc(m.name)}</h2><div class="org">${esc(m.org)} · ${esc(m.family)} · ${relDate(m.released)} · <span class="conf ${esc(m.confidence)}">${esc(m.confidence)}</span></div></div>
-        <button class="xbtn" id="dx">×</button>
+        ${hbtns}
       </div>
       <div class="dbody">
         <div class="dsec"><h3>Architecture diagram</h3>
@@ -1013,11 +1017,14 @@
         <div class="dsec"><h3>Notes</h3><div class="notes">${esc(m.notes)}</div></div>
         <div class="dsec"><h3>Sources</h3><div class="srcs">${(m.sources || []).map(s => `<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\//, '').replace(/\/raw\/main\/config\.json$/, ' · config.json').slice(0, 46))}</a>`).join('')}</div></div>
       </div>`;
-    $('#dx').onclick = closeDetail;
-    $('#scrim').classList.add('show');
+    const dx = $('#dx'); if (dx) dx.onclick = closeDetail;
+    if (!standalone) $('#scrim').classList.add('show');
     $('#drawer').classList.add('show');
   }
-  function closeDetail() { $('#scrim').classList.remove('show'); $('#drawer').classList.remove('show'); }
+  function closeDetail() {
+    if (standalone) return;   // the drawer IS the page; nothing to close
+    $('#scrim').classList.remove('show'); $('#drawer').classList.remove('show');
+  }
 
   // ---------- compare ----------
   function renderCompare() {
@@ -1184,6 +1191,19 @@
     $('#lbClose').onclick = () => $('#lightbox').classList.remove('show');
     $('#lightbox').onclick = (e) => { if (e.target === $('#lightbox')) $('#lightbox').classList.remove('show'); };
     render();
+
+    // standalone model page — reached via the drawer's ⧉ open-in-tab button
+    try {
+      const mid = new URLSearchParams(location.search).get('model');
+      const m = mid && MODELS.find(x => x.id === mid);
+      if (m) {
+        standalone = true;
+        document.body.classList.add('standalone');
+        document.body.insertBefore($('#drawer'), $('footer'));   // static drawer reads top-to-bottom: header → model → footer
+        document.title = m.name + ' — LLM & Multimodal Architecture Atlas';
+        openDetail(m);
+      }
+    } catch (e) {}
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
