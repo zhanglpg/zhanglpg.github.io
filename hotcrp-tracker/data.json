@@ -930,7 +930,7 @@
     "EuroSys '27 Spring::#586": {
       "conference": "EuroSys '27 Spring",
       "paper_id": "586",
-      "title": "Weave: Fine-Grained Dynamic SM...",
+      "title": "Weave: Fine-Grained Dynamic SM Scheduling in a MoE Megakernel for Compute-Communication Overlap",
       "authors": [
         "Ziyu Huang",
         "Yangjie Zhou",
@@ -953,7 +953,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-08T10:29:52+00:00",
-      "last_event": "2026-07-29T10:09:37+00:00",
+      "last_event": "2026-08-01T11:55:57+00:00",
       "events": [
         {
           "type": "updated",
@@ -1114,13 +1114,18 @@
           "type": "submitted",
           "date": "2026-07-29T10:09:37+00:00",
           "subject": "[EuroSys '27 Spring] Submission #586 \"Weave: Fine-Grained Dynamic SM...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-01T11:55:57+00:00",
+          "subject": "[EuroSys '27 Spring] Response for #586 \"Weave: Fine-Grained Dynamic SM...\""
         }
       ],
       "counts": {
         "updates": 30,
         "comments": 0,
         "reviews": 0,
-        "total": 32
+        "total": 33
       },
       "message_ids": [
         "<20260508102952.2C4A8906219@mail.hotcrp.com>",
@@ -1154,7 +1159,8 @@
         "<20260515115207.C512D8FBBFC@mail.hotcrp.com>",
         "<20260515115829.BF7BE915030@mail.hotcrp.com>",
         "<20260515115929.8C7C49163EA@mail.hotcrp.com>",
-        "<20260729100937.6F8EEAE6F1E@mail.hotcrp.com>"
+        "<20260729100937.6F8EEAE6F1E@mail.hotcrp.com>",
+        "<20260801115557.7B434AF4DC3@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1163,7 +1169,7 @@
     "EuroSys '27 Spring::#796": {
       "conference": "EuroSys '27 Spring",
       "paper_id": "796",
-      "title": "SUBench: A Benchmark for Large Language...",
+      "title": "SUBench: A Benchmark for Large Language Model Inference on GPU Supernodes",
       "authors": [
         "Shuangwei Li",
         "Jiaqi Shi",
@@ -1180,7 +1186,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-07-29T10:09:38+00:00",
+      "last_event": "2026-08-01T05:58:31+00:00",
       "events": [
         {
           "type": "updated",
@@ -1236,13 +1242,18 @@
           "type": "submitted",
           "date": "2026-07-29T10:09:38+00:00",
           "subject": "[EuroSys '27 Spring] Submission #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-01T05:58:31+00:00",
+          "subject": "[EuroSys '27 Spring] Response for #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 12
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1255,7 +1266,8 @@
         "<20260511091833.739478697BF@mail.hotcrp.com>",
         "<20260511115352.BFCA991FC0E@mail.hotcrp.com>",
         "<20260512021133.BAFED8D78D7@mail.hotcrp.com>",
-        "<20260729100938.145A7AE6F3A@mail.hotcrp.com>"
+        "<20260729100938.145A7AE6F3A@mail.hotcrp.com>",
+        "<20260801055831.E24F7AE6F0F@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2139,7 +2151,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-31T17:34:17+00:00",
+      "last_event": "2026-08-01T07:52:36+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2295,13 +2307,43 @@
           "type": "updated",
           "date": "2026-07-31T17:34:17+00:00",
           "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-08-01T03:41:04+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-08-01T03:59:17+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-08-01T04:42:30+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-08-01T07:44:37+00:00",
+          "subject": "[HPCA 2027] Submitted #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-08-01T07:48:25+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-08-01T07:52:36+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
-        "updates": 25,
+        "updates": 30,
         "comments": 0,
         "reviews": 0,
-        "total": 31
+        "total": 37
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
@@ -2334,7 +2376,13 @@
         "<20260730091808.3AE428E9C52@mail.hotcrp.com>",
         "<20260730093837.C5B668E9C56@mail.hotcrp.com>",
         "<20260730215308.1E172A5779E@mail.hotcrp.com>",
-        "<20260731173417.A9781A57798@mail.hotcrp.com>"
+        "<20260731173417.A9781A57798@mail.hotcrp.com>",
+        "<20260801034104.5D41691FEC2@mail.hotcrp.com>",
+        "<20260801035918.0085EA577B3@mail.hotcrp.com>",
+        "<20260801044230.AC1E28E9ED8@mail.hotcrp.com>",
+        "<20260801074437.60394AE6F1B@mail.hotcrp.com>",
+        "<20260801074825.C2D61AE6F1F@mail.hotcrp.com>",
+        "<20260801075236.8C18AAE6F24@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2787,7 +2835,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-07-29T10:09:38+00:00"
+      "last_event": "2026-08-01T11:55:57+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -2795,7 +2843,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-31T17:34:17+00:00"
+      "last_event": "2026-08-01T07:52:36+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2964,6 +3012,6 @@
       "date": "2026-07-27T17:38:56+00:00"
     }
   ],
-  "last_updated": "2026-08-01T00:06:17.677359+00:00",
-  "email_count": 308
+  "last_updated": "2026-08-01T12:14:14.648727+00:00",
+  "email_count": 316
 }
