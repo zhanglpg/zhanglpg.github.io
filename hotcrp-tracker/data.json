@@ -2139,7 +2139,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-07-30T21:53:08+00:00",
+      "last_event": "2026-07-31T17:34:17+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2290,13 +2290,18 @@
           "type": "other",
           "date": "2026-07-30T21:53:08+00:00",
           "subject": "[HPCA 2027] Conflict updates for submission #1013 \"RelayServe: Accelerating Serverless LLM...\"."
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T17:34:17+00:00",
+          "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
-        "updates": 24,
+        "updates": 25,
         "comments": 0,
         "reviews": 0,
-        "total": 30
+        "total": 31
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
@@ -2328,7 +2333,8 @@
         "<20260730091757.61BD48E9C52@mail.hotcrp.com>",
         "<20260730091808.3AE428E9C52@mail.hotcrp.com>",
         "<20260730093837.C5B668E9C56@mail.hotcrp.com>",
-        "<20260730215308.1E172A5779E@mail.hotcrp.com>"
+        "<20260730215308.1E172A5779E@mail.hotcrp.com>",
+        "<20260731173417.A9781A57798@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2562,7 +2568,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-24T04:02:33+00:00",
-      "last_event": "2026-07-30T21:53:13+00:00",
+      "last_event": "2026-07-31T15:49:19+00:00",
       "events": [
         {
           "type": "updated",
@@ -2658,13 +2664,48 @@
           "type": "other",
           "date": "2026-07-30T21:53:13+00:00",
           "subject": "[HPCA 2027] Conflict updates for submission #1655 \"MAX: Multiplexing Microservices and...\"."
+        },
+        {
+          "type": "submitted",
+          "date": "2026-07-31T13:29:41+00:00",
+          "subject": "[HPCA 2027] Submitted #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T13:37:06+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T14:09:41+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T14:34:07+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T14:35:58+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T15:03:23+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-07-31T15:49:19+00:00",
+          "subject": "[HPCA 2027] Updated #1655 \"MAX: Multiplexing Microservices and...\""
         }
       ],
       "counts": {
-        "updates": 16,
+        "updates": 22,
         "comments": 0,
         "reviews": 0,
-        "total": 19
+        "total": 26
       },
       "message_ids": [
         "<20260724040233.C9F2CA09760@mail.hotcrp.com>",
@@ -2685,7 +2726,14 @@
         "<20260725102108.932C6A37535@mail.hotcrp.com>",
         "<20260725102443.B0583A37533@mail.hotcrp.com>",
         "<20260728212032.CD14CAE152A@mail.hotcrp.com>",
-        "<20260730215313.87493AE75E1@mail.hotcrp.com>"
+        "<20260730215313.87493AE75E1@mail.hotcrp.com>",
+        "<20260731132941.2B7618E9ED8@mail.hotcrp.com>",
+        "<20260731133706.7B6968E9ED8@mail.hotcrp.com>",
+        "<20260731140941.43357A0975B@mail.hotcrp.com>",
+        "<20260731143407.89D24A09E9E@mail.hotcrp.com>",
+        "<20260731143558.B88F39594AB@mail.hotcrp.com>",
+        "<20260731150323.80F54A09EA9@mail.hotcrp.com>",
+        "<20260731154919.6A1548E9EC3@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2747,7 +2795,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-07-30T21:53:13+00:00"
+      "last_event": "2026-07-31T17:34:17+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -2916,6 +2964,6 @@
       "date": "2026-07-27T17:38:56+00:00"
     }
   ],
-  "last_updated": "2026-07-31T00:02:56.491935+00:00",
-  "email_count": 300
+  "last_updated": "2026-08-01T00:06:17.677359+00:00",
+  "email_count": 308
 }
