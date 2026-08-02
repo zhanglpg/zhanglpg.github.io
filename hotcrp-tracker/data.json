@@ -148,7 +148,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
-      "last_event": "2026-07-30T16:38:39+00:00",
+      "last_event": "2026-08-01T15:14:59+00:00",
       "events": [
         {
           "type": "updated",
@@ -224,13 +224,18 @@
           "type": "comment",
           "date": "2026-07-30T16:38:39+00:00",
           "subject": "[SOSP 2026] Comment for #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-01T15:14:59+00:00",
+          "subject": "[SOSP 2026] Comment for #629 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 5,
-        "comments": 6,
+        "comments": 7,
         "reviews": 0,
-        "total": 15
+        "total": 16
       },
       "message_ids": [
         "<20260402032219.6D4AE9CF346@mail.hotcrp.com>",
@@ -247,7 +252,8 @@
         "<20260708215732.0642C9D2DA0@mail.hotcrp.com>",
         "<20260712144810.410FE999B5F@mail.hotcrp.com>",
         "<20260712173044.0215D918447@mail.hotcrp.com>",
-        "<20260730163839.A3A6A8E9C4F@mail.hotcrp.com>"
+        "<20260730163839.A3A6A8E9C4F@mail.hotcrp.com>",
+        "<20260801151459.C37BDA577B4@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Apr 2, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2799,7 +2805,7 @@
     },
     "SOSP 2026": {
       "paper_count": 1,
-      "last_event": "2026-07-30T16:38:39+00:00"
+      "last_event": "2026-08-01T15:14:59+00:00"
     },
     "OSDI '26": {
       "paper_count": 2,
@@ -3010,8 +3016,14 @@
       "type": "announcement",
       "subject": "[SOSP 2026] registration open and check your paper title/authors",
       "date": "2026-07-27T17:38:56+00:00"
+    },
+    {
+      "conference": "ASE 2026",
+      "type": "announcement",
+      "subject": "[ASE 2026] Poster Presentation (Confirm by Aug 5th AoE)",
+      "date": "2026-08-01T21:45:54+00:00"
     }
   ],
-  "last_updated": "2026-08-01T12:14:14.648727+00:00",
-  "email_count": 316
+  "last_updated": "2026-08-02T00:04:38.534813+00:00",
+  "email_count": 318
 }
