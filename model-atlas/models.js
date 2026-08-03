@@ -438,6 +438,88 @@ window.MODELS = [
 ]
 },
 {
+"id": "longcat-2-0",
+"name": "LongCat-2.0",
+"org": "Meituan",
+"family": "LongCat",
+"released": "2026-07",
+"license": "MIT",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 1600,
+"params_active_B": 48,
+"n_layers": 38,
+"d_model": 8192,
+"d_ff": 12288,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 192,
+"attention": "sparse",
+"attention_detail": "MLA + LongCat Sparse Attention (LSA): indexer (index_n_heads=32, index_head_dim=128, RMS key-norm) selects top-2048 tokens via streaming-aware + hierarchical (coarse block recall, then fine token selection) indexing; cross-layer indexing shares one index pass across 2 consecutive attention blocks. MLA q_lora 1536 / kv_lora 512, qk_nope 128 + qk_rope 64, v 128; each of the 38 layers holds two MLA blocks (ScMoE dual-path).",
+"n_experts": 768,
+"active_experts": 12,
+"shared_experts": 0,
+"vocab_size": 163840,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Meituan's 1.6T/48B MoE flagship, scaled up from LongCat-Flash's shortcut-connected MoE (ScMoE): each of the 38 layers = 2 MLA blocks + 2 dense FFN (d_ff 12288) + 1 MoE block with 768 parameterized experts top-12 plus 128 zero-computation identity experts in the routing pool (safetensors index confirms 38x768 expert tensors, untied embeddings). 135B of N-gram (over-tokenizer) embedding parameters — 16 tables, ~16.5M n-gram entries (config oe_vocab_size_ratio 100.567 x 163840 vocab) — supplement the token embeddings. LSA replaces DSA's lightning indexer to fix its output discontinuity and quadratic scoring cost. 3-step MTP module (single replicated layer) for speculative decoding. Trained entirely on Chinese AI ASIC superpods, 35T+ tokens incl. hundreds of billions of 1M-context tokens. Context 1M (config max_position_embeddings 262144 is the max-output window; deepseek_yarn factor 120 from 8192 base).",
+"sources": [
+"https://huggingface.co/meituan-longcat/LongCat-2.0",
+"https://huggingface.co/meituan-longcat/LongCat-2.0/raw/main/config.json",
+"https://huggingface.co/meituan-longcat/LongCat-2.0/raw/main/model.safetensors.index.json",
+"https://longcat.chat/blog/longcat-2.0/"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "dsaidx",
+"title": "LSA — sparse indexer (top-k token selection)",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"keynorm": "RMS",
+"note": "streaming-aware budget · hierarchical: coarse block recall → fine token select",
+"cache": "cross-layer indexing (CLI): one index pass serves 2 consecutive attention blocks; all 3 MTP draft steps share a single pass"
+},
+"notes": [
+"replaces DSA's lightning indexer — fixes output discontinuity + quadratic scoring",
+"CLI trained by cross-layer distillation of attention saliency",
+"streaming-aware: hardware-aligned contiguous reads + dynamic random selection"
+]
+},
+{
+"kind": "mla",
+"title": "MLA base (2 blocks per layer, ScMoE dual-path)",
+"p": {
+"d": 8192,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"yarn": "deepseek_yarn ×120",
+"cache": "576 el/token per attn block × 76 blocks — LSA masks to the top-2048 selected tokens"
+},
+"notes": [
+"each of the 38 layers: 2 MLA + 2 dense FFN (12288) + 1 MoE (shortcut-connected)",
+"routing pool adds 128 zero-computation identity experts (no parameters)",
+"135B N-gram embedding: 16 tables, ~16.5M n-gram entries beside the 163,840 vocab"
+]
+}
+],
+"attn_bullets": [
+"attention cost ≈ O(L·k), k = 2048 — the indexer recalls candidates hierarchically, MLA attends to the winners"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
