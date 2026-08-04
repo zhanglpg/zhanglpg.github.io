@@ -2809,22 +2809,28 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-08-03T21:14:00+00:00",
-      "last_event": "2026-08-03T21:14:00+00:00",
+      "last_event": "2026-08-04T07:10:24+00:00",
       "events": [
         {
           "type": "submitted",
           "date": "2026-08-03T21:14:00+00:00",
           "subject": "[PPoPP 2027] Submitted #644 \"Relay-EP: Skew-Aware Token-Level Path...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-08-04T07:10:24+00:00",
+          "subject": "[PPoPP 2027] Updated #644 \"Relay-EP: Skew-Aware Token-Level Path...\""
         }
       ],
       "counts": {
-        "updates": 0,
+        "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 1
+        "total": 2
       },
       "message_ids": [
-        "<20260803211400.6C87EBBE994@mail.hotcrp.com>"
+        "<20260803211400.6C87EBBE994@mail.hotcrp.com>",
+        "<20260804071024.D02E5B4C61E@mail.hotcrp.com>"
       ],
       "deadline": "Monday Aug 3, 2026, 11:59:59 PM AoE",
       "review_scores": [],
@@ -2898,7 +2904,7 @@
     },
     "PPoPP 2027": {
       "paper_count": 1,
-      "last_event": "2026-08-03T21:14:00+00:00"
+      "last_event": "2026-08-04T07:10:24+00:00"
     }
   },
   "announcements": [
@@ -3065,6 +3071,6 @@
       "date": "2026-08-01T21:45:54+00:00"
     }
   ],
-  "last_updated": "2026-08-04T00:03:52.650134+00:00",
-  "email_count": 319
+  "last_updated": "2026-08-04T08:08:22.837134+00:00",
+  "email_count": 320
 }
