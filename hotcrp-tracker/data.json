@@ -2792,6 +2792,43 @@
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "PPoPP 2027::#644": {
+      "conference": "PPoPP 2027",
+      "paper_id": "644",
+      "title": "Relay-EP: Skew-Aware Token-Level Path Remapping for GPU-Initiated Expert Parallelism",
+      "authors": [
+        "Haoxuan Yu",
+        "Lingyun Yang",
+        "Yinghao Yu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Wei Wang"
+      ],
+      "site": "https://ppopp27-summer.hotcrp.com/paper/644",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-08-03T21:14:00+00:00",
+      "last_event": "2026-08-03T21:14:00+00:00",
+      "events": [
+        {
+          "type": "submitted",
+          "date": "2026-08-03T21:14:00+00:00",
+          "subject": "[PPoPP 2027] Submitted #644 \"Relay-EP: Skew-Aware Token-Level Path...\""
+        }
+      ],
+      "counts": {
+        "updates": 0,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20260803211400.6C87EBBE994@mail.hotcrp.com>"
+      ],
+      "deadline": "Monday Aug 3, 2026, 11:59:59 PM AoE",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -2858,6 +2895,10 @@
     "NSDI '27 Spring": {
       "paper_count": 1,
       "last_event": "2026-07-30T23:39:26+00:00"
+    },
+    "PPoPP 2027": {
+      "paper_count": 1,
+      "last_event": "2026-08-03T21:14:00+00:00"
     }
   },
   "announcements": [
@@ -3024,6 +3065,6 @@
       "date": "2026-08-01T21:45:54+00:00"
     }
   ],
-  "last_updated": "2026-08-02T00:04:38.534813+00:00",
-  "email_count": 318
+  "last_updated": "2026-08-04T00:03:52.650134+00:00",
+  "email_count": 319
 }
