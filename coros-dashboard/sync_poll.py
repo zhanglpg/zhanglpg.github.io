@@ -343,6 +343,11 @@ def main():
         run([sys.executable, "segments.py"])
     run([sys.executable, "update.py"])
 
+    # AI performance analysis for the freshly-synced activities (best-effort).
+    # Reuses the machine's Claude Code auth via analyze.py — no API key needed —
+    # and re-runs update.py to fold the notes into data.js before we publish.
+    run_analysis_pass(limit=12)
+
     # verify the new activities actually landed on the dashboard
     after = dashboard_label_ids()
     still_missing = [lid for (lid, st) in new if lid not in after]
@@ -352,6 +357,31 @@ def main():
 
     publish(f"coros-dashboard: sync {len(new)} new activities [auto]")
     return 0
+
+
+def run_analysis_pass(limit=12):
+    """Best-effort AI performance analysis for new/uncached activities.
+
+    Delegates to analyze.py, which reuses the machine's local Claude Code auth
+    (no ANTHROPIC_API_KEY required) and never fails a sync. If it wrote any new
+    analyses, regenerate data.js so they ride along in this sync's commit.
+    Any failure here is logged and swallowed — analysis must never block a sync.
+    """
+    try:
+        out = run([sys.executable, "analyze.py", "--limit", str(limit)])
+    except Exception as e:
+        log(f"analysis pass skipped: {str(e)[:200]}")
+        return
+    for line in out.strip().splitlines()[-2:]:
+        log(line)
+    m = re.search(r"GENERATED=(\d+)", out)
+    n = int(m.group(1)) if m else 0
+    if n > 0:
+        try:
+            run([sys.executable, "update.py"])
+            log(f"analysis: folded {n} new note set(s) into data.js")
+        except Exception as e:
+            log(f"analysis fold-in failed: {str(e)[:200]}")
 
 
 def publish(msg):

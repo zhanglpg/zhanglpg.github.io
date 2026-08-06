@@ -22,6 +22,9 @@ Live at: `https://zhanglpg.github.io/coros-dashboard/`
   Tap a segment to open the run that set it.
 - **Strength** — sessions grouped by workout routine, latest vs previous vs
   routine average, with calorie trend sparklines.
+- **AI analysis** — every activity's detail view carries a short "Coach's Read":
+  a Claude-generated note evaluating that session and comparing it to recent
+  activities of the same type. Generated once per activity when it syncs.
 
 ## Architecture
 
@@ -33,11 +36,13 @@ exports under `raw/`.
 coros-dashboard/
   index.html        # the app (self-contained)
   data.js           # generated — do not edit
-  update.py         # raw/ -> data.js (idempotent, dedupes by labelId)
+  update.py         # raw/ -> data.js (idempotent, dedupes by labelId; folds in AI notes)
+  analyze.py        # generates the AI "Coach's Read" per activity (cached)
   fetch_laps.py     # direct COROS MCP HTTP fetcher (context-free)
   raw/
     records/*.txt   # querySportRecords text dumps (any date ranges)
     laps/*.json     # per-run queryActivityLapData JSON, named <labelId>.json
+    analysis/*.json # cached AI analysis, one per <labelId> (generated, do not edit)
 ```
 
 ## How it updates
@@ -52,7 +57,9 @@ new activity appears it:
 2. Fetches lap data for new runs (`fetch_laps.py`)
 3. Downloads FIT files for new outdoor runs (GPS) and re-mines
    `segments.py` geo segments
-4. Regenerates `data.js` and commits + pushes so GitHub Pages redeploys
+4. Generates an AI "Coach's Read" for each new activity (`analyze.py`) and
+   folds it into `data.js`
+5. Regenerates `data.js` and commits + pushes so GitHub Pages redeploys
 
 It refreshes the shared OAuth token itself (same file Hermes uses), so no
 LLM is in the loop. Net latency: watch sync → dashboard ≈ poll interval +
@@ -69,8 +76,32 @@ record files and repeated runs are safe.
 
 ```
 python3 fetch_laps.py   # optional: backfill any missing lap files
-python3 update.py
+python3 analyze.py      # optional: AI notes for new/uncached activities (cap 12)
+python3 update.py       # folds any cached AI notes into data.js
 ```
+
+## AI analysis (Coach's Read)
+
+Each activity's detail modal shows a few Claude-generated bullet points: an
+overall verdict on the session and an explicit comparison (pace / HR / effort /
+volume) against the athlete's recent activities of the same type.
+
+- **Backend:** `analyze.py` shells out to the local `claude` CLI in headless
+  print mode (`claude -p`), which reuses this machine's existing Claude Code
+  auth — **no `ANTHROPIC_API_KEY` is needed**, and the launchd sync inherits it.
+  Model defaults to `claude-haiku-4-5` (override with `COROS_ANALYSIS_MODEL`).
+- **Cached & idempotent:** one note-set per activity under
+  `raw/analysis/<labelId>.json`, keyed by a fingerprint of the activity's
+  metrics + prompt version. An activity is re-analysed only when its data
+  materially changes (e.g. lap data lands after the first sync) or the prompt
+  is revised (`PROMPT_VERSION`). `update.py` reads the cache and never calls a
+  model, so it stays deterministic everywhere.
+- **Best-effort:** if the model is unreachable (offline, rate limited) the
+  activity is left un-analysed and retried next sync — a sync is never blocked.
+- **First-time backfill** of the whole history:
+  `python3 analyze.py --all && python3 update.py` (hundreds of calls; runs for a
+  while). Steady state only analyses the 1–2 activities per sync, which is fast.
+  Skip generation entirely with `COROS_SKIP_ANALYSIS=1`.
 
 ## Notes on the analytics
 
