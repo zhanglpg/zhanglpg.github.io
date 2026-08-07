@@ -102,6 +102,10 @@ volume) against the athlete's recent activities of the same type.
   `python3 analyze.py --all && python3 update.py` (hundreds of calls; runs for a
   while). Steady state only analyses the 1–2 activities per sync, which is fast.
   Skip generation entirely with `COROS_SKIP_ANALYSIS=1`.
+- **Prompt is per-type** (running vs strength vs other) with a per-type
+  `PROMPT_VERSION`. After changing a type's prompt, bump its version and run
+  `python3 analyze.py --refresh --all && python3 update.py` to re-do only the
+  already-cached notes for the affected type(s) — no new coverage, no wasted calls.
 
 ## Notes on the analytics
 

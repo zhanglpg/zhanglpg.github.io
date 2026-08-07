@@ -24,6 +24,8 @@ Usage:
   python3 analyze.py                # analyse stale/uncached activities (cap 12, newest first)
   python3 analyze.py --limit N      # cap at N this run
   python3 analyze.py --all          # no cap — use for the first-time backfill
+  python3 analyze.py --refresh      # only re-do already-cached notes gone stale (e.g. after a
+                                    #   prompt change); does not expand coverage
   python3 analyze.py --dry-run      # list what would be generated, call no model
 
 Env:
@@ -47,7 +49,10 @@ CACHE_DIR = os.path.join(BASE, "raw", "analysis")
 
 TZ = timezone(timedelta(hours=8))            # athlete is GMT+8
 MODEL = os.environ.get("COROS_ANALYSIS_MODEL", "claude-haiku-4-5")
-PROMPT_VERSION = "1"                          # bump to invalidate every cached analysis
+# Per-type prompt version — bump a type's entry to invalidate only that type's
+# cached analyses. (strength/other bumped to "2": the v1 instruction line said
+# "pace"/"split", which is running-specific and reads wrong for those types.)
+PROMPT_VERSION = {"run": "1", "strength": "2", "other": "2"}
 PEER_COUNT = 5                               # recent same-type sessions shown for comparison
 DEFAULT_LIMIT = 12                           # max activities analysed per invocation
 CALL_TIMEOUT_S = 150
@@ -100,10 +105,14 @@ _FP_KEYS = ("sportType", "distKm", "durationSec", "paceSec", "hr", "cal",
             "best1k", "elevGain", "sets", "speedKmh")
 
 
+def prompt_version(act):
+    return PROMPT_VERSION.get(act["_type"], "1")
+
+
 def fingerprint(act):
     payload = {k: act.get(k) for k in _FP_KEYS}
     payload["splitsN"] = len(act.get("splits") or [])
-    payload["pv"] = PROMPT_VERSION
+    payload["pv"] = prompt_version(act)
     blob = json.dumps(payload, sort_keys=True, ensure_ascii=False)
     return hashlib.sha1(blob.encode("utf-8")).hexdigest()[:16]
 
@@ -195,13 +204,33 @@ def this_block(act):
 
 TYPE_WORD = {"run": "run", "strength": "strength session", "other": "session"}
 
+# Per-type coaching voice and the metrics that are actually meaningful to compare
+# for that discipline. Strength has no "pace" or "splits", so that vocabulary must
+# not leak into its note (which is what the generic v1 instruction line did).
+COACH = {"run": "running coach", "strength": "strength & conditioning coach"}
+COMPARE = {
+    "run": "pace, heart rate, and overall effort",
+    "strength": "total sets / training volume, session duration, average heart rate, and calories",
+    "other": "distance, duration, speed, and heart rate",
+}
+CALLOUT = {
+    "run": "the standout or weakest kilometre split",
+    "strength": "any notable change in volume, duration, or effort versus the recent sessions",
+    "other": "the standout or weakest stretch of the session",
+}
+
 
 def build_prompt(act, peers):
-    type_word = TYPE_WORD.get(act["_type"], "session")
-    if act["_type"] == "run" and act.get("category") == "trail":
+    t = act["_type"]
+    type_word = TYPE_WORD.get(t, "session")
+    if t == "run" and act.get("category") == "trail":
         type_word = "trail run"
-    if act["_type"] == "other":
+    if t == "other":
         type_word = (act.get("sportName") or "session").lower()
+
+    coach = COACH.get(t, "endurance coach")
+    compare_dims = COMPARE.get(t, COMPARE["other"])
+    callout = CALLOUT.get(t, CALLOUT["other"])
 
     if peers:
         peer_lines = "\n".join(f"  - {metric_line(p)}" for p in peers)
@@ -212,7 +241,7 @@ def build_prompt(act, peers):
         peers_txt = (f'No earlier {type_word}s are on record — this is the '
                      f'first one to compare against.')
 
-    return f"""You are an elite endurance coach writing a terse, data-grounded note for an athlete's personal training log. Reference the actual numbers. No greeting, no medical advice, no generic filler.
+    return f"""You are an experienced {coach} writing a terse, data-grounded note for an athlete's personal training log. Reference the actual numbers. No greeting, no medical advice, no generic filler.
 
 THIS {type_word.upper()} ({short_date(act.get("date"))}):
 {this_block(act)}
@@ -221,8 +250,8 @@ THIS {type_word.upper()} ({short_date(act.get("date"))}):
 
 Write 3 to 4 short bullet points (max ~22 words each) that together:
 - give an overall verdict on how this {type_word} went;
-- compare pace / heart rate / effort / volume to the recent {type_word}s above, saying better or worse and by roughly how much;
-- call out the standout or weakest split or stretch of the session;
+- compare {compare_dims} to the recent {type_word}s above, saying better or worse and by roughly how much;
+- call out {callout};
 - note one concrete thing to build on or watch next time.
 Output ONLY the bullets, one per line, each starting with "- ". No heading, no closing line."""
 
@@ -318,7 +347,7 @@ def analyze_one(act, peers):
         "type": act["_type"],
         "date": act.get("date"),
         "fingerprint": fingerprint(act),
-        "promptVersion": PROMPT_VERSION,
+        "promptVersion": prompt_version(act),
         "model": MODEL,
         "generated": datetime.now(TZ).isoformat(timespec="seconds"),
         "peerCount": len(peers),
@@ -367,6 +396,10 @@ def main():
         by_group.setdefault((a["_type"], a["_group"]), []).append(a)
 
     stale = [a for a in acts if not is_current(a)]
+    if "--refresh" in sys.argv:
+        # only re-do activities that already have a (now-stale) cached note —
+        # e.g. after a prompt change — without spending calls on new coverage.
+        stale = [a for a in stale if os.path.exists(cache_path(a["labelId"]))]
     stale.sort(key=lambda a: a.get("ts") or 0, reverse=True)   # newest first
     total_stale = len(stale)
     if limit is not None:
