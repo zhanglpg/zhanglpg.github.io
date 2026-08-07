@@ -50,9 +50,10 @@ CACHE_DIR = os.path.join(BASE, "raw", "analysis")
 TZ = timezone(timedelta(hours=8))            # athlete is GMT+8
 MODEL = os.environ.get("COROS_ANALYSIS_MODEL", "claude-haiku-4-5")
 # Per-type prompt version — bump a type's entry to invalidate only that type's
-# cached analyses. (strength/other bumped to "2": the v1 instruction line said
-# "pace"/"split", which is running-specific and reads wrong for those types.)
-PROMPT_VERSION = {"run": "1", "strength": "2", "other": "2"}
+# cached analyses. History: v1 was generic; v2 made strength/other type-aware;
+# then the voice was reworked to be warm/encouraging for a recreational athlete
+# (run 1->2, strength/other 2->3), which touches every type.
+PROMPT_VERSION = {"run": "2", "strength": "3", "other": "3"}
 PEER_COUNT = 5                               # recent same-type sessions shown for comparison
 DEFAULT_LIMIT = 12                           # max activities analysed per invocation
 CALL_TIMEOUT_S = 150
@@ -204,19 +205,21 @@ def this_block(act):
 
 TYPE_WORD = {"run": "run", "strength": "strength session", "other": "session"}
 
-# Per-type coaching voice and the metrics that are actually meaningful to compare
-# for that discipline. Strength has no "pace" or "splits", so that vocabulary must
-# not leak into its note (which is what the generic v1 instruction line did).
-COACH = {"run": "running coach", "strength": "strength & conditioning coach"}
+# Per-type coaching voice, the metrics worth comparing, and a positive callout.
+# Strength has no "pace"/"splits", so that vocabulary must not leak into its note.
+COACH = {"run": "running coach", "strength": "strength coach"}
 COMPARE = {
     "run": "pace, heart rate, and overall effort",
     "strength": "total sets / training volume, session duration, average heart rate, and calories",
     "other": "distance, duration, speed, and heart rate",
 }
 CALLOUT = {
-    "run": "the standout or weakest kilometre split",
-    "strength": "any notable change in volume, duration, or effort versus the recent sessions",
-    "other": "the standout or weakest stretch of the session",
+    "run": "a standout kilometre or a stretch that looked strong",
+    "strength": "the volume, duration, or effort to feel good about",
+    "other": "a standout stretch or moment of the session",
+}
+EXTRA = {
+    "strength": "This is a gym strength session — do NOT use running words like pace, splits or kilometres.",
 }
 
 
@@ -228,9 +231,10 @@ def build_prompt(act, peers):
     if t == "other":
         type_word = (act.get("sportName") or "session").lower()
 
-    coach = COACH.get(t, "endurance coach")
+    coach = COACH.get(t, "coach")
     compare_dims = COMPARE.get(t, COMPARE["other"])
     callout = CALLOUT.get(t, CALLOUT["other"])
+    extra = EXTRA.get(t, "")
 
     if peers:
         peer_lines = "\n".join(f"  - {metric_line(p)}" for p in peers)
@@ -238,21 +242,21 @@ def build_prompt(act, peers):
         peers_txt = (f'Recent {type_word}s (most recent first):\n{peer_lines}'
                      + (f'\nRecent average — {summ}.' if summ else ''))
     else:
-        peers_txt = (f'No earlier {type_word}s are on record — this is the '
-                     f'first one to compare against.')
+        peers_txt = (f'No earlier {type_word}s are on record yet — so just '
+                     f'celebrate this one on its own.')
 
-    return f"""You are an experienced {coach} writing a terse, data-grounded note for an athlete's personal training log. Reference the actual numbers. No greeting, no medical advice, no generic filler.
+    return f"""You are a warm, encouraging {coach} writing a short note in a recreational athlete's training log. This person runs and works out to become their healthier, stronger self — not to win races — so be supportive and constructive: celebrate effort and steady progress, and never nitpick or scold. Keep it genuine and grounded in the real numbers (no empty hype). No greeting, no medical advice.{(' ' + extra) if extra else ''}
 
 THIS {type_word.upper()} ({short_date(act.get("date"))}):
 {this_block(act)}
 
 {peers_txt}
 
-Write 3 to 4 short bullet points (max ~22 words each) that together:
-- give an overall verdict on how this {type_word} went;
-- compare {compare_dims} to the recent {type_word}s above, saying better or worse and by roughly how much;
-- call out {callout};
-- note one concrete thing to build on or watch next time.
+Write 3 to 4 short, upbeat bullet points (max ~22 words each) that together:
+- open with what went well in this {type_word} — effort, consistency, or a number to be proud of;
+- put it in context against the recent {type_word}s above using {compare_dims}, framing it as progress or a solid effort — gently and positively even when a number is lower (an easier day is good recovery);
+- highlight {callout};
+- close with a warm, motivating nudge for next time.
 Output ONLY the bullets, one per line, each starting with "- ". No heading, no closing line."""
 
 
