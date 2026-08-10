@@ -520,6 +520,67 @@ window.MODELS = [
 ]
 },
 {
+"id": "minimax-h3",
+"name": "MiniMax H3 (Hailuo 3.0)",
+"org": "MiniMax",
+"family": "Hailuo",
+"released": "2026-08",
+"license": "MiniMax H3 Community License (excludes local deployment in US/EU/UK/KR)",
+"modality": "video-gen",
+"decoder_type": "DiT (video diffusion transformer)",
+"params_total_B": 33,
+"params_active_B": 33,
+"n_layers": 50,
+"d_model": 5376,
+"d_ff": 14336,
+"d_ff_moe": null,
+"n_heads": 56,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MHA",
+"attention_detail": "Single-stream Omni-Transformer: video, text and audio tokens packed into one sequence (one attention document) with full bidirectional 3D self-attention; per-head QK-RMSNorm; attention inner dim 7168 (56×128) exceeds d_model 5376; per-modality AdaLN (6 mod params × 3 modalities: video/text/audio); 2 text-token refiner blocks before packing.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "3D MM-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "33B dense single-stream latent video diffusion transformer (custom MiniMaxH3Scheduler, shift 12); generates 4-15 s clips up to 2K/24 fps with native stereo audio in one pass. Text conditioning enters in-stream from Qwen3-VL-32B layer-50 hidden states (text_dim 5120, no cross-attention); temporally causal video VAE f16t4d24 (16x spatial, 4x temporal, 24 latent ch) + 1x2x2 patchify gives 32x effective spatial downsampling; audio VAE compresses 32 kHz audio to 40 Hz latents (audio_in_channels 32); ~13B of AdaLN modulation weights are precomputable at inference. Undisclosed: training data, exact param breakdown; vocab/context are N/A (latent-token model).",
+"sources": [
+"https://huggingface.co/MiniMaxAI/MiniMax-H3",
+"https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/transformer/config.json",
+"https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_minimax_h3.py"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Single-stream 3D full attention (×50)",
+"p": {
+"d": 5376,
+"nq": 56,
+"nkv": 56,
+"dh": 128,
+"nocache": true,
+"rope": "3D MM-RoPE (t,h,w) · θ 10K",
+"qknorm": "per-head QK-RMSNorm",
+"cache": "none — full bidirectional attention over the packed video+text+audio document, recomputed every denoising step"
+},
+"notes": [
+"attention inner dim 7168 = 56 × 128 > d_model 5376",
+"per-modality AdaLN: 6 mods × 3 modalities — ~13B precomputable",
+"2 text token-refiner blocks before packing into the stream",
+"text cond. = Qwen3-VL-32B layer-50 hidden states (5120)"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
