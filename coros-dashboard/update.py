@@ -158,7 +158,7 @@ def parse_laps_file(path):
 # --------------------------------------------------------------------------- #
 def compute_pbs_and_segments(runs_with_laps):
     targets = [("1K", 1), ("3K", 3), ("5K", 5), ("10K", 10)]
-    best = {}
+    per_run_best = {name: [] for name, _ in targets}   # one best effort per run, per distance
     segments = []
     for run, lapdata in runs_with_laps:
         full = [l for l in lapdata["laps"] if l["distCm"] >= 99000]  # full 1K splits
@@ -173,19 +173,30 @@ def compute_pbs_and_segments(runs_with_laps):
         for name, n in targets:
             if len(times) < n:
                 continue
-            for i in range(len(times) - n + 1):
-                s = sum(times[i:i + n])
-                if name not in best or s < best[name]["seconds"]:
-                    best[name] = {
-                        "dist": name, "seconds": round(s, 1), "pace": fmt_pace(s / n),
-                        "date": run["date"], "labelId": run["labelId"],
-                        "runName": run["location"],
-                    }
-    pbs = [best[k] for k in ("1K", "3K", "5K", "10K") if k in best]
+            # this run's fastest rolling N-km window = its best effort at this distance
+            best_s = min(sum(times[i:i + n]) for i in range(len(times) - n + 1))
+            per_run_best[name].append({
+                "dist": name, "seconds": round(best_s, 1), "pace": fmt_pace(best_s / n),
+                "date": run["date"], "labelId": run["labelId"],
+                "runName": run["location"],
+            })
+
+    # Top-10 leaderboard per distance (best effort per run, fastest first). The
+    # #1 of each distance is the personal best shown on the hero cards.
+    pb_top = {}
+    pbs = []
+    for name, _ in targets:
+        ranked = sorted(per_run_best[name], key=lambda x: x["seconds"])[:10]
+        for i, e in enumerate(ranked):
+            e["rank"] = i + 1
+        pb_top[name] = ranked
+        if ranked:
+            pbs.append(ranked[0])
+
     segments.sort(key=lambda x: x["seconds"])
     for i, s in enumerate(segments):
         s["rank"] = i + 1
-    return pbs, segments[:10]
+    return pbs, segments[:10], pb_top
 
 
 def _haversine_m(a, b):
@@ -409,7 +420,7 @@ def main():
     # PBs & segments from flat runs that have lap data ---------------------- #
     flat_with_laps = [(r, laps[r["labelId"]]) for r in runs
                       if r["sportType"] in FLAT_RUN_TYPES and r["labelId"] in laps]
-    pbs, segments = compute_pbs_and_segments(flat_with_laps)
+    pbs, segments, pb_top = compute_pbs_and_segments(flat_with_laps)
 
     # Route-based segments (outdoor runs clustered by start location) ------- #
     routes = build_route_segments(runs, laps)
@@ -482,6 +493,7 @@ def main():
             "predHalf": "2:10:23", "predMarathon": "4:40:48",
         },
         "pbs": pbs,
+        "pbTop": pb_top,
         "segments": segments,
         "routes": routes,
         "geoSegments": geo_segments,

@@ -12,8 +12,9 @@ Live at: `https://zhanglpg.github.io/coros-dashboard/`
 - **Overview** — totals, run pace trend, monthly running volume, recent
   activity feed (tap any activity for details).
 - **Personal Bests** — fastest rolling 1K/3K/5K/10K splits from flat runs
-  (road + track; trail excluded). Tap a PB or any run row for the full
-  kilometre-split breakdown.
+  (road + track; trail excluded), plus a **top-10 leaderboard per distance**
+  (each run's best effort, ranked). Tap a PB, a leaderboard row, or any run row
+  for that run's full kilometre-split breakdown.
 - **Route Segments** — trail runs and hikes clustered by start location
   (~200 m); segments named after OpenStreetMap places at their endpoints.
   Road runs are excluded from segment mining.
