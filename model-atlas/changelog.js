@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-03 09:30",
+  "last_run": "2026-08-10 09:35",
   "entries": [
+    {
+      "date": "2026-08-10",
+      "added": [
+        "minimax-h3"
+      ],
+      "upgraded": [],
+      "note": "Added MiniMax H3 (Hailuo 3.0), the first video-generation model in the atlas: a 33B dense single-stream 'Omni-Transformer' video diffusion model (weights on HF 2026-08-03) — 50 layers, d_model 5376, 56 MHA heads with 3D MM-RoPE and per-head QK-RMSNorm, SwiGLU d_ff 14336, per-modality AdaLN (video/text/audio), text conditioning in-stream from Qwen3-VL-32B layer-50 states; generates 4-15 s clips at up to 2K/24fps with native stereo audio. All numbers from the HF transformer config.json and the official diffusers implementation. Considered and skipped: Qwen3.8-Max/27B (announced, weights promised for the week of Aug 10 but nothing published yet — revisit next run), DeepSeek-V4-Flash-0731 (checkpoint refresh, already covered)."
+    },
     {
       "date": "2026-08-03",
       "added": [

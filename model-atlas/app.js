@@ -29,7 +29,7 @@
   const dateKey = (s) => (s ? +(s.replace('-', '')) : 0);
 
   const isMoE = (m) => m.decoder_type === 'MoE';
-  const isGen = (m) => m.modality === 'image-gen';
+  const isGen = (m) => m.modality === 'image-gen' || m.modality === 'video-gen';
   const isMM = (m) => m.modality === 'multimodal';
   const typeBadge = (m) => {
     if (isGen(m)) return '<span class="badge b-dit">' + esc(m.decoder_type) + '</span>';
@@ -421,7 +421,7 @@
       pbox(x1, pjY, bw, 40, 'W_Q', `${num(p.nq)} heads × ${num(p.dh)}`);
       pbox(x2, pjY, bw, 40, 'W_K', `${num(p.nkv)} heads × ${num(p.dh)}`);
       pbox(x3, pjY, bw, 40, 'W_V', `${num(p.nkv)} heads × ${num(p.dh)}`);
-      cacheTag(x2 + bw - 46, pjY - 6); cacheTag(x3 + bw - 46, pjY - 6);
+      if (!p.nocache) { cacheTag(x2 + bw - 46, pjY - 6); cacheTag(x3 + bw - 46, pjY - 6); }
       const coreY = p.gate ? y0 + 122 : y0 + 96, cc = x1 + 131;
       aline(c1, pjY, c1, coreY + 52); aline(c2, pjY, c2, coreY + 52);
       // W_V steps left into the gutter (x=RX+288) so its vertical run misses the head-group inset
@@ -1078,7 +1078,7 @@
       if (!state.types.has(t)) return false;
     }
     if (state.mods.size) {
-      if (![...state.mods].some(md => m.modality === md)) return false;
+      if (![...state.mods].some(md => m.modality === md || (md === 'image-gen' && isGen(m)))) return false;
     }
     if (state.q) {
       const hay = [m.name, m.org, m.family, m.attention, m.attention_detail, m.notes, m.decoder_type, m.pos_encoding, m.norm].join(' ').toLowerCase();
