@@ -12,7 +12,7 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="data.js?v=4"></script>
+<script src="data.js?v=5"></script>
 <style>
   :root{
     --bg:#0e1014; --bg-2:#12151c; --card:#161a22; --card-2:#1b202b;
@@ -285,6 +285,30 @@
     font-size:11px;color:var(--txt-3);letter-spacing:.02em}
   .ai-pending{color:var(--txt-3);font-size:12.5px;font-style:italic}
 
+  /* ---------- clickable stat cards ---------- */
+  .card.clickable{cursor:pointer}
+  .card.clickable:hover{border-color:var(--run)}
+  .card-cta{margin-top:12px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--txt-3);transition:color .2s}
+  .card.clickable:hover .card-cta{color:var(--run)}
+
+  /* ---------- activities filter chips + view-all row ---------- */
+  .act-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+  .act-chip{appearance:none;cursor:pointer;background:var(--card);border:1px solid var(--line);color:var(--txt-2);
+    font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:.02em;padding:8px 14px;border-radius:99px;
+    transition:all .18s;display:inline-flex;align-items:center;gap:7px}
+  .act-chip:hover{color:var(--txt);border-color:var(--line-2)}
+  .act-chip.active{color:#0e1014;background:var(--run);border-color:var(--run)}
+  .act-chip .n{font-size:11px;color:var(--txt-3);font-weight:500}
+  .act-chip.active .n{color:rgba(14,16,20,.55)}
+  .feed-more{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 20px;cursor:pointer;
+    font-weight:600;font-size:13px;color:var(--txt-2);border-top:1px solid var(--line);transition:color .2s,background .18s}
+  .feed-more:hover{color:var(--run);background:rgba(255,255,255,.02)}
+
+  /* ---------- detail-modal route map ---------- */
+  .detail-map{height:240px;border-radius:12px;overflow:hidden;background:#1a1e26;position:relative;z-index:0}
+  .detail-map .leaflet-container{background:#1a1e26;border-radius:12px}
+
   footer{border-top:1px solid var(--line);padding:24px 0 38px;color:var(--txt-3);font-size:12px}
   footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
   footer a{color:var(--txt-2);text-decoration:none;font-weight:600;transition:color .2s}
@@ -342,8 +366,18 @@ if (D) {
   D.others.forEach(o => ACT[o.labelId] = Object.assign({}, o, {_type:"other"}));
   D.strengthGroups.forEach(g => GROUP_BY_ROUTINE[g.routine] = g);
 }
+
+/* one flat, newest-first list of every activity, tagged for the Activities filter */
+const ALL_ACTIVITIES = D ? [
+  ...D.runs.map(r => ({...r, _cat:r.category, _filter:"runs"})),
+  ...D.strength.map(s => ({...s, category:"strength", sportName:"Strength", location:s.routine, _cat:"strength", _filter:"strength"})),
+  ...D.others.map(o => ({...o, _cat:o.category, _filter:(o.category==="hike"?"hikes":"other")})),
+].sort((a,b)=>(b.ts||0)-(a.ts||0)) : [];
+
 let _openDetail = null;
 function openDetail(id){ if(_openDetail && ACT[id]) _openDetail(ACT[id]); }
+let _goActivities = null;
+function goActivities(filter){ if(_goActivities) _goActivities(filter); }
 
 function fmtDate(iso){ if(!iso) return "";
   return new Date(iso+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
@@ -471,13 +505,34 @@ function RouteProfile({segs,color}){
 }
 
 /* ---------------- pieces ---------------- */
-function StatCard({label,value,sub,color,delay=0}){
+function StatCard({label,value,sub,color,delay=0,onClick}){
   const v=useCountUp(typeof value==="number"?value:0);
   const isNum=typeof value==="number";
-  return (<div className="card reveal" style={{transitionDelay:`${delay}ms`}}>
+  return (<div className={"card reveal"+(onClick?" clickable":"")} style={{transitionDelay:`${delay}ms`}} onClick={onClick}>
     <div className="label">{label}</div>
     <div className="big countup" style={color?{color}:null}>{isNum?Math.round(v).toLocaleString():value}</div>
-    {sub && <div className="sub">{sub}</div>}</div>);
+    {sub && <div className="sub">{sub}</div>}
+    {onClick && <div className="card-cta">View all ›</div>}</div>);
+}
+function FeedItem({a}){
+  const cat=a._cat||a.category||"run";
+  const main = cat==="strength"
+    ? <span className="sv">{a.sets}<span style={{fontSize:12,color:"var(--txt-3)"}}> sets</span></span>
+    : (a.distKm? <span className="sv">{a.distKm}<span style={{fontSize:12,color:"var(--txt-3)"}}> km</span></span>
+               : <span className="sv">{a.duration}</span>);
+  return (<div className="feed-item" onClick={()=>openDetail(a.labelId)}>
+    <div className="icon" style={{background:SPORT_BG[cat]}}>{SPORT_ICON[cat]}</div>
+    <div className="mid">
+      <div className="title">{a.sportName||a.routine||cat} <span className={`chip ${cat}`} style={{marginLeft:6}}>{cat}</span></div>
+      <div className="detail">{fmtDate(a.date)}{a.location?` · ${a.location}`:""}</div>
+    </div>
+    <div className="stats">
+      <div>{main}<div className="sk">{cat==="strength"?"volume":"distance"}</div></div>
+      {a.durationSec && cat!=="strength" && <div><span className="sv">{a.duration}</span><div className="sk">time</div></div>}
+      {a.pace && <div><span className="sv">{a.pace}</span><div className="sk">/km</div></div>}
+      {a.hr && <div><span className="sv">{a.hr}</span><div className="sk">bpm</div></div>}
+    </div>
+  </div>);
 }
 function Delta({now,prev,unit="",invert=false}){
   if(prev==null||now==null) return null;
@@ -516,6 +571,29 @@ function AIAnalysis({a}){
     <div className="ai-foot" title={ai.model||""}>{foot.join(" · ")}</div>
   </div>);
 }
+/* GPS route on a Leaflet map inside the detail modal (outdoor activities) */
+function RouteMap({track,accent}){
+  const ref=useRef(null); const mapRef=useRef(null);
+  useEffect(()=>{
+    if(!ref.current||!track||track.length<2||typeof L==="undefined") return;
+    if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; }
+    const map=L.map(ref.current,{zoomControl:true,attributionControl:false,scrollWheelZoom:false});
+    mapRef.current=map;
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:19,subdomains:"abcd"}).addTo(map);
+    const latlngs=track.map(p=>[p[0],p[1]]);
+    L.polyline(latlngs,{color:accent||"#ff6b35",weight:4,opacity:.9}).addTo(map);
+    L.circleMarker(latlngs[0],{radius:6,color:"#3ddc84",fillColor:"#3ddc84",fillOpacity:1,weight:2})
+      .addTo(map).bindTooltip("Start",{direction:"top",offset:[0,-8]});
+    L.circleMarker(latlngs[latlngs.length-1],{radius:6,color:"#ff5d5d",fillColor:"#ff5d5d",fillOpacity:1,weight:2})
+      .addTo(map).bindTooltip("Finish",{direction:"top",offset:[0,-8]});
+    const bounds=L.latLngBounds(latlngs).pad(0.12);
+    map.fitBounds(bounds);
+    // modal animates in (transform/scale) — re-measure once settled so tiles/bounds are correct
+    const t=setTimeout(()=>{ if(mapRef.current){ map.invalidateSize(); map.fitBounds(bounds); } },120);
+    return ()=>{ clearTimeout(t); if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; } };
+  },[track]);
+  return <div className="detail-map" ref={ref}></div>;
+}
 function RunDetail({a}){
   const accent = a.category==="trail" ? "var(--hike)" : "var(--run)";
   return (<div>
@@ -528,6 +606,10 @@ function RunDetail({a}){
       <MStat k="Elev Gain" v={a.elevGain!=null?Math.round(a.elevGain):"—"} unit="m"/>
     </div>
     <AIAnalysis a={a}/>
+    {a.track && a.track.length>1 && (
+      <div className="msec"><h4>Route</h4>
+        <RouteMap track={a.track} accent={a.category==="trail"?"#ffc857":"#ff6b35"}/></div>
+    )}
     {a.splits && a.splits.length>0 ? (
       <div className="msec">
         <h4>Kilometre splits · fastest highlighted</h4>
@@ -579,6 +661,10 @@ function OtherDetail({a}){
       {a.cal!=null && <MStat k="Calories" v={a.cal} unit="kcal"/>}
     </div>
     <AIAnalysis a={a}/>
+    {a.track && a.track.length>1 && (
+      <div className="msec"><h4>Route</h4>
+        <RouteMap track={a.track} accent="#ffc857"/></div>
+    )}
   </div>);
 }
 function DetailModal({a,onClose}){
@@ -611,18 +697,14 @@ function DetailModal({a,onClose}){
 /* ---------------- sections ---------------- */
 function Overview(){
   const t=D.totals;
-  const recent=[
-    ...D.runs.map(r=>({...r,_cat:r.category})),
-    ...D.strength.map(s=>({...s,category:"strength",sportName:"Strength",location:s.routine,_cat:"strength"})),
-    ...D.others.map(o=>({...o,_cat:o.category})),
-  ].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,14);
+  const recent=ALL_ACTIVITIES.slice(0,14);
   return (<div>
     <div className="sec-head"><h2>Overview</h2>
       <div className="sub">{t.activities} activities · {t.firstDate} → {t.latestDate}</div></div>
     <div className="grid g4">
-      <StatCard label="Total Runs" value={t.runs} sub={`${t.runKm.toLocaleString()} km covered`} color="var(--run)"/>
-      <StatCard label="Strength Sessions" value={t.strength} sub="rehab → build phase" color="var(--strength)" delay={60}/>
-      <StatCard label="Hikes" value={t.hikes} sub="weekend mountains" color="var(--hike)" delay={120}/>
+      <StatCard label="Total Runs" value={t.runs} sub={`${t.runKm.toLocaleString()} km covered`} color="var(--run)" onClick={()=>goActivities("runs")}/>
+      <StatCard label="Strength Sessions" value={t.strength} sub="rehab → build phase" color="var(--strength)" delay={60} onClick={()=>goActivities("strength")}/>
+      <StatCard label="Hikes" value={t.hikes} sub="weekend mountains" color="var(--hike)" delay={120} onClick={()=>goActivities("hikes")}/>
       <StatCard label="Calories Burned" value={t.calories} sub="all disciplines" color="var(--seg)" delay={180}/>
     </div>
     <div className="grid g2" style={{marginTop:18}}>
@@ -636,24 +718,29 @@ function Overview(){
     </div>
     <div className="card reveal" style={{marginTop:18,padding:0,overflow:"hidden"}}>
       <div style={{padding:"18px 20px 10px"}}><h3 style={{fontFamily:"var(--disp)",fontWeight:400,fontSize:22}}>Recent Activities</h3></div>
-      {recent.map((a,i)=>{ const cat=a._cat||"run";
-        const main = cat==="strength"
-          ? <span className="sv">{a.sets}<span style={{fontSize:12,color:"var(--txt-3)"}}> sets</span></span>
-          : (a.distKm? <span className="sv">{a.distKm}<span style={{fontSize:12,color:"var(--txt-3)"}}> km</span></span>
-                     : <span className="sv">{a.duration}</span>);
-        return (<div className="feed-item" key={a.labelId+i} onClick={()=>openDetail(a.labelId)}>
-          <div className="icon" style={{background:SPORT_BG[cat]}}>{SPORT_ICON[cat]}</div>
-          <div className="mid">
-            <div className="title">{a.sportName||a.routine||cat} <span className={`chip ${cat}`} style={{marginLeft:6}}>{cat}</span></div>
-            <div className="detail">{fmtDate(a.date)}{a.location?` · ${a.location}`:""}</div>
-          </div>
-          <div className="stats">
-            <div>{main}<div className="sk">{cat==="strength"?"volume":"distance"}</div></div>
-            {a.durationSec && cat!=="strength" && <div><span className="sv">{a.duration}</span><div className="sk">time</div></div>}
-            {a.pace && <div><span className="sv">{a.pace}</span><div className="sk">/km</div></div>}
-            {a.hr && <div><span className="sv">{a.hr}</span><div className="sk">bpm</div></div>}
-          </div>
-        </div>); })}
+      {recent.map((a,i)=><FeedItem key={a.labelId+i} a={a}/>)}
+      <div className="feed-more" onClick={()=>goActivities("all")}>View all {t.activities} activities →</div>
+    </div>
+  </div>);
+}
+const ACT_FILTER_DEFS=[{id:"all",label:"All"},{id:"runs",label:"Runs"},{id:"strength",label:"Strength"},{id:"hikes",label:"Hikes"},{id:"other",label:"Other"}];
+function Activities({filter,setFilter}){
+  const counts=useMemo(()=>{ const c={all:ALL_ACTIVITIES.length};
+    ALL_ACTIVITIES.forEach(a=>{ c[a._filter]=(c[a._filter]||0)+1; }); return c; },[]);
+  const chips=ACT_FILTER_DEFS.filter(c=>c.id==="all"||counts[c.id]);
+  const cur=counts[filter]?filter:"all";
+  const list=cur==="all"?ALL_ACTIVITIES:ALL_ACTIVITIES.filter(a=>a._filter===cur);
+  const label=(ACT_FILTER_DEFS.find(c=>c.id===cur)||{}).label||"";
+  return (<div>
+    <div className="sec-head"><h2>Activities</h2>
+      <div className="sub">{list.length} {cur==="all"?"total":label.toLowerCase()} · tap any for details</div></div>
+    <div className="act-filters">
+      {chips.map(c=>(<button key={c.id} className={"act-chip"+(cur===c.id?" active":"")} onClick={()=>setFilter(c.id)}>
+        {c.label}<span className="n">{counts[c.id]||0}</span></button>))}
+    </div>
+    <div className="card reveal" style={{padding:0,overflow:"hidden"}}>
+      {list.map((a,i)=><FeedItem key={a.labelId+i} a={a}/>)}
+      {list.length===0 && <div className="empty">No activities.</div>}
     </div>
   </div>);
 }
@@ -852,11 +939,14 @@ function Strength(){
 function App(){
   const [tab,setTab]=useState("overview");
   const [detail,setDetail]=useState(null);
-  useEffect(()=>{ _openDetail=setDetail; },[]);
+  const [actFilter,setActFilter]=useState("all");
+  useEffect(()=>{ _openDetail=setDetail;
+    _goActivities=(f)=>{ setActFilter(f||"all"); setTab("activities"); window.scrollTo({top:0,behavior:"smooth"}); }; },[]);
   useReveal();
   if(!D) return <div className="empty" style={{padding:80}}>Loading data… (data.js missing)</div>;
   const tabs=[
     {id:"overview",label:"Overview",n:D.totals.activities},
+    {id:"activities",label:"Activities",n:D.totals.activities},
     {id:"pbs",label:"Personal Bests",n:D.pbs.length},
     {id:"routes",label:"Route Segments",n:(D.geoSegments||[]).length},
     {id:"strength",label:"Strength",n:D.strengthGroups.length},
@@ -889,6 +979,7 @@ function App(){
 
     <main><div className="wrap">
       <div className={`panel ${tab==="overview"?"active":""}`}><Overview/></div>
+      <div className={`panel ${tab==="activities"?"active":""}`}><Activities filter={actFilter} setFilter={setActFilter}/></div>
       <div className={`panel ${tab==="pbs"?"active":""}`}><PBs/></div>
       <div className={`panel ${tab==="routes"?"active":""}`}><GeoSegments/></div>
       <div className={`panel ${tab==="strength"?"active":""}`}><Strength/></div>

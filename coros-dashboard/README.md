@@ -10,7 +10,10 @@ Live at: `https://zhanglpg.github.io/coros-dashboard/`
 ## Features
 
 - **Overview** — totals, run pace trend, monthly running volume, recent
-  activity feed (tap any activity for details).
+  activity feed (tap any activity for details). The Total Runs / Strength /
+  Hikes cards and the "All activities" button jump to the Activities tab.
+- **Activities** — the full activity history with filter chips
+  (All / Runs / Strength / Hikes / Other); tap any for details.
 - **Personal Bests** — fastest rolling 1K/3K/5K/10K splits from flat runs
   (road + track; trail excluded), plus a **top-10 leaderboard per distance**
   (each run's best effort, ranked). Tap a PB, a leaderboard row, or any run row
@@ -26,6 +29,8 @@ Live at: `https://zhanglpg.github.io/coros-dashboard/`
 - **AI analysis** — every activity's detail view carries a short "Coach's Read":
   a Claude-generated note evaluating that session and comparing it to recent
   activities of the same type. Generated once per activity when it syncs.
+- **Route map** — every outdoor activity's detail view (outdoor / trail / track
+  run, hike) shows its GPS route on a map, drawn from the activity's FIT track.
 
 ## Architecture
 
@@ -43,6 +48,8 @@ coros-dashboard/
   raw/
     records/*.txt   # querySportRecords text dumps (any date ranges)
     laps/*.json     # per-run queryActivityLapData JSON, named <labelId>.json
+    fits/*.fit      # per-activity FIT files for outdoor activities (GPS tracks)
+    tracks/*.json   # cached downsampled [[lat,lon],...] polylines (generated)
     analysis/*.json # cached AI analysis, one per <labelId> (generated, do not edit)
 ```
 

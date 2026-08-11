@@ -21,7 +21,11 @@ RAW = os.path.join(BASE, "raw")
 RECORDS_DIR = os.path.join(RAW, "records")
 LAPS_DIR = os.path.join(RAW, "laps")
 ANALYSIS_DIR = os.path.join(RAW, "analysis")
+FITS_DIR = os.path.join(RAW, "fits")
+TRACKS_DIR = os.path.join(RAW, "tracks")
 OUT = os.path.join(BASE, "data.js")
+
+TRACK_MAX_POINTS = 120  # downsample cap for the per-activity detail-map polyline
 
 TZ = timezone(timedelta(hours=8))  # athlete is GMT+8
 
@@ -372,6 +376,57 @@ def attach_analysis(items, cache):
 
 
 # --------------------------------------------------------------------------- #
+# Per-activity GPS tracks (parsed from FIT files, cached, for the detail map)
+# --------------------------------------------------------------------------- #
+def load_track(label_id):
+    """Downsampled [[lat,lon],...] GPS polyline for an activity, or None.
+
+    Parsed once from raw/fits/<labelId>.fit (via segments.parse_fit) and cached
+    under raw/tracks/<labelId>.json so later update.py runs stay fast. Best-effort:
+    a missing FIT, a missing fitdecode, or a parse error simply yields no track
+    (the detail map is then just omitted for that activity)."""
+    cache = os.path.join(TRACKS_DIR, f"{label_id}.json")
+    if os.path.exists(cache):
+        try:
+            with open(cache, encoding="utf-8") as f:
+                return json.load(f) or None
+        except (OSError, ValueError):
+            pass
+    fit = os.path.join(FITS_DIR, f"{label_id}.fit")
+    if not os.path.exists(fit):
+        return None
+    try:
+        from segments import parse_fit
+        pts = parse_fit(fit)
+    except Exception:
+        return None
+    if len(pts) < 2:
+        return None
+    step = max(1, len(pts) // TRACK_MAX_POINTS)
+    sampled = pts[::step]
+    if sampled[-1] is not pts[-1]:
+        sampled.append(pts[-1])
+    track = [[round(p[0], 5), round(p[1], 5)] for p in sampled]
+    os.makedirs(TRACKS_DIR, exist_ok=True)
+    tmp = cache + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(track, f, separators=(",", ":"))
+    os.replace(tmp, cache)
+    return track
+
+
+def attach_tracks(items):
+    """Attach a GPS `track` polyline to each activity that has one. Returns count."""
+    n = 0
+    for a in items:
+        t = load_track(a["labelId"])
+        if t:
+            a["track"] = t
+            n += 1
+    return n
+
+
+# --------------------------------------------------------------------------- #
 # Main
 # --------------------------------------------------------------------------- #
 def main():
@@ -476,6 +531,9 @@ def main():
     attach_analysis(strength, analysis_cache)
     attach_analysis(others, analysis_cache)
 
+    # Attach GPS route tracks (outdoor runs + hikes) for the detail-view map ---- #
+    n_tracks = attach_tracks(runs) + attach_tracks(others)
+
     # Load geo segments if available (from segments.py)
     geo_segments = []
     geo_path = os.path.join(RAW, "geo_segments.json")
@@ -514,7 +572,7 @@ def main():
     print(f"Wrote {OUT}")
     print(f"  activities={len(acts)} runs={len(runs)} "
           f"runs_with_laps={len(flat_with_laps)} strength={len(strength)} routes={len(routes)} "
-          f"ai_analyses={len(analysis_cache)}")
+          f"ai_analyses={len(analysis_cache)} tracks={n_tracks}")
     print(f"  pbs={[ (p['dist'], p['pace']) for p in pbs ]}")
 
 

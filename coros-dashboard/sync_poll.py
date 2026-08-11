@@ -42,7 +42,9 @@ META_FILE = os.path.expanduser("~/.hermes/mcp-tokens/coros.meta.json")
 URL = "https://mcp.coros.com/mcp"
 
 RUN_TYPES = {100, 101, 102, 103}      # lap files fetched for these
-GPS_TYPES = {102, 104}                # FIT files fetched: trail run, hike (road runs excluded)
+GPS_TYPES = {100, 102, 103, 104}      # FIT files fetched for all outdoor activities
+                                      # (outdoor/trail/track run + hike) -> detail-map tracks.
+                                      # segments.py still mines only trail/hike (its SEGMENT_TYPES).
 WINDOW_DAYS = 7
 REFRESH_MARGIN_S = 3 * 86400          # refresh token when < 3 days of life left
 
