@@ -214,7 +214,9 @@ def backfill():
     for f in _glob.glob(os.path.join(RECORDS, "*.txt")):
         for lid, st in parse_records(open(f, encoding="utf-8").read()):
             pairs[lid] = st
-    targets = [(lid, st) for lid, st in sorted(pairs.items())
+    # newest first (labelIds are ~monotonic in time) so recent activities get
+    # their FITs before the daily COROS cap is hit, not last.
+    targets = [(lid, st) for lid, st in sorted(pairs.items(), reverse=True)
                if st in GPS_TYPES and not os.path.exists(os.path.join(FITS, f"{lid}.fit"))]
     log(f"backfill: {len(targets)} missing FITs")
     os.makedirs(FITS, exist_ok=True)
