@@ -606,7 +606,7 @@ function RouteMap({track,accent,totalKm}){
   useEffect(()=>{
     if(!ref.current||!track||track.length<2||typeof L==="undefined") return;
     if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; }
-    const map=L.map(ref.current,{zoomControl:true,attributionControl:false,scrollWheelZoom:false});
+    const map=L.map(ref.current,{zoomControl:true,attributionControl:false,scrollWheelZoom:true});
     mapRef.current=map;
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:19,subdomains:"abcd"}).addTo(map);
     const latlngs=track.map(p=>[p[0],p[1]]);
