@@ -581,6 +581,319 @@ window.MODELS = [
 ]
 },
 {
+"id": "qwen3-8-max",
+"name": "Qwen3.8-Max (2.4T-A95B)",
+"org": "Alibaba",
+"family": "Qwen3.8",
+"released": "2026-08",
+"license": "Qwen3.8-Max License (custom)",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 2400,
+"params_active_B": 95,
+"n_layers": 92,
+"d_model": 8192,
+"d_ff": null,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 4,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "3:1 hybrid — 69 Gated DeltaNet linear-attention layers (16 QK / 128 V heads, head_dim 128) + 23 gated full-attention layers (GQA 64 Q / 4 KV, head_dim 256, partial RoPE 0.25); full_attention_interval=4.",
+"n_experts": 512,
+"active_experts": 10,
+"shared_experts": 1,
+"vocab_size": 248320,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Largest open-weight model to date: 2.4T total / 95B active. Same Qwen3_5MoeForCausalLM class as Qwen3.5-397B scaled ~6x — every one of the 92 layers is MoE (no dense layers), 512 experts with 10 routed + 1 shared active, hybrid Gated-DeltaNet + gated full attention 3:1. Text-only, thinking-mode-only; MTP-trained; native 262K context extensible to ~1.01M (card: 1,010,000). Custom (non-Apache) Qwen3.8-Max license.",
+"sources": [
+"https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+"https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/raw/main/config.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 69,
+"type": "linear",
+"sub": "gated linear"
+},
+{
+"name": "Full GQA",
+"n": 23,
+"type": "GQA",
+"sub": "64/4 · pRoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (69 layers)",
+"p": {
+"d": 8192,
+"kh": 16,
+"vh": 128,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 8192 → 20480 · in_proj_z → 16384",
+"projSub": "split projections (Qwen3.5 class) · in_proj_b / a → β, α",
+"qsub": "L2 norm",
+"vsub": "128 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 16384 → 8192",
+"cacheline": "no KV cache on linear layers — state 128 × 128 × 128 ≈ 2.1 M el (fp32) + conv state 20480 × 4 per layer"
+},
+"notes": [
+"128 v-heads / 16 qk-heads — 2× value width vs Qwen3.5-397B"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (23 layers — every 4th)",
+"p": {
+"d": 8192,
+"nq": 64,
+"nkv": 4,
+"dh": 256,
+"rope": "partial RoPE 64/256",
+"qknorm": "zero-centered QK-norm / head",
+"gate": "σ(gate) per head",
+"cache": "2,048 el/token/layer × 23 full-attention layers"
+},
+"notes": [
+"text-only — plain partial RoPE (no MRoPE)",
+"every layer MoE: 512 experts, 10 routed + 1 shared"
+]
+}
+]
+},
+{
+"id": "qwen3-8-27b",
+"name": "Qwen3.8-27B",
+"org": "Alibaba",
+"family": "Qwen3.8",
+"released": "2026-08",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 27,
+"params_active_B": 27,
+"n_layers": 64,
+"d_model": 5120,
+"d_ff": 17408,
+"d_ff_moe": null,
+"n_heads": 24,
+"n_kv_heads": 4,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "3:1 hybrid — 48 Gated DeltaNet linear-attention layers (16 QK / 48 V heads, head_dim 128) + 16 gated full-attention layers (GQA 24 Q / 4 KV, head_dim 256, partial RoPE 0.25, interleaved MRoPE); full_attention_interval=4.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 248320,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "Interleaved-MRoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "SigLIP2-so400m-class ViT (depth 27, hidden 1152)",
+"encoder_params_B": 0.4,
+"fusion": "adapter",
+"notes": "Native image+video (patch 16, temporal_patch 2, GELU ViT, d_ff 4304); 2x2 spatial merge projects to out_hidden 5120."
+},
+"notes": "Dense-backbone companion to Qwen3.8-Max (Qwen3_5ForConditionalGeneration): native vision-language with the same 3:1 Gated-DeltaNet + gated full-attention hybrid stack, 16 x (3 linear + 1 full) = 64 layers. MTP-trained; native 262K context extensible to 1M. Hit #1 on Hacker News at release (2026-08-15).",
+"sources": [
+"https://huggingface.co/Qwen/Qwen3.8-27B",
+"https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/config.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 48,
+"type": "linear",
+"sub": "gated linear"
+},
+{
+"name": "Full GQA",
+"n": 16,
+"type": "GQA",
+"sub": "24/4 · iMRoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (48 layers)",
+"p": {
+"d": 5120,
+"kh": 16,
+"vh": 48,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 5120 → 10240 · in_proj_z → 6144",
+"projSub": "split projections (Qwen3.5 class) · in_proj_b / a → β, α",
+"qsub": "L2 norm",
+"vsub": "48 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 6144 → 5120",
+"cacheline": "no KV cache on linear layers — state 48 × 128 × 128 ≈ 786 K el (fp32) + conv state 10240 × 4 per layer"
+},
+"notes": [
+"dense FFN every layer (d_ff 17408) — no MoE"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (16 layers — every 4th)",
+"p": {
+"d": 5120,
+"nq": 24,
+"nkv": 4,
+"dh": 256,
+"rope": "iMRoPE 64/256",
+"qknorm": "zero-centered QK-norm / head",
+"gate": "σ(gate) per head",
+"cache": "2,048 el/token/layer × 16 full-attention layers"
+},
+"notes": [
+"attention module shared with Qwen3.8-Max (same class)",
+"text-only input degenerates to partial RoPE"
+]
+}
+]
+},
+{
+"id": "muse-glimmer-30b",
+"name": "Muse Glimmer 30B",
+"org": "Meta",
+"family": "Muse",
+"released": "2026-08",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 30,
+"params_active_B": 30,
+"n_layers": 52,
+"d_model": 6656,
+"d_ff": 19968,
+"d_ff_moe": null,
+"n_heads": 32,
+"n_kv_heads": 2,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "3:1 local/global — 39 sliding-window layers (window 2048, RoPE theta 500K) + 13 full-attention NoPE layers (layer_rope_theta 0); gated GQA 32 Q / 2 KV heads x 128 with QK-norm and extra query scaling (qk_scale_factor 3.87).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 202048,
+"context_length": 131072,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Meta Perception Encoder ViT-G/14 (depth 50, hidden 1536)",
+"encoder_params_B": 1.9,
+"fusion": "adapter",
+"notes": "Window/full 3:1 attention inside the ViT too (patch 14, temporal_patch 2, d_ff 8960); MLP projector (GELU, hidden 4096) with 2x2 merge."
+},
+"notes": "Meta's return to open weights (first since Llama 4, Apache 2.0): a 30B dense VLM (28B text decoder + ~2B Perception Encoder) distilled from Muse Spark 1.2 for on-device agentic use. (SWA,SWA,SWA,Full) x 13 pattern — RoPE on sliding layers, NoPE on full layers; final logit softcapping 20.0; speculative-decoding drafter model released alongside. Day-0 GGUF/ExecuTorch support.",
+"sources": [
+"https://huggingface.co/meta-models/Muse-Glimmer-30B",
+"https://huggingface.co/meta-models/Muse-Glimmer-30B/raw/main/config.json",
+"https://huggingface.co/blog/muse-glimmer"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Local SWA",
+"n": 39,
+"type": "sliding",
+"sub": "win 2048"
+},
+{
+"name": "Global",
+"n": 13,
+"type": "global",
+"sub": "NoPE"
+}
+],
+"pattern": "lllglllglllglllglllglllglllglllglllglllglllglllglllg",
+"pattern_map": {
+"l": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "3:1 local / global attention — RoPE local, NoPE global",
+"p": {
+"variants": [
+{
+"n": 39,
+"name": "local sliding 2048",
+"type": "sliding",
+"span": "win",
+"frac": 0.3,
+"spanLabel": "window 2048",
+"sub1": "gated GQA 32Q / 2KV × 128",
+"sub2": "RoPE θ 500K (sliding layers only)"
+},
+{
+"n": 13,
+"name": "global NoPE",
+"type": "global",
+"span": "full",
+"spanLabel": "full 128K",
+"sub1": "no positional encoding (layer_rope_theta 0)",
+"sub2": "1 global after every 3 local"
+}
+],
+"common": [
+"QK-norm + extra query scaling (qk_scale_factor 3.87)",
+"per-layer attention output gate (6656 × 4096)",
+"final logit softcap 20.0"
+],
+"cache": "global layers: 512 el/token unbounded × 13 · local capped at 2048 tokens"
+}
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",

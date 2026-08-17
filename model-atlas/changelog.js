@@ -1,8 +1,18 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-10 09:35",
+  "last_run": "2026-08-17 09:31",
   "entries": [
+    {
+      "date": "2026-08-17",
+      "added": [
+        "qwen3-8-max",
+        "qwen3-8-27b",
+        "muse-glimmer-30b"
+      ],
+      "upgraded": [],
+      "note": "Added the three big open-weight drops of the week, all verified from raw HF configs. Qwen3.8-Max (2.4T total / 95B active) is the largest open-weight model to date: 92 all-MoE layers (512 experts, top-10 + 1 shared) on a 3:1 Gated-DeltaNet + gated full-attention hybrid, text-only under a custom license. Qwen3.8-27B is its dense vision-language companion (same hybrid stack, Apache 2.0). Muse Glimmer 30B is Meta's return to open weights (first since Llama 4): a 30B dense VLM distilled from Muse Spark 1.2 — (SWA×3, Full)×13 with RoPE on sliding layers and NoPE on global ones, Apache 2.0. Skipped: Muse Spark 1.2 itself (weights announced but not yet published — revisit)."
+    },
     {
       "date": "2026-08-10",
       "added": [
