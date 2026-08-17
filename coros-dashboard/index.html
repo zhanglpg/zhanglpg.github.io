@@ -308,6 +308,10 @@
   /* ---------- detail-modal route map ---------- */
   .detail-map{height:240px;border-radius:12px;overflow:hidden;background:#1a1e26;position:relative;z-index:0}
   .detail-map .leaflet-container{background:#1a1e26;border-radius:12px}
+  .detail-map .leaflet-div-icon.km-badge{background:transparent;border:none}
+  .km-dot{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+    background:rgba(14,16,20,.82);border:2px solid #ff6b35;color:#fff;font-weight:700;font-size:11px;line-height:1;
+    font-variant-numeric:tabular-nums;box-shadow:0 1px 4px rgba(0,0,0,.5)}
 
   footer{border-top:1px solid var(--line);padding:24px 0 38px;color:var(--txt-3);font-size:12px}
   footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
@@ -571,8 +575,33 @@ function AIAnalysis({a}){
     <div className="ai-foot" title={ai.model||""}>{foot.join(" · ")}</div>
   </div>);
 }
+/* positions of each whole-kilometre point along a [[lat,lon],...] track.
+   Cumulative great-circle distance, rescaled to the activity's known distKm so
+   the marks don't drift on a downsampled polyline. Returns [[lat,lon,km],...]. */
+function computeKmMarks(track,totalKm){
+  if(!track||track.length<2) return [];
+  const R=6371000, rad=d=>d*Math.PI/180;
+  const hav=(a,b)=>{ const dLa=rad(b[0]-a[0]),dLo=rad(b[1]-a[1]);
+    const s=Math.sin(dLa/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLo/2)**2;
+    return 2*R*Math.asin(Math.sqrt(s)); };
+  const cum=[0];
+  for(let i=1;i<track.length;i++) cum.push(cum[i-1]+hav(track[i-1],track[i]));
+  const raw=cum[cum.length-1];
+  if(raw<100) return [];
+  const scale=(totalKm&&totalKm>0)?(totalKm*1000)/raw:1;   // raw metres -> real metres
+  const marks=[]; let i=1;
+  for(let km=1; km*1000<raw*scale-40; km++){                // skip a mark sitting on the finish
+    const target=(km*1000)/scale;                           // target in raw metres
+    while(i<cum.length && cum[i]<target) i++;
+    if(i>=cum.length) break;
+    const seg=cum[i]-cum[i-1]||1, f=Math.max(0,Math.min(1,(target-cum[i-1])/seg));
+    marks.push([track[i-1][0]+(track[i][0]-track[i-1][0])*f,
+                track[i-1][1]+(track[i][1]-track[i-1][1])*f, km]);
+  }
+  return marks;
+}
 /* GPS route on a Leaflet map inside the detail modal (outdoor activities) */
-function RouteMap({track,accent}){
+function RouteMap({track,accent,totalKm}){
   const ref=useRef(null); const mapRef=useRef(null);
   useEffect(()=>{
     if(!ref.current||!track||track.length<2||typeof L==="undefined") return;
@@ -581,7 +610,14 @@ function RouteMap({track,accent}){
     mapRef.current=map;
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:19,subdomains:"abcd"}).addTo(map);
     const latlngs=track.map(p=>[p[0],p[1]]);
-    L.polyline(latlngs,{color:accent||"#ff6b35",weight:4,opacity:.9}).addTo(map);
+    const col=accent||"#ff6b35";
+    L.polyline(latlngs,{color:col,weight:4,opacity:.9}).addTo(map);
+    // whole-kilometre badges
+    computeKmMarks(track,totalKm).forEach(([lat,lon,km])=>{
+      L.marker([lat,lon],{interactive:false,keyboard:false,
+        icon:L.divIcon({className:"km-badge",iconSize:[22,22],iconAnchor:[11,11],
+          html:`<div class="km-dot" style="border-color:${col}">${km}</div>`})}).addTo(map);
+    });
     L.circleMarker(latlngs[0],{radius:6,color:"#3ddc84",fillColor:"#3ddc84",fillOpacity:1,weight:2})
       .addTo(map).bindTooltip("Start",{direction:"top",offset:[0,-8]});
     L.circleMarker(latlngs[latlngs.length-1],{radius:6,color:"#ff5d5d",fillColor:"#ff5d5d",fillOpacity:1,weight:2})
@@ -591,7 +627,7 @@ function RouteMap({track,accent}){
     // modal animates in (transform/scale) — re-measure once settled so tiles/bounds are correct
     const t=setTimeout(()=>{ if(mapRef.current){ map.invalidateSize(); map.fitBounds(bounds); } },120);
     return ()=>{ clearTimeout(t); if(mapRef.current){ mapRef.current.remove(); mapRef.current=null; } };
-  },[track]);
+  },[track,totalKm]);
   return <div className="detail-map" ref={ref}></div>;
 }
 function RunDetail({a}){
@@ -608,7 +644,7 @@ function RunDetail({a}){
     <AIAnalysis a={a}/>
     {a.track && a.track.length>1 && (
       <div className="msec"><h4>Route</h4>
-        <RouteMap track={a.track} accent={a.category==="trail"?"#ffc857":"#ff6b35"}/></div>
+        <RouteMap track={a.track} totalKm={a.distKm} accent={a.category==="trail"?"#ffc857":"#ff6b35"}/></div>
     )}
     {a.splits && a.splits.length>0 ? (
       <div className="msec">
@@ -663,7 +699,7 @@ function OtherDetail({a}){
     <AIAnalysis a={a}/>
     {a.track && a.track.length>1 && (
       <div className="msec"><h4>Route</h4>
-        <RouteMap track={a.track} accent="#ffc857"/></div>
+        <RouteMap track={a.track} totalKm={a.distKm} accent="#ffc857"/></div>
     )}
   </div>);
 }
