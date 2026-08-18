@@ -5938,13 +5938,13 @@
         {
           "assignment": "LHS Career Exploration",
           "due_date": "Friday, 12/05/2025",
-          "days_overdue": 248
+          "days_overdue": 255
         }
       ]
     }
   },
-  "last_updated": "2026-08-11T00:03:43.278593+00:00",
-  "email_count": 65,
+  "last_updated": "2026-08-18T00:09:35.066671+00:00",
+  "email_count": 66,
   "events": [
     {
       "type": "grade_posted",
@@ -6397,6 +6397,6 @@
       "date": "2026-06-08T22:03:52+00:00"
     }
   ],
-  "week_start": "8/03/26",
-  "week_end": "8/10/26"
+  "week_start": "8/10/26",
+  "week_end": "8/17/26"
 }
