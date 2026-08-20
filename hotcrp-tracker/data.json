@@ -2093,7 +2093,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-13T16:12:59+00:00",
-      "last_event": "2026-08-19T06:34:16+00:00",
+      "last_event": "2026-08-20T03:01:43+00:00",
       "events": [
         {
           "type": "updated",
@@ -2229,13 +2229,33 @@
           "type": "comment",
           "date": "2026-08-19T06:34:16+00:00",
           "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T02:55:15+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T02:55:51+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T02:59:43+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T03:01:43+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 2,
-        "comments": 23,
+        "comments": 27,
         "reviews": 0,
-        "total": 27
+        "total": 31
       },
       "message_ids": [
         "<20260713161259.B00839AE3E4@mail.hotcrp.com>",
@@ -2264,7 +2284,11 @@
         "<20260818075328.B1E019476C6@mail.hotcrp.com>",
         "<20260818084353.3E894AEBBCB@mail.hotcrp.com>",
         "<20260819062454.284C191EB68@mail.hotcrp.com>",
-        "<20260819063416.0FECE91EB13@mail.hotcrp.com>"
+        "<20260819063416.0FECE91EB13@mail.hotcrp.com>",
+        "<20260820025515.5BD0591EBF7@mail.hotcrp.com>",
+        "<20260820025551.0798B91EBF7@mail.hotcrp.com>",
+        "<20260820025943.D0F0A9208DE@mail.hotcrp.com>",
+        "<20260820030143.163BE91EBFD@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3052,7 +3076,7 @@
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-08-19T06:34:16+00:00"
+      "last_event": "2026-08-20T03:01:43+00:00"
     },
     "NSDI '27 Spring": {
       "paper_count": 1,
@@ -3227,6 +3251,6 @@
       "date": "2026-08-01T21:45:54+00:00"
     }
   ],
-  "last_updated": "2026-08-19T08:22:55.257548+00:00",
-  "email_count": 346
+  "last_updated": "2026-08-20T04:07:52.091666+00:00",
+  "email_count": 350
 }
