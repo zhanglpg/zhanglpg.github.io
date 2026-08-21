@@ -960,7 +960,7 @@
     "EuroSys '27 Spring::#586": {
       "conference": "EuroSys '27 Spring",
       "paper_id": "586",
-      "title": "Weave: Fine-Grained Dynamic SM Scheduling in a MoE Megakernel for Compute-Communication Overlap",
+      "title": "Weave: Fine-Grained Dynamic SM...",
       "authors": [
         "Ziyu Huang",
         "Yangjie Zhou",
@@ -983,7 +983,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-08T10:29:52+00:00",
-      "last_event": "2026-08-01T11:55:57+00:00",
+      "last_event": "2026-08-21T00:33:46+00:00",
       "events": [
         {
           "type": "updated",
@@ -1149,13 +1149,18 @@
           "type": "other",
           "date": "2026-08-01T11:55:57+00:00",
           "subject": "[EuroSys '27 Spring] Response for #586 \"Weave: Fine-Grained Dynamic SM...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-08-21T00:33:46+00:00",
+          "subject": "[EuroSys '27 Spring] Submission #586 \"Weave: Fine-Grained Dynamic SM...\""
         }
       ],
       "counts": {
         "updates": 30,
         "comments": 0,
         "reviews": 0,
-        "total": 33
+        "total": 34
       },
       "message_ids": [
         "<20260508102952.2C4A8906219@mail.hotcrp.com>",
@@ -1190,7 +1195,8 @@
         "<20260515115829.BF7BE915030@mail.hotcrp.com>",
         "<20260515115929.8C7C49163EA@mail.hotcrp.com>",
         "<20260729100937.6F8EEAE6F1E@mail.hotcrp.com>",
-        "<20260801115557.7B434AF4DC3@mail.hotcrp.com>"
+        "<20260801115557.7B434AF4DC3@mail.hotcrp.com>",
+        "<20260821003346.E8E4F920B15@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1199,7 +1205,7 @@
     "EuroSys '27 Spring::#796": {
       "conference": "EuroSys '27 Spring",
       "paper_id": "796",
-      "title": "SUBench: A Benchmark for Large Language Model Inference on GPU Supernodes",
+      "title": "SUBench: A Benchmark for Large Language...",
       "authors": [
         "Shuangwei Li",
         "Jiaqi Shi",
@@ -1216,7 +1222,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-08-01T05:58:31+00:00",
+      "last_event": "2026-08-21T00:40:16+00:00",
       "events": [
         {
           "type": "updated",
@@ -1277,13 +1283,18 @@
           "type": "other",
           "date": "2026-08-01T05:58:31+00:00",
           "subject": "[EuroSys '27 Spring] Response for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-08-21T00:40:16+00:00",
+          "subject": "[EuroSys '27 Spring] Submission #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
         "comments": 0,
         "reviews": 0,
-        "total": 12
+        "total": 13
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1297,7 +1308,8 @@
         "<20260511115352.BFCA991FC0E@mail.hotcrp.com>",
         "<20260512021133.BAFED8D78D7@mail.hotcrp.com>",
         "<20260729100938.145A7AE6F3A@mail.hotcrp.com>",
-        "<20260801055831.E24F7AE6F0F@mail.hotcrp.com>"
+        "<20260801055831.E24F7AE6F0F@mail.hotcrp.com>",
+        "<20260821004016.626DE920A9E@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2093,7 +2105,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-13T16:12:59+00:00",
-      "last_event": "2026-08-20T06:15:33+00:00",
+      "last_event": "2026-08-20T16:26:59+00:00",
       "events": [
         {
           "type": "updated",
@@ -2269,13 +2281,33 @@
           "type": "comment",
           "date": "2026-08-20T06:15:33+00:00",
           "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T12:42:28+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T15:55:37+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T16:07:52+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-20T16:26:59+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 2,
-        "comments": 30,
+        "comments": 34,
         "reviews": 0,
-        "total": 35
+        "total": 39
       },
       "message_ids": [
         "<20260713161259.B00839AE3E4@mail.hotcrp.com>",
@@ -2312,7 +2344,11 @@
         "<20260820040734.859A6920963@mail.hotcrp.com>",
         "<20260820060215.B9FE691EB7D@mail.hotcrp.com>",
         "<20260820061226.081C291E964@mail.hotcrp.com>",
-        "<20260820061533.57FE391EBDE@mail.hotcrp.com>"
+        "<20260820061533.57FE391EBDE@mail.hotcrp.com>",
+        "<20260820124228.850A89208DE@mail.hotcrp.com>",
+        "<20260820155537.7F81D91EB13@mail.hotcrp.com>",
+        "<20260820160752.C8D7F920989@mail.hotcrp.com>",
+        "<20260820162659.3CDBC920985@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3088,7 +3124,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-08-01T11:55:57+00:00"
+      "last_event": "2026-08-21T00:40:16+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -3100,7 +3136,7 @@
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-08-20T06:15:33+00:00"
+      "last_event": "2026-08-20T16:26:59+00:00"
     },
     "NSDI '27 Spring": {
       "paper_count": 1,
@@ -3275,6 +3311,6 @@
       "date": "2026-08-01T21:45:54+00:00"
     }
   ],
-  "last_updated": "2026-08-20T08:30:26.705466+00:00",
-  "email_count": 354
+  "last_updated": "2026-08-21T04:34:21.196572+00:00",
+  "email_count": 360
 }
