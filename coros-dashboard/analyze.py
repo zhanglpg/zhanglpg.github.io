@@ -2,16 +2,18 @@
 """AI performance analysis for COROS activities (best-effort, cached).
 
 For every activity on the dashboard that lacks a *current* analysis, this asks a
-Claude model for a short coach-style read: how the athlete performed in THIS
+model for a short coach-style read: how the athlete performed in THIS
 session and how it compares to their recent activities of the same type
 (runs vs runs, that strength routine vs itself, hikes vs hikes, ...).
 
-Generation backend: the local `claude` CLI in headless print mode, which reuses
-the machine's existing Claude Code auth (~/.claude/.credentials.json) — so no
-ANTHROPIC_API_KEY is required and nothing new has to be provisioned for the
-launchd sync. If a model call fails (offline, not authenticated, rate limited)
-the activity is simply left un-analysed and retried on a later sync; the sync
-itself is never blocked.
+Generation backend: a direct OpenAI-compatible chat-completions call to the
+Alibaba endpoint that Hermes is configured with — API key read at call time
+from ~/.hermes/.env (DASHSCOPE_API_KEY) and base_url from ~/.hermes/auth.json,
+so key rotation propagates and nothing needs interactive re-login (the old
+`claude` CLI backend silently stopped whenever Claude Code's OAuth expired).
+If a model call fails (offline, rate limited, quota exhausted) the activity is
+simply left un-analysed and retried on a later sync; the sync itself is never
+blocked.
 
 Results are cached one-JSON-per-activity under raw/analysis/<labelId>.json,
 keyed by a fingerprint of the activity's metrics and the prompt version, so an
@@ -29,7 +31,7 @@ Usage:
   python3 analyze.py --dry-run      # list what would be generated, call no model
 
 Env:
-  COROS_ANALYSIS_MODEL   model alias/id for `claude --model` (default claude-haiku-4-5)
+  COROS_ANALYSIS_MODEL   model id on the Alibaba endpoint (default qwen3.6-flash)
   COROS_SKIP_ANALYSIS=1  make this a no-op (for CI / quick regens)
 """
 import os
@@ -37,10 +39,9 @@ import re
 import sys
 import json
 import time
-import shutil
 import hashlib
-import tempfile
-import subprocess
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone, timedelta
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +49,7 @@ DATA_JS = os.path.join(BASE, "data.js")
 CACHE_DIR = os.path.join(BASE, "raw", "analysis")
 
 TZ = timezone(timedelta(hours=8))            # athlete is GMT+8
-MODEL = os.environ.get("COROS_ANALYSIS_MODEL", "claude-haiku-4-5")
+MODEL = os.environ.get("COROS_ANALYSIS_MODEL", "qwen3.6-flash")
 # Per-type prompt version — bump a type's entry to invalidate only that type's
 # cached analyses. History: v1 was generic; v2 made strength/other type-aware;
 # then the voice was reworked to be warm/encouraging for a recreational athlete
@@ -261,55 +262,65 @@ Output ONLY the bullets, one per line, each starting with "- ". No heading, no c
 
 
 # --------------------------------------------------------------------------- #
-# model call (headless Claude Code CLI — reuses existing auth, no API key)
+# model call (direct OpenAI-compatible request to the Hermes-managed Alibaba
+# endpoint — credentials read fresh each call so rotation propagates)
 # --------------------------------------------------------------------------- #
-def _claude_bin():
-    return (shutil.which("claude")
-            or next((p for p in (os.path.expanduser("~/.local/bin/claude"),
-                                 "/usr/local/bin/claude", "/opt/homebrew/bin/claude")
-                     if os.path.exists(p)), None))
+HERMES_ENV = os.path.expanduser("~/.hermes/.env")
+HERMES_AUTH = os.path.expanduser("~/.hermes/auth.json")
+_ENV_KEY_RE = re.compile(r'\s*(?:export\s+)?DASHSCOPE_API_KEY\s*=\s*["\']?([^"\'\s]+)')
+
+
+def _endpoint():
+    """Return (base_url, api_key) or (None, None) if unavailable."""
+    key = os.environ.get("DASHSCOPE_API_KEY")
+    if not key:
+        try:
+            with open(HERMES_ENV) as f:
+                for line in f:
+                    m = _ENV_KEY_RE.match(line)
+                    if m:
+                        key = m.group(1)
+                        break
+        except OSError:
+            pass
+    base = None
+    try:
+        with open(HERMES_AUTH) as f:
+            pool = json.load(f).get("credential_pool", {}).get("alibaba", [])
+        base = next((e.get("base_url") for e in pool if e.get("base_url")), None)
+    except (OSError, ValueError):
+        pass
+    return (base, key) if base and key else (None, None)
 
 
 def call_model(prompt):
     """Return the model's text, or None on any failure (best-effort)."""
-    claude = _claude_bin()
-    if not claude:
-        log("`claude` CLI not found on PATH — skipping (no analysis backend)")
+    base, key = _endpoint()
+    if not base:
+        log("no model endpoint (missing ~/.hermes/.env key or auth.json base_url) — skipping")
         return None
-    # Curated, least-privilege env: only what the CLI needs to find its
-    # credentials (~/.claude) and run — never the parent's secrets (API keys,
-    # SSH agent socket, tokens). The model subprocess has no business seeing them.
-    home = os.environ.get("HOME") or os.path.expanduser("~")
-    env = {
-        "HOME": home,
-        "PATH": os.pathsep.join([
-            os.path.join(home, ".local/bin"),
-            "/usr/local/bin", "/opt/homebrew/bin", "/usr/bin", "/bin",
-        ]),
-        "USER": os.environ.get("USER", ""),
-        "LOGNAME": os.environ.get("LOGNAME", ""),
-        "LANG": os.environ.get("LANG", "en_US.UTF-8"),
-        "TMPDIR": os.environ.get("TMPDIR", "/tmp"),
-    }
+    body = json.dumps({
+        "model": MODEL,
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": 1500,
+    }).encode()
+    req = urllib.request.Request(
+        base.rstrip("/") + "/chat/completions", data=body,
+        headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})
     try:
-        r = subprocess.run(
-            [claude, "-p", prompt,
-             "--model", MODEL,
-             "--output-format", "text",
-             "--strict-mcp-config",           # ignore all MCP servers (don't touch coros MCP)
-             "--disallowedTools", "Bash,Read,Write,Edit,WebFetch,WebSearch,Task,Glob,Grep"],
-            stdin=subprocess.DEVNULL, capture_output=True, text=True,
-            timeout=CALL_TIMEOUT_S, cwd=tempfile.gettempdir(), env=env)
-    except subprocess.TimeoutExpired:
-        log("model call timed out")
+        with urllib.request.urlopen(req, timeout=CALL_TIMEOUT_S) as r:
+            resp = json.load(r)
+    except urllib.error.HTTPError as e:
+        log(f"model call failed HTTP {e.code}: {(e.read() or b'').decode(errors='replace')[:200]}")
         return None
-    except OSError as e:
-        log(f"model call could not start: {e}")
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError) as e:
+        log(f"model call failed: {e}")
         return None
-    if r.returncode != 0:
-        log(f"model call failed rc={r.returncode}: {(r.stderr or '').strip()[:200]}")
+    try:
+        return (resp["choices"][0]["message"]["content"] or "").strip() or None
+    except (KeyError, IndexError, TypeError):
+        log(f"model response malformed: {str(resp)[:200]}")
         return None
-    return (r.stdout or "").strip() or None
 
 
 _BULLET_RE = re.compile(r"^\s*(?:[-*•·]|\d+[.)])\s+")
