@@ -825,6 +825,12 @@
       'Alibaba China E-commerce Group': '#ff6f3c',
       'Alibaba International Digital Commerce Group': '#a2431b',
       'Cloud Intelligence Group': '#ffc078',
+      // FY2027 Q1 reorg (announced 2026-08-20): E-commerce absorbs the old
+      // China group + AIDC (+Freshippo); AI Cloud absorbs Cloud + T-Head;
+      // AI Labs is the new model/app bucket carved out of All others.
+      'Alibaba E-commerce Group': '#ff6f3c',
+      'AI Cloud and Compute Services': '#ffc078',
+      'AI Labs and Applications': '#e64980',
       'All others': '#8b949e'
     },
     GOOG: {
