@@ -1,13 +1,13 @@
 window.FINANCIALS = {
-  "generated": "2026-07-26",
+  "generated": "2026-08-22",
   "companies": {
     "BABA": {
       "company": "Alibaba Group Holding Limited",
       "currency": "CNY",
       "eps_unit": "CNY (RMB) per ADS; 1 ADS = 8 ordinary shares",
-      "fiscal_note": "Fiscal year ends March 31. The quarter ended 2022-06-30 is FY2023 Q1; the quarter ended 2026-03-31 is FY2026 Q4. FY2026 Q3 (Dec 2025) was announced unusually late, on 2026-03-19; FY2026 Q4 was announced 2026-05-13.",
+      "fiscal_note": "Fiscal year ends March 31. The quarter ended 2022-06-30 is FY2023 Q1; the quarter ended 2026-03-31 is FY2026 Q4. FY2026 Q3 (Dec 2025) was announced unusually late, on 2026-03-19; FY2026 Q4 was announced 2026-05-13; FY2027 Q1 was announced 2026-08-20.",
       "notes": {
-        "quarterly": "All monetary values in RMB millions except buyback_usd_m (US$ millions) and dividend_per_unit (US$ per ADS). net_income = net income attributable to ordinary shareholders (GAAP). diluted_eps and non_gaap_diluted_eps are per ADS in RMB as reported (reported diluted EPS/ADS can differ slightly from net_income/shares because of dilution adjustments for subsidiary equity awards and convertible notes). shares_diluted_m = weighted-average ordinary shares on a diluted basis (millions, as used for non-GAAP diluted EPS); divide by 8 for ADS equivalents. gross_profit is derived as revenue minus cost of revenue (Alibaba does not present a gross-profit subtotal). capex = purchases of property and equipment excluding land use rights and construction in progress relating to office campuses, per the free-cash-flow reconciliation; free_cash_flow is Alibaba's reported non-GAAP FCF (operating cash flow less that capex and intangible-asset purchases, adjusted for buyer/consumer protection fund deposits), so FCF does not equal OCF minus capex exactly. cash_and_investments = cash and cash equivalents + short-term investments + other treasury investments included in equity securities and other investments; the 2022-06-30 figure (RMB453,193m) is the narrower 'cash, cash equivalents and short-term investments' as then disclosed. SEGMENT REORGANIZATIONS: (1) Effective FY2024 Q1 (announced 2023-08-10) Alibaba moved to business-group reporting (Taobao and Tmall Group; AIDC; Local Services; Cainiao; Cloud Intelligence; Digital Media and Entertainment; All others). FY2023 quarters here use the recast comparatives from the corresponding FY2024 quarterly releases. (2) From FY2024 Q2, DingTalk was reclassified from Cloud Intelligence to All others; FY2024 quarters here use the recast comparatives from the corresponding FY2025 releases (all DingTalk-adjusted). The Jun-2022 quarter was never re-published after that reclass, so its Cloud figure still includes DingTalk. (3) Effective FY2026 Q1 (announced 2025-08-29) Alibaba consolidated to four segments: Alibaba China E-commerce Group (Taobao and Tmall + Ele.me/instant commerce + Fliggy), AIDC, Cloud Intelligence Group, and All others (now including Cainiao, Amap and Hujing DME). FY2025 quarters here use the recast four-segment comparatives from the corresponding FY2026 releases; recast segment figures therefore come from a newer release than each period's source_url. DIVIDENDS (US$ per ADS, attached to the fiscal Q4 they relate to): FY2023 $1.00 declared 2023-11-16 with the FY2024 Q2 release; FY2024 $1.66 ($1.00 annual + $0.66 one-time extraordinary) declared 2024-05-14; FY2025 $2.00 ($1.05 annual + $0.95 one-time extraordinary) declared 2025-05-15; FY2026 $1.05 annual declared 2026-05-13. BUYBACKS are as disclosed in each release (mostly rounded, e.g. 'approximately US$3.5 billion'); FY2026 Q3 and Q4 are 0 - the FY2026 annual release discloses full-year repurchases of 73m ordinary shares for US$1.0bn, all executed in Q1 (56m shares, US$815m) and Q2 (17m shares, US$253m). FY2026 Q4 had a GAAP loss from operations of RMB848m (quick-commerce investment plus impairments in All others); GAAP net income stayed positive on investment gains while non-GAAP net income was only RMB86m.",
+        "quarterly": "All monetary values in RMB millions except buyback_usd_m (US$ millions) and dividend_per_unit (US$ per ADS). net_income = net income attributable to ordinary shareholders (GAAP). diluted_eps and non_gaap_diluted_eps are per ADS in RMB as reported (reported diluted EPS/ADS can differ slightly from net_income/shares because of dilution adjustments for subsidiary equity awards and convertible notes). shares_diluted_m = weighted-average ordinary shares on a diluted basis (millions, as used for non-GAAP diluted EPS); divide by 8 for ADS equivalents. gross_profit is derived as revenue minus cost of revenue (Alibaba does not present a gross-profit subtotal). capex = purchases of property and equipment excluding land use rights and construction in progress relating to office campuses, per the free-cash-flow reconciliation; free_cash_flow is Alibaba's reported non-GAAP FCF (operating cash flow less that capex and intangible-asset purchases, adjusted for buyer/consumer protection fund deposits), so FCF does not equal OCF minus capex exactly. cash_and_investments = cash and cash equivalents + short-term investments + other treasury investments included in equity securities and other investments; the 2022-06-30 figure (RMB453,193m) is the narrower 'cash, cash equivalents and short-term investments' as then disclosed. SEGMENT REORGANIZATIONS: (1) Effective FY2024 Q1 (announced 2023-08-10) Alibaba moved to business-group reporting (Taobao and Tmall Group; AIDC; Local Services; Cainiao; Cloud Intelligence; Digital Media and Entertainment; All others). FY2023 quarters here use the recast comparatives from the corresponding FY2024 quarterly releases. (2) From FY2024 Q2, DingTalk was reclassified from Cloud Intelligence to All others; FY2024 quarters here use the recast comparatives from the corresponding FY2025 releases (all DingTalk-adjusted). The Jun-2022 quarter was never re-published after that reclass, so its Cloud figure still includes DingTalk. (3) Effective FY2026 Q1 (announced 2025-08-29) Alibaba consolidated to four segments: Alibaba China E-commerce Group (Taobao and Tmall + Ele.me/instant commerce + Fliggy), AIDC, Cloud Intelligence Group, and All others (now including Cainiao, Amap and Hujing DME). FY2025 quarters here use the recast four-segment comparatives from the corresponding FY2026 releases; recast segment figures therefore come from a newer release than each period's source_url. DIVIDENDS (US$ per ADS, attached to the fiscal Q4 they relate to): FY2023 $1.00 declared 2023-11-16 with the FY2024 Q2 release; FY2024 $1.66 ($1.00 annual + $0.66 one-time extraordinary) declared 2024-05-14; FY2025 $2.00 ($1.05 annual + $0.95 one-time extraordinary) declared 2025-05-15; FY2026 $1.05 annual declared 2026-05-13. BUYBACKS are as disclosed in each release (mostly rounded, e.g. 'approximately US$3.5 billion'); FY2026 Q3 and Q4 are 0 - the FY2026 annual release discloses full-year repurchases of 73m ordinary shares for US$1.0bn, all executed in Q1 (56m shares, US$815m) and Q2 (17m shares, US$253m). FY2026 Q4 had a GAAP loss from operations of RMB848m (quick-commerce investment plus impairments in All others); GAAP net income stayed positive on investment gains while non-GAAP net income was only RMB86m. (4) Effective FY2027 Q1 (announced 2026-08-20) Alibaba reorganized into four segments again: Alibaba E-commerce Group (Alibaba China E-commerce Group + AIDC + Freshippo + certain Cainiao commerce businesses), AI Cloud and Compute Services (Cloud Intelligence Group + T-Head), AI Labs and Applications (AI model labs, Qwen Consumer Business Group, QwenWork - previously in All others), and All others (now mainly Alibaba Health, Hujing DME, Amap, Lingxi Games). FY2026 Q1 segments here use the recast four-segment comparatives from the FY2027 Q1 release (that recast moves AI businesses out of All others, so the recast All others adjusted EBITA shows a profit); consolidated totals are unaffected. FY2027 Q1 recorded RMB4,458m goodwill impairment (All others) and a EUR550m European Commission Digital Services Act provision; non-GAAP net income excludes those plus investment gains.",
         "annual": "All figures RMB millions (US GAAP) except buyback_usd_m (USD millions, as stated by the company) and dividend_per_unit (USD per ADS declared with respect to that fiscal year; Alibaba declares dividends in USD). Income statement, cash flow and share-count figures cross-checked between SEC XBRL companyfacts (20-F data, CIK 0001577552) and the annual results press releases furnished as 6-K exhibits (source_url per period). net_income = net income attributable to ordinary shareholders (EPS numerator); consolidated net income and net income attributable to Alibaba Group differ slightly (mezzanine-equity accretion, NCI). gross_profit is derived as revenue minus cost of revenue (Alibaba does not present a gross profit line). diluted_eps / non_gaap_diluted_eps are per-ADS figures as printed in the press releases; the per-ADS series is continuous across the July 2019 1-to-8 share subdivision (the ADS-to-share ratio changed from 1:1 to 1:8 simultaneously). shares_diluted_m = weighted-average diluted ORDINARY shares; FY2016-FY2017 as-reported counts (2,562m / 2,573m) were multiplied by 8 to adjust for the 2019 subdivision for series consistency. operating_cash_flow uses latest restated values (ASU 2016-18 restricted-cash restatement raised FY2017 from 80,326 as first reported to 82,854 and FY2018 from 125,171 to 125,805). free_cash_flow is Alibaba's own non-GAAP measure as reported (definition evolved: SME-loan adjustment through FY2017; licensed copyrights included from FY2019; consumer/buyer-protection-fund deposit changes excluded from FY2020); FY2018 uses the restated 99,996 shown in the FY2019 release (originally 99,362). capex = purchases of property and equipment plus intangible assets per the free-cash-flow reconciliation (EXCLUDES land use rights and construction-in-progress for office campuses); the company's broader 'total capital expenditures' figure is higher (e.g. FY2026 RMB126,063m vs 122,895m here). cash_and_investments = cash and cash equivalents plus short-term investments (FY2016-FY2022); from FY2023 the company's disclosed figure also includes other treasury investments (fixed deposits, CDs, marketable debt securities >1yr). Buybacks (USD): FY2016 US$3,070m and FY2017 US$1,915m are the USD equivalents of repurchase cash outflows stated in the respective 20-F liquidity discussions (RMB19,795m and RMB13,182m); FY2019 US$1,620m and FY2022 US$9,658m and FY2023 US$10,884m are the USD equivalents of repurchase cash outflows stated in the releases; FY2021 US$118m per FY2021 20-F Item 16E; FY2024 US$12.5bn and FY2025 US$11.9bn per the releases (company-stated program totals; cash-flow USD equivalents were 12,291 and 11,942); FY2026 US$1,046m per the repurchase table in the FY2026 results announcement (text rounds to US$1.0bn); no repurchases in FY2018 or FY2020 (dividend_per_unit 0 for FY2016-FY2022: no dividends were paid before FY2023). Dividends per ADS declared for the fiscal year: FY2023 US$1.00 (first-ever, declared 2023-11-16, source https://www.sec.gov/Archives/edgar/data/1577552/000110465923119081/tm2330915d1_ex99-1.htm); FY2024 US$1.66 (US$1.00 regular + US$0.66 special); FY2025 US$2.00 (US$1.05 regular + US$0.95 special); FY2026 US$1.05. SEGMENTS changed repeatedly; four as-reported eras are used, with recast comparatives from the newer release at each boundary per series-consistency preference: (1) FY2016-FY2020 Core commerce / Cloud computing / Digital media & entertainment / Innovation initiatives & others (FY2016 figures are the recast comparatives from the FY2017 release); (2) FY2021-FY2022 seven-segment structure introduced Dec 2021 quarter (FY2021 figures are recast comparatives from the FY2022 release); (3) FY2023-FY2024 post-reorganization business groups (FY2023 figures are recast comparatives from the FY2024 release, incl. DingTalk moved from Cloud to All others); (4) FY2025-FY2026 simplified four-group structure adopted June 2025 quarter (FY2025 figures are recast comparatives from the FY2026 release). Segment profit is adjusted EBITA (non-GAAP) in all years. From era (3) on, segment revenues are before unallocated items and inter-segment elimination and therefore sum to more than consolidated revenue; in eras (1)-(2) segment revenues sum to consolidated revenue. FY2016 non-GAAP net income / EPS use the FY2017-release re-presentation (42,791 / 16.77; originally reported 42,741 / 16.75). FY2026 operating income fell 64% on quick-commerce and AI investment plus goodwill impairment; net income was supported by mark-to-market investment gains and disposal gains (Trendyol GO local services); FY2026 free cash flow was negative on RMB122bn cloud/AI capex."
       },
       "quarterly": [
@@ -895,27 +895,27 @@ window.FINANCIALS = {
           "dividend_per_unit": null,
           "segments": [
             {
-              "name": "Alibaba China E-commerce Group",
-              "revenue": 140072,
-              "profit": 38389,
+              "name": "Alibaba E-commerce Group",
+              "revenue": 198812,
+              "profit": 39988,
               "profit_metric": "adjusted EBITA"
             },
             {
-              "name": "Alibaba International Digital Commerce Group",
-              "revenue": 34741,
-              "profit": -59,
+              "name": "AI Cloud and Compute Services",
+              "revenue": 33418,
+              "profit": 2419,
               "profit_metric": "adjusted EBITA"
             },
             {
-              "name": "Cloud Intelligence Group",
-              "revenue": 33398,
-              "profit": 2954,
+              "name": "AI Labs and Applications",
+              "revenue": 2882,
+              "profit": -3224,
               "profit_metric": "adjusted EBITA"
             },
             {
               "name": "All others",
-              "revenue": 58599,
-              "profit": -1415,
+              "revenue": 28629,
+              "profit": 687,
               "profit_metric": "adjusted EBITA"
             }
           ],
@@ -1114,6 +1114,66 @@ window.FINANCIALS = {
           "ttm_free_cash_flow": -46609,
           "ttm_diluted_eps": 43.02,
           "ttm_capex": 122021
+        },
+        {
+          "label": "FY2027 Q1 (Jun 2026)",
+          "period_end": "2026-06-30",
+          "revenue": 268953,
+          "cost_of_revenue": 166096,
+          "gross_profit": 102857,
+          "operating_income": 15161,
+          "net_income": 10537,
+          "non_gaap_net_income": 20715,
+          "diluted_eps": 3.71,
+          "non_gaap_diluted_eps": 8.52,
+          "operating_cash_flow": 22945,
+          "capex": 67660,
+          "free_cash_flow": -44670,
+          "cash_and_investments": 474505,
+          "shares_diluted_m": 19324,
+          "buyback_usd_m": 162,
+          "dividend_per_unit": null,
+          "segments": [
+            {
+              "name": "Alibaba E-commerce Group",
+              "revenue": 205862,
+              "profit": 39749,
+              "profit_metric": "adjusted EBITA"
+            },
+            {
+              "name": "AI Cloud and Compute Services",
+              "revenue": 48437,
+              "profit": 5628,
+              "profit_metric": "adjusted EBITA"
+            },
+            {
+              "name": "AI Labs and Applications",
+              "revenue": 3338,
+              "profit": -13861,
+              "profit_metric": "adjusted EBITA"
+            },
+            {
+              "name": "All others",
+              "revenue": 28803,
+              "profit": -3343,
+              "profit_metric": "adjusted EBITA"
+            }
+          ],
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1577552/000110465926099220/tm2623667d1_ex99-1.htm",
+          "gross_margin": 0.3824,
+          "operating_margin": 0.0564,
+          "net_margin": 0.0392,
+          "fcf_margin": -0.1661,
+          "revenue_yoy": 0.086,
+          "operating_income_yoy": -0.5667,
+          "net_income_yoy": -0.7556,
+          "diluted_eps_yoy": -0.7937,
+          "free_cash_flow_yoy": null,
+          "ttm_revenue": 1044971,
+          "ttm_net_income": 73325,
+          "ttm_free_cash_flow": -72464,
+          "ttm_diluted_eps": 28.75,
+          "ttm_capex": 151052
         }
       ],
       "annual": [
@@ -1796,12 +1856,12 @@ window.FINANCIALS = {
         }
       ],
       "segment_era": {
-        "start": "2024-06-30",
+        "start": "2026-06-30",
         "names": [
-          "Alibaba China E-commerce Group",
-          "Alibaba International Digital Commerce Group",
-          "All others",
-          "Cloud Intelligence Group"
+          "AI Cloud and Compute Services",
+          "AI Labs and Applications",
+          "Alibaba E-commerce Group",
+          "All others"
         ]
       }
     },
