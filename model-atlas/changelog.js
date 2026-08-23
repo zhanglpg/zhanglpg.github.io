@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-17 09:31",
+  "last_run": "2026-08-23 09:44",
   "entries": [
+    {
+      "date": "2026-08-23",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, the week's standout trending model — its HF repos are gated, so no primary-source config exists for the released 22B; the arXiv paper documents the earlier LTX-2 at 14B+5B, which does not match. Revisit if the config becomes public), DeepSeek-V4-Pro-0813 (config identical to the existing DeepSeek-V4-Pro entry except speculative-decoding metadata — checkpoint refresh), Ornith-1.5-35B-A3B (continued pretraining on the Qwen3.5-397B base, same Qwen3_5Moe architecture already in the atlas), Muse Spark 1.2 (weights announced Aug 10, still unpublished), and Kimi K3's Aug 20 repo update (tokenizer fix only, no architecture change). All 46 existing entries remain verified; nothing to upgrade."
+    },
     {
       "date": "2026-08-17",
       "added": [
