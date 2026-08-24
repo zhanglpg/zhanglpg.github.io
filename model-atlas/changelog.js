@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-23 09:44",
+  "last_run": "2026-08-24 09:24",
   "entries": [
+    {
+      "date": "2026-08-24",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, still top-trending at ~738k downloads, but both HF repos remain gated — HTTP 401 on config.json, so no primary source for the released model; revisit if the config goes public), Ornith-1.5-397B (ornith-ai's flagship claims Opus-4.8-level coding, but it's continued pretraining + self-improvement RL on the Qwen3.5-397B base — same Qwen3_5Moe architecture already in the atlas), and Muse Spark 1.2 (still unpublished on HF, carried over from Aug 17/23). Also confirmed: Qwen/Qwen3.8-2.4T-A95B's full 213-shard weights are now public (created Aug 8) and its raw config matches the existing verified qwen3-8-max entry field-for-field (92 all-MoE layers, 512 experts top-10+1, 3:1 Gated-DeltaNet hybrid, 2.4T/95B per README) — no update needed. All 46 entries remain verified; zero partial/estimated entries left to upgrade."
+    },
     {
       "date": "2026-08-23",
       "added": [],
