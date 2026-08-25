@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-24 09:24",
+  "last_run": "2026-08-25 10:23",
   "entries": [
+    {
+      "date": "2026-08-25",
+      "added": [
+        "k-exaone-2-0"
+      ],
+      "upgraded": [],
+      "note": "Added K-EXAONE 2.0 (750B/37B), LG AI Research's frontier open MoE — published on HF 2026-07-29 but missed by the earlier scans: 78 layers (2 dense head + 76 MoE), 256 experts top-8 + 1 shared with sigmoid dropless routing, LLLG hybrid attention (58 sliding-window layers with RoPE θ1M + 20 global NoPE layers in 19 × (3×128 + 1 global) blocks), Clamped SwiGLU on the last 16 layers, MTP + DSpark speculative drafters; verified against the raw config.json and arXiv:2608.04505 (recomputed 748.7B vs claimed 750B). Considered and skipped: SenseNova-U1.5-8B-MoT (dual-pathway Qwen3-based MoT any-to-any unified model — architecturally interesting but niche, 134 likes), LTX-2.5 (HF repos still gated, 3rd consecutive run), Ornith-1.5-35B-A3B (continued pretraining on the Qwen3.5 base), Muse Spark 1.2 (still unpublished, 4th run). All 47 entries verified."
+    },
     {
       "date": "2026-08-24",
       "added": [],
