@@ -2111,7 +2111,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-13T16:12:59+00:00",
-      "last_event": "2026-08-24T11:02:37+00:00",
+      "last_event": "2026-08-24T18:35:30+00:00",
       "events": [
         {
           "type": "updated",
@@ -2432,13 +2432,83 @@
           "type": "comment",
           "date": "2026-08-24T11:02:37+00:00",
           "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T15:30:01+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T15:39:24+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T16:13:06+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T16:26:04+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T16:42:23+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T16:45:55+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T16:50:35+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T16:51:16+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T17:06:13+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T17:16:13+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T18:27:16+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T18:27:53+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-24T18:29:10+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-08-24T18:35:30+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Submitted review #3D \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 2,
-        "comments": 58,
+        "comments": 71,
         "reviews": 0,
-        "total": 64
+        "total": 78
       },
       "message_ids": [
         "<20260713161259.B00839AE3E4@mail.hotcrp.com>",
@@ -2504,7 +2574,21 @@
         "<20260824104232.C8EDB91EB50@mail.hotcrp.com>",
         "<20260824105808.5E8C991EB50@mail.hotcrp.com>",
         "<20260824105958.2301D8404CA@mail.hotcrp.com>",
-        "<20260824110237.2D72A8404CB@mail.hotcrp.com>"
+        "<20260824110237.2D72A8404CB@mail.hotcrp.com>",
+        "<20260824153001.386578404C1@mail.hotcrp.com>",
+        "<20260824153924.DEE688404D0@mail.hotcrp.com>",
+        "<20260824161306.2402291EBC9@mail.hotcrp.com>",
+        "<20260824162604.16EE491EBFB@mail.hotcrp.com>",
+        "<20260824164223.8F2FD91EBE5@mail.hotcrp.com>",
+        "<20260824164555.C56C691EBE5@mail.hotcrp.com>",
+        "<20260824165035.2379F91EBE5@mail.hotcrp.com>",
+        "<20260824165116.2C6759208DD@mail.hotcrp.com>",
+        "<20260824170613.5976691EBE5@mail.hotcrp.com>",
+        "<20260824171613.361B791EBE5@mail.hotcrp.com>",
+        "<20260824182716.185628404D0@mail.hotcrp.com>",
+        "<20260824182753.1DF688404D0@mail.hotcrp.com>",
+        "<20260824182910.340EA8404D0@mail.hotcrp.com>",
+        "<20260824183530.70DDB91EBC7@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3292,7 +3376,7 @@
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-08-24T11:02:37+00:00"
+      "last_event": "2026-08-24T18:35:30+00:00"
     },
     "NSDI '27 Spring": {
       "paper_count": 1,
@@ -3465,8 +3549,14 @@
       "type": "announcement",
       "subject": "[ASE 2026] Poster Presentation (Confirm by Aug 5th AoE)",
       "date": "2026-08-01T21:45:54+00:00"
+    },
+    {
+      "conference": "SOSP 2026",
+      "type": "announcement",
+      "subject": "[SOSP 2026] conference registration reminder",
+      "date": "2026-08-24T20:57:40+00:00"
     }
   ],
-  "last_updated": "2026-08-24T12:05:25.760809+00:00",
-  "email_count": 386
+  "last_updated": "2026-08-25T00:01:40.957476+00:00",
+  "email_count": 401
 }
