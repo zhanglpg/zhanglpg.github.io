@@ -894,6 +894,108 @@ window.MODELS = [
 ]
 },
 {
+"id": "k-exaone-2-0",
+"name": "K-EXAONE 2.0 (750B-A37B)",
+"org": "LG AI Research",
+"family": "EXAONE",
+"released": "2026-07",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 750,
+"params_active_B": 37,
+"n_layers": 78,
+"d_model": 6144,
+"d_ff": 18432,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "LLLG hybrid — 2 dense head layers (1 global + 1 sliding-window 4096) followed by 19 × (3×128-token sliding-window + 1 global) blocks: 20 global NoPE layers + 58 sliding layers with RoPE theta 1M (SWA-only RoPE); GQA 64 Q / 8 KV heads × 128 with per-head QK-norm.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 153600,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "LG AI Research's frontier open-weight MoE, upcycled from K-EXAONE (236B): depth 48→78 layers (block-level duplication, 12→19 LLLG blocks) and width 128→256 experts (expert + router-row duplication), followed by continual pretraining. 750B total / ~37B active: top-8 of 256 experts + 1 shared expert with sigmoid scoring, sequence-level load balancing, dropless routing (noaux_tc). Two dense head layers (d_ff 18,432) then 76 MoE layers (expert d_ff 2,048); the last 16 layers use Clamped SwiGLU (limit 7.0) to bound exploding activations. Ships MTP (1 sliding-window layer, 4 speculative steps) and DSpark drafters for ~3–5× decoding speedup. 256K context, 10 languages, BF16 weights (749.4B params in the safetensors index). Published on HF 2026-07-29.",
+"sources": [
+"https://arxiv.org/abs/2608.04505",
+"https://www.lgresearch.ai/news/view?seq=678",
+"https://huggingface.co/LGAI-EXAONE/K-EXAONE-2.0-750B-A37B",
+"https://huggingface.co/LGAI-EXAONE/K-EXAONE-2.0-750B-A37B/raw/main/config.json"
+],
+"confidence": "verified",
+"dense_first_layers": 2,
+"attention_split": {
+"parts": [
+{
+"name": "Sliding",
+"n": 58,
+"type": "sliding",
+"sub": "win 128 · 1×4096"
+},
+{
+"name": "Global",
+"n": 20,
+"type": "global",
+"sub": "NoPE"
+}
+],
+"pattern": "gssssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "LLLG hybrid — sliding-window + global NoPE blocks",
+"p": {
+"variants": [
+{
+"n": 58,
+"name": "sliding window",
+"type": "sliding",
+"span": "win",
+"frac": 0.15,
+"spanLabel": "window 128 (layer 1: 4096)",
+"sub1": "GQA 64Q / 8KV × 128 · per-head QK-norm",
+"sub2": "RoPE θ 1M — applied on SWA layers only"
+},
+{
+"n": 20,
+"name": "global NoPE",
+"type": "global",
+"span": "full",
+"spanLabel": "full context 256K",
+"sub1": "no positional encoding",
+"sub2": "1 global per LLLG block · layer 0 + final layer"
+}
+],
+"common": [
+"2 dense head layers (global + 4096-SWA, d_ff 18,432) before the MoE stack",
+"last 16 layers: Clamped SwiGLU (limit 7.0) bounds exploding activations"
+],
+"cache": "global layers: 2,048 el/token unbounded × 20 · sliding layers capped at 128 tokens (4,096 at layer 1)"
+},
+"notes": []
+}
+],
+"attn_bullets": [
+"upcycled from K-EXAONE (236B/23B): depth 48→78 by duplicating middle LLLG blocks, width 128→256 experts by duplicating experts + router rows — then continual pretraining",
+"sigmoid-routing dropless MoE (top-8 + 1 shared of 256, routed_scaling_factor 2.5); BF16 weights total 749.4B params in the safetensors index",
+"ships MTP (1 SWA layer, 4 speculative steps) + DSpark drafters → ~3–5× decoding speedup"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
