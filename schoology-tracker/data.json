@@ -2943,6 +2943,46 @@
               "perfect": false
             }
           ]
+        },
+        "Photo and Design": {
+          "full_name": "Photo and Design - 7670: ReynoldsM p4 T1",
+          "grade": "-",
+          "percentage": "100%",
+          "term": "26-27 T1",
+          "assignments": [
+            {
+              "name": "Individual Found Letters",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
+        },
+        "AP Statistics": {
+          "full_name": "AP Statistics - 2460: IamsK p7 T1",
+          "grade": "A+",
+          "percentage": "100%",
+          "term": "26-27 T1",
+          "assignments": [
+            {
+              "name": "2A_A Assignment 2 Part A) Finish the 3 pages of the class notes.",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "1A_A - Assignment 1 Part A) complete all 4 pages of the class notes, including the problems on pages 1-4",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "0D The Joy of Stats.org",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            }
+          ]
         }
       },
       "overdue": []
@@ -5938,50 +5978,14 @@
         {
           "assignment": "LHS Career Exploration",
           "due_date": "Friday, 12/05/2025",
-          "days_overdue": 255
+          "days_overdue": 262
         }
       ]
     }
   },
-  "last_updated": "2026-08-18T00:09:35.066671+00:00",
-  "email_count": 66,
+  "last_updated": "2026-08-25T00:01:27.544716+00:00",
+  "email_count": 67,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Macbeth Vocab Test",
-      "grade": "9/10",
-      "percentage": 90.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Act 3 Quiz",
-      "grade": "9/10",
-      "percentage": 90.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Chemistry H",
-      "subject": "Unit 10 Test",
-      "grade": "18/26",
-      "percentage": 69.2,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Step 1: Photo Practice-Shared Slidedeck",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Sheldon",
@@ -6395,8 +6399,44 @@
       "grade": "48/55",
       "percentage": 87.3,
       "date": "2026-06-08T22:03:52+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Photo and Design",
+      "subject": "Individual Found Letters",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-08-24T22:04:02+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "2A_A Assignment 2 Part A) Finish the 3 pages of the class notes.",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-08-24T22:04:02+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "1A_A - Assignment 1 Part A) complete all 4 pages of the class notes, including the problems on pages 1-4",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-08-24T22:04:02+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "0D The Joy of Stats.org",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-08-24T22:04:02+00:00"
     }
   ],
-  "week_start": "8/10/26",
-  "week_end": "8/17/26"
+  "week_start": "8/17/26",
+  "week_end": "8/24/26"
 }
