@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-25 10:23",
+  "last_run": "2026-08-26 09:27",
   "entries": [
+    {
+      "date": "2026-08-26",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. No notable open-weight releases since K-EXAONE 2.0 was added Aug 25: swept 25 major HF orgs and trending, all clear. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, still top-trending at ~834k downloads, but all HF repos remain gated — HTTP 401 on config.json, 4th consecutive run; revisit when the config goes public), Muse Spark 1.2 (Meta, 5th run — still unpublished; only the Muse Glimmer 30B derivative is on HF), superwhisper/s1-mini (ASR post-processing finetune of Qwen3-0.6B — derivative and niche), Ornith-1.5-35B-A3B and SenseNova-U1.5-8B-MoT (reassessed in prior runs, status unchanged). All 47 entries remain verified; zero partial/estimated entries left to upgrade."
+    },
     {
       "date": "2026-08-25",
       "added": [
