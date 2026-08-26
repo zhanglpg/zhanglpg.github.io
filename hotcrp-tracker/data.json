@@ -1228,7 +1228,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-08-21T00:40:16+00:00",
+      "last_event": "2026-08-25T17:12:57+00:00",
       "events": [
         {
           "type": "updated",
@@ -1294,13 +1294,18 @@
           "type": "submitted",
           "date": "2026-08-21T00:40:16+00:00",
           "subject": "[EuroSys '27 Spring] Submission #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-25T17:12:57+00:00",
+          "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
-        "comments": 0,
+        "comments": 1,
         "reviews": 0,
-        "total": 13
+        "total": 14
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1315,7 +1320,8 @@
         "<20260512021133.BAFED8D78D7@mail.hotcrp.com>",
         "<20260729100938.145A7AE6F3A@mail.hotcrp.com>",
         "<20260801055831.E24F7AE6F0F@mail.hotcrp.com>",
-        "<20260821004016.626DE920A9E@mail.hotcrp.com>"
+        "<20260821004016.626DE920A9E@mail.hotcrp.com>",
+        "<20260825171257.221F68404CB@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2111,7 +2117,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-13T16:12:59+00:00",
-      "last_event": "2026-08-24T18:35:30+00:00",
+      "last_event": "2026-08-25T15:21:35+00:00",
       "events": [
         {
           "type": "updated",
@@ -2502,13 +2508,18 @@
           "type": "submitted",
           "date": "2026-08-24T18:35:30+00:00",
           "subject": "[SOSP '26 Artifact Evaluation] Submitted review #3D \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-25T15:21:35+00:00",
+          "subject": "[SOSP '26 Artifact Evaluation] Comment for #3 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 2,
-        "comments": 71,
+        "comments": 72,
         "reviews": 0,
-        "total": 78
+        "total": 79
       },
       "message_ids": [
         "<20260713161259.B00839AE3E4@mail.hotcrp.com>",
@@ -2588,7 +2599,8 @@
         "<20260824182716.185628404D0@mail.hotcrp.com>",
         "<20260824182753.1DF688404D0@mail.hotcrp.com>",
         "<20260824182910.340EA8404D0@mail.hotcrp.com>",
-        "<20260824183530.70DDB91EBC7@mail.hotcrp.com>"
+        "<20260824183530.70DDB91EBC7@mail.hotcrp.com>",
+        "<20260825152135.E9DC8920B0F@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Jul 14, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3364,7 +3376,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-08-21T00:40:16+00:00"
+      "last_event": "2026-08-25T17:12:57+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -3376,7 +3388,7 @@
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-08-24T18:35:30+00:00"
+      "last_event": "2026-08-25T15:21:35+00:00"
     },
     "NSDI '27 Spring": {
       "paper_count": 1,
@@ -3563,6 +3575,6 @@
       "date": "2026-08-25T10:11:38+00:00"
     }
   ],
-  "last_updated": "2026-08-25T12:02:55.501554+00:00",
-  "email_count": 402
+  "last_updated": "2026-08-26T00:02:59.873360+00:00",
+  "email_count": 404
 }
