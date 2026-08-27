@@ -148,7 +148,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
-      "last_event": "2026-08-26T02:13:59+00:00",
+      "last_event": "2026-08-27T03:48:09+00:00",
       "events": [
         {
           "type": "updated",
@@ -264,13 +264,23 @@
           "type": "accepted",
           "date": "2026-08-26T02:13:59+00:00",
           "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-08-27T03:18:11+00:00",
+          "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-27T03:48:09+00:00",
+          "subject": "[SOSP 2026] Comment for #629 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 5,
-        "comments": 10,
+        "comments": 11,
         "reviews": 0,
-        "total": 23
+        "total": 25
       },
       "message_ids": [
         "<20260402032219.6D4AE9CF346@mail.hotcrp.com>",
@@ -295,9 +305,11 @@
         "<20260817024606.8E35EC0803C@mail.hotcrp.com>",
         "<20260823141211.37CFA8404DF@mail.hotcrp.com>",
         "<20260826021044.AAC01842E44@mail.hotcrp.com>",
-        "<20260826021359.15005842E44@mail.hotcrp.com>"
+        "<20260826021359.15005842E44@mail.hotcrp.com>",
+        "<20260827031811.B4A95920B61@mail.hotcrp.com>",
+        "<20260827034809.8E80B91686D@mail.hotcrp.com>"
       ],
-      "deadline": "Thursday Apr 2, 2026, 7:59:59 AM EDT",
+      "deadline": "Saturday Aug 29, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
     },
@@ -3352,7 +3364,7 @@
     },
     "SOSP 2026": {
       "paper_count": 1,
-      "last_event": "2026-08-26T02:13:59+00:00"
+      "last_event": "2026-08-27T03:48:09+00:00"
     },
     "OSDI '26": {
       "paper_count": 2,
@@ -3587,6 +3599,6 @@
       "date": "2026-08-25T10:11:38+00:00"
     }
   ],
-  "last_updated": "2026-08-26T04:05:29.800729+00:00",
-  "email_count": 406
+  "last_updated": "2026-08-27T04:02:53.448986+00:00",
+  "email_count": 408
 }
