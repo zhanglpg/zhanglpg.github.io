@@ -1264,7 +1264,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-08-25T17:12:57+00:00",
+      "last_event": "2026-08-28T18:18:16+00:00",
       "events": [
         {
           "type": "updated",
@@ -1335,13 +1335,18 @@
           "type": "comment",
           "date": "2026-08-25T17:12:57+00:00",
           "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-08-28T18:18:16+00:00",
+          "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
-        "comments": 1,
+        "comments": 2,
         "reviews": 0,
-        "total": 14
+        "total": 15
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1357,7 +1362,8 @@
         "<20260729100938.145A7AE6F3A@mail.hotcrp.com>",
         "<20260801055831.E24F7AE6F0F@mail.hotcrp.com>",
         "<20260821004016.626DE920A9E@mail.hotcrp.com>",
-        "<20260825171257.221F68404CB@mail.hotcrp.com>"
+        "<20260825171257.221F68404CB@mail.hotcrp.com>",
+        "<20260828181816.EA689927017@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3412,7 +3418,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-08-25T17:12:57+00:00"
+      "last_event": "2026-08-28T18:18:16+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -3609,8 +3615,14 @@
       "type": "announcement",
       "subject": "[SOSP '26 Artifact Evaluation] Action Required: Permanent archival for \"Available\" badge",
       "date": "2026-08-25T10:11:38+00:00"
+    },
+    {
+      "conference": "SOSP '26 Artifact Evaluation",
+      "type": "announcement",
+      "subject": "[SOSP '26 Artifact Evaluation] Badges",
+      "date": "2026-08-28T16:07:48+00:00"
     }
   ],
-  "last_updated": "2026-08-28T04:06:32.568710+00:00",
-  "email_count": 410
+  "last_updated": "2026-08-29T00:03:53.991105+00:00",
+  "email_count": 412
 }
