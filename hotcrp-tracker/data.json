@@ -148,7 +148,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
-      "last_event": "2026-08-28T03:59:58+00:00",
+      "last_event": "2026-08-29T03:41:39+00:00",
       "events": [
         {
           "type": "updated",
@@ -284,13 +284,18 @@
           "type": "accepted",
           "date": "2026-08-28T03:59:58+00:00",
           "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-08-29T03:41:39+00:00",
+          "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 5,
         "comments": 12,
         "reviews": 0,
-        "total": 27
+        "total": 28
       },
       "message_ids": [
         "<20260402032219.6D4AE9CF346@mail.hotcrp.com>",
@@ -319,7 +324,8 @@
         "<20260827031811.B4A95920B61@mail.hotcrp.com>",
         "<20260827034809.8E80B91686D@mail.hotcrp.com>",
         "<20260827121421.C6F78920C03@mail.hotcrp.com>",
-        "<20260828035958.94C72920D16@mail.hotcrp.com>"
+        "<20260828035958.94C72920D16@mail.hotcrp.com>",
+        "<20260829034139.864A6927039@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 29, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3382,7 +3388,7 @@
     },
     "SOSP 2026": {
       "paper_count": 1,
-      "last_event": "2026-08-28T03:59:58+00:00"
+      "last_event": "2026-08-29T03:41:39+00:00"
     },
     "OSDI '26": {
       "paper_count": 2,
@@ -3623,6 +3629,6 @@
       "date": "2026-08-28T16:07:48+00:00"
     }
   ],
-  "last_updated": "2026-08-29T00:03:53.991105+00:00",
-  "email_count": 412
+  "last_updated": "2026-08-29T04:03:44.020510+00:00",
+  "email_count": 413
 }
