@@ -1591,7 +1591,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-07-11T08:22:44+00:00",
+      "last_event": "2026-08-30T04:26:04+00:00",
       "events": [
         {
           "type": "updated",
@@ -1642,13 +1642,18 @@
           "type": "updated",
           "date": "2026-07-11T08:22:44+00:00",
           "subject": "[ATC '26] Updated #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-30T04:26:04+00:00",
+          "subject": "[ATC '26] Response period starts for paper #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
         }
       ],
       "counts": {
         "updates": 9,
         "comments": 0,
         "reviews": 0,
-        "total": 10
+        "total": 11
       },
       "message_ids": [
         "<20260603070306.602148F10B2@mail.hotcrp.com>",
@@ -1660,7 +1665,8 @@
         "<20260611025509.BEB1E90B8E3@mail.hotcrp.com>",
         "<20260611032322.6A39690B8D6@mail.hotcrp.com>",
         "<20260611033928.2371290B8D6@mail.hotcrp.com>",
-        "<20260711082244.485A29430D3@mail.hotcrp.com>"
+        "<20260711082244.485A29430D3@mail.hotcrp.com>",
+        "<20260830042604.ADC8D9B3C8D@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1682,7 +1688,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-06-11T11:51:26+00:00",
+      "last_event": "2026-08-30T04:26:06+00:00",
       "events": [
         {
           "type": "updated",
@@ -1713,13 +1719,18 @@
           "type": "updated",
           "date": "2026-06-11T11:51:26+00:00",
           "subject": "[ATC '26] Updated #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-30T04:26:06+00:00",
+          "subject": "[ATC '26] Response period starts for paper #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 5,
         "comments": 0,
         "reviews": 0,
-        "total": 6
+        "total": 7
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
@@ -1727,7 +1738,8 @@
         "<20260611044724.5AFCB90B8F8@mail.hotcrp.com>",
         "<20260611075632.A9DA690B8E8@mail.hotcrp.com>",
         "<20260611104439.9DE3590B8F6@mail.hotcrp.com>",
-        "<20260611115126.270A392D9BA@mail.hotcrp.com>"
+        "<20260611115126.270A392D9BA@mail.hotcrp.com>",
+        "<20260830042606.62321A056AE@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1754,7 +1766,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-06-11T11:25:59+00:00",
+      "last_event": "2026-08-30T04:26:07+00:00",
       "events": [
         {
           "type": "updated",
@@ -1830,13 +1842,18 @@
           "type": "updated",
           "date": "2026-06-11T11:25:59+00:00",
           "subject": "[ATC '26] Updated #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-30T04:26:07+00:00",
+          "subject": "[ATC '26] Response period starts for paper #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
         "updates": 14,
         "comments": 0,
         "reviews": 0,
-        "total": 15
+        "total": 16
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
@@ -1853,7 +1870,8 @@
         "<20260611094946.2337690B8FE@mail.hotcrp.com>",
         "<20260611101405.C096290B8F6@mail.hotcrp.com>",
         "<20260611112118.7B1BB90B8FE@mail.hotcrp.com>",
-        "<20260611112559.09C0E90B8FE@mail.hotcrp.com>"
+        "<20260611112559.09C0E90B8FE@mail.hotcrp.com>",
+        "<20260830042607.A498EA0D438@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1879,7 +1897,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T10:07:22+00:00",
-      "last_event": "2026-06-11T09:57:10+00:00",
+      "last_event": "2026-08-30T04:26:06+00:00",
       "events": [
         {
           "type": "submitted",
@@ -1915,13 +1933,18 @@
           "type": "updated",
           "date": "2026-06-11T09:57:10+00:00",
           "subject": "[ATC '26] Updated #471 \"TraJudger: Structure-Guided Failure...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-30T04:26:06+00:00",
+          "subject": "[ATC '26] Response period starts for paper #471 \"TraJudger: Structure-Guided Failure...\""
         }
       ],
       "counts": {
         "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 7
+        "total": 8
       },
       "message_ids": [
         "<20260610100722.87F3E92D996@mail.hotcrp.com>",
@@ -1930,7 +1953,8 @@
         "<20260611090506.6D94090B8D7@mail.hotcrp.com>",
         "<20260611091022.2351B90B8D6@mail.hotcrp.com>",
         "<20260611092310.BD80691608B@mail.hotcrp.com>",
-        "<20260611095710.0D28B90B8F8@mail.hotcrp.com>"
+        "<20260611095710.0D28B90B8F8@mail.hotcrp.com>",
+        "<20260830042606.57F0EA056AC@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1956,7 +1980,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T13:13:51+00:00",
-      "last_event": "2026-06-11T05:18:37+00:00",
+      "last_event": "2026-08-30T04:26:09+00:00",
       "events": [
         {
           "type": "updated",
@@ -1987,13 +2011,18 @@
           "type": "updated",
           "date": "2026-06-11T05:18:37+00:00",
           "subject": "[ATC '26] Updated #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-08-30T04:26:09+00:00",
+          "subject": "[ATC '26] Response period starts for paper #1518 \"Axon: Asynchronous Global KV-Aware...\""
         }
       ],
       "counts": {
         "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 6
+        "total": 7
       },
       "message_ids": [
         "<20260610131351.6939590A6D8@mail.hotcrp.com>",
@@ -2001,7 +2030,8 @@
         "<20260611021608.0E15890B8DE@mail.hotcrp.com>",
         "<20260611021635.9CF0890B8DE@mail.hotcrp.com>",
         "<20260611022002.C543490B8DA@mail.hotcrp.com>",
-        "<20260611051837.E00A792D9A7@mail.hotcrp.com>"
+        "<20260611051837.E00A792D9A7@mail.hotcrp.com>",
+        "<20260830042609.61AA0AEBBE7@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3434,7 +3464,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-07-28T16:28:38+00:00"
+      "last_event": "2026-08-30T04:26:09+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -3635,6 +3665,6 @@
       "date": "2026-08-28T16:07:48+00:00"
     }
   ],
-  "last_updated": "2026-08-29T08:04:48.590508+00:00",
-  "email_count": 414
+  "last_updated": "2026-08-30T08:03:03.281510+00:00",
+  "email_count": 419
 }
