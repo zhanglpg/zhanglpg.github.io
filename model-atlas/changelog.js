@@ -1,13 +1,18 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-08-26 09:27",
+  "last_run": "2026-09-01 11:19",
   "entries": [
     {
-      "date": "2026-08-26",
-      "added": [],
+      "date": "2026-09-01",
+      "added": [
+        "glm-5-3-flash",
+        "qwen3-8-flash-next",
+        "hy4-preview",
+        "deepseek-v4-flash-vision-exp"
+      ],
       "upgraded": [],
-      "note": "Checked — no changes. No notable open-weight releases since K-EXAONE 2.0 was added Aug 25: swept 25 major HF orgs and trending, all clear. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, still top-trending at ~834k downloads, but all HF repos remain gated — HTTP 401 on config.json, 4th consecutive run; revisit when the config goes public), Muse Spark 1.2 (Meta, 5th run — still unpublished; only the Muse Glimmer 30B derivative is on HF), superwhisper/s1-mini (ASR post-processing finetune of Qwen3-0.6B — derivative and niche), Ornith-1.5-35B-A3B and SenseNova-U1.5-8B-MoT (reassessed in prior runs, status unchanged). All 47 entries remain verified; zero partial/estimated entries left to upgrade."
+      "note": "Added the four frontier open-weight drops of the week, all verified from raw HF configs + official cards. GLM-5.3-Flash (320B/18B, MIT): Z.ai's first natively multimodal GLM-5 — a sparse + linear attention hybrid (34 KDA gated-linear layers, 64×128, conv 4, interleaved 3:1 with 11 DSA sparse layers on full-NoPE MLA; indexer 32×128 top-2048 with 4-key pooling), 288 experts top-8 + 1 shared with sigmoid dropless routing, mHC residuals, 1M context. Qwen3.8-Flash-Next (125B/6B + 51B n-gram embeddings + 4B MTP, Qwen Community License): the experimental Qwen4-architecture preview — 3:1 Gated DeltaNet + QSA (Qwen Sparse Attention) hybrid where a 4-Q-head MQA indexer selects 4-token micro-blocks (512 blocks = 2048-token budget) instead of per-token top-k, plus a Gated Residual (4 branches, rank-320). Hunyuan Hy4 preview (770B/49B, Apache-2.0): Tencent's flagship — Gated MLA + Gated DSA on all 78 layers with IndexCache cross-layer index reuse (21 of 78 layers run the indexer), iHC hyper-connections, native MTP drafter. DeepSeek-V4-Flash-Vision-Exp (~297B estimated, partial confidence — DeepSeek's first multimodal model): V4-Flash stack + 32-layer ViT tower, 3 MTP drafters, DSpark noise-token decoding. Considered and skipped: GLM-5.3 (text-only — config is byte-identical to the GLM-5.2 base except transformers_version; a post-training-only refresh, so the existing GLM-5.2 entry already covers the architecture), LTX-2.5 (still gated, 6th consecutive run), Muse Spark 1.2 (still unpublished). 51 models total."
     },
     {
       "date": "2026-08-25",

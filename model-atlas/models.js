@@ -996,6 +996,491 @@ window.MODELS = [
 ]
 },
 {
+"id": "glm-5-3-flash",
+"name": "GLM-5.3-Flash",
+"org": "Zhipu",
+"family": "GLM",
+"released": "2026-08",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 320,
+"params_active_B": 18,
+"n_layers": 45,
+"d_model": 4096,
+"d_ff": 12288,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "3:1 hybrid — 34 KDA linear-attention layers (gated DeltaNet-style: 64 heads × 128, short conv 4, per-head decay + gate) + 11 DSA sparse layers every 4th (MLA with full NoPE: q_lora 1536, kv_lora 512, qk_nope 256, v 256; indexer 32 × 128 heads, top-2048, 4-key block pooling); interleaved indexer RoPE only.",
+"n_experts": 288,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 154880,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "ViT (24 layers, hidden 1024, 16 heads, patch 14, image 448)",
+"encoder_params_B": 0.3,
+"fusion": "adapter",
+"notes": "Native image+video (temporal patch 2, spatial merge 2); 1024 → 10240 → 4096 projection into the LM."
+},
+"notes": "Z.ai's first natively multimodal GLM-5: 320B total / 18B active with a novel sparse + linear attention hybrid — 34 KDA gated-linear-attention layers (DeltaNet-style, 64 heads × 128, short conv 4) interleaved 3:1 with 11 DeepSeek-style DSA layers (full-NoPE MLA: q_lora 1536, kv_lora 512, v 256; indexer 32 × 128, top-2048, 4-key block pooling). 288 experts top-8 + 1 shared with sigmoid dropless routing (noaux_tc); first 3 layers dense (d_ff 12,288). mHC manifold-constrained hyper-connections (Sinkhorn 20); Clamped SwiGLU (limit 10); MTP 1 layer. 1M context; FP8 release (BF16 sibling repo). Approaches Claude Opus 4.8 on coding/agentic benchmarks at ~1/10 the serving cost.",
+"sources": [
+"https://huggingface.co/zai-org/GLM-5.3-Flash",
+"https://huggingface.co/zai-org/GLM-5.3-Flash/raw/main/config.json",
+"https://z.ai/blog/glm-5.3-flash",
+"https://arxiv.org/abs/2602.15763"
+],
+"confidence": "verified",
+"dense_first_layers": 3,
+"attention_split": {
+"parts": [
+{
+"name": "KDA linear",
+"n": 34,
+"type": "linear",
+"sub": "gated δ · conv 4"
+},
+{
+"name": "DSA sparse",
+"n": 11,
+"type": "sparse",
+"sub": "MLA NoPE · top-2048"
+}
+],
+"pattern": "lllslllslllslllslllslllslllslllslllslllslllsl",
+"pattern_map": {
+"l": "linear",
+"s": "sparse"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "KDA — gated linear attention (34 layers)",
+"p": {
+"d": 4096,
+"kh": 64,
+"vh": 64,
+"dh": 128,
+"conv": 4,
+"proj": "fused qkvbfg → q | k | v | β | f | g",
+"projSub": "single fused projection (KDA)",
+"qsub": "L2 norm",
+"vsub": "64 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "input-dependent decay",
+"decaySub": "A_log · dt_bias · b_proj",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNorm ⊗ SiLU(z)",
+"outSub": "→ out_proj",
+"cacheline": "no KV cache on linear layers — state 64×128×128 ≈ 1.05M el (fp32) + conv 4×4096"
+},
+"notes": [
+"gate lower bound −5 keeps decay stable",
+"34 of 45 layers: every layer except the 4th, 8th, … (DSA)"
+]
+},
+{
+"kind": "dsaidx",
+"title": "DSA indexer — top-2048 token selection",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"keynorm": "LN",
+"note": "kpool 4 — 4-key block pooling · interleaved indexer RoPE",
+"cache": "indexer keys cached on the 11 sparse layers — no IndexShare (Flash runs its own indexer per sparse layer)"
+},
+"notes": [
+"MLA on the sparse layers is fully NoPE (q_lora 1536, kv_lora 512, qk_nope 256, v 256)",
+"the MTP layer also carries its own indexer"
+]
+},
+{
+"kind": "mhc",
+"title": "mHC — manifold-constrained hyper-connections",
+"p": {
+"sinkhorn": 20,
+"cap": "x_{l+1} = H_res·x_l + H_postᵀ·F(H_pre·x_l) — each mapping = static + input-dynamic part"
+}
+}
+],
+"residual": {
+"kind": "mhc",
+"note": "Residuals: 4-stream manifold-constrained Hyper-Connections (mHC)"
+},
+"attn_bullets": [
+"MTP module: 1 extra layer (indexer-equipped) for multi-token prediction",
+"Clamped SwiGLU (limit 10) bounds activation spikes on every layer",
+"vision: 24-layer ViT (1024) + 10240-dim projector feeds the LM (image + video)"
+]
+},
+{
+"id": "qwen3-8-flash-next",
+"name": "Qwen3.8-Flash-Next",
+"org": "Alibaba",
+"family": "Qwen3.8",
+"released": "2026-08",
+"license": "Qwen Community License 1.0 (custom)",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 125,
+"params_active_B": 6,
+"n_layers": 48,
+"d_model": 2560,
+"d_ff": null,
+"d_ff_moe": 640,
+"n_heads": 24,
+"n_kv_heads": 2,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "3:1 hybrid — 36 Gated DeltaNet linear-attention layers (16 QK / 48 V heads, head_dim 128, conv 4) + 12 QSA sparse layers every 4th (GQA 24 Q / 2 KV, head_dim 256, partial RoPE 0.25, interleaved MRoPE; indexer MQA 4 Q / 1 shared K head × 128, budget 512 blocks = 2048 tokens, 4-token micro-blocks).",
+"n_experts": 512,
+"active_experts": 10,
+"shared_experts": 1,
+"vocab_size": 248320,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "SigLIP2-so400m-class ViT (27 layers, hidden 1152, 16 heads, patch 16)",
+"encoder_params_B": 0.4,
+"fusion": "adapter",
+"notes": "Native image+video (temporal patch 2, GELU ViT, d_ff 4304); 2×2 spatial merge projects to d_model 2560."
+},
+"notes": "Experimental preview of the Qwen4 architecture (Qwen4ExpForConditionalGeneration): 125B total / 6B active MoE (512 experts top-10 + 1 shared, expert d_ff 640) PLUS 51B N-gram embedding parameters (20M bigram/trigram entries indexed at layer 2 — cheap, offload-friendly parameter scaling) and a 4B MTP layer. 3:1 hybrid of Gated DeltaNet and QSA (Qwen Sparse Attention) — QSA selects 4-token micro-blocks via an MQA indexer (512 blocks = 2048-token budget) instead of per-token top-k. Gated Residual: 4 branches with a rank-320 bottleneck, element-wise data-dependent read gate + per-branch scalar write gate. Muon+AdamW split-optimizer recipe, no batch-size warmup. Native 262K context, extensible to 1M.",
+"sources": [
+"https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+"https://huggingface.co/Qwen/Qwen3.8-Flash-Next/raw/main/config.json",
+"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Gated DeltaNet",
+"n": 36,
+"type": "linear",
+"sub": "16QK/48V × 128 · conv 4"
+},
+{
+"name": "QSA sparse",
+"n": 12,
+"type": "sparse",
+"sub": "24Q/2KV × 256 · 512 blocks"
+}
+],
+"pattern": "lllslllslllslllslllslllslllslllslllslllslllsllls",
+"pattern_map": {
+"l": "linear",
+"s": "sparse"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (36 layers)",
+"p": {
+"d": 2560,
+"kh": 16,
+"vh": 48,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 2560 → 10240 · in_proj_z → gate",
+"projSub": "split projections (Qwen4Exp class) · in_proj_b / a → β, α",
+"qsub": "L2 norm",
+"vsub": "48 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNorm ⊗ SiLU(z)",
+"outSub": "→ out_proj",
+"cacheline": "no KV cache on linear layers — state 48×128×128 ≈ 0.79M el (fp32) + conv 4×10240"
+}
+},
+{
+"kind": "msa",
+"title": "QSA — Qwen Sparse Attention (12 layers)",
+"p": {
+"nq": 24,
+"nkv": 2,
+"dh": 256,
+"iheads": 4,
+"idim": 128,
+"topk": 512,
+"block": 4,
+"budget": 2048,
+"group": 12,
+"blockSub": "block-level scoring",
+"qsub": "per-head QK-norm · partial RoPE 64/256",
+"cache": "indexer MQA: 4 Q heads / 1 shared K head × 128 — 4-token micro-blocks, 512 blocks"
+},
+"notes": [
+"replaces gated full attention: block-level selection instead of per-token top-k",
+"full_attention_interval 4 — every 4th layer"
+]
+}
+],
+"attn_bullets": [
+"N-gram embeddings: 20M bigram/trigram entries (51B params) indexed at layer 2 — parameter scaling with near-zero compute",
+"Gated Residual: 4 branches, rank-320 bottleneck — element-wise read gate + per-branch write gate",
+"MTP: 1 layer · Muon + AdamW split recipe · no batch-size warmup"
+]
+},
+{
+"id": "hy4-preview",
+"name": "Hunyuan Hy4 (preview)",
+"org": "Tencent Hunyuan",
+"family": "Hunyuan",
+"released": "2026-08",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 770,
+"params_active_B": 49,
+"n_layers": 78,
+"d_model": 6144,
+"d_ff": 18432,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 8,
+"head_dim": 256,
+"attention": "sparse",
+"attention_detail": "Gated MLA + Gated DeepSeek Sparse Attention on all 78 layers — MLA (q_lora 2048, kv_lora 512, qk_nope 192 + qk_rope 64, v 256) with an element-wise output gate; DSA indexer 32 × 128 heads, top-2048, with IndexCache cross-layer reuse (21 full indexer layers, 57 shared); learnable sink tokens.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 120832,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Tencent's 770B total / 49B active flagship preview (Apache-2.0): Gated MLA + Gated DSA sparse attention on every one of the 78 layers — DeepSeek-style indexer (top-2048, 32 × 128 heads) with element-wise attention gating and IndexCache cross-layer index reuse (21 of 78 layers run the indexer, 57 reuse the nearest top-k). Residuals: iHC identity Hyper-Connections (4 streams, hc_mult 4, magnitude 2.0). Layer 0 is a dense FFN (d_ff 18,432), layers 1–77 are MoE (256 experts top-8 + 1 shared, dropless e_score_correction_bias routing). Native MTP speculative-decoding layer (10B total / 0.7B active). Learnable sink tokens; Clamped SwiGLU (limit 10); RoPE θ 10M; 1M context.",
+"sources": [
+"https://huggingface.co/tencent/Hy4-preview",
+"https://huggingface.co/tencent/Hy4-preview/raw/main/config.json",
+"https://github.com/Tencent-Hunyuan/Hy4-preview"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"attn_modules": [
+{
+"kind": "dsaidx",
+"title": "Gated DSA — IndexCache cross-layer reuse",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"keynorm": "LN",
+"note": "element-wise gate on attention output (gated MLA)",
+"shareLabel": "IndexCache",
+"share": {
+"full": 21,
+"shared": 57,
+"total": 78,
+"layers": [
+0,
+1,
+5,
+9,
+13,
+17,
+21,
+25,
+29,
+33,
+37,
+41,
+45,
+49,
+53,
+57,
+61,
+65,
+69,
+73,
+77
+]
+},
+"cache": "k^I cached on the 21 indexer layers — 57 shared layers reuse the nearest top-k"
+},
+"notes": [
+"Gated DSA: inspired by DeepSeek's sparse attention + GLM's gating",
+"IndexCache: cross-layer sparse-index reuse (arXiv 2603.12201)"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA — element-wise gating",
+"p": {
+"d": 6144,
+"nh": 64,
+"qlora": 2048,
+"kvlora": 512,
+"nope": 192,
+"rope": 64,
+"v": 256,
+"gate": "element-wise gate",
+"cache": "KV cache: c_KV 512 + k_R 64 = 576 el/token/layer"
+},
+"notes": [
+"gated_mla: learned element-wise gate scales the attention output per channel"
+]
+}
+],
+"attn_bullets": [
+"iHC (identity Hyper-Connections): 4 residual streams, hc_mult 4 — expands inter-layer information flow",
+"layer 0: dense FFN (d_ff 18,432) · layers 1–77: MoE 256 experts top-8 + 1 shared",
+"native MTP layer (10B total / 0.7B active) built in for speculative decoding",
+"learnable sink tokens · Clamped SwiGLU (limit 10) · RoPE θ 10M"
+]
+},
+{
+"id": "deepseek-v4-flash-vision-exp",
+"name": "DeepSeek-V4-Flash-Vision-Exp",
+"org": "DeepSeek",
+"family": "DeepSeek-V4",
+"released": "2026-08",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 297,
+"params_active_B": 13,
+"n_layers": 43,
+"d_model": 4096,
+"d_ff": 2048,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 1,
+"head_dim": 512,
+"attention": "sparse",
+"attention_detail": "CSA+HCA hybrid sparse stack over a shared K=V MQA backbone (n_kv=1), sliding-window 128, Lightning Indexer top-512; partial-RoPE on 64 of 512 head dims. First two layers are pure sliding-window.",
+"n_experts": 256,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 129280,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "ViT (32 layers, hidden 1024, 16 heads, patch 14)",
+"encoder_params_B": 0.3,
+"fusion": "adapter",
+"notes": "Patch 14 with 3× downsample (≤384 visual tokens, min 147,456 px input); vision RoPE θ 10K; MLP aligner (w1 4096 → 9216, w2 → 4096) into the LM."
+},
+"notes": "DeepSeek's first multimodal model in the V4 family: the verified V4-Flash LM stack (CSA+HCA compressed sparse attention over a shared K=V MQA backbone, mHC hyper-connections, hash-routed first 3 MoE layers, 256 experts top-6 + 1 shared) with a 32-layer ViT vision tower (dim 1024, 16 heads, patch 14, 3× downsample) + MLP aligner, and continued training for visual understanding. Ships 3 MTP drafters (vs 1 in the base) and DSpark noise-token speculative decoding (block 5, Markov rank 256, targets layers 40–42). Total params not officially disclosed: ~297B estimated — 284B verified V4-Flash base + ~0.35B vision tower/aligner + 2 extra MTP layers (each with a 256-expert MoE FFN, ~6.4B). FP4 experts + FP8 weights (167.8 GB).",
+"sources": [
+"https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+"https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp/raw/main/config.json"
+],
+"confidence": "partial",
+"attention_split": {
+"parts": [
+{
+"name": "CSA",
+"n": 21,
+"type": "CSA",
+"sub": "top-512"
+},
+{
+"name": "HCA",
+"n": 20,
+"type": "HCA",
+"sub": "ratio 128"
+},
+{
+"name": "SW",
+"n": 2,
+"type": "SW",
+"sub": "win 128"
+}
+],
+"pattern": "??CHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
+"pattern_map": {
+"C": "CSA",
+"H": "HCA",
+"?": "SW"
+}
+},
+"attn_modules": [
+{
+"kind": "csa",
+"title": "CSA — Compressed Sparse Attention (21 layers)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1024,
+"m": 4,
+"topk": 512,
+"win": 128,
+"og": 8,
+"olora": 1024,
+"cache": "CSA cache/token: C_comp ~128 el + indexer ~32 el amortized + 128 × 512 ring — FP8 (RoPE dims BF16)"
+},
+"notes": [
+"indexer scores 4:1-compressed blocks, not raw tokens (V3.2-DSA lineage)",
+"shared K=V: each 512-dim entry serves as both key and value (n_kv = 1)",
+"query latent shared by main attention and indexer",
+"output RoPE(−i): outputs carry relative, not absolute, position"
+]
+},
+{
+"kind": "hca",
+"title": "HCA — Heavily Compressed Attention (20 layers)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1024,
+"m": 128,
+"win": 128,
+"og": 8,
+"olora": 1024,
+"cache": "HCA cache/token: ~4 el amortized + ring"
+},
+"notes": [
+"alternates with CSA — near-free global context on half the stack",
+"same query path, sinks, grouped W_O as CSA; only KV compression differs",
+"first 2 layers: pure 128-token sliding window (compress_ratio 0)"
+]
+},
+{
+"kind": "mhc",
+"title": "mHC — Manifold-Constrained Hyper-Connections",
+"p": {
+"sinkhorn": 20,
+"cap": "x_{l+1} = H_res·x_l + H_postᵀ·F(H_pre·x_l) — each mapping = static + input-dynamic part · ~6.7% train overhead"
+}
+}
+],
+"residual": {
+"kind": "mhc",
+"note": "Residuals: 4-stream Manifold-Constrained Hyper-Connections (mHC), doubly-stochastic mixing — see panel"
+},
+"attn_bullets": [
+"vision tower: 32-layer ViT (dim 1024, 16 heads, patch 14) with 3× downsample → ≤384 tokens + MLP aligner",
+"3 MTP drafters (vs 1 in the base) · DSpark noise-token speculative decoding (block 5, Markov rank 256)",
+"first 3 MoE layers Hash-routed · FP4 experts + FP8 weights (167.8 GB)"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
