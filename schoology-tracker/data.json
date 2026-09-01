@@ -2955,13 +2955,19 @@
               "score": "10/10",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "8/26 WIP: Screenshot Research Slide",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
         "AP Statistics": {
           "full_name": "AP Statistics - 2460: IamsK p7 T1",
           "grade": "A+",
-          "percentage": "100%",
+          "percentage": "97.86%",
           "term": "26-27 T1",
           "assignments": [
             {
@@ -2979,6 +2985,74 @@
             {
               "name": "0D The Joy of Stats.org",
               "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4A_D Assignment 4 Part D) Join our AP Section on your College Board Account",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2A_B - Assignment 2 part B) Handout (Smoking and Education) (see Ch. 3 example problems for hints)",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "4A_A Assignment 4 Part A Edpuzzle (11points curved to 9)",
+              "score": "8/9",
+              "percentage": 88.9,
+              "perfect": false
+            },
+            {
+              "name": "3D Video Review Ch3 SMTW",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "3D Warm UP Day 3 Are you ready for Th/Fri Quiz?",
+              "score": "6/10",
+              "percentage": 60.0,
+              "perfect": false
+            }
+          ]
+        },
+        "Amer Lit/Writ": {
+          "full_name": "Amer Lit/Writ - 1130: SignoreL p2 T1",
+          "grade": "-",
+          "percentage": "100%",
+          "term": "26-27 T1",
+          "assignments": [
+            {
+              "name": "Name Pronounciation",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Pres./Geo. Test",
+              "score": "9/22",
+              "percentage": 40.9,
+              "perfect": false
+            },
+            {
+              "name": "Jamestown Documents HIPPO",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Snapshot Autobiography",
+              "score": "4/4",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Signed Greensheet",
+              "score": "2/2",
               "percentage": 100.0,
               "perfect": true
             }
@@ -5978,113 +6052,19 @@
         {
           "assignment": "LHS Career Exploration",
           "due_date": "Friday, 12/05/2025",
-          "days_overdue": 262
+          "days_overdue": 269
+        },
+        {
+          "assignment": "Middle Ground Activity",
+          "due_date": "Wednesday, 08/26/2026",
+          "days_overdue": 5
         }
       ]
     }
   },
-  "last_updated": "2026-08-25T00:01:27.544716+00:00",
-  "email_count": 67,
+  "last_updated": "2026-09-01T00:02:15.836419+00:00",
+  "email_count": 68,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Final Bird Print & Photo Upload",
-      "grade": "49/50",
-      "percentage": 98.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Class Mural",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Calculus BC",
-      "subject": "Presentation",
-      "grade": "87/100",
-      "percentage": 87.0,
-      "date": "2026-05-25T22:08:33+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Karaoke",
-      "grade": "11/11",
-      "percentage": 100.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Final Citizenship",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "AP Chinese Lng/Cul",
-      "subject": "Final class practice/participation",
-      "grade": "100/100",
-      "percentage": 100.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Scene Performance",
-      "grade": "27/30",
-      "percentage": 90.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Written Portion of the Scene Prep (Theme Report)",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Dramatic Introduction",
-      "grade": "40/40",
-      "percentage": 100.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Single Replacement lab",
-      "grade": "4/5",
-      "percentage": 80.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Acids and Bases Test",
-      "grade": "52/58",
-      "percentage": 89.7,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Glenn",
@@ -6435,8 +6415,107 @@
       "grade": "10/10",
       "percentage": 100.0,
       "date": "2026-08-24T22:04:02+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Amer Lit/Writ",
+      "subject": "Name Pronounciation",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Amer Lit/Writ",
+      "subject": "Pres./Geo. Test",
+      "grade": "9/22",
+      "percentage": 40.9,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Amer Lit/Writ",
+      "subject": "Jamestown Documents HIPPO",
+      "grade": "4/4",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Amer Lit/Writ",
+      "subject": "Snapshot Autobiography",
+      "grade": "4/4",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Amer Lit/Writ",
+      "subject": "Signed Greensheet",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Photo and Design",
+      "subject": "8/26 WIP: Screenshot Research Slide",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "4A_D Assignment 4 Part D) Join our AP Section on your College Board Account",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "2A_B - Assignment 2 part B) Handout (Smoking and Education) (see Ch. 3 example problems for hints)",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "4A_A Assignment 4 Part A Edpuzzle (11points curved to 9)",
+      "grade": "8/9",
+      "percentage": 88.9,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "3D Video Review Ch3 SMTW",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-08-31T22:05:38+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "3D Warm UP Day 3 Are you ready for Th/Fri Quiz?",
+      "grade": "6/10",
+      "percentage": 60.0,
+      "date": "2026-08-31T22:05:38+00:00"
     }
   ],
-  "week_start": "8/17/26",
-  "week_end": "8/24/26"
+  "week_start": "8/24/26",
+  "week_end": "8/31/26"
 }
