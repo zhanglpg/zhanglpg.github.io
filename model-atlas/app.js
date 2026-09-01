@@ -553,7 +553,7 @@
       T(cxA, tY - 32, 'mask → MLA attends only the selected latents', { fs: 10, fill: '#f0883e', fw: 700 });
       if (p.share) {
         const ticksY = y0 + 42, tx = RX + 60, tw = 316, nL = p.share.total || 78;
-        T(RX + 14, y0 + 26, `IndexShare: ${num(p.share.full)} indexer layers, ${num(p.share.shared)} reuse the last top-k`, { fs: 10.5, an: 'start', fill: '#e3b341', fw: 700 });
+        T(RX + 14, y0 + 26, `${esc(p.shareLabel || 'IndexShare')}: ${num(p.share.full)} indexer layers, ${num(p.share.shared)} reuse the last top-k`, { fs: 10.5, an: 'start', fill: '#e3b341', fw: 700 });
         R(tx, ticksY, tw, 13, { fill: '#0d1420', stroke: LINE, rx: 4, sw: 1 });
         const fullSet = new Set(p.share.layers || []);
         for (let i = 0; i < nL; i++) {
@@ -649,7 +649,7 @@
       apath(`M ${cxA} ${inY - 12} L ${cxA} ${inY - 18} L ${RX + 110} ${inY - 18} L ${RX + 110} ${rA + 50}`);
       apath(`M ${cxA} ${inY - 18} L ${RX + 327} ${inY - 18} L ${RX + 327} ${rA + 50}`);
       const sY = y0 + hP - 136;
-      pbox(RX + 226, sY, 202, 40, 'scores (fp32, causal)', `max-pool per ${num(p.block)}-token block`, { fs1: 10 });
+      pbox(RX + 226, sY, 202, 40, 'scores (fp32, causal)', `${esc(p.blockSub || 'max-pool')} per ${num(p.block)}-token block`, { fs1: 10 });
       aline(RX + 327, rA, RX + 327, sY + 46);
       // block strip: 16 blocks, top-k orange, local green
       const bx = RX + 226, bw2 = 202, by = sY - 26, nB = 16;
@@ -664,7 +664,7 @@
       pbox(RX + 226, tY, 202, 44, `top-${num(p.topk)} blocks / group`, `+ local always · ≤ ${num(fmtNum(p.budget))} tokens`, { stroke: '#f0883e', c1: '#f0883e', fs1: 10.5 });
       aline(RX + 327, by, RX + 327, tY + 50);
       const coreY = y0 + 88;
-      pbox(RX + 18, coreY, 400, 48, `GQA softmax — ${num(p.nq)} Q / ${num(p.nkv)} KV over selected blocks`, 'each group of 16 Q heads shares its block selection', { fill: '#242b3d', stroke: '#f0883e', c1: '#f0883e', fs1: 10.8 });
+      pbox(RX + 18, coreY, 400, 48, `GQA softmax — ${num(p.nq)} Q / ${num(p.nkv)} KV over selected blocks`, `each group of ${num(p.group ?? 16)} Q heads shares its block selection`, { fill: '#242b3d', stroke: '#f0883e', c1: '#f0883e', fs1: 10.8 });
       aline(RX + 110, rA, RX + 110, coreY + 54);
       aline(RX + 327, tY, RX + 327, coreY + 54);
       const woY = y0 + 28;
