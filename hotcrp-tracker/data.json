@@ -3493,8 +3493,8 @@
         "Luping Wang",
         "Weigao Chen",
         "Yifei Wu",
-        "Rui Zhang",
         "Yonghe Zhang",
+        "Rui Zhang",
         "Wenchao Wu",
         "Jiyu Luo",
         "Haoran Geng",
@@ -3509,22 +3509,28 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-02T04:56:51+00:00",
-      "last_event": "2026-09-02T04:56:51+00:00",
+      "last_event": "2026-09-02T08:09:35+00:00",
       "events": [
         {
           "type": "submitted",
           "date": "2026-09-02T04:56:51+00:00",
           "subject": "[NSDI '27 Fall] Registered #117 \"Webb: Turning Fleet-Wide Profiling into...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-02T08:09:35+00:00",
+          "subject": "[NSDI '27 Fall] Updated #117 \"Webb: Turning Fleet-Wide Profiling into...\""
         }
       ],
       "counts": {
-        "updates": 0,
+        "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 1
+        "total": 2
       },
       "message_ids": [
-        "<20260902045651.E51A5840DB1@mail.hotcrp.com>"
+        "<20260902045651.E51A5840DB1@mail.hotcrp.com>",
+        "<20260902080935.41D8F920C9D@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -3602,7 +3608,7 @@
     },
     "NSDI '27 Fall": {
       "paper_count": 2,
-      "last_event": "2026-09-02T04:56:51+00:00"
+      "last_event": "2026-09-02T08:09:35+00:00"
     }
   },
   "announcements": [
@@ -3787,6 +3793,6 @@
       "date": "2026-08-28T16:07:48+00:00"
     }
   ],
-  "last_updated": "2026-09-02T08:03:05.310835+00:00",
-  "email_count": 426
+  "last_updated": "2026-09-02T12:04:06.962266+00:00",
+  "email_count": 427
 }
