@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-01 11:19",
+  "last_run": "2026-09-02 09:38",
   "entries": [
+    {
+      "date": "2026-09-02",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Considered and skipped: Spark-X2.5-4B/1.7B (iFlytek's XHToken dense on-device models with a 3×sliding-window + full hybrid attention and native 1M context — verified from raw configs, but small-scale/niche and the SWA/full hybrid is already represented in the gallery), LTX-2.5 (still gated — HTTP 401 on config.json, 7th consecutive run), and Muse Spark 1.2 (still only a README placeholder on HF, no weights, 6th run). Re-checked the one partial entry, DeepSeek-V4-Flash-Vision-Exp: the official README still discloses no total parameter count, so its ~297B estimate stands. All 51 models unchanged."
+    },
     {
       "date": "2026-09-01",
       "added": [
