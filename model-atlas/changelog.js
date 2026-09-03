@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-02 09:38",
+  "last_run": "2026-09-03 09:30",
   "entries": [
+    {
+      "date": "2026-09-03",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Considered and skipped: OpenVDN/vdn-minimax-h3 (hybrid linear+softmax attention branch bolted onto MiniMax H3 — a community speed-up add-on, not a new base model), microsoft VibeVoice-ASR-Streaming 1.5B/7B (ASR, out of gallery scope), inclusionAI Ling-3.0 singprobe (5.18M-param streaming guardrail probe), internlm InternLumina-U2 (README-only placeholder, no weights), Whittle-Next-26B-A3B (GGUF research preview with no config.json), and LTX-2.5 / Muse Spark 1.2 (still gated or unpublished — 8th and 7th consecutive runs). DeepSeek-V4-Flash-Vision-Exp's README gained vLLM/SGLang serving recipes but still no total param count, so its ~297B estimate stands. All 51 models unchanged."
+    },
     {
       "date": "2026-09-02",
       "added": [],
