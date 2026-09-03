@@ -1700,7 +1700,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-08-30T04:26:06+00:00",
+      "last_event": "2026-09-02T15:13:12+00:00",
       "events": [
         {
           "type": "updated",
@@ -1736,13 +1736,18 @@
           "type": "other",
           "date": "2026-08-30T04:26:06+00:00",
           "subject": "[ATC '26] Response period starts for paper #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-09-02T15:13:12+00:00",
+          "subject": "[ATC '26] Response for #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 5,
         "comments": 0,
         "reviews": 0,
-        "total": 7
+        "total": 8
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
@@ -1751,7 +1756,8 @@
         "<20260611075632.A9DA690B8E8@mail.hotcrp.com>",
         "<20260611104439.9DE3590B8F6@mail.hotcrp.com>",
         "<20260611115126.270A392D9BA@mail.hotcrp.com>",
-        "<20260830042606.62321A056AE@mail.hotcrp.com>"
+        "<20260830042606.62321A056AE@mail.hotcrp.com>",
+        "<20260902151312.363E8840D91@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3588,7 +3594,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-09-02T06:01:50+00:00"
+      "last_event": "2026-09-02T15:13:12+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -3793,6 +3799,6 @@
       "date": "2026-08-28T16:07:48+00:00"
     }
   ],
-  "last_updated": "2026-09-02T12:04:06.962266+00:00",
-  "email_count": 427
+  "last_updated": "2026-09-03T00:04:17.878880+00:00",
+  "email_count": 428
 }
