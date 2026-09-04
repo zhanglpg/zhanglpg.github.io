@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-03 09:30",
+  "last_run": "2026-09-04 09:31",
   "entries": [
+    {
+      "date": "2026-09-04",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Muse Spark 1.3 launched Sep 2 but Meta shipped it proprietary (API/Muse Code only); the MuseSparkAI HF repos are empty README placeholders, so no open weights or config to verify (9th consecutive run watching Muse Spark). Considered and skipped: inclusionAI/Ling-3.0-flash-Fin (financial-domain variant of Ling-3.0-flash, same BailingMoeV3 architecture already judged small-scale/niche), BAAI ConsiSpace & MobileVLA-R1 (zip-dump repos with no config.json), BAAI Recon2Reason-Reasoning-4B (Qwen3-VL-4B finetune), and LTX-2.5 (still gated — HTTP 401 on config.json, 9th consecutive run). Re-checked the one partial entry, DeepSeek-V4-Flash-Vision-Exp: config unchanged and the README still discloses no total param count, so its ~297B estimate stands. All 51 models unchanged."
+    },
     {
       "date": "2026-09-03",
       "added": [],
