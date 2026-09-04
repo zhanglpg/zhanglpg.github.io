@@ -3827,8 +3827,14 @@
       "type": "announcement",
       "subject": "[SOSP '26 Artifact Evaluation] Badges",
       "date": "2026-08-28T16:07:48+00:00"
+    },
+    {
+      "conference": "EuroSys '27 Spring",
+      "type": "announcement",
+      "subject": "[EuroSys '27 Spring] Key Deadlines",
+      "date": "2026-09-03T13:41:05+00:00"
     }
   ],
-  "last_updated": "2026-09-03T12:03:56.120718+00:00",
-  "email_count": 433
+  "last_updated": "2026-09-04T00:04:04.184170+00:00",
+  "email_count": 434
 }
