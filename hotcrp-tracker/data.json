@@ -148,7 +148,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-04-02T03:22:19+00:00",
-      "last_event": "2026-08-29T04:13:36+00:00",
+      "last_event": "2026-09-07T15:17:55+00:00",
       "events": [
         {
           "type": "updated",
@@ -294,13 +294,28 @@
           "type": "accepted",
           "date": "2026-08-29T04:13:36+00:00",
           "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-07T15:00:39+00:00",
+          "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-09-07T15:03:59+00:00",
+          "subject": "[SOSP 2026] Incomplete source file package for submission #629 \"DiFlow: A System for Micro-Serving...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-07T15:17:55+00:00",
+          "subject": "[SOSP 2026] Updated accepted #629 \"DiFlow: A System for Micro-Serving...\""
         }
       ],
       "counts": {
         "updates": 5,
         "comments": 12,
         "reviews": 0,
-        "total": 29
+        "total": 32
       },
       "message_ids": [
         "<20260402032219.6D4AE9CF346@mail.hotcrp.com>",
@@ -331,7 +346,10 @@
         "<20260827121421.C6F78920C03@mail.hotcrp.com>",
         "<20260828035958.94C72920D16@mail.hotcrp.com>",
         "<20260829034139.864A6927039@mail.hotcrp.com>",
-        "<20260829041336.349E596253F@mail.hotcrp.com>"
+        "<20260829041336.349E596253F@mail.hotcrp.com>",
+        "<20260907150039.0F6E48404C2@mail.hotcrp.com>",
+        "<20260907150359.7BA998404C0@mail.hotcrp.com>",
+        "<20260907151755.8EC40839446@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 29, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3584,7 +3602,7 @@
     },
     "SOSP 2026": {
       "paper_count": 1,
-      "last_event": "2026-08-29T04:13:36+00:00"
+      "last_event": "2026-09-07T15:17:55+00:00"
     },
     "OSDI '26": {
       "paper_count": 2,
@@ -3833,8 +3851,14 @@
       "type": "announcement",
       "subject": "[EuroSys '27 Spring] Key Deadlines",
       "date": "2026-09-03T13:41:05+00:00"
+    },
+    {
+      "conference": "SOSP 2026",
+      "type": "announcement",
+      "subject": "[SOSP 2026] Presentation information",
+      "date": "2026-09-07T16:06:55+00:00"
     }
   ],
-  "last_updated": "2026-09-04T00:04:04.184170+00:00",
-  "email_count": 434
+  "last_updated": "2026-09-08T00:02:13.395406+00:00",
+  "email_count": 438
 }
