@@ -1,8 +1,17 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-07 10:52",
+  "last_run": "2026-09-08 10:03",
   "entries": [
+    {
+      "date": "2026-09-08",
+      "added": [
+        "llada2-2-flash",
+        "llada2-2-mini"
+      ],
+      "upgraded": [],
+      "note": "Added the LLaDA2.2 agentic diffusion-language-model family from Ant Group's InclusionAI — the gallery's first masked-diffusion LLMs (bidirectional attention, parallel block generation, Levenshtein Editing via DELETE/INSERT control tokens, Block Routing bounding MoE activation per 32-token block, L-EBPO agentic RL). LLaDA2.2-flash: 100B MoE, 32 layers, 256 experts top-8 + 1 shared, 128K context (config-verified; active params not officially disclosed — ~4.9B derived, so confidence=partial on that field alone). LLaDA2.2-mini (released 2026-09-05): 16B/1.4B active, 20 layers, same routing scheme (verified). Considered and skipped: openbmb/MiniCPM5-2B (dense Llama-arch 2B on-device model — no architectural novelty, small scale), tencent/EVIE-8B & 4.5B (visual-document-retrieval Colbert heads on a Qwen3.5 base — retrieval niche, previously skipped), Viggle/Viggle-Animate (MiniMax-H3 video blocks repackaged as pt2 modules — derivative), inclusionAI/LLaDA-Image (Aug 28 diffusion image generator built on LLaDA2 text encoder — outside the discovery window, revisit next run for the image-gen slot), Novasy/nova-video-gen (CogVideoX-2b re-upload), BAAI/ConsiSpace (still a zip dump). DeepSeek-V4-Flash-Vision-Exp re-checked: README still discloses no total param count — ~297B estimate and partial confidence stand."
+    },
     {
       "date": "2026-09-07",
       "added": [
