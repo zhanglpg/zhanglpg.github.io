@@ -1666,6 +1666,192 @@ window.MODELS = [
 "dense_first_layers": 1
 },
 {
+"id": "ling-3-0-flash-vl",
+"name": "Ling-3.0-flash-VL",
+"org": "InclusionAI",
+"family": "Ling",
+"released": "2026-09",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 124,
+"params_active_B": 5.5,
+"n_layers": 42,
+"d_model": 2560,
+"d_ff": 6144,
+"d_ff_moe": 768,
+"n_heads": 32,
+"n_kv_heads": 32,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "5:1 hybrid — 35 KDA (Kimi-style Delta Attention) linear-attention layers + 7 gated-MLA full-attention layers, one MLA every 6th layer (pattern kkkkkm ×7, verified from the safetensors weight map). KDA: 32 heads × 128, depthwise causal conv k=4 on q/k/v, per-channel decay via f_proj with per-head A_log, safe gate bounded by kda_lower_bound −5, full-rank sigmoid output gate (g_proj 2560→4096), o_norm RMSNorm(128); no RoPE — position comes from the recurrence. Gated MLA: full-rank W_Q (no q compression, q_lora_rank null) 2560→32×192 (128 nope + 64 rope), kv_a_proj_with_mqa → 512-d latent + 64-d shared rope key, kv_b_proj 512→32×256, per-head sigmoid output gate (head_wise granularity); M-RoPE sections [8,12,12] encode spatial + temporal positions for video.",
+"n_experts": 512,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 157184,
+"context_length": 131072,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial M-RoPE (MLA layers only)",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Qwen3-MoE-ViT (27L × 1152d, patch 16)",
+"encoder_params_B": 0.43,
+"fusion": "MLP projector",
+"notes": "Native image + video input. ViT (16 heads, GELU-tanh, 2304 learned position embeddings, temporal patch 2) → 2×2 patch merger (LayerNorm 1152 → 4608) → 2-layer MLP (4608 → 2560 → 2560) into the decoder stream; mrope_section [8,12,12] splits the 64 rope dims across time/height/width (VideoRoPE)."
+},
+"notes": "Ant Group InclusionAI's native multimodal flagship of the Ling-3.0 line (published on HF 2026-09-04): 124B total / 5.5B active per token, 1M-token context claimed (native max_position_embeddings 131072; the official SGLang recipe runs 256K via YaRN factor 2.0). Ultra-sparse 512-expert MoE (top-8 + 1 shared, expert d_ff 768, sigmoid scoring with expert bias, 8 groups / top-4 group-limited, routed_scaling 2.5, normalized top-k); first 2 layers dense (d_ff 6144). Clamped SwiGLU on the last 7 layers (expert limit 4.0, shared-expert limit 5.0–7.0, linear_silu). Brings vision into the full agentic loop (understand / reason / act / verify); Artificial Analysis Intelligence Index v4.1.1 score 42 (+4 over the text-only Ling-3.0-flash). Total params verified against the safetensors index (249.7 GB BF16 ≈ 124.9B params incl. the 0.43B vision tower); computed decoder total 123.8B = 1.00 ratio.",
+"sources": [
+"https://huggingface.co/inclusionAI/Ling-3.0-flash-VL",
+"https://huggingface.co/inclusionAI/Ling-3.0-flash-VL/raw/main/config.json",
+"https://huggingface.co/inclusionAI/Ling-3.0-flash-VL/raw/main/README.md",
+"https://huggingface.co/inclusionAI/Ling-3.0-flash-VL/raw/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 2,
+"attention_split": {
+"parts": [
+{
+"name": "KDA",
+"n": 35,
+"type": "linear",
+"sub": "delta rule · conv k4 · gated"
+},
+{
+"name": "Gated MLA",
+"n": 7,
+"type": "MLA",
+"sub": "latent KV 512 · M-RoPE"
+}
+],
+"pattern": "kkkkkmkkkkkmkkkkkmkkkkkmkkkkkmkkkkkmkkkkkm",
+"pattern_map": {
+"k": "linear",
+"m": "MLA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "KDA — Kimi Delta Attention (35 layers)",
+"p": {
+"d": 2560,
+"kh": 32,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "q / k / v projections 2560 → 4096",
+"projSub": "β: b_proj → 32 · decay: f_proj → 4096 (no LoRA)",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← Diag(e^g)·S + β·k⊗(v − (Diag(e^g)S)ᵀk)",
+"decayName": "per-channel decay Diag(e^g)",
+"decaySub": "g = −5·σ(·) ∈ (−5, 0)",
+"beta": "β = σ(b) per head ∈ (0,1)",
+"out": "o = Sᵀq → RMSNorm(128) ⊗ σ(g_proj h)",
+"outSub": "full-rank gate → o_proj 4096 → 2560",
+"cacheline": "no KV cache — recurrent state 32 × 128 × 128 ≈ 524 K el + 3 conv states (4096 × 4) per layer"
+},
+"notes": [
+"same KDA kernel family as Kimi K3 (chunk_kda, per-channel diagonal decay)",
+"no_kda_lora: f_proj / g_proj run directly from the 2560-d hidden state",
+"q,k L2-normalized in kernel · position comes from the recurrence — no RoPE on KDA layers"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA + M-RoPE (7 layers — every 6th)",
+"p": {
+"d": 2560,
+"nh": 32,
+"qlora": null,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": false,
+"gate": "σ(g_proj h) per head",
+"cache": "576 el/token × 7 MLA layers ≈ 8 KB/token — only these layers cache anything"
+},
+"notes": [
+"full-rank W_Q (q_lora_rank null, V2-Lite style): 2560 → 32 × (128 nope + 64 rope)",
+"kv_a_proj_with_mqa → one 512-d MQA latent + 64-d shared rope key; kv_b_proj expands per head",
+"M-RoPE sections [8,12,12] over time/height/width — video positions ride the shared k_R",
+"head-wise sigmoid output gate before dense 4096 → 2560"
+]
+}
+],
+"attn_bullets": [
+"native multimodal: ViT features join the text stream — vision feeds understand / reason / act / verify agentic loops",
+"1M-token context claimed; native max_position_embeddings 131072, official SGLang recipe runs 256K via YaRN ×2.0",
+"512 experts top-8 + 1 shared (sigmoid + expert bias, 8 groups / top-4, routed_scaling 2.5); 2 dense head layers"
+]
+},
+{
+"id": "llada-image",
+"name": "LLaDA-Image",
+"org": "InclusionAI",
+"family": "LLaDA",
+"released": "2026-09",
+"license": "Apache-2.0",
+"modality": "image-gen",
+"decoder_type": "DiT (diffusion transformer)",
+"params_total_B": 6,
+"params_active_B": 6,
+"n_layers": 30,
+"d_model": 3840,
+"d_ff": 10240,
+"d_ff_moe": null,
+"n_heads": 30,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MHA",
+"attention_detail": "Pure single-stream DiT: 30 layers of full bidirectional self-attention (30 heads × 128) over one concatenated document of [ VLM condition tokens ; noised image latent tokens ] (+ SigLIP-VQ semantic tokens and clean reference VAE latents when editing); per-head QK-RMSNorm; 3-axis RoPE (dims 32/48/48 = t/h/w, θ 256); no separate text stream — conditioning enters in-stream. Plus 2 context-refiner layers over the condition tokens before the main stack. Flow-matching velocity prediction (FlowMatchEuler scheduler, 1000 train timesteps); AdaLN-Single ×4 mods per layer from a 256-d timestep embedding.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "3-axis RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "The gallery's first image generator conditioned by a diffusion LLM instead of T5/CLIP: a 6B single-stream flow-matching DiT trained from scratch, paired with a FROZEN LLaDA2.0-Mini masked-diffusion MoE VLM (20L/2048d, 256 experts top-8 + 1 shared) as its text/condition encoder, bridged by a Residual Query Adapter (256 learnable queries, 1-layer cross-attention) prepended to the VLM prefill and a 6-layer Transformer connector (2048 → 2560 projection). One checkpoint unifies text-to-image generation and instruction-guided reference editing — the reference image bypasses the VLM entirely and enters the DiT as SigLIP-VQ semantic features (40L/1536d ViT, codebook 16384, semantic dim 4096) + clean FLUX.2-VAE latents (32-ch, 2×2 patchify → 128 in-channels). Trained image-only-first (220M samples, >90% image-only stages) with parameter-free RMSNorm + Muon; Qwen-Image-Bench open-source SOTA 53.53 EN / 53.38 ZH. TwinFlow-distilled LLaDA-Image-Turbo runs 2–4 steps. On-disk DiT: 6.54B params (13.08 GB bf16) vs the report's 6B claim. Weights + inference code released 2026-09-04; training code promised.",
+"sources": [
+"https://arxiv.org/abs/2609.03796",
+"https://huggingface.co/inclusionAI/LLaDA-Image",
+"https://huggingface.co/inclusionAI/LLaDA-Image/raw/main/transformer/config.json",
+"https://huggingface.co/inclusionAI/LLaDA-Image/raw/main/README.md",
+"https://github.com/inclusionAI/LLaDA-Image"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Single-stream full attention (×30)",
+"p": {
+"d": 3840,
+"nq": 30,
+"nkv": 30,
+"dh": 128,
+"nocache": true,
+"rope": "3-axis RoPE 32/48/48 · θ 256",
+"qknorm": "QK-RMSNorm (parameter-free)",
+"cache": "none — bidirectional attention over the packed document, recomputed every denoising step"
+},
+"notes": [
+"one packed stream: [ VLM condition tokens ; noised latent tokens ] (+ SigLIP-VQ semantics & clean reference latents when editing)",
+"sequential pre-RMSNorm blocks — parameter-free RMSNorm throughout the DiT (trained with Muon)",
+"AdaLN-Single: Linear(256 → 4×3840) per layer — shift · scale · gate for both attention and MLP from the timestep embedding",
+"SwiGLU FFN (w1/w2/w3), d_ff 10,240; 2 context-refiner layers of the same shape polish the condition tokens first"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
