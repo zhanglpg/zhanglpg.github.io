@@ -3595,6 +3595,60 @@
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "ASPLOS'27 - September cycle::#857": {
+      "conference": "ASPLOS'27 - September cycle",
+      "paper_id": "857",
+      "title": "RunKAB: A Runtime System for Concurrent Kernel Agent Benchmarking",
+      "authors": [
+        "Tianyu Feng",
+        "Haoxuan Yu",
+        "Tianyuan Wu",
+        "Lingyun Yang",
+        "Daocheng Ying",
+        "Yuxiao Wang",
+        "Ruibo Fan",
+        "Yinghao Yu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Wei Wang"
+      ],
+      "site": "https://asplos27-sep.hotcrp.com/paper/857",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-09-08T12:20:19+00:00",
+      "last_event": "2026-09-08T13:51:41+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-09-08T12:20:19+00:00",
+          "subject": "[ASPLOS'27 - September cycle] Updated #857 \"RunKAB: A Runtime System for Concurrent...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-08T12:27:00+00:00",
+          "subject": "[ASPLOS'27 - September cycle] Updated #857 \"RunKAB: A Runtime System for Concurrent...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-08T13:51:41+00:00",
+          "subject": "[ASPLOS'27 - September cycle] Updated #857 \"RunKAB: A Runtime System for Concurrent...\""
+        }
+      ],
+      "counts": {
+        "updates": 3,
+        "comments": 0,
+        "reviews": 0,
+        "total": 3
+      },
+      "message_ids": [
+        "<20260908122019.1046B843180@mail.hotcrp.com>",
+        "<20260908122700.A7697843182@mail.hotcrp.com>",
+        "<20260908135141.4EA0C843184@mail.hotcrp.com>"
+      ],
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -3669,6 +3723,10 @@
     "NSDI '27 Fall": {
       "paper_count": 2,
       "last_event": "2026-09-02T08:09:35+00:00"
+    },
+    "ASPLOS'27 - September cycle": {
+      "paper_count": 1,
+      "last_event": "2026-09-08T13:51:41+00:00"
     }
   },
   "announcements": [
@@ -3865,6 +3923,6 @@
       "date": "2026-09-07T16:06:55+00:00"
     }
   ],
-  "last_updated": "2026-09-08T12:04:10.278637+00:00",
-  "email_count": 439
+  "last_updated": "2026-09-09T00:02:47.074508+00:00",
+  "email_count": 442
 }
