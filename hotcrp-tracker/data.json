@@ -3617,7 +3617,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-08T12:20:19+00:00",
-      "last_event": "2026-09-09T10:59:24+00:00",
+      "last_event": "2026-09-09T14:08:46+00:00",
       "events": [
         {
           "type": "updated",
@@ -3648,13 +3648,18 @@
           "type": "updated",
           "date": "2026-09-09T10:59:24+00:00",
           "subject": "[ASPLOS'27 - September cycle] Updated #857 \"RunKAB: A Runtime System for Concurrent...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-09T14:08:46+00:00",
+          "subject": "[ASPLOS'27 - September cycle] Updated #857 \"RunKAB: A Runtime System for Concurrent...\""
         }
       ],
       "counts": {
-        "updates": 6,
+        "updates": 7,
         "comments": 0,
         "reviews": 0,
-        "total": 6
+        "total": 7
       },
       "message_ids": [
         "<20260908122019.1046B843180@mail.hotcrp.com>",
@@ -3662,7 +3667,8 @@
         "<20260908135141.4EA0C843184@mail.hotcrp.com>",
         "<20260909085841.E8D6E920D33@mail.hotcrp.com>",
         "<20260909095517.011EC920DFE@mail.hotcrp.com>",
-        "<20260909105924.5104683BC58@mail.hotcrp.com>"
+        "<20260909105924.5104683BC58@mail.hotcrp.com>",
+        "<20260909140846.A9267840DA3@mail.hotcrp.com>"
       ],
       "deadline": "Wednesday Sep 9, 2026, 11:59 PM AoE",
       "review_scores": [],
@@ -3744,7 +3750,7 @@
     },
     "ASPLOS'27 - September cycle": {
       "paper_count": 1,
-      "last_event": "2026-09-09T10:59:24+00:00"
+      "last_event": "2026-09-09T14:08:46+00:00"
     }
   },
   "announcements": [
@@ -3941,6 +3947,6 @@
       "date": "2026-09-07T16:06:55+00:00"
     }
   ],
-  "last_updated": "2026-09-09T12:02:39.794548+00:00",
-  "email_count": 445
+  "last_updated": "2026-09-10T00:02:10.967749+00:00",
+  "email_count": 446
 }
