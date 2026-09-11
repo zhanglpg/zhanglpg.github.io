@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-10 09:40",
+  "last_run": "2026-09-11 10:14",
   "entries": [
+    {
+      "date": "2026-09-11",
+      "added": [
+        "deepseek-v4-1-flash"
+      ],
+      "upgraded": [],
+      "note": "Added DeepSeek-V4.1-Flash (Sep 10): a 552B-backbone/16B-decode-active native-multimodal MoE and the gallery's first Causal Encoder-Decoder — 20 causal encoder + 20 decoder layers whose global KV is projected from the final encoder hidden state, activating only 8B params during prefill and 16B during decode. It replaces V4's CSA/HCA hybrid with pure CSA2: every layer runs a 128-token SWA while the global branch is statically split into Full (4 layers: own main KV + indexer, Top-512), Reindex (4: shared KV, fresh indices, 2048-block candidate pool) and Reuse (30: shared KV + indices) modes — and FP4 (E2M1) main KV caching shrinks the global cache to 890 B/token (¼ of V4-Flash) with SWA Bounded Replay cutting persistent KV to ⅛. Also adds 196B Engram conditional memory (763B on disk incl. vision + 3 DSpark drafters), Single-Pass mHC, and DSpark speculative decoding — config.json + tech report + 510 GB weights verified. Considered and skipped: Lightricks LTX-2.5 LoRAs (base model still config-gated — 12th run), BAAI AIDD (no pipeline tag), NVIDIA DeepSeek-V4-Pro-0813-NVFP4-DSpark and MiniCPM5-2B-DSpark-GGUF (quants of tracked models), XHToken/Spark-X2.5-4B (4B dense, minor org), Nex-N2.5-Pro (weights still unreleased). Partial rechecks: deepseek-v4-flash-vision-exp and llada2-2-flash disclosures unchanged — both stay partial."
+    },
     {
       "date": "2026-09-10",
       "added": [],
@@ -193,12 +201,6 @@ window.ATLAS_CHANGELOG = {
         "minimax-m2-7"
       ],
       "note": "Weekly run: upgraded Kimi K2.7 and MiniMax-M2.7 to verified against newly published HF configs (M2.7 dense d_ff corrected to n/a — all 62 layers are MoE). Considered Kimi K3 (2.8T, 896 experts, KDA linear attention); skipped until weights/config go public 2026-07-27."
-    },
-    {
-      "date": "2026-07-24",
-      "added": [],
-      "upgraded": [],
-      "note": "Dark/light theme (auto-detects OS preference, ?theme= override) and click-to-enlarge diagram lightbox."
     }
   ]
 };

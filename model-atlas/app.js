@@ -107,8 +107,8 @@
   // Raschka-gallery-style generated diagram: bottom-up main stack (input at bottom, logits at top)
   // inside a gray model container with a purple repeated-block, proper residual skip lines,
   // RoPE side box, dotted-leader callouts, and exploded FFN / MoE sub-module diagrams on the right.
-  const A_COL = { MHA: '#3fb950', GQA: '#3fb950', MQA: '#3fb950', MLA: '#bc8cff', sparse: '#f0883e', hybrid: '#58a6ff', linear: '#39c5cf', sliding: '#f0883e', global: '#3fb950', CSA: '#f0883e', HCA: '#f778ba', SW: '#9aa7b4', MMDiT: '#f778ba' };
-  const A_NAME = { MHA: 'Multi-Head Attention', GQA: 'Grouped-Query Attention', MQA: 'Multi-Query Attention', MLA: 'Multi-head Latent Attention', sparse: 'Sparse Attention', hybrid: 'Hybrid Attention', linear: 'Linear Attention', sliding: 'Sliding-Window Attention', global: 'Global Attention', CSA: 'Compressed Sparse Attention', HCA: 'Heavily Compressed Attention', SW: 'Sliding Window', MMDiT: 'Joint Attention (MMDiT)' };
+  const A_COL = { MHA: '#3fb950', GQA: '#3fb950', MQA: '#3fb950', MLA: '#bc8cff', sparse: '#f0883e', hybrid: '#58a6ff', linear: '#39c5cf', sliding: '#f0883e', global: '#3fb950', CSA: '#f0883e', HCA: '#f778ba', SW: '#9aa7b4', MMDiT: '#f778ba', csa2full: '#f0883e', csa2reindex: '#f778ba', csa2reuse: '#39c5cf' };
+  const A_NAME = { MHA: 'Multi-Head Attention', GQA: 'Grouped-Query Attention', MQA: 'Multi-Query Attention', MLA: 'Multi-head Latent Attention', sparse: 'Sparse Attention', hybrid: 'Hybrid Attention', linear: 'Linear Attention', sliding: 'Sliding-Window Attention', global: 'Global Attention', CSA: 'Compressed Sparse Attention', HCA: 'Heavily Compressed Attention', SW: 'Sliding Window', MMDiT: 'Joint Attention (MMDiT)', csa2full: 'CSA2 Full Mode', csa2reindex: 'CSA2 Reindex Mode', csa2reuse: 'CSA2 Reuse Mode' };
   function attnColor(a) { return A_COL[a] || '#3fb950'; }
 
   function archSVG(m) {

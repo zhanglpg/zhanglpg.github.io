@@ -1852,6 +1852,133 @@ window.MODELS = [
 ]
 },
 {
+"id": "deepseek-v4-1-flash",
+"name": "DeepSeek-V4.1-Flash",
+"org": "DeepSeek",
+"family": "DeepSeek-V4.1",
+"released": "2026-09",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 552,
+"params_active_B": 16,
+"n_layers": 40,
+"d_model": 5120,
+"d_ff": null,
+"d_ff_moe": 2304,
+"n_heads": 64,
+"n_kv_heads": 1,
+"head_dim": 512,
+"attention": "sparse",
+"attention_detail": "CED (Causal Encoder-Decoder): 20-layer causal encoder + 20-layer decoder whose global KV is projected from the final encoder hidden state; CSA2 pure compressed-sparse attention in three static modes — Full (own main KV + indexer, Top-512), Reindex (shared KV, fresh indices), Reuse (shared KV + indices) — with a hierarchical sparse indexer bounding decoder indexing to a 2048-block candidate pool; 128-token SWA in every layer (first 2 SWA-only); MQA backbone n_kv=1, partial-RoPE (64 of 512 dims), FP4 (E2M1) main KV cache.",
+"n_experts": 384,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 129280,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "DeepSeek-ViT (32L/1024d, patch 14)",
+"encoder_params_B": 0.4,
+"fusion": "MLP projector",
+"notes": "Trained from scratch: 2D-RoPE for arbitrary resolutions, linear patch projection, RMSNorm + SwiGLU; 3×3 pixel-unshuffle downsample (≤1024 visual tokens, ~1344×1344 px max input) then a two-layer MLP projector into the 5120-dim backbone; native image+text from the start of LM pre-training."
+},
+"notes": "DeepSeek's KV-cache-compression flagship (Sep 2026): CED nearly halves prefill compute (8B active prefill / 16B decode) and CSA2's cross-layer KV+index reuse plus FP4 main KV caching shrink the global KV cache to 890 B/token — ¼ of V4-Flash — while SWA Bounded Replay cuts persistent KV to ⅛. 552B backbone + 196B Engram conditional memory (sparse n-gram lookup at layers 1 & 14) = 763B total on disk incl. vision + 3 DSpark drafters; 384 experts top-6 + 1 shared, clamped SwiGLU, Single-Pass mHC residuals, DSpark speculative decoding (5 draft positions, Markov rank 256). Trained from scratch on 45T multimodal tokens with sparse attention at 64K; 1M context from 34T tokens onward. MIT.",
+"sources": [
+"https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf",
+"https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+"https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/config.json",
+"https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Reuse",
+"n": 30,
+"type": "csa2reuse",
+"sub": "shared KV+idx"
+},
+{
+"name": "Full",
+"n": 4,
+"type": "csa2full",
+"sub": "own KV+idx"
+},
+{
+"name": "Reindex",
+"n": 4,
+"type": "csa2reindex",
+"sub": "re-score idx"
+},
+{
+"name": "SWA",
+"n": 2,
+"type": "SW",
+"sub": "win 128"
+}
+],
+"pattern": "SSFUUUUUFUUUUUFUUUUUFUUURUUURUUURUUURUUU",
+"pattern_map": {
+"S": "SW",
+"F": "csa2full",
+"R": "csa2reindex",
+"U": "csa2reuse"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "SWA 128 in every layer — SWA Bounded Replay",
+"p": {
+"variants": [
+{
+"n": 40,
+"name": "sliding window 128",
+"type": "sliding",
+"span": "win",
+"frac": 0.3,
+"spanLabel": "window 128",
+"sub1": "every layer keeps its own SWA KV",
+"sub2": "Bounded Replay: replay only the last 128 tokens"
+}
+],
+"common": [
+"first 2 layers SWA-only (no global branch); the rest run SWA alongside CSA2",
+"SWA KV never persisted to SSD → persistent cache ≈ ⅛ of V4-Flash"
+],
+"cache": "global KV: FP4 (E2M1) main KV + indexer K shared across layers — 890 B/token (¼ of V4-Flash)"
+}
+},
+{
+"kind": "mhc",
+"title": "Single-Pass mHC — Manifold-Constrained Hyper-Connections",
+"p": {
+"sinkhorn": 20,
+"cap": "Single-Pass mHC: x_{l+1} = H_res·x_l + H_postᵀ·F(H_pre·x_l) — one fused Mega-mHC kernel (≈½ activation traffic vs 4-kernel mHC)"
+},
+"notes": [
+"revised residual-stream mixing of V4's mHC, fused for the inference stack",
+"doubly-stochastic 4×4 H_res mixing, Sinkhorn ×20"
+]
+}
+],
+"residual": {
+"kind": "mhc",
+"note": "Residuals: Single-Pass mHC — 4-stream doubly-stochastic mixing fused into one Mega-mHC kernel (see panel)"
+},
+"attn_bullets": [
+"CED: decoder global KV projected from the final encoder hidden state — 8B active prefill / 16B decode",
+"CSA2: Full/Reindex/Reuse statically share main KV + indexer K; decoder Reindex scores only a 2048-block candidate pool",
+"Engram: 196B sparsely accessed conditional memory (n-gram 2–4, 8 hash heads, modules at layers 1 & 14)",
+"DSpark: 3 draft blocks × 5 draft positions, Markov rank 256, confidence-scheduled verification"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
