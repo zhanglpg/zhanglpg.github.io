@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-11 10:14",
+  "last_run": "2026-09-12 09:40",
   "entries": [
+    {
+      "date": "2026-09-12",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Scanned HF newest-1000 across text-generation, image-text-to-text, and image/video-gen filters since Sep 10: everything notable was a quant, merge, or finetune of tracked models (DeepSeek-V4.1-Flash GGUF/MLX/EXL3/NVFP4 wave, Boulesis-26B-A4B = Gemma-4 RP merge). nex-agi/Nex-N2.5-Pro weights went live (123 shards, Sep 11) but its config.json is Qwen3_5MoeForConditionalGeneration — a post-trained variant of the tracked Qwen3.5-397B-A17B architecture, skipped per the no-finetune rule. CohereLabs/North-Small-Translate-1.0 (218B/25B MoE translation model, announced Sep 10) is auto-gated — config.json and README both HTTP 401, so it cannot be verified from primary sources; revisit once ungated. thesysdev/OUI-1 (26B diffusion-Gemma generative-UI model, Sep 7) is a LoRA/adapter finetune of google/diffusiongemma-26B-A4B-it (June release, previously assessed) — skipped. Partial rechecks: deepseek-v4-flash-vision-exp README still discloses no total param count (~297B stays estimated) and llada2-2-flash still has no official active-param count — both remain partial."
+    },
     {
       "date": "2026-09-11",
       "added": [
@@ -192,15 +198,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Three verified late-July releases: Inkling (Thinking Machines' first open model — 975B/41B trimodal MoE, RoPE-free relative-position attention, 1M ctx), Solar Open 2 250B-A15B (Upstage — hybrid softmax + KDA linear attention, NoPE), and Laguna S 2.1 (poolside's 118B/8B agentic-coding MoE, per-head attention gating). Kimi K3 skipped again: its HF repo is still an 'upcoming release' placeholder with no config to verify against."
-    },
-    {
-      "date": "2026-07-24",
-      "added": [],
-      "upgraded": [
-        "kimi-k2-7",
-        "minimax-m2-7"
-      ],
-      "note": "Weekly run: upgraded Kimi K2.7 and MiniMax-M2.7 to verified against newly published HF configs (M2.7 dense d_ff corrected to n/a — all 62 layers are MoE). Considered Kimi K3 (2.8T, 896 experts, KDA linear attention); skipped until weights/config go public 2026-07-27."
     }
   ]
 };
