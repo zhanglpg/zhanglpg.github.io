@@ -57,6 +57,12 @@ title: Home
     </a>
   </li>
   <li>
+    <a href="{{ '/hiking-routes/' | relative_url }}">
+      <div class="title">🥾 单日徒步路线深度研究库</div>
+      <div class="summary">十线合并建档：黄山大环线 · 武功山反穿/正穿 · 武明纵穿 · 九华山速穿/后山环线 · 丽水千八 · 三清山 · 新四军大环 · 明月山 · 白马尖 · 杭州标毅线。统一强度模型（T1–T5 技术分级 × 爬升密度 × GPS 轨迹中位校准，峨眉山 9.5h 基准），含距离/爬升多源裁定、耗时区间、季节日历、杭州出发后勤模板、合规红线与勘误记录。方法论已沉淀为 hiking-intensity skill。</div>
+    </a>
+  </li>
+  <li>
     <a href="{{ '/llm-roofline-sim/' | relative_url }}">
       <div class="title">Revenue-per-Chip-Hour Roofline Simulator</div>
       <div class="summary">Interactive React dashboard that maximizes per-chip total-token TPM (the policy-invariant proxy for revenue/chip-hour) under TTFT/TPOT SLOs for MoE LLMs. Six models (DeepSeek V4 Pro/Flash, Qwen 3.5-397B, Kimi K2.6, GLM 5.1, MiniMax M2.7) × six chips (B200, B300, GB300 NVL72, TPU Ironwood, TPU v8i, AMD MI355X) × four scenarios, with TPOT/TTFT/cache-hit-rate sliders, optimal-θ search, decode/TTFT breakdowns, and the precision-aware hierarchical roofline algorithm from the companion paper.</div>
