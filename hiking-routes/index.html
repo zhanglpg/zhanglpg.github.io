@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单日徒步路线深度研究库（十线合并版）</title>
+<style>
+:root{
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s1-deep:#1c5cab;
+  --good:#006300; --bad:#d03b3b; --warnbg:#fdf3e3; --card-shadow:0 1px 3px rgba(11,11,11,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s1-deep:#9ec5f4;
+    --good:#0ca30c; --bad:#e66767; --warnbg:#2a2318; --card-shadow:none; color-scheme:dark; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font:16px/1.75 system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header.hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:34px 30px;margin-bottom:26px;box-shadow:var(--card-shadow)}
+.kicker{color:var(--s1);font-weight:700;letter-spacing:.12em;font-size:13px;text-transform:uppercase}
+h1{font-size:28px;line-height:1.4;margin:8px 0 10px}
+.sub{color:var(--ink2);font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:13px;margin-top:14px}
+h2{font-size:22px;margin:44px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--grid)}
+h3{font-size:18px;margin:30px 0 8px}
+h4{font-size:15.5px;margin:18px 0 8px}
+p{margin:9px 0}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 22px;margin:14px 0;box-shadow:var(--card-shadow)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.4px;background:var(--surface)}
+th,td{border:1px solid var(--grid);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:rgba(42,120,214,.08);font-weight:700}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.c,th.c{text-align:center}
+.yes{color:var(--good);font-weight:700}.no{color:var(--bad);font-weight:700}.mid{color:var(--s2);font-weight:700}
+.note{background:var(--warnbg);border-left:4px solid var(--s2);padding:11px 15px;border-radius:0 10px 10px 0;margin:13px 0;font-size:13.8px}
+.note.blue{border-left-color:var(--s1)}
+.note.green{border-left-color:var(--s3)}
+code{background:rgba(42,120,214,.10);padding:1px 6px;border-radius:5px;font-size:.9em;font-family:ui-monospace,Menlo,monospace}
+.small{font-size:12.8px;color:var(--muted)}
+.toc{columns:2;column-gap:32px;font-size:14px}
+@media(max-width:720px){.toc{columns:1}.hbar-row{grid-template-columns:170px 1fr}}
+.toc a{text-decoration:none}
+.chart{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:16px 0;box-shadow:var(--card-shadow)}
+.chart h4{margin:0 0 4px;font-size:15px}
+.chart .cap{color:var(--muted);font-size:12.5px;margin-bottom:12px}
+.hbar-row{display:grid;grid-template-columns:250px 1fr;gap:10px;align-items:center;margin:6px 0}
+.hbar-lab{font-size:12.8px;color:var(--ink2);text-align:right}
+.hbar-track{position:relative;height:20px}
+.hbar{position:relative;height:13px;top:3px;border-radius:0 4px 4px 0;min-width:3px}
+.hbar .val{position:absolute;left:calc(100% + 8px);top:-4px;font-size:12.2px;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+[data-tip]{position:relative;cursor:default}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);
+  background:var(--ink);color:var(--surface);font-size:12px;line-height:1.5;padding:6px 10px;border-radius:8px;white-space:nowrap;z-index:9;pointer-events:none}
+.tag{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border);color:var(--ink2);margin:0 2px}
+.tag.red{color:var(--bad);border-color:var(--bad)}
+.tag.green{color:var(--good);border-color:var(--good)}
+.tag.orange{color:var(--s2);border-color:var(--s2)}
+.tag.blue{color:var(--s1);border-color:var(--s1)}
+.routehead{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 10px}
+.route{border-top:3px solid var(--grid);padding-top:4px;margin-top:38px}
+footer{margin-top:56px;color:var(--muted);font-size:13px;border-top:1px solid var(--grid);padding-top:18px}
+.src{font-size:12.6px;color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">深度研究报告 · 户外徒步路线库 · v5 合并版</div>
+  <h1>单日徒步路线深度研究库<br>九华山 · 黄山 · 武功山 · 武明纵穿 · 丽水千八 · 三清山 · 新四军大环 · 明月山 · 白马尖</h1>
+  <div class="sub">10 条线统一建档：路线详情 / 距离与爬升（GPS 多源交叉验证）/ 强度（统一时间口径）/ 季节 / 杭州出发后勤 / 合规红线 —— 全部按"单日徒步（可前晚就位）+ 峨眉山 24km/+3000m/9–10h 实测能力"标定</div>
+  <div class="meta">
+    <span>📅 2026-09-13 · v7（新增杭州标毅线本地校准锚点 §2.10；强度方法论已沉淀为可复用 skill：hiking-intensity，含 T1–T5 分级表、轨迹校准流程与 17 线案例库）</span>
+    <span>🔍 方法：六路并行调研，两步路/六只脚/8264/美篇 GPS 实测 + 政府/景区官方通告交叉验证；内容农场离群值剔除并注明</span>
+  </div>
+</header>
+
+<div class="card">
+<b>目录</b>
+<div class="toc">
+<p>0. <a href="#s0">使用说明：能力基准 · 强度模型 v2（T1–T5 分级）· 轨迹校准 · 勘误记录</a><br>
+1. <a href="#s1">路线总表 · 强度阶梯 · 季节日历</a><br>
+2. <a href="#s2">路线详情</a><br>
+&nbsp;&nbsp;2.1 <a href="#r1">黄山前后山大环线（A+）</a><br>
+&nbsp;&nbsp;2.2 <a href="#r2">武功山反穿 / 正穿半程（A）</a><br>
+&nbsp;&nbsp;2.3 <a href="#r3">武明纵穿 B 线（A）</a><br>
+&nbsp;&nbsp;2.4 <a href="#r4">九华山南北穿越 / 后山环线（A）</a><br>
+&nbsp;&nbsp;2.5 <a href="#r5">丽水千八：龙泉段精华 / 小千八 / 九峰连穿（A）</a><br>
+&nbsp;&nbsp;2.6 <a href="#r6">三清山大环线（A 风景向）</a><br>
+&nbsp;&nbsp;2.7 <a href="#r7">新四军大环：标准环 / 小飞象（A）</a><br>
+&nbsp;&nbsp;2.8 <a href="#r8">明月山大穿越（B+）</a><br>
+&nbsp;&nbsp;2.9 <a href="#r9">白马尖三尖连穿（B / 折中版 A）</a><br>
+&nbsp;&nbsp;2.10 <a href="#r10">杭州标毅线（本地校准锚 · 0.85×）</a><br>
+3. <a href="#s3">选型建议：场景推荐 + 进阶路径</a><br>
+4. <a href="#s4">除名与合规警示（龟牛大穿越 / 孔目江）</a><br>
+5. <a href="#s5">通用警示与数据口径</a><br>
+6. <a href="#s6">参考来源</a></p>
+</div>
+</div>
+
+<h2 id="s0">0. 使用说明</h2>
+<h3>0.1 能力基准与单日口径</h3>
+<p><b>基准（本队实测）</b>：峨眉山南线（99 道拐）24km / 累计爬升 ~3000m / <b>9–10 小时</b>完成 → 爬升速度 300–330m/h、综合速度 ~2.5km/h（石阶路面）。<b>"单日"</b>：徒步时间在一个日历日内完成（开走→登顶→出山）；前一天交通/住宿就位是允许且标准的玩法。<b>校准锚点为双线制（v7）</b>：峨眉山南线（爬升主导型，125 m/km）+ <b>杭州标毅线</b>（距离主导型，60 m/km，§2.10）——两类负荷形态各有一个实测锚点，速度模型才被双向钉住。</p>
+<h3>0.2 强度模型 v2：技术难度分级 × 爬升密度（v6 修订）</h3>
+<p>v5 曾用"野路一律打 7–8 折"——本版修正：<b>"野路"不是均质类别</b>。轨迹证据显示成熟野路（路迹清晰+飘带/路牌密集）可以比万级石阶更快：宜兴标准环 65% 竹林"野路"，轨迹中位速度 3.2–3.3 km/h 为全线最高；武功山龙山→发云界"野路"段路牌密集"绝对不会走错路"，强驴 2.5–3.5h 通过；白马尖南线古道"很好走、路径清晰"。真正慢的是 <b>T4 受阻段</b>（乱石翻行/滑坡体/60°+ 陡坡手脚并用/需自主寻路），如白马尖天河尖方向（"很多段几乎看不见路，在大石头上翻行"）、九华山打鼓岭石海。正确因子是"路面技术等级 × 爬升/下降密度"：</p>
+<table>
+<tr><th>等级</th><th>特征（可观察判据）</th><th class="n">强驴参考速度</th><th class="n">爬升率</th><th>本库典型路段</th></tr>
+<tr><td><b>T1</b> 成熟石阶/栈道</td><td>路面确定，速度仅由坡度决定</td><td class="n">3.0–4.0 km/h</td><td class="n">300–350 m/h</td><td>黄山全程、三清山栈道、明月山 6281 级、峨眉山、武功山 d 段（万级台阶）</td></tr>
+<tr><td><b>T2</b> 清晰土路/草甸主线/成熟古道</td><td>踩踏充分、路迹明显，<b>通行效率最高</b></td><td class="n">3.2–4.0 km/h</td><td class="n">330–380 m/h</td><td>武功山草甸脊线、宜兴古道村道、白马尖南线古道</td></tr>
+<tr><td><b>T3</b> 野路路迹清晰</td><td>有路迹+飘带/路牌，偶需辨认</td><td class="n">2.3–3.0 km/h</td><td class="n">280–330 m/h</td><td>武功山 b 段（碎石树根但路牌密集）、九华南段（2025 后飘带密）、千八林间段、武明草木分界</td></tr>
+<tr><td><b>T4</b> 受阻野路</td><td>乱石坡/石海/滑坡体/泥泞/60°+ 陡坡需手脚并用/寻路负担重</td><td class="n">1.2–1.8 km/h</td><td class="n">200–280 m/h</td><td>白马尖天河尖方向、九华打鼓岭石海/猫碗峰、宜兴"叶子"段、绝望坡碎石 70°（短）、武明羊狮幕乱石段</td></tr>
+<tr><td><b>T5</b> 技术段</td><td>攀爬/绳索/暴露刃脊</td><td class="n">0.6–1.0 km/h</td><td class="n">—</td><td>九华狮子山绳索段（短）、青龙背（官方劝离）</td></tr>
+</table>
+<div class="formula">段时间 = max( D_i ÷ v路面(T_i),&nbsp; G_i↑ ÷ r上(T_i),&nbsp; G_i↓ ÷ r下(T_i) )&nbsp;&nbsp;；全程 T = Σ段 + 休整 1–1.5h<br>
+<b>强度倍数 = T 中值 ÷ 9.5h</b>（峨眉山基准：24km/+3000m/9–10h，T1 石阶，爬升密度 125 m/km）<br>
+关键判变量：<b>爬升密度 G/D</b> —— &gt;100 m/km 爬升主导（峨眉山 125、九华速穿 95、武功山反穿 94）；70–100 混合（宜兴 75、黄山 81、白马尖 85）；&lt;70 距离/下降主导（武明 B 线 ↑42/↓100）</div>
+
+<h3>0.3 轨迹速度分布校准（稳健统计，仅作参考）</h3>
+<p>校准规则：① 每线采集多条独立 GPS 样本（两步路轨迹/活动页、8264、美篇、微博、知乎等，多引擎搜索摘要提取）；② 单轨均速 = 距离 ÷ 用时（注明总时间/运动时间口径）；③ <b>剔除离群类</b>：越野跑/速穿纪录、冬季冰雪、重装多日、新手/夜爬、未完成或纯分段轨迹；④ 取余下样本<b>中位数</b>（抗单轨偏差）；⑤ 模型预测与轨迹中位偏差 &gt;15% 时，以轨迹中位为准反推修正；⑥ 样本 n&lt;3 标低置信。</p>
+<table>
+<tr><th>路线</th><th class="n">有效样本</th><th>剔除的离群类</th><th class="n">轨迹速度参考</th><th class="n">v6 采用（本队）</th><th class="c">置信</th></tr>
+<tr><td>武功山反穿</td><td class="n">8+（采24剔16）：龙山→发云界 强驴 2.5–3.5h/俱乐部 4h/商业队 5–6h；发云界→金顶 强驴 2–2.5h、新手分段 5–8h；金顶→大门台阶 1.75–3h；龙山→沈子 26km/10h35（冬季强驴）；沈明 D1 24km/12.5h</td><td>冬季 13h+、夜爬新手 22 斤包、3 人无领队 16h、重装 29h</td><td class="n">分段合成 9.5–11.5h</td><td class="n">10–12h · 1.15×</td><td class="c yes">高</td></tr>
+<tr><td>白马尖单环</td><td class="n">6（采27剔21）：商业队 12km/7h、15km/8h（计划）、百科 12km/7h、重装上行 997m/2h45（363m/h）、单人强驴登顶&lt;2h、前山台阶往返 8km/4h20</td><td>180km 虐线段、冬季、纯登顶往返</td><td class="n">商业队 1.7–1.9 km/h；强驴明显更快</td><td class="n">单环 6–7.5h · 0.7×<br>折中 9.5–11h · 1.05×<br><b>双环 13–15h · 1.4×+ 单日不可行</b>（商业队轨迹明确拆两日：D1 15km/8h+D2 13km/7.5h）</td><td class="c mid">中</td></tr>
+<tr><td>宜兴标准环</td><td class="n">4：游侠客参考 23km/7h、暴走村限时 24km/7.5h、微博 GPS 24.59km/5h47、普通 7–10h</td><td>雪后个人 4.25km/h（作上限）</td><td class="n"><b>3.2–3.3 km/h（全线最高）</b></td><td class="n">7–8.5h · 0.8×<br>小飞象 10–11.5h · 1.15×</td><td class="c yes">高</td></tr>
+<tr><td>三清山大环线</td><td class="n">3：两步路山脚口径 18.67km/运动 7h49（2.39km/h）、汇总 20km/10–11h（游客）、官方大环 7–8h</td><td>冬季 9h（拍照）</td><td class="n">1.9–2.4 km/h（游客~个人）</td><td class="n">6.5–7.5h · 0.75×</td><td class="c yes">高</td></tr>
+<tr><td>千八九峰（轻装）</td><td class="n">3：两步路活动 45.67km/17h、美篇 49.18km/20h、52km/26h</td><td>重装 45.43km/27h</td><td class="n">2.5–2.7 km/h（俱乐部轻装）</td><td class="n">龙泉段 9–10.5h · 1.0×</td><td class="c mid">中</td></tr>
+<tr><td>九华山速穿</td><td class="n">6（采19剔13）：南脊野线 6.8km/近6h（两步路轨迹打点 09:06→14:15 十王峰）、商业队 D1 野路 8km/4h20、重装 D1 5h55 到十王峰、双峰单日 21km/8h17/+1721m、冬季野线 8km/6h15、攻略汇总速穿 32km/12–14h</td><td>雪天速穿纪录 8h 余（越野级）、重装/冬季/未完成轨迹</td><td class="n">南脊 T4 段 1.2–1.9 km/h（全程最慢段锚点）</td><td class="n">11.5–13.5h · 1.3×</td><td class="c mid">中</td></tr>
+<tr><td>黄山大环线</td><td class="n">6（采15剔9）：索道上+地轨版 25km/8h、含天都无缆车 18.1km/7–8h（+1126/−1676）、峡谷全徒步总时 12.5h（含莲花峰排队 3.5h→有效 ~9h）、天都峰老道口上 1h/新道口下 1h10（两步路打点）、慈光阁→老道口 8km/3h（重装）、精华环线 22km/运动 7.5h；分段参考：峡谷排云亭→谷底 2h、云谷寺→白鹅岭 6.5km/2.5–4h</td><td>野线进山样本、两日样本、排队极端值（莲花峰 3.5h）</td><td class="n">2.9–3.1 km/h（含索道/地轨辅助版）；<b>"含天都+峡谷谷底+全程无缆车"完整样本为零</b>→分段合成</td><td class="n">12–14h · 1.35×（去天都版 10.5–12h · 1.15×）</td><td class="c mid">中（分段样本充足）</td></tr>
+<tr><td>武明纵穿 B 线</td><td class="n">2：美篇速穿金顶→大门 9h（8:20–17:20 打点）、俱乐部发云界→明月山 12km/5h+</td><td>雨雾 15h 极端样本</td><td class="n">2.4–3.7 km/h（方差大）</td><td class="n">9.5–12h · 1.15×</td><td class="c mid">低-中</td></tr>
+<tr><td>明月山大穿越</td><td class="n">2 分段：潭下→山顶 6.3km/4–5h（普通人）、山脊→明月山 12km/5h+</td><td>—</td><td class="n">石阶段 1.4 / 山脊 2.4 km/h</td><td class="n">8.5–10h · 0.95×</td><td class="c mid">低（无全程轨迹）</td></tr>
+<tr><td>小千八 / 小飞象 / 白马尖折中·双环</td><td class="n">0 全程轨迹</td><td>—</td><td class="n">—</td><td class="n">按同域 T 级与爬升密度类比推算</td><td class="c no">低（模型推算）</td></tr>
+</table>
+<p class="small">轨迹数据<b>仅作参考</b>（用户要求采纳）：样本人群构成不可控（商业队含新手拖速、俱乐部活动≠强驴个人）、"总时间/运动时间"口径不完全一致、GPS 海拔噪声 ±300m——故一律用中位数+离群剔除+置信分级，且与双因子模型互相验证、冲突时取保守侧。本队与轨迹人群的换算锚点：峨眉山同径对照（普通游客 12–16h、强驴 10–12h、本队 9–10h → 本队 ≈ 强驴轨迹人群上限附近，商业队中位 ×1.2–1.3 ≈ 本队）。</p>
+
+<h3>0.4 版本勘误记录</h3>
+<div class="note">
+<b>v5 勘误</b>：v4 强度列误用爬升占比口径 → v5 改时间口径重算。<br>
+<b>v6 勘误（轨迹校准后）</b>：① <b>白马尖双环 13–14.5h→13–15h，强度 1.4×+，单日降级为不可行</b>——商业队轨迹明确拆两日（D1 15km/8h + D2 13km/7.5h），且无任何单日完成样本；改推单环（0.7×）/折中版（1.05×）/驮锅雷（0.65×）；② 千八龙泉段 8–10h→<b>9–10.5h（1.0×）</b>（九峰轻装轨迹中位 2.5–2.7 km/h 反推）；③ 小千八 6–8h→<b>7.5–9h（0.85×，低置信）</b>；④ 宜兴标准环 6–8h→<b>7–8.5h（0.8×）</b>、小飞象 9–11h→<b>10–11.5h（1.15×）</b>；⑤ 黄山 11–13h→<b>12–14h（1.35×）</b>——分段合成：前山含天都 5.5–6h + 中段 1.5–2h + 峡谷 2h + 地轨 + 后山 2.75–3.25h + 休整 1.5h；去天都版 10.5–12h（1.15×）；⑥ 武功山正穿半程 8–10h→<b>8–9h（0.9×）</b>（沈子村→金顶 GPS 4h30 实证）；⑦ 九华后山环线 5–7h→<b>5–6.5h（0.6×）</b>；⑧ 九华速穿 11–13h→<b>11.5–13.5h（1.3×）</b>（南脊野线 6.8km/近 6h 轨迹锚定 + 攻略汇总 12–14h 佐证）。武功山反穿（24 样本）/武明 B 线/三清山/明月山经轨迹检验<b>维持</b>。<br>
+<b>方法论结论（回应本轮修正意见）</b>：徒步速度的第一决定因素是<b>爬升密度（m/km）× T4 级受阻段占比</b>，而非"野路 vs 石阶"标签——宜兴 65% 竹林"野路"轨迹速度全线最高（成熟路迹+75m/km 中等密度）；白马尖名义爬升不大但天河尖方向 T4 乱石段拖垮速度；黄山/三清山纯 T1 石阶却因双向升降负荷（黄山 ↑2100+↓2200）回到 1.3×。
+</div>
+
+<h2 id="s1">1. 路线总表 · 强度阶梯 · 季节日历</h2>
+<table>
+<tr><th>路线（含变体）</th><th>位置</th><th class="n">距离 / 累计爬升</th><th class="n">本队预计</th><th class="n">强度*</th><th>出发形态</th><th>最佳季节</th><th class="c">合规</th><th class="c">推荐</th></tr>
+<tr><td><b>黄山前后山大环线</b>（地轨版）</td><td>安徽黄山</td><td class="n">25–27km / +2000–2200m</td><td class="n">12–14h</td><td class="n">1.35×</td><td>前晚宿汤口（当日往返不可行）；去天都版 10.5–12h/1.15×</td><td>9下–11上</td><td class="c yes">✓ 全景区</td><td class="c yes">A+</td></tr>
+<tr><td><b>武功山反穿</b>（龙山村→金顶→景区出）</td><td>江西萍乡</td><td class="n">23–25km / +2100–2400m</td><td class="n">10–12h</td><td class="n">1.15×</td><td>前晚宿龙山村（或紧凑当日往返）</td><td>5–6月绿浪 / 9–11月金草甸</td><td class="c mid">△ 野线动态管控</td><td class="c yes">A</td></tr>
+<tr><td><b>武明纵穿 B 线</b>（金顶→发云界→羊狮幕→明月山）</td><td>江西萍/宜/安福</td><td class="n">~33km / ↑1400 ↓3300m</td><td class="n">9.5–12h</td><td class="n">1.15×</td><td>D0 宿金顶，D1 单日徒步</td><td>9中–11中</td><td class="c mid">△ 同上+两景区门票</td><td class="c yes">A</td></tr>
+<tr><td><b>九华山南北速穿</b>（清泉村→平坦寺）</td><td>安徽池州</td><td class="n">30–33km / +2900–3000m</td><td class="n">11.5–13.5h</td><td class="n">1.3×</td><td>前晚宿南口清泉村</td><td>4–6月杜鹃 / 9–11月红叶</td><td class="c no">⚠️ 禁入未开发区通告</td><td class="c yes">A</td></tr>
+<tr><td>└ 变体：后山单日环线（顺时针）</td><td>同上</td><td class="n">13–16km / +1000–1600m</td><td class="n">5–6.5h</td><td class="n">0.6×</td><td>杭州当日往返 ✓</td><td>同上</td><td class="c mid">△</td><td class="c yes">A−休闲</td></tr>
+<tr><td><b>丽水千八·龙泉段精华</b>（仁坑→黄茅尖→麻连岱）</td><td>浙江龙泉</td><td class="n">20–23km / +1700–2100m</td><td class="n">9–10.5h</td><td class="n">1.0×</td><td>前晚宿仁坑村</td><td>4下–6上杜鹃 / 9下–12上秋色</td><td class="c yes">✓ 凤阳山景区段</td><td class="c yes">A</td></tr>
+<tr><td>└ 变体：庆元小千八环线（栗洋起）</td><td>浙江庆元</td><td class="n">17km / +1200–1600m(未核实)</td><td class="n">7.5–9h</td><td class="n">0.85×</td><td>前晚就位</td><td>10–11月</td><td class="c mid">△ 近保护区，先确认</td><td class="c">B(低置信)</td></tr>
+<tr><td>└ 多日版：九峰连穿（仁坑→百山祖镇）</td><td>龙泉/庆元</td><td class="n">45–52km / +3200–3900m</td><td class="n">2–3天</td><td class="n">多日</td><td>—</td><td>同上</td><td class="c no">⚠️ 百山祖段禁入</td><td class="c yes">A(多日)</td></tr>
+<tr><td><b>三清山大环线</b>（含玉京峰 1819.9m）</td><td>江西上饶玉山</td><td class="n">15–20km / +1100–1400m</td><td class="n">6.5–7.5h</td><td class="n">0.75×</td><td>前晚宿外双溪/金沙</td><td>3–5月杜鹃 / 9–11月 / 11–4月云海雾凇</td><td class="c yes">✓ 全景区</td><td class="c yes">A 风景向</td></tr>
+<tr><td><b>新四军大环·小飞象版</b></td><td>江苏宜兴</td><td class="n">30km / +2250m</td><td class="n">10–11.5h</td><td class="n">1.15×</td><td><b>杭州当日往返 ✓</b></td><td>10–11月（3–5月次之）</td><td class="c yes">✓ 免费开放</td><td class="c yes">A</td></tr>
+<tr><td>└ 标准环（或+黄塔顶）</td><td>同上</td><td class="n">23–24.5km / +1700–1900m</td><td class="n">7–8.5h</td><td class="n">0.8×</td><td>当日往返 ✓</td><td>3–5月 / 10–11月</td><td class="c yes">✓</td><td class="c yes">A 拉练</td></tr>
+<tr><td><b>明月山大穿越</b>（潭下→羊狮幕南福门）</td><td>江西宜春/安福</td><td class="n">15–17km / +1350–1550m</td><td class="n">8.5–10.5h</td><td class="n">1.0×</td><td>前晚宿温汤镇</td><td>4–5月 / 10–11月 / 冬云海雾凇</td><td class="c mid">△ 羊角尖野线严禁</td><td class="c yes">B+</td></tr>
+<tr><td><b>武功山正穿半程</b>（沈子村→金顶→景区出）</td><td>江西萍乡</td><td class="n">18–20km / +1500–1700m</td><td class="n">8–9h</td><td class="n">0.9×</td><td>前晚宿沈子村</td><td>同武功山</td><td class="c mid">△</td><td class="c yes">B+热身</td></tr>
+<tr><td><b>白马尖折中版</b>（白马尖环+天河尖半环）</td><td>安徽霍山</td><td class="n">~20km / +1500m</td><td class="n">9.5–11h</td><td class="n">1.05×</td><td>前晚宿六安/太阳乡</td><td><b>4中下–5上杜鹃海</b> / 10下–11上</td><td class="c yes">✓ 4A景区+林场§</td><td class="c yes">A</td></tr>
+<tr><td>└ 三尖双环连穿</td><td>同上</td><td class="n">25–28km / +1900–2100m</td><td class="n">13–15h</td><td class="n">1.4×+</td><td class="no">单日不可行（商业队轨迹均拆两日）→ 2 日线</td><td>同上</td><td class="c yes">✓§</td><td class="c mid">B(2日)</td></tr>
+<tr><td>└ 单环（白马尖+多云尖）/ 驮锅雷环穿</td><td>同上</td><td class="n">12–15km / +1100–1200m</td><td class="n">6–7.5h / 5.5–7h</td><td class="n">0.7× / 0.65×</td><td>前晚就位</td><td><b>4 月杜鹃季最佳</b> / 10下–11上</td><td class="c yes">✓</td><td class="c yes">A−</td></tr>
+<tr><td><b>杭州标毅线</b>（老和云起→北高峰→天竺山→十里琅珰→五云山→玉皇山→吴山广场）<span class="tag blue">本地锚</span></td><td>杭州西湖群山</td><td class="n">24–26km / +1200–1570m</td><td class="n">7.5–9h</td><td class="n">0.85×</td><td><b>零交通成本</b>（地铁 3 号线古荡站直达起点）</td><td>全年（盛夏清晨）</td><td class="c yes">✓ 城市游步道</td><td class="c yes">A 拉练/校准锚</td></tr>
+</table>
+<p class="small">* 强度 = 预计全程耗时中值 ÷ 9.5h（峨眉山基准），时间口径（§0.2）。§ = 白马尖天河尖段近鹞落坪保护区东界，分区未完全核实，行前电话景区 0564-5757777。</p>
+
+<div class="chart">
+<h4>强度阶梯（时间口径 · v6 轨迹校准，峨眉山 = 1.0×）</h4>
+<div class="cap">条长 = 强度倍数（预计耗时中值 ÷ 9.5h）；灰条 = 峨眉山基准。悬停看距离/爬升/耗时与样本依据。</div>
+<div class="hbar-row"><div class="hbar-lab">白马尖三尖双环连穿</div><div class="hbar-track"><div class="hbar" style="width:90%;background:var(--s2)" data-tip="25–28km/+1900–2100m · 13–15h · 单日不可行（商业队拆两日）"><span class="val">1.4×+ 单日不可行</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">黄山前后山大环线</div><div class="hbar-track"><div class="hbar" style="width:86%;background:var(--s1)" data-tip="25–27km/+2000–2200m · 12–14h · 去天都版 10.5–12h/1.15×"><span class="val">1.35×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">九华山南北速穿</div><div class="hbar-track"><div class="hbar" style="width:83%;background:var(--s1)" data-tip="30–33km/+2900–3000m · 11.5–13.5h · 南脊野线 1.2km/h 锚定"><span class="val">1.3×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">武功山反穿</div><div class="hbar-track"><div class="hbar" style="width:74%;background:var(--s1)" data-tip="23–25km/+2100–2400m · 10–12h · 24 轨迹样本支持"><span class="val">1.15×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">武明纵穿 B 线</div><div class="hbar-track"><div class="hbar" style="width:74%;background:var(--s1)" data-tip="33km/↑1400↓3300m · 10–12h · 下降为主毁膝 · 速穿 9h 打点实证"><span class="val">1.15×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">新四军大环·小飞象</div><div class="hbar-track"><div class="hbar" style="width:74%;background:var(--s1)" data-tip="30km/+2250m · 10–11.5h · 当日往返 · 无轨迹（模型推算）"><span class="val">1.15×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">白马尖折中版</div><div class="hbar-track"><div class="hbar" style="width:67%;background:var(--s1)" data-tip="~20km/+1500m · 9.5–11h · 含天河尖 T4 段"><span class="val">1.05×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">千八龙泉段精华</div><div class="hbar-track"><div class="hbar" style="width:64%;background:var(--s1)" data-tip="20–23km/+1700–2100m · 9–10.5h · 九峰轻装轨迹中位 2.5–2.7km/h 反推"><span class="val">1.0×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">明月山大穿越</div><div class="hbar-track"><div class="hbar" style="width:64%;background:var(--s1)" data-tip="15–17km/+1350–1550m · 8.5–10.5h · 分段轨迹合成"><span class="val">1.0×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">峨眉山南线（基准）</div><div class="hbar-track"><div class="hbar" style="width:64%;background:#898781" data-tip="24km/+3000m · 9–10h 实测"><span class="val">1.0×（24km/+3000m/9–10h）</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">武功山正穿半程</div><div class="hbar-track"><div class="hbar" style="width:58%;background:var(--s3)" data-tip="18–20km/+1500–1700m · 8–9h · 沈子村→金顶 GPS 4h30 实证"><span class="val">0.9×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">庆元小千八</div><div class="hbar-track"><div class="hbar" style="width:54%;background:var(--s3)" data-tip="17km/爬升未核实 · 7.5–9h · 低置信（无轨迹，同域类比）"><span class="val">0.85×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">杭州标毅线（本地锚）</div><div class="hbar-track"><div class="hbar" style="width:54%;background:var(--s3)" data-tip="24–26km/+1200–1570m · 7.5–9h · T1 石板为主 · 8264 GPS 运动 7.5h 实证"><span class="val">0.85×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">新四军大环·标准环</div><div class="hbar-track"><div class="hbar" style="width:51%;background:var(--s3)" data-tip="23–24.5km/+1700–1900m · 7–8.5h · 轨迹中位 3.2–3.3km/h 全线最高"><span class="val">0.8×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">三清山大环线</div><div class="hbar-track"><div class="hbar" style="width:48%;background:var(--s3)" data-tip="15–20km/+1100–1400m · 6.5–7.5h · 含玉京峰"><span class="val">0.75×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">白马尖单环 / 驮锅雷环穿</div><div class="hbar-track"><div class="hbar" style="width:44%;background:var(--s3)" data-tip="12–15km/+1100–1200m · 5.5–7.5h · 4 月杜鹃季"><span class="val">0.65–0.7×</span></div></div></div>
+<div class="hbar-row"><div class="hbar-lab">九华山后山环线</div><div class="hbar-track"><div class="hbar" style="width:38%;background:var(--s3)" data-tip="13–16km/+1000–1600m · 5–6.5h · 当日往返"><span class="val">0.6×</span></div></div></div>
+</div>
+
+<h3>季节日历（● 最佳 ○ 可走 △ 有风险 ✗ 避开）</h3>
+<table>
+<tr><th>路线</th><th class="c">1</th><th class="c">2</th><th class="c">3</th><th class="c">4</th><th class="c">5</th><th class="c">6</th><th class="c">7</th><th class="c">8</th><th class="c">9</th><th class="c">10</th><th class="c">11</th><th class="c">12</th></tr>
+<tr><td>黄山大环线</td><td class="c no">✗</td><td class="c no">✗</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c no">✗冬关</td></tr>
+<tr><td>武功山/武明纵穿</td><td class="c mid">△</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△雷雨</td><td class="c mid">△雷雨虫</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td></tr>
+<tr><td>九华山（速穿/环线）</td><td class="c no">✗</td><td class="c no">✗</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td><td class="c no">✗</td><td class="c no">✗</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td></tr>
+<tr><td>丽水千八（龙泉段）</td><td class="c no">✗</td><td class="c no">✗</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c no">✗</td><td class="c no">✗</td><td class="c no">✗</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td></tr>
+<tr><td>三清山</td><td class="c mid">△雾凇</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△云海</td></tr>
+<tr><td>新四军大环</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td><td class="c no">✗</td><td class="c no">✗</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td></tr>
+<tr><td>明月山</td><td class="c mid">△云海</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td><td class="c mid">△</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td></tr>
+<tr><td>白马尖</td><td class="c no">✗</td><td class="c no">✗</td><td class="c mid">△</td><td class="c yes">●杜鹃</td><td class="c yes">●</td><td class="c mid">△蚂蟥</td><td class="c mid">△</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c no">✗</td></tr>
+<tr><td>杭州标毅线</td><td class="c mid">△</td><td class="c mid">△</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△梅雨</td><td class="c mid">△清晨</td><td class="c mid">△清晨</td><td class="c yes">●</td><td class="c yes">●</td><td class="c yes">●</td><td class="c mid">△</td></tr>
+</table>
+<p class="small">防火期速记：九华山 10.1–5.10、江西 10.1–4.30、浙江 11.1–4.30、宜兴 11.1–4.30——秋冬全线禁炉头。<b>当前（9 月中）窗口</b>：黄山/武功山/九华山/三清山正当季；千八 9 下旬起转佳；白马尖等 10 下或明年 4 月杜鹃季。</p>
+
+<h2 id="s2">2. 路线详情（按推荐度排序）</h2>
+
+<div class="route" id="r1">
+<h3>2.1 黄山前后山大环线（地轨版）｜A+ 确定性最高</h3>
+<div class="routehead"><span class="tag blue">25–27km / +2000–2200m</span><span class="tag">11–13h · 1.25×</span><span class="tag green">全景区零合规风险</span><span class="tag">光明顶 1860m</span><span class="tag orange">需前晚宿汤口 + 天都峰预约</span></div>
+<p><b>路线（正向：前山上后山下）</b>：慈光阁(640m) → 立马桥 → 半山寺 → 天都峰新道口 → <b>天都峰顶 1810m</b>（预约制，官方预留 ~4h 含排队；鲫鱼背单向通行）→ 老道口下 → 玉屏楼 → 百步云梯 → 莲花亭（<b>莲花峰现封闭轮休</b>，走天门坎便道绕行）→ 鳌鱼峰 → 天海 → <b>光明顶 1860m</b> → 飞来石 → 排云亭 → 西海大峡谷一环/二环 → 谷底排云溪站(1204m) → <b>地轨缆车上天海</b>（100 元，5–8min，892m/均坡 34°）→ 北海（黑虎松/梦笔生花）→ 白鹅岭 → 云谷寺(890m)。正向理由：天都峰放在体力最好的早晨并匹配预约首批时段（7:00–8:00）。</p>
+<ul>
+  <li><b>数据裁定</b>：知乎 GPS 27km/+2518m 系"含莲花峰+汤口镇起"口径，修正（−莲花峰 ~200m、−汤口 2km、+天都峰 2.5km/230m）→ <b>25–27km / +2000–2200m</b>；全徒步谷底版 29–32km/+2600–2800m（13–15h 超昼长，不推荐单日）</li>
+  <li><b>耗时（v6 分段合成+轨迹校准）</b>：前山含天都 5.5–6h（慈光阁→老道口重装实测 3h；天都峰老道口上 1h/新道口下 1h10 两步路打点；新道口 60–80° 需手脚并用属 T4–T5，首批预约排队 0.5–1h）+ 玉屏→光明顶 1.5–2h + 排云亭→谷底 2h（多源一致）+ 地轨 0.25h + 天海→白鹅岭 1.25h + 下云谷寺 1.5–2h + 休整 1.5h → <b>12–14h（1.35×）</b>；<b>去天都版 10.5–12h（1.15×）</b>。轨迹佐证：索道+地轨版 25km/8h、峡谷全徒步版有效 ~9h（总时 12.5h 含莲花峰排队 3.5h 极端样本）、含天都无缆车 18.1km/7–8h；<b>"含天都+峡谷谷底+全程无缆车"完整轨迹样本为零</b>（能一天完成者极少），本表为分段合成</li>
+  <li><b>后勤模板</b>：周五晚高铁宿汤口（150–350 元）；<b>提前两日 21:00"黄山旅游官方平台"小程序抢天都峰首批名额</b>（免费但先购门票 190；晴天日限 3000 人、峰顶瞬时 500 人，7:00–15:00，15:00 只出不进）→ 周六 5:40–6:30 首班景交（19 元）→ 7:00 前过检票 → 16:30–17:30 云谷寺 → 班车回黄山北 → <b>G2187 20:35→杭州东 22:10</b>。全含 ~590–620 元/人。杭州东→黄山北最快 1h26m（G2185 07:15→08:46）</li>
+  <li><b>硬截止</b>：徒步检票口 15:00 只出不进；索道末班 17:10（周末 17:40）；景交下行末班 ~18:10。下撤点密集：玉屏索道(90)/谷底地轨(100)/太平索道(80)/云谷索道(80)</li>
+  <li><b>季节与云海</b>：最佳 <b>9 下–11 上</b>；云海年均 51–60 天（冬季最多但天都峰+大峡谷 12–3 月关闭 → 大环线冬季不成立）；"黄山旅游气象"微博<b>每日发次日云海概率%</b>，出发前一晚定夺</li>
+  <li><b>风险</b>：雷暴最大（2024-05-25 飞来石雷击 13 人伤）；台风闭园先例（2024"格美"、2026"巴威"）；黄金周天都峰/峡谷排队可达小时级——避开节假日，工作日+首批时段是解法</li>
+</ul>
+</div>
+
+<div class="route" id="r2">
+<h3>2.2 武功山反穿（含正穿半程）｜A 高山草甸之王</h3>
+<div class="routehead"><span class="tag blue">反穿 23–25km / +2100–2400m</span><span class="tag">10–12h · 1.15×</span><span class="tag orange">野线动态管控·卫生费10元</span><span class="tag">金顶白鹤峰 1918.3m</span></div>
+<p><b>反穿路线</b>：龙山村(二字头, ~560m) → 羊角尖 → <b>发云界 1628m</b>（6km/+1070m 密林陡坡 3.2–3.6h；客栈群，<b>补满 2L 水——此后草甸脊线无水源</b>）→ 风车口 → 千丈岩(平安驿站) → 好汉坡(~50°) → <b>绝望坡</b>(1360→1710m，最大近 70°) → 观音宕(星空营地) → 吊马桩(客栈群) → <b>金顶白鹤峰 1918.3m</b> → 金顶索道(25)+中庵索道(50) 或徒步 6.5km 台阶 → 景区大门。</p>
+<ul>
+  <li><b>数据裁定</b>：GPS 多源（知乎 19.35km/2600m 冬季、美篇 25km/+2532、豆瓣 19km/1917 未登顶）→ 采信 <b>23–25km / +2100–2400m</b>（龙山 560→金顶 1918 净升 1360 + 发云界—金顶 20 余山头反复升降 ~800–1000m；2600+/3200+ 系气压噪声剔除）</li>
+  <li><b>耗时（v6 轨迹校准，24 样本）</b>：龙山→发云界强驴 2.5–3.5h/俱乐部 4h/商业队 5–6h；发云界→金顶强驴 2–2.5h（草甸 3.2km/h）；金顶→大门台阶 1.75–3h → 分段合成 <b>索道版 9.5–11h、徒步下山版 10.5–12h</b>，维持 10–12h/1.15×。离群剔除：冬季 13h+、夜爬新手、重装 29h、速穿 3.5km/h 个人</li>
+  <li><b>正穿半程（稳健热身）</b>：沈子村→铁蹄峰→金顶→景区出，18–20km/+1500–1700m，<b>8–9h（0.9×）</b>（GPS 实证：沈子村→金顶 10km/+1310m/4h30 + 金顶→大门台阶 2–2.5h + 休整）</li>
+  <li><b>不推荐单日</b>：沈龙全线 25–30km（11.5–13.5h 余量小）；沈明线全程 45–50km/+3600m（纪录 13h=越野跑级）→ 见 2.3 武明纵穿</li>
+  <li><b>后勤模板</b>：周五 <b>G261 杭州东 18:06→萍乡北 21:21</b>（或 K807 卧铺杭州南 20:54→萍乡 06:50 完美衔接）→ 拼车 ~1h 宿龙山村口客栈（100–200 元）→ 周六 <b>5:00 头灯出发</b>（10 月起 4:40）→ 14:30–16:00 金顶 → <b>17:10 末班索道</b>（旺季；淡季 16:30）→ 景区大门拼车 40 元回萍乡北 → G220 18:09→杭州东 21:09（需 16:30 前出山门，偏紧；稳妥版萍乡加宿，周日 G262 07:43→10:45）。预算人均 ~1250 元。客栈链每 1–2km 一处（发云界 100–150 含两餐、武发 150/220、观音宕帐篷 80、金顶帐篷 128）可全程轻装</li>
+  <li><b>合规</b>：管委会 2021 公告"禁止穿越、救援费自担"，<b>实际执行宽松</b>（村口登记收 10 元卫生费放行，2026 年三次实测）；恶劣天气临时封口（2026-05-23 暴雨当日即封）；江西防火期 10.1–4.30 禁火不禁入。<b>辟谣</b>：网传"野穿永久关闭"系 AI 假消息（日期自相矛盾），真实事故为 2024-05-19</li>
+  <li><b>风险（血泪教训）</b>：<b>2024-05-19 失温遇难</b>——3 名无重装无雨衣女生午后反穿，绝望坡一带暴雨+7–8 级风+浓雾（能见度&lt;10m）夜间失温身亡。保命三件套：<b>雨衣（非伞）+保温层+头灯</b>；山脊 1600m+ 无遮蔽，雷雨/大风/浓雾预报即改期；发云界—金顶草甸起伏"走错比走对难"但飘带密集，密林段无信号需离线轨迹；7–8 月臭屁虫虫灾（2026-06）；江西有偿救援判例已开先河（庐山 7.4 万+组织者拘留）</li>
+</ul>
+</div>
+
+<div class="route" id="r3">
+<h3>2.3 武明纵穿 B 线（金顶→明月山）｜A 一穿三山</h3>
+<div class="routehead"><span class="tag blue">~33km / ↑1400 ↓3300m</span><span class="tag">9.5–12h · 1.15×</span><span class="tag orange">下降为主·护膝双杖</span><span class="tag">D0 宿金顶</span></div>
+<p><b>路线</b>：金顶 → 吊马桩 → 观音宕 → 绝望坡 → 好汉坡 → 千丈岩 → <b>发云界</b>（金顶起 10.7km，补满水）→ 草木分界 → 新沈家大院 → <b>羊狮慕山脊</b>（"四驱"乱石段，原始野路）→ 三市界碑 → <b>明月山顶（月亮湖）</b> → 明月山索道下温汤（或 6381 级台阶，+2–3h）。景观序列：武功山草甸 → 羊狮慕花岗岩峰林（小黄山）→ 明月山青云栈道，一线串三种地貌。</p>
+<ul>
+  <li><b>数据裁定</b>：发云界→明月山大门 22km/↑860/↓1976（两步路 GPS）+ 金顶→发云界 10.7km/起伏 400–600m → <b>合计 ~33km / ↑1300–1500 / ↓3200–3500</b>；实测参照：金顶→明月山大门 9h（速穿者含拍照）</li>
+  <li><b>耗时（v6 轨迹校准，40+ 样本）</b>：速穿者全程打点金顶 8:20→发云界 11:41→羊狮幕 15:02→明月山大门 17:20 = <b>金顶→大门 9h</b>；轻装结伴发云界→明月山 20km/7.5h；商业队 22km/~10h；俱乐部 54 人 D2 发云界 7:00→大门 17:06；两步路轻装 22km/12.5h（总时间口径）→ 合成 <b>10–12h（1.15×）</b>；索道下撤版 8.5–10.5h。<b>下降 3300m 是主要负荷</b>（比爬升更毁膝），护膝+双杖强制。发云界→羊狮幕 8km 为"真正无人区"（60° 陡峰手脚并用、无水源无客栈，T4）——比草甸段慢得多</li>
+  <li><b>后勤模板</b>：周六 G219 杭州东 07:52→宜春 10:42（2h50m，¥363–413）→ 门票 70+中庵索道 65+金顶索道 35 上金顶 → <b>宿金顶帐篷酒店/观音宕营地</b>（帐篷 80–100/顶、星空房 ~680，看日落星空日出）→ 周日 06:00 金顶起步 → 15:00–17:00 明月山顶 → <b>明月山索道末班 17:30</b>（下行 70）→ 打车/拼车宜春站（~80 元/40min）→ 返程（晚班直达未核实需 12306 确认；无则宜春宿一晚，周一早 G262 08:02→杭州东 10:45）</li>
+  <li><b>下撤点 ×4</b>：明月山索道 / 羊狮慕索道(下70)+观光车(30)+小火车(50，末班 ~16:00–16:30 且淡季可能停运) / 龙门客栈→龙山村 / 金顶段景区台阶+两级索道。<b>2022 年教训：有徒步者遇口子全关被迫台阶夜下——出发前电话确认索道当日运营</b></li>
+  <li><b>合规与风险</b>：同武功山（野线动态管控）+ 安福侧 2026-08-11 禁入未开发区域公告 + 明月山门票 90–95/羊狮幕 100（建议购联票 298，勿绕行逃票）；<b>严禁羊角尖野线下撤</b>（2023-10 女驴友该段失联、搜救 18 天遇难）；发云界→羊狮幕原始林段无信号连续数小时；事故记录同 §2.2（2024-05 失温、2024-05 重装夜行险些被困）</li>
+  <li><b>全程沈明线（46km/↑3155m）单日 ❌</b>：实测最快 11h40m 为超强个体，对本队 14–16h 超安全日光窗 → 保留为两日行程</li>
+</ul>
+</div>
+
+<div class="route" id="r4">
+<h3>2.4 九华山南北穿越（含后山环线）｜A 毕业线</h3>
+<div class="routehead"><span class="tag blue">速穿 30–33km / +2900–3000m</span><span class="tag">11–13h · 1.25×</span><span class="tag red">官方禁入未开发区通告·救援费自担</span><span class="tag">十王峰 1344.4m</span></div>
+<p><b>速穿路线</b>：陵阳镇清泉村白沙岭古道口(南) → 楼台山 → 七贤峰(~1337m) → <b>十王峰 1344.4m</b>（官方现行口径，旧资料 1342m）→ 天台峰 1306m → 花台 1299m → 打鼓岭垭口 → 猫碗峰 → 石海 → 千佛寺（<b>唯一可靠补水点，山泉水</b>）→ 天华峰 1084m → 狮子峰 → 独秀峰 → 莲花峰 → 五老峰 → 药师殿 → 北麓朱备平坦寺(翠峰寺)出。</p>
+<ul>
+  <li><b>数据裁定（v6 轨迹校准，采 19 剔 13）</b>：两步路轨迹 33.6km/+2600m、8264 多篇 30–36km/+2900–3500m → <b>速穿 30–33km/+2900–3000m；两日线 35–36km/+3200–3500m</b>；"近 4000m"离群剔除。<b>耗时锚点：南脊野线 6.8km 用了近 6h（轨迹打点 09:06→14:15 十王峰，1.2km/h——全程最慢段，T4：路迹不明+灌木+三处垂直攀爬）</b>；商业队 D1 野路 8km/4h20；双峰单日 21km/8h17/+1721m；攻略汇总速穿 12–14h → 本队 <b>11.5–13.5h（1.3×）</b>；速穿纪录 8h 余=越野跑级。约 70% 野路（南脊 T4、景区段 T1"天台 5500 级台阶"、北段 T3/T4"打鼓岭乱石坡手脚并用""后段完全一点路的痕迹都没有"）</li>
+  <li><b>难点</b>：起点后 1.2/4.2km 两处垂直攀爬、6.3km 处垂直陡降（新手建议带绳）；<b>打鼓岭石海</b>（重装噩梦，有队伍错走至悬崖边）；药师殿—天华峰密林寻路；狮子山绳索段 2026-03 绳断颈部伤（救援 10h，蓝天救援队称"一个月已救援 5 次"）</li>
+  <li><b>后勤模板（速穿）</b>：周六下午杭州西→九华山站（池黄高铁最快 <b>2h09m</b>，~190–200 元）→ 包车南口清泉村宿（户外摄影之家 13030623158 / 苦妹潭 18963736245 / 借山而居 18956686015）→ 周日 <b>5:30–6:00 开走</b> → 17:00–18:30 平坦寺出 → 打车 40min（55–80 元）九华山站/池州站 → 晚班回杭。南北摆渡包车打包 ~200 元/车；北口将军村老程农家乐可作行李转运点；餐早 ~20/晚 ~60</li>
+  <li><b>后山单日环线（0.6× 休闲版，杭州当日往返 ✓）</b>：朱备将军村/苏家宕起，<b>顺时针</b>（先天台后花台，方向性查票顺利）：打鼓岭古道→真如庵→天台寺→十王峰→青龙背→古佛洞→花台→野路回；13–16km/+1000–1600m，<b>5–6.5h</b>（轨迹：个人 16km/9h 含拍照、"路迹很明显基本台阶"）；早班高铁→9:30 开走→15:30–16:30 完走→18–19 点回杭。另有黄石溪朝圣古道环线 8.7km/+900–1000m（最老进香道，台阶好）</li>
+  <li><b>合规红线</b>：官网 <b>2025-12-30 通告禁入未开发区域</b>（游览/探险/露营/夜游），<b>违规遇险救援费自担</b>；池州市 2026-05-06 严禁俱乐部组织非法穿越；查票常态化（2023 年以来查补 22.36 万元；"花台→天台方向易被查"）；天华峰禁攀、青龙背官方劝离；防火禁火令 <b>10.1–5.10</b>（进山查火种）；"封山谣言"已辟谣（2026-05）。门票旺季 160/淡季 140，<b>当日有效</b>+二次入园登记</li>
+  <li><b>季节与风险</b>：4–6 月（花台杜鹃 4 月中–6 月初）、9–11 月（红叶）最佳；云海年均雾日 168 天、<b>雨后次日清晨</b>概率最高；避梅雨/7–8 月雷暴台风（2026-07"巴威"闭园）/12–2 月覆冰（极端 −13.3℃）；<b>大雾天严禁野线</b>（2025-10 花台大雾搜救 7h）；9 月日落 ~18:15，落后计划 1h 即从天台/花台索道下撤（下行 55）</li>
+</ul>
+</div>
+
+<div class="route" id="r5">
+<h3>2.5 丽水千八：龙泉段精华 / 小千八 / 九峰连穿｜A 浙江屋脊</h3>
+<div class="routehead"><span class="tag blue">龙泉段 20–23km / +1700–2100m</span><span class="tag">8–10h · 0.95×</span><span class="tag green">凤阳山景区段合规</span><span class="tag red">百山祖段禁入（九峰全程）</span><span class="tag">黄茅尖 1929m 江浙沪第一</span></div>
+<p><b>"千八"</b> = 海拔千米八百以上：浙江 1800m+ 山峰共 11 座，全在龙泉/庆元洞宫山脉（黄茅尖 1929、黄茅尖南峰 1917、百山祖 1856.7、黄凤垟尖 1854、凤阳山 1848、烧香岩 1832、凤阳山北峰 1828、新兰尖 1828、大天堂 1822、天堂山 1811、荒村尖 1810）。</p>
+<ul>
+  <li><b>龙泉段精华（单日主推，= 九峰线 D1）</b>：仁坑村(655m) → 乌狮窟 → 凤阳山南/北峰 → 猎户山庄 → <b>黄茅尖 1929m</b> → 黄茅尖南峰 → 黄凤垟尖 → <b>凤阳湖·瓯江源（最后补水点）</b> → 麻连岱村；20–23km/+1700–2100m，<b>9–10.5h（1.0×，v6 校准：九峰轻装轨迹中位 2.5–2.7km/h 反推，两步路活动 45.67km/17h、美篇 49.18km/20h）</b>，一次收 4 座 1800m+ 峰；后勤：杭州→龙泉市站 ~5h（衢宁线班次少 2–3 对/日）→ 前晚宿仁坑客栈（徐老板 85–120 含餐）→ 周日 6:00 开走 → 麻连岱约车（行前与客栈确认）→ 包车回龙泉站（100–150 元）→ 晚班回杭；备选下撤：黄茅尖顶玻璃房（免费避风营地）</li>
+  <li><b>庆元小千八（轻量版）</b>：栗洋村起 17km 环线串天堂山—大天堂—烧香岩三峰；爬升未核实（估 +1200–1600m，行前两步路轨迹确认）；6–8h；杭州→庆元 ~4.5–5h</li>
+  <li><b>九峰连穿（多日版）</b>：仁坑→…→南溪村→凤百古道→茶木淤→百山祖→车根村，<b>45–52km/+3200–3900m（GPS 七源交叉），行走 20–27h，2–3 天</b>；分段：D1 仁坑→麻连岱 20–23km；D2 →南溪 14–16km；D3 →百山祖镇 16km。<b>"爬升 12000m=1.4 珠峰"系越野赛 118km 赛道口径，与徒步线无关</b>。十一峰大环线 ~100km/+6164m（3–4 天）</li>
+  <li><b>合规红线</b>：<b>百山祖段（庆元侧）按禁入对待</b>——2025-07 两步路实测口子铁丝网+专人看守、2026-08"茶木淤禁区不开放"、百科"山顶有监控"；强闯违规可能受罚。替代：<b>"新千八"= 南溪村改登锅帽尖(1760m)</b>经栗洋出，或只走龙泉段。凤阳山段（龙泉侧）宽松：黄茅尖 4A 景区、市政府 2025-11 主办千八越野赛。浙江防火期 <b>11.1–4.30 禁一切野外用火（含气罐炉）</b>——重装炊事违法，轻装住农家</li>
+  <li><b>难度与风险</b>：九峰全程为"华东第一虐"（仁坑→凤阳山 1200m 持续陡升+万级石阶；烧香岩—大天堂 5km 无遮荫碎石脊；<b>烧香岩为迷路高发地</b>，2017/2023 连夜搜救记录）；约 60% 路段信号弱/无；毒蛇+梅雨季蚂蟥；离线轨迹（行者路书 #518176）+头灯+对讲机</li>
+  <li><b>季节</b>：4 下–6 上（5 月凤阳山高山杜鹃花海）、9 下–12 上（秋色金黄茅草、云海概率最高、11 月赛事季）；避 6–7 月梅雨（蚂蟥）、8–9 月台风、12–2 月冰雪（黄茅尖年均温仅 12℃）</li>
+</ul>
+</div>
+
+<div class="route" id="r6">
+<h3>2.6 三清山大环线（含玉京峰）｜A 风景向</h3>
+<div class="routehead"><span class="tag blue">15–20km / +1100–1400m</span><span class="tag">6.5–7.5h · 0.75×</span><span class="tag green">全景区合规</span><span class="tag">玉京峰 1819.9m·封闭40年后2026-01重开</span></div>
+<p><b>路线（外双溪索道上，顺时针）</b>：外双溪上站(1250m) → 万寿园(1.5km) → <b>一线天 299 级</b> → 玉台(1530m，第一日出点) → 南清园（玉女开怀/东方女神/巨蟒出山 128m 石柱/禹皇顶 1580m）→ <b>阳光海岸栈道</b>(3600m，均海拔 1600m) → 九天应元府 → 三清宫(1530m，道教古建群) → 郁松林 → <b>玉京峰 1819.9m</b>（往返 +4km/+600m，含 300m 连续石阶）→ <b>西海岸栈道</b>(3700m，悬挑崖壁垂直高差 200m+，2700m 无台阶) → 浏霞台 → 日上山庄 → 外双溪下。</p>
+<ul>
+  <li><b>数据裁定</b>：两步路 GPS 山脚口径 18.67km/+1691m；索道上下含玉京峰+万寿园 → <b>15–20km/+1100–1400m</b>；不含玉京峰 12–16km/+600–900m</li>
+  <li><b>玉京峰预约（关键）</b>：封闭 40 年后 <b>2026-01-01 重开</b>；免费但须<b>提前 1 日在"三清山智慧旅游"小程序预约</b>，持当日门票+索道票，闸机实名，8:00–17:00，<b>15:00–15:30 清场</b>；雷雨/冰冻/大雾临时关闭——安排 13:00 前完成</li>
+  <li><b>票务</b>：门票 120（淡季 110，指纹 72h）；外双溪/金沙索道往返 125；<b>港首索道</b>（2025-05 新通，10min 直达三清宫，人最少）往返 150；套票 245。⚠️ <b>外双溪索道 2026-09-01~09-15 年检停运</b>（09-16 恢复）——期间改金沙或港首（免费接驳车连接）</li>
+  <li><b>后勤模板</b>：周五晚杭州东→玉山南（1h31m–2h，¥141–169，日均 ~11 班）→ 宿外双溪/金沙（200–400）→ 周六 <b>7:30 前到索道站</b>（2024 国庆曾下山排队 8h/数千人夜滞）→ 顺时针大环线 6.5–7.5h → 15:30 下山 → 集散专车 30 元回玉山南 → 21:00 前回杭。<b>杭州当日往返不可行</b>（最早班到玉山南已近 9 点）</li>
+  <li><b>景观地位</b>：2008 世界自然遗产（"独一无二的景观美学"）；《中国国家地理》"中国最美五大峰林"；云海年 200+ 雾日、最佳 11–4 月雨雪后放晴日出前后（注："西太平洋最美花岗岩"为中美地质学家评价、非 UNESCO 原文）</li>
+  <li><b>合规与风险</b>：2026-04-15 景区公告禁入非开放区域——<b>本环线全程在开放区域 ✓</b>；山上低 8–10℃、雾天栈道湿滑、冬季冰爪（山下租 10 元）；大风索道停运；冬季防火期禁火</li>
+</ul>
+</div>
+
+<div class="route" id="r7">
+<h3>2.7 新四军大环（标准环 / 小飞象）｜A 唯一真当日往返</h3>
+<div class="routehead"><span class="tag blue">标准 23–24.5km/+1700–1900m · 小飞象 30km/+2250m</span><span class="tag">6–8h / 9–11h · 0.75× / 1.05×</span><span class="tag green">免费开放·合规最省心</span><span class="tag">玉女峰 585m</span></div>
+<p><b>路线</b>（起终点=宜兴竹海国际会议中心，湖㳇镇；苏浙界竹海，主题为新四军苏南根据地游击区）：会议中心 → 霍岭"劝退坡"(~1km 碎石陡坡+300m) → 岭下村(4km·补给) → 新华村(7km·补给) → 太华山(九峰禅寺，"苏南小延安") → 横岭(10km·"叶子"切线口) → 和岕口村(12km·长兴侧补给) → <b>水曲岕"叶子"段</b>（最虐：60–70° 无路竹坡攀竹）→ 白石岭(14km) → 玉女峰/凌云阁(18km，"苏南第一峰"碑) → 蘑菇亭(20km) → 竹海景区侧下山 → 会议中心(23km)。<b>小飞象版</b> = 拼三洲古道+竹海，30km/+2250m 八上八下；另有切线小环 ~20km/+1300m、C 线半环 12km/+1150m、长鼻象 37km/+2400m。</p>
+<ul>
+  <li><b>数据裁定（v6 轨迹校准）</b>：七源交叉（游侠客 23/1700、美篇 23/1680–1750、暴走村 24/1900、微博 GPS 实测 24.59/1871）→ <b>23–24.5km/+1700–1900m</b>，一致性好无离群值；<b>轨迹中位速度 3.2–3.3km/h = 全线最高</b>（领队参考 7h、限时 7.5h、强驴个人 5h47）——成熟路迹+飘带密集+75m/km 中等爬升密度，实证"成熟野路不慢"；本队标准环 <b>7–8.5h（0.8×）</b>、小飞象 <b>10–11.5h（1.15×，无轨迹纯模型）</b>；地理真高点黄塔顶 611.5m（部分版本加餐）</li>
+  <li><b>当日往返模板（三线中唯一）</b>：G814 杭州东 06:50→宜兴 07:30（33–50min，每日多班，60–90 元）→ 打车 30–45min（50–80 元）→ 08:30 开走 → 三村补给（2–3L 水）→ <b>关门纪律：太华山 15:30 / 横岭叶子岔口 14:00–16:00 超时走切线直插白石岭（省 2–3h）</b> → 15:00–17:00 完走（小飞象 ~17:00–18:00）→ 打车回宜兴站 → 末班 ~21 时前回程。体力不支可在三村租村民车辆撤回（官方预案）</li>
+  <li><b>难度</b>："江浙单日第一虐"（标准环）；65% 竹林湿滑+倒竹；<b>迷路头号风险</b>（叶子段无路迹，有人多转 8h）——离线轨迹+俱乐部丝带；门槛：单日 15km/+1000m 经验</li>
+  <li><b>季节</b>：3–5 月（茶园新绿+映山红）、10–11 月（干爽通透）；<b>避雨天及雨后 2–3 天</b>（竹叶极滑摔伤集中）、盛夏（2026-05 29℃ 多人中暑边缘）、融雪期；景观=竹海+山脊远眺（黄塔顶望苏浙皖），多源评价"纯拉练线"景观单一</li>
+  <li><b>合规</b>：免费全年可走，未见封山令；防火期 11.1–4.30 禁火不封路；末段是否穿竹海景区（80 元）因版本而异</li>
+</ul>
+</div>
+
+<div class="route" id="r8">
+<h3>2.8 明月山大穿越（潭下→羊狮幕）｜B+</h3>
+<div class="routehead"><span class="tag blue">15–17km / +1350–1550m</span><span class="tag">8.5–10h · 0.95×</span><span class="tag red">羊角尖野线严禁（2023 遇难事故路段）</span><span class="tag">太平山 1735.6m</span></div>
+<p><b>路线（走法 A 单向）</b>：明月山景区大门潭下村(~300m) → <b>6281 级石阶</b>/五叠瀑（云谷飞瀑落差 119.57m）→ 山顶月亮湖(1530m) → <b>青云栈道</b>（~3100m，"中国最险七大悬空栈道"，穿星月洞 150m 天然石洞）→ 沿高山小火车铁道山脊 5.5km（过三市界碑）→ 羊狮慕小火车站 → 凌云栈道环线(4km) → 羊狮慕索道下安福南福门。路面构成：石阶 40% + 栈道/公路 30% + 铁道旁土石山道 30%。</p>
+<ul>
+  <li><b>数据裁定</b>：8264 槽下口径 18km/+1150–1200、两步路 GPS 羊角尖野线段 6km/+1100、美篇多源 → 走法 A <b>15–17km/+1350–1550m</b>；主峰太平山 <b>1735.6m</b>（官方宣传 1736；游客核心区非真顶；西侧羊狮慕石笋峰 1764m 反更高）</li>
+  <li><b>耗时（v6 分段轨迹合成）</b>：6281 石阶段强驴单人 3h15（雨雾）/大众登高赛 4h/普通 4–5h（越野赛官方测量 8.6km/+1266m 佐证）→ 本队 3.25–3.75h；山顶环线+青云栈道 3.1km 1–1.5h；铁道山脊走廊 6.6km/1.5h（团队实测，速穿者 3.95km/52min）；羊狮幕凌云栈道 2.5–4km 1–1.5h（平路/下坡为主）；索道接驳 0.5h + 休整 1–1.5h → <b>8.5–10.5h（1.0×）</b>。爬升仅峨眉山一半但 6281 级连续石阶是耗时主体；<b>全程无连续公开轨迹（分段样本充足）</b></li>
+  <li><b>后勤模板</b>：周五 G219 杭州东 07:52→宜春 10:42 → 宿温汤镇富硒温泉民宿（300–500，113/115 路转 118 可达景区）→ 周六 06:30 潭下门开走 → 15:10–16:00 羊狮慕索道下南福门 → 宜春高铁站羊狮慕直通车 20 元/包车回宜春 → 周日 G262 08:02→杭州东 10:45。联票 298（明月山 95+羊狮幕 100+索道+小火车）；<b>小火车淡季可能停运，不可作唯一退路</b>；索道夏 8:00–17:30</li>
+  <li><b>合规红线</b>：<b>羊角尖—潭下野线严禁</b>——2023-10-01 49 岁女驴友该段失联，搜救 18 天于 300m 落差沟底遇难（大雾+岔路+无信号）；只走"石阶+铁道山脊+栈道"主流廊道；槽下村绕门票口存在但建议合规购票；非自然保护区核心区（武功山风景名胜区条例），江西防火期 10.1–4.30 禁火</li>
+  <li><b>季节与风险</b>：4–5 月（杜鹃+瀑布丰水+云海）、10–11 月；冬季 11–2 月为云海+雾凇高发期（栈道结冰谨慎）；山脊 4–5km 无补给自带 1.5–2L；峡谷/后山信号盲区；赣西夏秋毒蛇+蚂蟥蜱虫；山顶低 ~8℃</li>
+</ul>
+</div>
+
+<div class="route" id="r9">
+<h3>2.9 白马尖三尖连穿（大别山主峰）｜折中版 A / 双环 B 挑战档</h3>
+<div class="routehead"><span class="tag blue">单环 12–15km/+1100–1200m · 折中 ~20km/+1500m · 双环 25–28km/+1900–2100m</span><span class="tag">6–7.5h·0.7× / 9.5–11h·1.05× / <b>双环 13–15h 单日不可行</b></span><span class="tag green">4A 景区+林场</span><span class="tag">白马尖 1777m 大别山第一</span><span class="tag orange">4 月都枝杜鹃海</span></div>
+<p><b>路线（双环）</b>：铜鼓地/马家河 12 队登山口(780m) → 黄泥包 → <b>白马尖 1777m</b>（"1777"标志碑）→ V 形垭口 → <b>多云尖 1763m</b> → 多云寺遗址 → 陈家河 → 观音庙 → 铜鼓地（第一环 13–15km/+1100m）；接万家红林场 → 仙人打伞 → 大王庙 → <b>天河尖 1771m</b>（岳西测绘 1771.5m 更高，存争议）→ 石海 → 黄阴木林 → 大/小扁担翘 → 川岭公路头（第二环 13–16km/+900m）。三峰品字鼎立。<b>折中版</b> = 白马尖环+天河尖半环 ~20km/+1500m。</p>
+<ul>
+  <li><b>数据口径</b>：双环为两环拼接推算（无完整公开轨迹，置信中上）；分段源：搜狐 15km/1100、美篇 GPS 12km/7h、8264 高程记录（780→1774）</li>
+  <li><b>耗时（v6 轨迹校准，6 有效样本）</b>：商业队单环 12km/7h、15km/8h（计划）、百科口径 12km/7h、重装上行 997m/2h45（363m/h）、个人强驴登顶 &lt;2h、前山景区台阶往返 8km/4h20 → 商业队中位 1.7–1.9km/h，本队 ≈ 商业队 ×1.2–1.3（峨眉山锚定）。据此：<b>单环 6–7.5h（0.7×）</b>；<b>折中版（单环+天河尖半环）9.5–11h（1.05×）</b>；<b>双环 13–15h（1.4×+）——无任何单日完成样本，商业队轨迹明确拆两日（D1 15km/8h + D2 13km/7.5h），判定单日不可行</b>，改 2 日（宿多云尖/中途农家）或越野级。<b>驮锅雷环穿</b> 12.8km/+1157m 实测 6h+（"下山比上山快不了很多，大石头+河道"）→ 本队 5.5–7h（0.65×），4 月杜鹃性价比之王</li>
+  <li><b>路面构成（v6 修正——南线没有想象中野）</b>：南线古道"很好走、路径清晰，沿途木桥与建筑遗址"（T2–T3，含激流脱鞋过溪、乱石坡、滑坡体短 T4 段）；白马尖—多云尖山脊为原森林防火道（T2）；<b>真 T4 在天河尖方向</b>："很多段几乎看不见路、在大石头上翻行""人迹罕至需自主开路"、单程丛林穿越 3h+——折中版的主要难度来源</li>
+  <li><b>后勤模板</b>：杭州有<b>直达高铁</b>——杭州西 06:06→六安 08:46（G1442，2h40m，¥213–223）等 4 班/日；周五晚 G1790/D2196 抵六安，宿六安或太阳乡农庄（100–250 含餐）→ 周六 6:00 包车进山（2–2.5h，约 300–500 元/车，估算未核实）→ 7:00 起步（门票 80，6:00–18:00、16:00 停止入园）→ 17:00 前收队 → D2264 六安 19:44→杭州东 22:45（紧）或宿一晚周日 D2198 08:24→11:12</li>
+  <li><b>合规</b>：全程大别山主峰景区（4A、国家地质公园核心园区）+国有林场；武汉/合肥/南京商业队 2022–2026 常态化、未见拦截；<b>天河尖近鹞落坪保护区东界、分区未完全核实 → 走霍山马家河侧并提前电话 0564-5757777</b></li>
+  <li><b>季节</b>：<b>最佳 4 月中下–5 月上：千年都枝杜鹃海</b>（1400–1700m，大别山特有名片）；次佳 10 下–11 上（秋色+云海）；避 6–8 月雷暴+<b>蚂蟥</b>（两步路 2025-06 实拍"雨后山上蚂蝗遍地"）、12–3 月山脊冰雪（2023-12 有队伍因冰冻放弃）</li>
+  <li><b>风险</b>：天河尖段"很多段几乎看不见路、大石头翻行"、山脊"人迹罕至需自主开路"——离线轨迹+有经验领队必备；信号断续、全程无补给（2L 水+路餐）；救援半径大（最近医院霍山县城/太阳乡）；石海雨后湿滑</li>
+  <li><b>同区替补</b>：驮锅雷环穿（驮尖 1751—锅斗岩—雷音寺塔，12.8km/+1157m，实测 6h+，"大别山最美/最虐"口碑，4 月杜鹃性价比最高）；薄刀峰（罗田 4A，刀背脊合规替代）；⚠️ 鹞落坪—黄茅尖—驮尖—明堂山线（20km/+1400m）擦保护区边缘、分区未核实，出行前须向管委会确认</li>
+</ul>
+</div>
+
+<div class="route" id="r10">
+<h3>2.10 杭州标毅线（西湖群山标准毅行）｜本地校准锚 · A 拉练</h3>
+<div class="routehead"><span class="tag blue">24–26km / +1200–1570m</span><span class="tag">7.5–9h · 0.85×</span><span class="tag green">零交通成本·下撤点密集</span><span class="tag">天竺山 412.5m 西湖群山最高</span></div>
+<p><b>为什么单列</b>：①2002 年仿香港毅行者设计的"标准毅行"线，"杭州徒步毕业线"，本地强驴认证线；②<b>校准价值</b>——爬升密度仅 60m/km（距离主导型），与峨眉山锚（125m/km 爬升主导型）互补，是速度模型在"长距离低爬升"形态下的本地参照；③地铁直达起终点、可随时改线下撤，零成本高频拉练。</p>
+<p><b>路线</b>：老和云起牌坊（地铁 3 号线古荡站 B 口步行百米）→ 老和山(164m) → 秦亭山 → 将军山 → 美女山 → 灵峰山 → <b>北高峰 313.7m</b>（"天下第一财神庙"，补水）→ 美人峰 → 龙门山 → 石人亭（石人岭 256m，补水）→ 白云峰 → 猢狲岭 → <b>天竺山 412.5m</b>（杭州主城区最高峰）→ 十里琅珰（茶园山脊）→ <b>五云山 340m</b>（补水）→ 林海亭（酒店补水）→ 贵人阁(240m，俯瞰钱塘江) → 虎跑（补水）→ 玉皇山（俯瞰八卦田）→ 将台山 → 凤凰山 → 万松书院 → 云居山 → 城隍山（吴山）→ <b>吴山广场</b>（公交/地铁回程），串 20+ 山峰。</p>
+<ul>
+  <li><b>数据裁定</b>：标称主流 25km/+1500m（晚潮/搜狐/网易多源）；区间 24–26km/+1200–1570m（8264 GPS +~1200m/运动 7.5h、实测帖 ~25km/+1570m）；"实际走出 28km/1800m"系走错绕行个例——岔路极多，<b>跟轨迹走</b></li>
+  <li><b>路面（T 构成）</b>："90% 以上人工铺成石板路/台阶"（两步路游记原文）→ T1 ~70–90% + T2 游步道 + 少数 T3 野路段（23 号电话亭→天竺山、天竺山→十里琅珰下、五云山→林海亭、贵人阁→儿童公园）；<b>无 T4/T5——标毅的"野路"不构成难度项</b></li>
+  <li><b>耗时（双因子+轨迹校准）</b>：距离约束 25÷3.2≈7.8h 主导（爬升约束仅 1500÷330≈4.5h）+ 休整 → 本队 <b>7.5–9h（0.85×）</b>；轨迹：GPS 运动 7.5h（2025-01 个人，含拍照祈福）、常规口径 6–10h、"体力好的四小时跑完"（越野级，剔除）</li>
+  <li><b>后勤</b>：起点地铁直达、终点吴山广场公交/地铁——全库唯一零接驳线；补给密集（北高峰/石人岭/五云山/林海亭/虎跑/龙井村扫码水 3–5 元/梅家坞/满觉陇）→ <b>轻装 1–1.5L 水即可</b>；四段划分（老和云起→北高峰→真际寺/龙井→四眼井→吴山），每段末都可下撤改线</li>
+  <li><b>风险</b>：岔路多（迷路即 +3–5km）；夏季中暑警示（2026-07 杭州山区中暑/失温报道，盛夏清晨出发+水量加倍）；夜爬北高峰段有摩托飙车险情报道（2026-09）；石板路对膝不友好（缓冲鞋+杖）；冬季正常可走（低海拔无冰雪问题）</li>
+  <li><b>校准用法</b>：每 1–2 个月走一次当"体检尺"——按 0.85× 基准对照实测：<b>&lt;7h 可上 1.15× 档</b>（武功山反穿/武明纵穿/小飞象）；<b>&lt;6h 可挑 1.3× 档</b>（九华速穿/黄山大环线）；新队友首次入队也用它标定个人系数</li>
+</ul>
+</div>
+
+<h2 id="s3">3. 选型建议</h2>
+<div class="card">
+<h4>按场景选</h4>
+<ul>
+  <li><b>不想住宿、当日往返</b>：<b>杭州标毅线（0.85×，地铁直达零交通成本，兼作能力校准尺，§2.10）</b>；新四军大环（标准 0.8× / 小飞象 1.15×）——杭州东高铁 33–50min；九华山后山环线（早班高铁当日往返，0.6×）</li>
+  <li><b>风景确定性最高</b>：黄山大环线（全景区、下撤点密集、云海概率每日可查）——代价是 1.35× 强度（去天都版 1.15×）+天都峰抢预约</li>
+  <li><b>高山草甸+云海</b>：武功山反穿（1.15×，24 轨迹样本支持）或武明纵穿 B 线（1.15×，一穿三山、D0 宿金顶看星空日出）</li>
+  <li><b>集邮高峰</b>：千八龙泉段（黄茅尖 1929m 江浙沪第一，1.0×）；白马尖（大别山第一 1777m，4 月杜鹃季：单环 0.7× / 折中 1.05×）</li>
+  <li><b>毕业挑战</b>：九华山速穿（1.3×，"安徽小鳌太"）→ 黄山大环线（1.35×）；白马尖双环已转 2 日线（1.4×+，单日不可行）</li>
+  <li><b>恢复期/带家属</b>：三清山（0.75× 世界级风景全栈道）、九华山后山环线、黄石溪古道（8.7km）</li>
+</ul>
+<h4>进阶路径（时间口径强度递增，v6 校准值）</h4>
+<p>九华后山环线(0.6×) → 驮锅雷/白马尖单环(0.65–0.7×) → 三清山(0.75×) → 新四军标准环(0.8×) → 小千八(0.85×) → 武功山正穿半程(0.9×) → 明月山/千八龙泉段(1.0×) → 白马尖折中(1.05×) → 武功山反穿/武明纵穿/新四军小飞象(1.15×) → 九华山速穿(1.3×) → 黄山大环线(1.35×) → 多日：白马尖双环、千八九峰连穿、沈明线全程。</p>
+<h4>本月（9 月中）窗口建议</h4>
+<p>正处最佳期的：<b>黄山（9 下起）、武功山/武明（金草甸 9 中起）、九华山（9–11 月）、三清山</b>；千八 9 下旬转佳；白马尖等 10 下秋色或明年 4 月杜鹃季；明月山/新四军 10 月更佳。若本周末出行：首选黄山（需周五宿汤口+今明抢天都峰预约）或武功山反穿（周五晚 G261/K807 就位）。</p>
+</div>
+
+<h2 id="s4">4. 除名与合规警示</h2>
+<div class="note">
+<ul>
+  <li><b>❌ "龟牛大穿越"（大别山）除名</b>：该名称在两步路/8264/美篇/小红书全部主流户外源<b>查无此线</b>；其地理指向（英山—岳西主脊）恰落在<b>湖北大别山、安徽天马（金寨）、安徽鹞落坪（岳西）三个国家级自然保护区</b>核心-缓冲连片区；叠加 2025-08 勘界立标（381 界桩）验收、<b>2026-03-15 新《自然保护区条例》施行</b>（擅闯核心区最高罚 10 万、生态损害最高 500 万）、2026 年鳌太/卧龙罚款判例——禁入级红线。合法替代 = 白马尖三尖连穿（§2.9）。</li>
+  <li><b>❌ "孔目江穿越"查无此线</b>：孔目江为新余市河流（源出分宜洞村乡丘陵，与永新相距 150km；永新最高峰仅 1391.3m），多引擎精确检索零轨迹命中。按"武功山姊妹山、1500m+、可单日强穿"特征判定实指<b>武明纵穿</b>，已按此建档（§2.3）。</li>
+  <li><b>各线合规状态速记</b>：全景区零风险 = 黄山、三清山；免费开放 = 新四军大环；景区段合规 = 千八龙泉段（凤阳山）、白马尖；<b>动态管控/野线 = 武功山系（登记+卫生费放行，恶劣天气封口）、九华山（禁入通告+救援费自担+方向性查票）、明月山（羊角尖严禁）、千八百山祖段（铁丝网+看守，禁入）</b>。所有野线：救援费自担条款已在江西（庐山 7.4 万+组织者拘留判例）、安徽（九华山通告）落地，风险自担。</li>
+</ul>
+</div>
+
+<h2 id="s5">5. 通用警示与数据口径</h2>
+<div class="card">
+<b>硬性通用提醒（十线通用）</b>
+<ul>
+  <li>🧭 <b>离线轨迹是生命线</b>：武功山/九华山/千八/明月山/白马尖均有大面积信号盲区，迷路是各线第一大风险（九华山狮子山、千八烧香岩、明月山羊角尖、宜兴叶子段均为事故/搜救高发点）</li>
+  <li>🥾 装备基线：防滑越野鞋、双杖+护膝（武明纵穿 ↓3300m 尤其）、头灯×2 电源、雨衣（非伞）、<b>保温层+急救毯</b>（武功山 2024-05-19 失温遇难教训）、2–3L 水+电解质（千八瓯江源后/武功山发云界后/九华山山脊/白马尖全程无水源）</li>
+  <li>🔥 防火期禁炉头对照：九华山 10.1–5.10、江西 10.1–4.30、浙江 11.1–4.30、宜兴 11.1–4.30——秋冬全线轻装住农家/客栈</li>
+  <li>🌧 共同避坑：雨天及雨后 2–3 天（陡坡/竹叶/石阶极滑）、梅雨（蚂蟥+泥泞）、7–8 月雷暴台风（山脊暴露段立即下撤；武功山金顶 2013 年"世纪之碑"被雷击毁、黄山 2024 飞来石雷击 13 伤）、冬季高山冰雪</li>
+  <li>⏰ 关门纪律：各线索道/景交末班（武功山 17:10、明月山 17:30、三清山 17:30、黄山 17:10/17:40、九华山下撤索道 18:00 前）是单日计划的硬边界，<b>落后计划 1h 即执行下撤预案</b></li>
+  <li>📋 户外保险+结伴 3 人+行程告知家人；救援 110/119、森林防火 12119</li>
+</ul>
+<b>数据口径说明</b>
+<ul>
+  <li>所有距离/爬升为<b>多份独立 GPS 轨迹交叉验证后的区间</b>；冲突裁定在各线"数据裁定"条目注明；已剔除的内容农场离群值：九华山"爬升 4000m"、千八"12000m"（越野赛口径）、武功山"3200m"（气压噪声）、明月山"云海 72%"（未核实）</li>
+  <li>强度倍数统一为<b>时间口径</b>；v6 = §0.2 双因子模型（T1–T5 技术分级 × 爬升密度）× §0.3 轨迹中位速度校准（稳健统计：剔离群、取中位数、小样本标置信度）；轨迹采集法 = 多引擎搜索摘要提取（两步路/8264/美篇详情页反爬 403），人群构成偏差经峨眉山锚定换算（商业队中位 ×1.2–1.3 ≈ 本队）；历次勘误见 §0.4</li>
+  <li>白马尖双环为两环拼接推算（无完整公开轨迹）；小千八爬升、宜春晚班直达高铁、白马尖包车行情为"未能核实"项，出行前复核</li>
+  <li>门票/车次/预约规则/管控状态为 2025–2026 快照（核查日 2026-09-13），出行前以官方渠道与近两周轨迹动态复核</li>
+</ul>
+</div>
+
+<h2 id="s6">6. 参考来源（按路线分组，择要）</h2>
+<div class="card src">
+<b>黄山</b>：黄山旅游官方平台（门票 190/索道/地轨/天都峰预约规则 2026-07 公告）；知乎 GPS 27km/+2518m 轨迹帖（2022-07）；美篇引两步路"精华环线"22km（2021-10）；管委会公告（雷击 2024-05-25、台风闭园、冬季天都峰+峡谷关闭、承载量 4 万）；"黄山旅游气象"微博（每日云海概率）；12306/携程票务快照（G2185/G2187，2026-09）。<br>
+<b>武功山/武明纵穿</b>：萍乡武功山官网 wugongshan.cn（门票 70/索道价/运营时间）；两步路 GPS：76048727（沈明线 46km/↑3155 分段明细）、76045613、76018871、75956597、74066509、74086658；8264：5764521（2026-05 卫生费实测）、5759168（2026-01）、5740520、5748454、5711749（沈明线 11h40m 速穿）；美篇 5fb41u24（13h 打点全程）、57rcz597；知乎 p/369032041（正穿时间戳）、p/2053543837470143678（冬季单日 GPS）；新华社/红星新闻（2024-05-19 失温事故通报）；央广网（2014 雷击）；"萍乡武功山发布"公众号（禁火令 2025-10-01~2026-04-30、2026-05-02 闭园）；吉安安福 2026-08-11 禁入未开发区公告；江西有偿救援判例（奉新 2 万/庐山 7.4 万+拘留）；smzdm"野穿永久关闭"文判定为 AI 假消息（日期自相矛盾）。<br>
+<b>九华山</b>：两步路 75918235（33.6km/2600m GPS）；8264 5762345/5763579/5762333（2026-03~05）；美篇 56vadbyk/53czmi23/4z3hiakc/5kupr49y/590b8a4o；jiuhuashan.gov.cn（海拔 770110、门票 1710202、禁入通告 1705591、防火令 1683677、查补票专报 1381299）；池州市 ahqy.gov.cn 2026-05-06；凤凰网安徽 2026-03-30（狮子山绳断事故）；澎湃 27186317（池黄高铁）、33175286（封山谣言辟谣）。<br>
+<b>丽水千八</b>：8264 5724070（45.43km/+3442m 重装）；两步路 75612693（十一峰 100km/+6164m）、75963567（2025-07 百山祖铁丝网实测）；美篇 5 篇（2023–2025）；浙江省林业局（国家公园创建 2020）；丽水市政府/浙江省体育局/人民网/中国日报（2025-11 千八越野赛）；龙泉发布（2026-03 防火处罚）；澎湃 1825964（2017 警方禁入口径）；B 站 cv41274570/cv41318806（锅帽尖替代）；庆元发布（2025-02 开口程实测）。<br>
+<b>三清山</b>：两步路 42197035（18.67km/+1691m GPS，2026-09-04）；上饶文旅微博（汪顺同款线/交通攻略）；腾讯新闻+上饶文旅+百度百科（玉京峰 2026-01-01 重开/预约规则）；景区 2026-04-15 非开放区域公告；新浪多篇（票务快照：门票 120/索道 125/港首 150/套票 245）；上饶日报问政（外双溪索道 2026-09-01~15 检修）；央广网（2024 国庆排队 8h）。<br>
+<b>新四军大环</b>：游侠客社区 1047881/1037806/1042041/1047154；美篇 4mz0cv2s；两步路活动页 75434019；8264 5689714/5758634；微博 GPS 实测 QqAGBDki6（24.59km/1871m，2026-02）；知乎 p/607784690（命名由来）；宜兴市政府网（太华山纪念馆）；"宜兴发布"（黄塔顶古道 2024 整修）。<br>
+<b>明月山</b>：8264《明月山徒步全攻略》（2026-08，槽下 18km/+1150–1200）；两步路"龙心"GPS（羊角尖野线 6km/+1100，2023-10）；美篇沈明线系列（2025-05）、国庆穿越 3/3（2023-10）；安福县政府网（凌云栈道 4000m/石笋峰 1764）；羊狮幕官方公众号（索道/小火车/直通车 2025-08~2026-02）；央广网/极目新闻（2023-10 羊角尖遇难事故，搜救 18 天）；宜春市政府网（太平山 1736）；《江西武功山风景名胜区-宜春明月山景区条例》（2022）。<br>
+<b>白马尖</b>：搜狐户外（2026-04 15km/1100；2026-03 天河尖环 13km/900）；美篇 GPS（2024-10 12km/7h；2025-03 驮锅雷 12.8km/+1157）；8264（2023-01 高程记录 780→1774；2025-02 冰雪实录）；两步路（2025-06 蚂蟥实拍；南京活动帖 鹞落坪线 20km/+1400）；霍山县政府 2026-03 景区名录（4A/门票 80/开放时间）；岳西文旅（都枝杜鹃）；12306/票务快照（G1442/G1544/D2196/D2198/D2264，2026-09）。<br>
+<p class="small">调研方法：六路并行子任务（官方数据组/GPS 轨迹组/游记风险组），可信度分级：GPS 实测 &gt; 官方 &gt; 资深游记 &gt; 内容农场（仅列示已剔除口径）。v5 合并版 · 2026-09-13。</p>
+</div>
+
+<footer>
+  单日徒步路线深度研究库 · v7（新增标毅线本地锚；强度方法论已沉淀为可复用 skill：hiking-intensity，含 T1–T5 分级详表 / 轨迹校准流程 / 17 线案例库）· 2026-09-13 ·
+  自包含静态 HTML（无外部依赖、无权限校验逻辑），可离线阅读。图表 CSS 渲染、悬停可见数值、均配等价表格；配色通过 CVD 校验。
+</footer>
+</div>
+</body>
+</html>
