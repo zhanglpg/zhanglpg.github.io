@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-12 09:40",
+  "last_run": "2026-09-13 09:30",
   "entries": [
+    {
+      "date": "2026-09-13",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Scanned HF newest-models across text-generation, image-text-to-text, text-to-image and text-to-video since Sep 11, plus 16 major orgs (moonshotai, google, Qwen, deepseek-ai, THUDM, MiniMaxAI, zai-org, OpenBMB, inclusionAI, BAAI, Lightricks, CohereLabs, unsloth, meta-llama, stabilityai, mistralai): everything new was a quant/merge/finetune of tracked models (DeepSeek-V4.1-Flash GGUF/FP8/MLX wave, Qwen3.8-27B quants incl. abliterated GGUFs, MiniMax-H3 video derivatives, SD/Wan/Z-Image re-uploads). AlayaLab/Evoke-Turbo (Sep 11) is a controllability distill of the small Aug EVOKE world-model (26 likes) — not frontier, low traction, skipped; xagent2025/VelaVec-T2I is a 9.8M-param retrieval encoder, not a generator; BAAI/AIDD is a resource index, not a model. CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 both still gated HTTP 401 (LTX-2.5 — 14th run) so unverifiable from primary sources. Partial rechecks: llada2-2-flash README still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial (56/58 verified)."
+    },
     {
       "date": "2026-09-12",
       "added": [],
@@ -188,16 +194,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Kimi K3 tech report + open weights dropped — no longer the 'upcoming release' placeholder we'd been skipping. Added as verified against HF config.json: 2.8T/104B Stable LatentMoE (896 experts top-16 + 2 shared, latent dim 3584) on a Kimi Delta Attention backbone — 93 layers, 69 KDA linear + 24 gated-MLA full attention with Attention Residuals, SiTU-GLU activation, native multimodal (MoonViT), 1M context. World's first open 3T-class model. New: dedicated KDA/MLA split diagram — the attention box shows both types side by side with a 93-tick layer-order strip of the true interleave pattern."
-    },
-    {
-      "date": "2026-07-27",
-      "added": [
-        "inkling",
-        "solar-open2-250b",
-        "laguna-s-2-1"
-      ],
-      "upgraded": [],
-      "note": "Three verified late-July releases: Inkling (Thinking Machines' first open model — 975B/41B trimodal MoE, RoPE-free relative-position attention, 1M ctx), Solar Open 2 250B-A15B (Upstage — hybrid softmax + KDA linear attention, NoPE), and Laguna S 2.1 (poolside's 118B/8B agentic-coding MoE, per-head attention gating). Kimi K3 skipped again: its HF repo is still an 'upcoming release' placeholder with no config to verify against."
     }
   ]
 };
