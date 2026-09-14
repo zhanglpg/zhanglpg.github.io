@@ -1979,6 +1979,112 @@ window.MODELS = [
 ]
 },
 {
+"id": "agnes-3-0-flash",
+"name": "Agnes-3.0-Flash Preview",
+"org": "Agnes AI",
+"family": "Agnes",
+"released": "2026-09",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 33,
+"params_active_B": 33,
+"n_layers": 72,
+"d_model": 5120,
+"d_ff": 17408,
+"d_ff_moe": null,
+"n_heads": 24,
+"n_kv_heads": 4,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "72 layers alternate 3:1 — 54 gated delta-rule recurrent layers (agnes_delta_attention: 16 key heads / 48 value heads, head_dim 128, causal conv kernel 4 in front, gated RMS-norm, fp32 recurrent state, swish output gate) plus 18 global-attention layers (24 query / 4 KV heads, head_dim 256, 6:1 GQA, RMS-norm on q and k, sigmoid-gated output). Only the 18 global layers hold a sequence-length KV cache. Partial rotary (first 25% of head dim = 64 dims), 3-axis interleaved mrope sections 11:11:10, base 1e7. Every layer also runs a parallel SwiGLU 2048 branch alongside the main 17408 FFN; 1 MTP (multi-token-prediction) draft layer ships with the checkpoint.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 248320,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "Interleaved-MRoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Agnes ViT (27L/1152d, patch 16)",
+"encoder_params_B": 0.4,
+"fusion": "adapter",
+"notes": "27-layer, 1152-dim (16-head) vision tower, patch 16, temporal patch 2, 2x2 spatial merge projecting into the 5120-dim decoder; image + video input via bundled processor (deepstack disabled)."
+},
+"notes": "Agnes AI's open-weight preview of its 3.0 Flash flagship (Sep 11): a 33B dense hybrid-attention multimodal decoder in the Qwen3-Next / gated-delta-net lineage — 3 of every 4 layers are length-independent recurrent delta-rule layers, so only 18 of 72 layers carry a growing KV cache, targeting flagship-class reasoning on a single H200/H100 (~66 GB bf16). Adjustable reasoning effort (high/medium/low + off), tool calling, 262K context. The model card warns this Preview checkpoint differs from the 1M-context production/API model on Artificial Analysis — its benchmarks (IFBench 74.2, GPQA Diamond 85.05) belong to these weights only. Remote code required (custom AgnesForConditionalGeneration).",
+"sources": [
+"https://huggingface.co/Agnes-AI/Agnes-3.0-Flash",
+"https://huggingface.co/Agnes-AI/Agnes-3.0-Flash/raw/main/config.json",
+"https://huggingface.co/Agnes-AI/Agnes-3.0-Flash/raw/main/README.md",
+"https://agnes-ai.com/"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Delta Rule",
+"n": 54,
+"type": "linear",
+"sub": "conv k4 · gated"
+},
+{
+"name": "Global Attn",
+"n": 18,
+"type": "global",
+"sub": "GQA 24/4 · d_h 256"
+}
+],
+"pattern": "kkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkm",
+"pattern_map": {
+"k": "linear",
+"m": "global"
+}
+}
+},
+{
+"id": "aliceai-t5-35b-a0-6b",
+"name": "AliceAI-T5-35B-A0.6B",
+"org": "Yandex",
+"family": "AliceAI",
+"released": "2026-09",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 34.35,
+"params_active_B": 0.6,
+"n_layers": 28,
+"d_model": 1536,
+"d_ff": null,
+"d_ff_moe": 512,
+"n_heads": 12,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "GQA",
+"attention_detail": "Encoder-decoder (UL2-style T5): 16-layer encoder with full 12-head self-attention (12 q / 12 kv), 12-layer decoder with 12 query / 4 KV-head GQA self-attention plus cross-attention; head_dim 128, query_pre_attn_scalar 128, RoPE with YaRN extension (factor 20 from 9984 original positions) to 128K context, fp32 residual accumulators.",
+"n_experts": 512,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 135040,
+"context_length": 131073,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": true,
+"vision": null,
+"notes": "Yandex's sparse-MoE encoder-decoder base model (Sep 10): 34.35B unique params but only ~0.6B active per token — every one of the 28 layers (encoder FFNs, decoder FFNs) is a dMoE block with 512 tiny SwiGLU experts (expert d_ff 512), top-8 routing via a learned sigmoid router with L1-normalized weights and aux-loss-free top-k bias updates. Embeddings are shared between encoder and decoder and tied to the LM head. 128K context via YaRN. Base-model benchmarks beat Gemma 4 E4B and Qwen3.5 2B/4B bases on Russian factuality (CultCat 68.0, WikiWebFacts 81.3) while trailing Qwen3.5-35B-A3B on math/code — an extreme-sparsity efficiency play, not a frontier release. Second encoder-decoder text model in the gallery after DeepSeek-V4.1-Flash's CED.",
+"sources": [
+"https://huggingface.co/yandex/AliceAI-T5-35B-A0.6B",
+"https://huggingface.co/yandex/AliceAI-T5-35B-A0.6B/raw/main/config.json",
+"https://huggingface.co/yandex/AliceAI-T5-35B-A0.6B/raw/main/README.md",
+"https://habr.com/ru/companies/yandex/articles/1080654/"
+],
+"confidence": "verified"
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
