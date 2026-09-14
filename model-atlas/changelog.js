@@ -1,8 +1,17 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-13 09:30",
+  "last_run": "2026-09-14 10:00",
   "entries": [
+    {
+      "date": "2026-09-14",
+      "added": [
+        "agnes-3-0-flash",
+        "aliceai-t5-35b-a0-6b"
+      ],
+      "upgraded": [],
+      "note": "Added Agnes-3.0-Flash Preview (Sep 11, Agnes AI): a 33B dense multimodal hybrid-attention decoder in the gated-delta-net lineage — 54 delta-rule recurrent layers (16k/48v heads, conv k4, fp32 state) alternating 3:1 with 18 GQA global-attention layers (24q/4kv, d_h 256), so only 18 of 72 layers hold a growing KV cache; 262K context, parallel SwiGLU 2048 branch in every layer, 27L/1152d ViT, Apache-2.0, verified against config.json + README + 19-shard bf16 weights (66.2 GB). New 3:1 delta/global split diagram with a 72-tick layer strip. Also added Yandex AliceAI-T5-35B-A0.6B (Sep 10): a UL2-style encoder-decoder (16L encoder + 12L decoder, d1536) whose FFNs in all 28 layers are dMoE blocks with 512 tiny SwiGLU experts (d_ff 512) top-8 via a learned sigmoid router with L1-normalized weights and aux-loss-free bias updates — 34.35B unique but only ~0.6B active per token; 128K context via YaRN, tied shared embeddings, Apache-2.0, verified against config.json + README + 15-shard weights. Considered and skipped: Edge0-35B-A3B-preview (4-bit MLX quant of Qwen3.5-35B-A3B), NeoHorse-1-4B (Qwen3.5-4B finetune), Lotus-1 (Qwen3.5-35B-A3B RP finetune), Odette-26B-A4B (Gemma-4 merge), FlyGPT (fruit-fly-connectome toy), GeoCore-9B (domain DiT re-upload), the PYTHAI fork wave and the usual DeepSeek/Qwen/MiniMax-H3 quant wave. Partial rechecks: llada2-2-flash and deepseek-v4-flash-vision-exp disclosures unchanged — both stay partial (58/60 verified)."
+    },
     {
       "date": "2026-09-13",
       "added": [],
@@ -186,14 +195,6 @@ window.ATLAS_CHANGELOG = {
         "minimax-m3"
       ],
       "note": "Rolled out the K3-style split-attention diagram to all 14 heterogeneous models. The decoder block now shows each attention type as a labeled box (width ∝ layer count) plus a per-layer tick strip of the true interleave order — sliding-window vs full (gpt-oss, Gemma 3, Llama 4, Inkling, Laguna), linear vs softmax (Solar Open 2, MiniMax Text-01, Qwen3-Next/3.5), and DeepSeek-V4's CSA vs HCA compressed-attention alternation (from config compress_ratios; Flash adds 2 sliding warmup layers). Patterns verified against HF config.json layer lists."
-    },
-    {
-      "date": "2026-07-28",
-      "added": [
-        "kimi-k3"
-      ],
-      "upgraded": [],
-      "note": "Kimi K3 tech report + open weights dropped — no longer the 'upcoming release' placeholder we'd been skipping. Added as verified against HF config.json: 2.8T/104B Stable LatentMoE (896 experts top-16 + 2 shared, latent dim 3584) on a Kimi Delta Attention backbone — 93 layers, 69 KDA linear + 24 gated-MLA full attention with Attention Residuals, SiTU-GLU activation, native multimodal (MoonViT), 1M context. World's first open 3T-class model. New: dedicated KDA/MLA split diagram — the attention box shows both types side by side with a 93-tick layer-order strip of the true interleave pattern."
     }
   ]
 };
