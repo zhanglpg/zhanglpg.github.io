@@ -2967,7 +2967,7 @@
         "AP Statistics": {
           "full_name": "AP Statistics - 2460: IamsK p7 T1",
           "grade": "A",
-          "percentage": "93.72%",
+          "percentage": "93.98%",
           "term": "26-27 T1",
           "assignments": [
             {
@@ -3047,6 +3047,36 @@
               "score": "10/10",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "7A_B - Assignment 7 Part B) p.129-130 / 3, 6, 11, 12, 16, 18, 22.",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "8A_A - Assignment 8 Part A) submit a pdf of the completed class notes.",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "7A_A - Assignment 7 Part A) Complete and submit the class notes.",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "6A_B Assignment 6 Part B) Complete the Decathlon Investigation handout – both sides",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "5A_B - Assignment 5 Part B) pages 75-78 / 48,50 (no reports, just write a few sentences) pages 95-100 / #7, 28, 30.",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         },
@@ -3085,6 +3115,12 @@
               "score": "2/2",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "Ch 1-3 Test",
+              "score": "25/27",
+              "percentage": 92.6,
+              "perfect": false
             }
           ]
         },
@@ -3109,6 +3145,12 @@
             {
               "name": "Graph Matching Lab",
               "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "CH 2 Quiz",
+              "score": "16/16",
               "percentage": 100.0,
               "perfect": true
             }
@@ -6106,7 +6148,7 @@
         "AP Physics C:Mech": {
           "full_name": "AP Physics C:Mech - 3730: NguyenT p1 T1",
           "grade": "A",
-          "percentage": "100%",
+          "percentage": "98.48%",
           "term": "26-27 T1",
           "assignments": [
             {
@@ -6126,13 +6168,19 @@
               "score": "20/20",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "CH 2 Quiz",
+              "score": "15/16",
+              "percentage": 93.8,
+              "perfect": false
             }
           ]
         },
         "AP Statistics": {
           "full_name": "AP Statistics - 2460: BlaschkeB p6 T1",
-          "grade": "A",
-          "percentage": "100%",
+          "grade": "-",
+          "percentage": "93%",
           "term": "26-27 T1",
           "assignments": [
             {
@@ -6164,6 +6212,36 @@
               "score": "10/10",
               "percentage": 100.0,
               "perfect": true
+            },
+            {
+              "name": "UNIT 1 EXAM",
+              "score": "86/100",
+              "percentage": 86.0,
+              "perfect": false
+            },
+            {
+              "name": "Lesson 14-18 Skills Check",
+              "score": "25/25",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 18 Notes and HW",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "2027 AP Exam JOIN CODE Assignment",
+              "score": "5/5",
+              "percentage": 100.0,
+              "perfect": true
+            },
+            {
+              "name": "Lesson 17 Notes and HW",
+              "score": "10/10",
+              "percentage": 100.0,
+              "perfect": true
             }
           ]
         }
@@ -6172,136 +6250,14 @@
         {
           "assignment": "LHS Career Exploration",
           "due_date": "Friday, 12/05/2025",
-          "days_overdue": 276
-        },
-        {
-          "assignment": "Middle Ground Activity",
-          "due_date": "Wednesday, 08/26/2026",
-          "days_overdue": 12
+          "days_overdue": 283
         }
       ]
     }
   },
-  "last_updated": "2026-09-08T00:01:53.609254+00:00",
-  "email_count": 69,
+  "last_updated": "2026-09-15T00:01:10.733833+00:00",
+  "email_count": 70,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Art 1",
-      "subject": "Colored ink bird print",
-      "grade": "4/5",
-      "percentage": 80.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Calculus BC",
-      "subject": "HW Extra Topics",
-      "grade": "27/27",
-      "percentage": 100.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Calculus BC",
-      "subject": "Test Extra Topics",
-      "grade": "78/100",
-      "percentage": 78.0,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "AP Calculus BC",
-      "subject": "Extra Topics Quizzes",
-      "grade": "21/27",
-      "percentage": 77.8,
-      "date": "2026-06-01T22:05:23+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "World Lit/Writ",
-      "subject": "Participation End of Semester 2",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Review packet",
-      "grade": "4/5",
-      "percentage": 80.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "course": "Chemistry H",
-      "subject": "Final exam",
-      "grade": "93/100",
-      "percentage": 93.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Final Performance",
-      "grade": "17/20",
-      "percentage": 85.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Complete 3.1 soliloquy analysis",
-      "grade": "0/2",
-      "percentage": 0.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Wordless Banquet Scene",
-      "grade": "0/2",
-      "percentage": 0.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "Banquet Scene and Witches Wkst",
-      "grade": "0/2",
-      "percentage": 0.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "World Lit/Writ",
-      "subject": "4.2-3 Questions",
-      "grade": "0/2",
-      "percentage": 0.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "course": "Chemistry H",
-      "subject": "Final Review Packet",
-      "grade": "3/5",
-      "percentage": 60.0,
-      "date": "2026-06-08T22:03:52+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Sheldon",
@@ -6634,8 +6590,125 @@
       "grade": "10/10",
       "percentage": 100.0,
       "date": "2026-09-07T22:03:51+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "Amer Lit/Writ",
+      "subject": "Ch 1-3 Test",
+      "grade": "25/27",
+      "percentage": 92.6,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Physics C:Mech",
+      "subject": "CH 2 Quiz",
+      "grade": "16/16",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "7A_B - Assignment 7 Part B) p.129-130 / 3, 6, 11, 12, 16, 18, 22.",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "8A_A - Assignment 8 Part A) submit a pdf of the completed class notes.",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "7A_A - Assignment 7 Part A) Complete and submit the class notes.",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "6A_B Assignment 6 Part B) Complete the Decathlon Investigation handout – both sides",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "course": "AP Statistics",
+      "subject": "5A_B - Assignment 5 Part B) pages 75-78 / 48,50 (no reports, just write a few sentences) pages 95-100 / #7, 28, 30.",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Physics C:Mech",
+      "subject": "CH 2 Quiz",
+      "grade": "15/16",
+      "percentage": 93.8,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Statistics",
+      "subject": "UNIT 1 EXAM",
+      "grade": "86/100",
+      "percentage": 86.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Statistics",
+      "subject": "Lesson 14-18 Skills Check",
+      "grade": "25/25",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Statistics",
+      "subject": "Lesson 18 Notes and HW",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Statistics",
+      "subject": "2027 AP Exam JOIN CODE Assignment",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "course": "AP Statistics",
+      "subject": "Lesson 17 Notes and HW",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-14T22:13:08+00:00"
     }
   ],
-  "week_start": "8/31/26",
-  "week_end": "9/07/26"
+  "week_start": "9/07/26",
+  "week_end": "9/14/26"
 }
