@@ -541,7 +541,7 @@
     },
     {
       "date": "2026-09-15",
-      "captured_at": "2026-09-15T00:01:10.733833+00:00",
+      "captured_at": "2026-09-15T13:28:06.338093+00:00",
       "grades": {
         "Glenn": {
           "2025-26": {
@@ -553,10 +553,10 @@
             "PE 10-12": 94.67
           },
           "2026-27": {
-            "Photo and Design": 100.0,
-            "AP Statistics": 93.98,
             "Amer Lit/Writ": 100.0,
-            "AP Physics C:Mech": 100.0
+            "AP Physics C:Mech": 100.0,
+            "Photo and Design": 100.0,
+            "AP Statistics": 93.98
           }
         },
         "Sheldon": {

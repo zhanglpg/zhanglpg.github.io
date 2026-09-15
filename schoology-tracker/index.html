@@ -351,6 +351,12 @@
   })();
   function savePref(k, v) { prefs[k] = v; localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); }
 
+  // Some courses report only a letter grade (no percentage) — colour by letter then.
+  function letterBand(letter) {
+    if (!letter || letter === "-") return "none";
+    const l = letter[0].toUpperCase();
+    return l === "A" ? "good" : l === "B" ? "ok" : l === "C" ? "warn" : (l === "D" || l === "F") ? "bad" : "none";
+  }
   function gradeBand(pct) {
     if (pct == null || isNaN(pct)) return "none";
     if (pct >= 90) return "good";
@@ -420,8 +426,11 @@
     const counts = { good: 0, ok: 0, warn: 0, bad: 0, none: 0 };
     pcts.forEach(p => counts[gradeBand(p)]++);
     const overdue = (data?.students?.[student]?.overdue || []).length;
-    return { avg, counts, overdue, totalCourses: list.length };
+    const graded = list.filter(c => isGraded(c)).length;
+    return { avg, counts, overdue, totalCourses: list.length, graded };
   }
+  // A course with neither a percentage nor a letter grade (e.g. a tutorial period).
+  function isGraded(c) { return parsePct(c.percentage) != null || (c.grade && c.grade !== "-"); }
 
   function trendValues(history, student, year, course) {
     if (!history?.snapshots) return [];
@@ -435,22 +444,29 @@
       .filter(v => typeof v === "number");
   }
 
+  // Letter-only grades get a nominal percentage so they sort sensibly among the rest.
+  const LETTER_PCT = { "A+": 97, "A": 95, "A-": 91, "B+": 88, "B": 85, "B-": 81, "C+": 78, "C": 75, "C-": 71, "D+": 68, "D": 65, "D-": 61, "F": 50 };
+  function sortKey(c) {
+    const p = parsePct(c.percentage);
+    return p != null ? p : (LETTER_PCT[c.grade] ?? null);
+  }
   function sortCourses(entries, sortBy) {
     const arr = [...entries];
     if (sortBy === "attention") {
-      arr.sort((a, b) => (parsePct(a[1].percentage) ?? 200) - (parsePct(b[1].percentage) ?? 200));
+      arr.sort((a, b) => (sortKey(a[1]) ?? 200) - (sortKey(b[1]) ?? 200));
     } else if (sortBy === "grade") {
-      arr.sort((a, b) => (parsePct(b[1].percentage) ?? -1) - (parsePct(a[1].percentage) ?? -1));
+      arr.sort((a, b) => (sortKey(b[1]) ?? -1) - (sortKey(a[1]) ?? -1));
     } else {
       arr.sort((a, b) => a[0].localeCompare(b[0]));
     }
-    return arr;
+    // Ungraded courses always sink to the bottom.
+    return [...arr.filter(e => isGraded(e[1])), ...arr.filter(e => !isGraded(e[1]))];
   }
 
   function studentCard(student, data, history, sortBy, color, year) {
     const courses = coursesFor(data, student, year);
     const entries = sortCourses(Object.entries(courses), sortBy);
-    const { avg, counts, overdue } = summarize(student, data, year);
+    const { avg, counts, overdue, graded } = summarize(student, data, year);
     const isCurrent = year === data?.current_year;
 
     const stats = el("div", { class: "student-stats" },
@@ -459,8 +475,8 @@
         el("div", { class: "l" }, "Average"),
       ),
       el("div", { class: "stat" },
-        el("div", { class: "v" }, String(entries.length)),
-        el("div", { class: "l" }, "Courses"),
+        el("div", { class: "v" }, String(graded)),
+        el("div", { class: "l" }, "Graded courses"),
       ),
       el("div", { class: "stat" },
         el("div", { class: "v good" }, String(counts.good)),
@@ -496,7 +512,7 @@
 
   function courseRow(student, name, c, history, color, year) {
     const pct = parsePct(c.percentage);
-    const band = gradeBand(pct);
+    const band = pct != null ? gradeBand(pct) : letterBand(c.grade);
     const trend = trendValues(history, student, year, name);
 
     const grade = el("div", { class: "grade-pill g-" + band },
@@ -510,8 +526,9 @@
       grade,
     );
 
-    const bar = el("div", { class: "progress" }, el("span", {
-      style: `width:${Math.min(Math.max(pct ?? 0, 0), 100)}%; background:var(--${band === "good" ? "good" : band === "ok" ? "ok" : band === "warn" ? "warn" : band === "bad" ? "bad" : "dim"});`,
+    // No percentage yet (letter-only or ungraded): no progress bar to draw.
+    const bar = pct == null ? null : el("div", { class: "progress" }, el("span", {
+      style: `width:${Math.min(Math.max(pct, 0), 100)}%; background:var(--${band === "good" ? "good" : band === "ok" ? "ok" : band === "warn" ? "warn" : band === "bad" ? "bad" : "dim"});`,
     }));
 
     const assignments = (c.assignments || []).slice().reverse();
@@ -595,7 +612,7 @@
   function totalsLine(data, year) {
     let total = 0, overdue = 0;
     for (const s of STUDENTS) {
-      total += Object.keys(coursesFor(data, s, year)).length;
+      total += Object.values(coursesFor(data, s, year)).filter(isGraded).length;
       overdue += (data?.students?.[s]?.overdue || []).length;
     }
     return { total, overdue };
