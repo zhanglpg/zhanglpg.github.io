@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-14 10:00",
+  "last_run": "2026-09-15 09:39",
   "entries": [
+    {
+      "date": "2026-09-15",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked \u2014 no changes. Two Shanghai AI Lab releases since Sep 13 were both post-trained variants of tracked architectures: internlm/Intern-S2-397B (40 likes) is Qwen3_5MoeForConditionalGeneration \u2014 the identical 60L/d4096/512-expert-top-10 Gated-DeltaNet 3:1 hybrid spec as the tracked Qwen3.5-397B-A17B \u2014 and internlm/Atria-Dawn-Preview (57 likes, agentic research model) is GlmMoeDsaForCausalLM with the exact GLM-5.2 config (78L/d6144/256 experts, MLA+DSA with 21-of-78 IndexShare layers), its README stating it is built on the 744B GLM-5.2 foundation \u2014 both skipped per the no-finetune-of-tracked-models rule (consistent with the Nex-N2.5 decisions). Also skipped: tencent/Simple-Attention-Sparsification (research attention-gate weights for Qwen3-4B/14B, arXiv 2609.13141), OPENGCM/GTM-3-base (75M single-GPU nanoGPT toy), zeromodels SD/SDXL re-uploads, and the DeepSeek-V4.1-Flash / Qwen3.8 / GLM-5.3 quant wave (soyrsoyr NVFP4/MXFP4/FP8 validation builds, MLX, GGUF, thoughtworks backdoor research checkpoints). Partial rechecks: llada2-2-flash README still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1, ~297B stays estimated) \u2014 both remain partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 still gated HTTP 401 (16th run). 60 models unchanged."
+    },
     {
       "date": "2026-09-14",
       "added": [
@@ -174,27 +180,7 @@ window.ATLAS_CHANGELOG = {
         "stable-diffusion-3-5-large"
       ],
       "note": "Diagrams now open up the attention mechanism itself, not just its name. Each model gets exploded per-mechanism panels showing the real internal dataflow with verified dimensions: MLA latent compression (c_KV/k_R cache, decoupled RoPE, weight absorption), DeepSeek-V4's CSA/HCA compressed-sparse stacks over a shared-K=V MQA backbone with the Lightning Indexer, DSA token top-k (+ GLM-5.2 IndexShare cross-layer reuse), Kimi K3's KDA delta-rule linear attention and AttnRes snapshot-bank residuals, Gated DeltaNet, MiniMax Lightning/MSA block-sparse, sliding/chunk/full spans, GQA head-grouping, MMDiT joint attention, and DeepSeek-V4's mHC hyper-connection residual stream. Every number was re-verified against HF configs + tech reports (9-family research pass with adversarial fact-checking) and the diagrams passed a multi-agent visual review. Corrected a few dataset labels the sources contradicted: Kimi K3 is NoPE (not RoPE), Kimi-VL-A3B uses V2-Lite MLA with no query compression, GLM-5.2 runs IndexShare, DeepSeek-V3.2 is partial-RoPE."
-    },
-    {
-      "date": "2026-07-28",
-      "added": [],
-      "upgraded": [
-        "solar-open2-250b",
-        "inkling",
-        "laguna-s-2-1",
-        "minimax-text-01",
-        "gemma-3-27b",
-        "llama-4-scout",
-        "llama-4-maverick",
-        "gpt-oss-120b",
-        "gpt-oss-20b",
-        "qwen3-next-80b-a3b",
-        "qwen3-5-397b-a17b",
-        "deepseek-v4-pro",
-        "deepseek-v4-flash",
-        "minimax-m3"
-      ],
-      "note": "Rolled out the K3-style split-attention diagram to all 14 heterogeneous models. The decoder block now shows each attention type as a labeled box (width ∝ layer count) plus a per-layer tick strip of the true interleave order — sliding-window vs full (gpt-oss, Gemma 3, Llama 4, Inkling, Laguna), linear vs softmax (Solar Open 2, MiniMax Text-01, Qwen3-Next/3.5), and DeepSeek-V4's CSA vs HCA compressed-attention alternation (from config compress_ratios; Flash adds 2 sliding warmup layers). Patterns verified against HF config.json layer lists."
     }
+
   ]
 };
