@@ -71,7 +71,6 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 4px;
-    margin-bottom: 18px;
     gap: 2px;
   }
   .tab {
@@ -84,6 +83,9 @@
   }
   .tab:hover { color: var(--text); }
   .tab.active { background: var(--surface-2); color: var(--text); }
+  .tab .gl { font-size: 10px; color: var(--dim); margin-left: 5px; font-weight: 400; }
+  .tab.active .gl { color: var(--muted); }
+  .toolbar .left { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
   .toolbar {
     display: flex;
@@ -320,6 +322,29 @@
   const STUDENTS = ["Glenn", "Sheldon"];
   const STORAGE_KEY = "schoology-prefs-v1";
 
+  // School-year selection is per page load (never persisted) so the dashboard
+  // always opens on the current school year.
+  let selectedYear = null;
+
+  function schoolYears(data) {
+    const ys = new Set();
+    for (const s of STUDENTS) for (const y of Object.keys(data?.students?.[s]?.years || {})) ys.add(y);
+    if (data?.current_year) ys.add(data.current_year);
+    return [...ys].sort().reverse();
+  }
+  function coursesFor(data, student, year) {
+    return data?.students?.[student]?.years?.[year]?.courses || {};
+  }
+  function gradeLevelFor(data, student, year) {
+    const yd = data?.students?.[student]?.years?.[year];
+    return yd?.grade_level ?? data?.students?.[student]?.grade ?? null;
+  }
+  function ordinal(n) {
+    if (n == null) return "";
+    const s = ["th", "st", "nd", "rd"], v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
   const prefs = (() => {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
     catch { return {}; }
@@ -387,8 +412,8 @@
     render(root, data, history);
   }
 
-  function summarize(student, data) {
-    const courses = data?.students?.[student]?.courses || {};
+  function summarize(student, data, year) {
+    const courses = coursesFor(data, student, year);
     const list = Object.values(courses);
     const pcts = list.map(c => parsePct(c.percentage)).filter(v => v != null);
     const avg = pcts.length ? pcts.reduce((a, b) => a + b, 0) / pcts.length : null;
@@ -398,10 +423,15 @@
     return { avg, counts, overdue, totalCourses: list.length };
   }
 
-  function trendValues(history, student, course) {
+  function trendValues(history, student, year, course) {
     if (!history?.snapshots) return [];
     return history.snapshots
-      .map(s => s.grades?.[student]?.[course])
+      .map(s => {
+        const g = s.grades?.[student];
+        const v = g?.[year]?.[course];
+        // tolerate pre-migration flat snapshots
+        return typeof v === "number" ? v : (typeof g?.[course] === "number" ? g[course] : undefined);
+      })
       .filter(v => typeof v === "number");
   }
 
@@ -417,10 +447,11 @@
     return arr;
   }
 
-  function studentCard(student, data, history, sortBy, color) {
-    const courses = data?.students?.[student]?.courses || {};
+  function studentCard(student, data, history, sortBy, color, year) {
+    const courses = coursesFor(data, student, year);
     const entries = sortCourses(Object.entries(courses), sortBy);
-    const { avg, counts, overdue } = summarize(student, data);
+    const { avg, counts, overdue } = summarize(student, data, year);
+    const isCurrent = year === data?.current_year;
 
     const stats = el("div", { class: "student-stats" },
       el("div", { class: "stat" },
@@ -436,7 +467,7 @@
         el("div", { class: "l" }, "≥90%"),
       ),
       el("div", { class: "stat" },
-        el("div", { class: "v " + (overdue > 0 ? "bad" : "") }, String(overdue)),
+        el("div", { class: "v " + (isCurrent && overdue > 0 ? "bad" : "") }, isCurrent ? String(overdue) : "—"),
         el("div", { class: "l" }, "Overdue"),
       ),
     );
@@ -445,27 +476,28 @@
     if (entries.length === 0) {
       body = el("div", { class: "empty-state" },
         el("div", { class: "icon" }, "📭"),
-        el("div", null, "No courses yet"),
-        el("div", { style: "font-size:11px; margin-top:6px;" }, "Waiting for the next Schoology Weekly Summary…"),
+        el("div", null, `No courses for ${year} yet`),
+        isCurrent ? el("div", { style: "font-size:11px; margin-top:6px;" }, "Waiting for the next Schoology Weekly Summary…") : null,
       );
     } else {
-      body = el("div", { class: "course-list" }, entries.map(([name, c]) => courseRow(student, name, c, history, color)));
+      body = el("div", { class: "course-list" }, entries.map(([name, c]) => courseRow(student, name, c, history, color, year)));
     }
 
+    const gl = gradeLevelFor(data, student, year);
     return el("div", { class: "student-card " + (student === "Sheldon" ? "sheldon" : "") },
       el("div", { class: "student-header" },
         el("h2", null, student),
-        el("div", { class: "sub" }, `Grade ${data?.students?.[student]?.grade ?? 10} · ${data?.students?.[student]?.school || "Lynbrook High School"}`),
+        el("div", { class: "sub" }, `${gl != null ? ordinal(gl) + " grade · " : ""}${year} · ${data?.students?.[student]?.school || "Lynbrook High School"}`),
       ),
       stats,
       body,
     );
   }
 
-  function courseRow(student, name, c, history, color) {
+  function courseRow(student, name, c, history, color, year) {
     const pct = parsePct(c.percentage);
     const band = gradeBand(pct);
-    const trend = trendValues(history, student, name);
+    const trend = trendValues(history, student, year, name);
 
     const grade = el("div", { class: "grade-pill g-" + band },
       el("span", { class: "letter" }, c.grade && c.grade !== "-" ? c.grade : "—"),
@@ -529,12 +561,15 @@
     );
   }
 
-  function eventTimeline(data) {
-    const events = (data?.events || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 25);
+  function eventTimeline(data, year) {
+    const isCurrent = year === data?.current_year;
+    const events = (data?.events || [])
+      .filter(e => e.year ? e.year === year : isCurrent)
+      .sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 25);
     if (events.length === 0) return null;
     return el("div", { class: "timeline" },
       el("h3", null,
-        el("span", null, "📋 Recent Activity"),
+        el("span", null, `📋 Recent Activity · ${year}`),
         el("span", { class: "count" }, `${events.length} events`),
       ),
       events.map(e => el("div", { class: "timeline-item" },
@@ -557,13 +592,11 @@
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
 
-  function totalsLine(data) {
+  function totalsLine(data, year) {
     let total = 0, overdue = 0;
     for (const s of STUDENTS) {
-      const sd = data?.students?.[s];
-      if (!sd) continue;
-      total += Object.values(sd.courses || {}).length;
-      overdue += (sd.overdue || []).length;
+      total += Object.keys(coursesFor(data, s, year)).length;
+      overdue += (data?.students?.[s]?.overdue || []).length;
     }
     return { total, overdue };
   }
@@ -572,7 +605,11 @@
     root.className = "";
     const tab = prefs.tab && ["both", "Glenn", "Sheldon"].includes(prefs.tab) ? prefs.tab : "both";
     const sortBy = prefs.sortBy && ["attention", "name", "grade"].includes(prefs.sortBy) ? prefs.sortBy : "attention";
-    const totals = totalsLine(data);
+    const years = schoolYears(data);
+    const currentYear = data?.current_year || years[0] || null;
+    const year = selectedYear && years.includes(selectedYear) ? selectedYear : currentYear;
+    const isCurrent = year === currentYear;
+    const totals = totalsLine(data, year);
     const updatedRaw = data?.last_updated ? new Date(data.last_updated) : null;
     const updatedStr = updatedRaw && !isNaN(updatedRaw)
       ? updatedRaw.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })
@@ -582,6 +619,7 @@
       el("h1", null, "📚 Schoology Tracker"),
       el("div", { class: "sub" }, "Glenn & Sheldon · Lynbrook High School"),
       el("div", { class: "meta" },
+        el("span", null, "School year ", el("b", null, year || "—"), isCurrent ? "" : " (past)"),
         el("span", null, "Updated ", el("b", null, updatedStr)),
         el("span", null, el("b", null, String(data?.email_count ?? 0)), " emails processed"),
         el("span", null, el("b", null, String(totals.total)), " courses tracked"),
@@ -607,24 +645,34 @@
     );
     sortSelect.value = sortBy;
 
+    const yearTabs = el("div", { class: "tabs", title: "School year" },
+      years.map(y => {
+        const gl = gradeLevelFor(data, "Glenn", y) ?? gradeLevelFor(data, "Sheldon", y);
+        return el("button", {
+          class: "tab" + (year === y ? " active" : ""),
+          onclick: () => { selectedYear = y; renderApp(data, history); },
+        }, y, gl != null ? el("span", { class: "gl" }, ordinal(gl)) : null);
+      }),
+    );
+
     const toolbar = el("div", { class: "toolbar" },
-      tabs,
+      el("div", { class: "left" }, tabs, yearTabs),
       el("div", { class: "sort-control" }, "Sort:", sortSelect),
     );
 
     const showGlenn = tab === "both" || tab === "Glenn";
     const showSheldon = tab === "both" || tab === "Sheldon";
     const cards = [];
-    if (showGlenn) cards.push(studentCard("Glenn", data, history, sortBy, "#60a5fa"));
-    if (showSheldon) cards.push(studentCard("Sheldon", data, history, sortBy, "#c084fc"));
+    if (showGlenn) cards.push(studentCard("Glenn", data, history, sortBy, "#60a5fa", year));
+    if (showSheldon) cards.push(studentCard("Sheldon", data, history, sortBy, "#c084fc", year));
 
     const grid = el("div", { class: "student-grid", style: cards.length === 1 ? "grid-template-columns: 1fr; max-width: 680px; margin: 0 auto;" : "" }, cards);
 
     const container = el("div", { class: "container" },
-      overdueBanner(data),
+      isCurrent ? overdueBanner(data) : null,
       toolbar,
       grid,
-      eventTimeline(data),
+      eventTimeline(data, year),
     );
 
     root.appendChild(header);
