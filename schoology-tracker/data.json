@@ -3194,13 +3194,7 @@
     "Sheldon": {
       "grade": 11,
       "school": "Lynbrook High School",
-      "overdue": [
-        {
-          "assignment": "LHS Career Exploration",
-          "due_date": "Friday, 12/05/2025",
-          "days_overdue": 283
-        }
-      ],
+      "overdue": [],
       "years": {
         "2025-26": {
           "grade_level": 10,
