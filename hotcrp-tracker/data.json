@@ -3864,6 +3864,51 @@
       "deadline": "Tuesday Sep 15, 2026, 11:59 PM AoE",
       "review_scores": [],
       "review_mean": null
+    },
+    "EuroSys '27 Fall::#1544": {
+      "conference": "EuroSys '27 Fall",
+      "paper_id": "1544",
+      "title": "MoECompass: A Unified Performance Model for Selecting and Optimizing Strategies in MoE Inference",
+      "authors": [
+        "Chutong Ding",
+        "Kaixuan Zhang",
+        "Luping Wang",
+        "Shiyou Qian",
+        "Jian Cao",
+        "Cheng Huang",
+        "Guodong Yang",
+        "Liping Zhang"
+      ],
+      "site": "https://eurosys27-fall.hotcrp.com/paper/1544",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-09-16T03:44:11+00:00",
+      "last_event": "2026-09-16T03:44:53+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-09-16T03:44:11+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-16T03:44:53+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        }
+      ],
+      "counts": {
+        "updates": 2,
+        "comments": 0,
+        "reviews": 0,
+        "total": 2
+      },
+      "message_ids": [
+        "<20260916034411.94E36866771@mail.hotcrp.com>",
+        "<20260916034453.8E3BD866771@mail.hotcrp.com>"
+      ],
+      "deadline": "Friday Sep 25, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -3946,6 +3991,10 @@
     "FAST '27 Fall": {
       "paper_count": 1,
       "last_event": "2026-09-15T11:13:32+00:00"
+    },
+    "EuroSys '27 Fall": {
+      "paper_count": 1,
+      "last_event": "2026-09-16T03:44:53+00:00"
     }
   },
   "announcements": [
@@ -4160,6 +4209,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-15T12:04:10.131413+00:00",
-  "email_count": 468
+  "last_updated": "2026-09-16T04:01:44.843963+00:00",
+  "email_count": 470
 }
