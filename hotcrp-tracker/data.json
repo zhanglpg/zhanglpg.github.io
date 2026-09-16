@@ -3824,7 +3824,7 @@
     "FAST '27 Fall::#132": {
       "conference": "FAST '27 Fall",
       "paper_id": "132",
-      "title": "Deployed System: MossFS",
+      "title": "Deployed System: MossFS: A Log-Structured File System on Cloud Object Storage for Billion-Scale Agent Sandboxes",
       "authors": [
         "Tianze Wang (Shanghai Jiao Tong University",
         "Alibaba Group)",
@@ -3839,7 +3839,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-15T02:21:29+00:00",
-      "last_event": "2026-09-16T07:08:31+00:00",
+      "last_event": "2026-09-16T11:49:17+00:00",
       "events": [
         {
           "type": "updated",
@@ -3855,18 +3855,54 @@
           "type": "updated",
           "date": "2026-09-16T07:08:31+00:00",
           "subject": "[FAST '27 Fall] Updated #132 \"Deployed System: MossFS\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-16T10:30:45+00:00",
+          "subject": "[FAST '27 Fall] Updated #132 \"Deployed System: MossFS: A...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-16T11:10:51+00:00",
+          "subject": "[FAST '27 Fall] Updated #132 \"Deployed System: MossFS: A...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-16T11:25:10+00:00",
+          "subject": "[FAST '27 Fall] Updated #132 \"Deployed System: MossFS: A...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-16T11:39:17+00:00",
+          "subject": "[FAST '27 Fall] Updated #132 \"Deployed System: MossFS: A...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-16T11:39:38+00:00",
+          "subject": "[FAST '27 Fall] Submitted #132 \"Deployed System: MossFS: A...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-16T11:49:17+00:00",
+          "subject": "[FAST '27 Fall] Updated #132 \"Deployed System: MossFS: A...\""
         }
       ],
       "counts": {
-        "updates": 3,
+        "updates": 8,
         "comments": 0,
         "reviews": 0,
-        "total": 3
+        "total": 9
       },
       "message_ids": [
         "<20260915022129.B4199BC2BD3@mail.hotcrp.com>",
         "<20260915111332.698C68417EA@mail.hotcrp.com>",
-        "<20260916070831.A70EE86677D@mail.hotcrp.com>"
+        "<20260916070831.A70EE86677D@mail.hotcrp.com>",
+        "<20260916103045.19E1BBC2BC1@mail.hotcrp.com>",
+        "<20260916111051.2843BBE2DD5@mail.hotcrp.com>",
+        "<20260916112510.1C789BE2DC4@mail.hotcrp.com>",
+        "<20260916113917.50CB3BE2DC4@mail.hotcrp.com>",
+        "<20260916113938.45F7ABE2DC2@mail.hotcrp.com>",
+        "<20260916114917.61986BE2DE1@mail.hotcrp.com>"
       ],
       "deadline": "Tuesday Sep 15, 2026, 11:59 PM AoE",
       "review_scores": [],
@@ -4009,7 +4045,7 @@
     },
     "FAST '27 Fall": {
       "paper_count": 1,
-      "last_event": "2026-09-16T07:08:31+00:00"
+      "last_event": "2026-09-16T11:49:17+00:00"
     },
     "EuroSys '27 Fall": {
       "paper_count": 1,
@@ -4228,6 +4264,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-16T08:05:11.636223+00:00",
-  "email_count": 473
+  "last_updated": "2026-09-16T12:04:13.148120+00:00",
+  "email_count": 479
 }
