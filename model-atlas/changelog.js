@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-16 09:35",
+  "last_run": "2026-09-17 09:35",
   "entries": [
+    {
+      "date": "2026-09-17",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked \u2014 no changes. Scanned HF newest-models (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video; createdAt \u2265 Sep 15), ~40-org sweep (DeepSeek, Qwen, zai-org, THUDM, moonshotai, meta, Mistral, google, nvidia, MiniMax, inclusionAI, internlm, BAAI, Agnes-AI, openbmb, nex-agi, m-a-p, TaichuAI, ibm-granite, Lightricks, et al.), trendingScore + likes7d top-40, and web search. Everything new since the last run was a derivative or re-upload of tracked/previously-assessed models: empero-ai/Qwen3.8-35B-A3B-Distill (12 likes) is an SFT distillation of tracked Qwen3.6-35B-A3B per its base_model tag \u2014 no-distill rule; harshatheg/Qwen-2.5-1B-RLCD (127 likes) is an MLX constrained-decoding finetune of Qwen2.5-1.5B-Instruct; CrowtherLabs/atom-proton-1.0 and Mapika/decider-2b-vision are Qwen3.8-27B-FP8 / Qwen3.5-2B finetunes; x-square-robot/X-Planner-9B and keepstar/Kali-Lite-Vision-9B are qwen3_5-arch domain VLMs; BAAI/Brainmu-Spike is a spike-camera reconstruction LoRA (out of atlas scope); internlm/Atria-Dawn-Preview-Ascend-w8a8 is a quant of the Sep-15-skipped Atria (config-identical to tracked GLM-5.2); PrismLive-2B/4B are MLX quants of gemma-4-E4B; TaichuAI/ZDTaichu5.0-9B-FP8/MLX/GGUF are quants of the already-assessed Sep-4 9B; plus the usual luganoquant/kingjones777/comatto/Abiray quant-GGUF wave over DeepSeek-V4.1-Flash, GLM-5.3-Flash, Kimi-K3, Agnes-3.0-Flash, Qwen3.8-Flash-Next, LTX-2.5, MiniMax-H3 and Wan2.2, the frtertaer LTX-2.5-uncensored FP8 re-upload, FastVideo-FastH3 LoRAs, and SDXL/Flux/Krea/Z-Image LoRA churn. Web search surfaced only closed-weight or derivative items (Abacus Smaug = Kimi-K3/V4-Flash/Qwen3.8-27B post-trains; State-of-Open-Source report mentions no new open weights). Partial rechecks: llada2-2-flash README still discloses no official active-param count (lastModified Aug 20) and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) \u2014 both stay partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 still gated HTTP 401 (18th run). 60 models unchanged."
+    },
     {
       "date": "2026-09-16",
       "added": [],
@@ -143,14 +149,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added MiniMax H3 (Hailuo 3.0), the first video-generation model in the atlas: a 33B dense single-stream 'Omni-Transformer' video diffusion model (weights on HF 2026-08-03) \u2014 50 layers, d_model 5376, 56 MHA heads with 3D MM-RoPE and per-head QK-RMSNorm, SwiGLU d_ff 14336, per-modality AdaLN (video/text/audio), text conditioning in-stream from Qwen3-VL-32B layer-50 states; generates 4-15 s clips at up to 2K/24fps with native stereo audio. All numbers from the HF transformer config.json and the official diffusers implementation. Considered and skipped: Qwen3.8-Max/27B (announced, weights promised for the week of Aug 10 but nothing published yet \u2014 revisit next run), DeepSeek-V4-Flash-0731 (checkpoint refresh, already covered)."
-    },
-    {
-      "date": "2026-08-03",
-      "added": [
-        "longcat-2-0"
-      ],
-      "upgraded": [],
-      "note": "Added LongCat-2.0 (Meituan) as verified: 1.6T/48B ScMoE flagship trained entirely on Chinese AI ASICs \u2014 38 layers each holding 2 MLA blocks + 2 dense FFNs + a 768-expert top-12 MoE with 128 zero-computation identity experts, LongCat Sparse Attention (a DSA-style top-2048 indexer with streaming-aware, cross-layer and hierarchical indexing), 135B of N-gram embedding parameters, 1M context. Structure confirmed from the safetensors tensor map. Considered and skipped: DeepSeek-V4-Flash-0731 (checkpoint refresh, same architecture), XYZ-Aquila-pro (Qwen3.5-397B finetune), Microsoft Fara1.5-27B (Qwen3.5-27B finetune), Kroma (LoRA for Krea 2); Mistral's teased MoE family has no weights or specs yet."
     }
   ]
 };
