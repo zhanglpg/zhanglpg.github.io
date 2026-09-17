@@ -3964,6 +3964,65 @@
       "deadline": "Friday Sep 25, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "NSDI '27 Fall::#181": {
+      "conference": "NSDI '27 Fall",
+      "paper_id": "181",
+      "title": "Axon: Asynchronous Global KV-Aware Scheduling Across Distributed Instances for Agentic Workloads",
+      "authors": [
+        "Yuqi Qiu",
+        "Jinting Zou",
+        "Zizhao Mo",
+        "Junlin Chen",
+        "Liao Chen",
+        "Huanle Xu",
+        "Guoyao Xu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "ChengZhong Xu"
+      ],
+      "site": "https://nsdi27fall.usenix.hotcrp.com/paper/181",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-09-17T07:16:02+00:00",
+      "last_event": "2026-09-17T07:23:53+00:00",
+      "events": [
+        {
+          "type": "updated",
+          "date": "2026-09-17T07:16:02+00:00",
+          "subject": "[NSDI '27 Fall] Updated #181 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-17T07:19:18+00:00",
+          "subject": "[NSDI '27 Fall] Updated #181 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-17T07:23:02+00:00",
+          "subject": "[NSDI '27 Fall] Updated #181 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-17T07:23:53+00:00",
+          "subject": "[NSDI '27 Fall] Updated #181 \"Axon: Asynchronous Global KV-Aware...\""
+        }
+      ],
+      "counts": {
+        "updates": 4,
+        "comments": 0,
+        "reviews": 0,
+        "total": 4
+      },
+      "message_ids": [
+        "<20260917071602.0B2FBBC2BE6@mail.hotcrp.com>",
+        "<20260917071918.51F3BBC2BE6@mail.hotcrp.com>",
+        "<20260917072302.077B4BC2BE6@mail.hotcrp.com>",
+        "<20260917072353.8D136BE2DDB@mail.hotcrp.com>"
+      ],
+      "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -4036,8 +4095,8 @@
       "last_event": "2026-08-04T11:33:27+00:00"
     },
     "NSDI '27 Fall": {
-      "paper_count": 3,
-      "last_event": "2026-09-14T13:13:13+00:00"
+      "paper_count": 4,
+      "last_event": "2026-09-17T07:23:53+00:00"
     },
     "ASPLOS'27 - September cycle": {
       "paper_count": 1,
@@ -4264,6 +4323,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-16T12:04:13.148120+00:00",
-  "email_count": 479
+  "last_updated": "2026-09-17T08:03:36.924673+00:00",
+  "email_count": 483
 }
