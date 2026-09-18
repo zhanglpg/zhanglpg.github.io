@@ -2085,6 +2085,195 @@ window.MODELS = [
 "confidence": "verified"
 },
 {
+"id": "gigachat3-5-reasoning",
+"name": "GigaChat 3.5 Reasoning",
+"org": "Sber",
+"family": "GigaChat",
+"released": "2026-09",
+"license": "MIT",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 432,
+"params_active_B": 28,
+"n_layers": 40,
+"d_model": 7168,
+"d_ff": 18432,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "40 layers split 3:1 — 30 GigaChat35GatedDeltaNet linear-attention layers (32 key / 64 value heads, head_dim 128, causal depthwise conv kernel 4 over the 16384-d qkv stream, per-head decay from A_log + dt_bias, zero-centered gated RMSNorm sigmoid output gate ×2.0) interleaved with 10 gated-MLA full-attention layers (full_attention_layers [3, 7, …, 39]; q_lora 1536, kv_lora 512, qk_nope 128 + qk_rope 64, v 128, 64 heads, per-head sigmoid output gate via gate_proj, interleaved RoPE + YaRN ×8 from 32768 positions, α = √(d/rank) latent-MLA scaling). ZeroCenteredGatedNorm (RMSNorm followed by a learned ×2σ multiplicative gate) on every sublayer, pre AND post (layernorm_type pre_post). 3 MTP heads (layers 40–42, dense FFN, shared_head + eh_proj) ship in the checkpoint for EAGLE/MTP speculative decoding.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 128256,
+"context_length": 262144,
+"norm": "ZeroCenteredGatedNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Sber's first full-reasoning flagship (announced Sep 10, MIT-licensed open weights as ai-sage): 432B MoE / 28B active — 256 routed experts top-8 + 1 shared (expert d_ff 2048, routed_scaling_factor 2.5, noaux_tc-style sigmoid router with e_score_correction_bias), first 3 layers dense (d_ff 18432). Post-training trains six domain experts independently with online RL (CISPO, difficulty-filtered task pool, domain-specific rewards) and merges them into one release model via on-policy distillation; 37% fewer reasoning tokens than DeepSeek V4 Flash Preview on AIME/HMMT/IMOAnswerBench. Trained natively in FP8 at all stages; the release is FP8 (dynamic e4m3, 128×128 blocks, ~446 GB index ≈ 432B params) with linear-attention parts, embeddings, router and norms kept full precision. 262K context, ru/en bilingual, remote code required (custom GigaChat35ForCausalLM).",
+"sources": [
+"https://huggingface.co/ai-sage/GigaChat3.5-432B-A28B-Reasoning",
+"https://huggingface.co/ai-sage/GigaChat3.5-432B-A28B-Reasoning/raw/main/config.json",
+"https://huggingface.co/ai-sage/GigaChat3.5-432B-A28B-Reasoning/raw/main/README.md",
+"https://www.techcircle.in/2026-09-17/sber-releases-432-billion-parameter-gigachat-3-5-reasoning-model/"
+],
+"confidence": "verified",
+"dense_first_layers": 3,
+"attention_split": {
+"parts": [
+{
+"name": "GatedDeltaNet",
+"n": 30,
+"type": "linear",
+"sub": "conv k4 · gated"
+},
+{
+"name": "Gated MLA",
+"n": 10,
+"type": "MLA",
+"sub": "latent KV · gate"
+}
+],
+"pattern": "lllmlllmlllmlllmlllmlllmlllmlllmlllmlllm",
+"pattern_map": {
+"l": "linear",
+"m": "MLA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "GigaChat35GatedDeltaNet (30 layers)",
+"p": {
+"d": 7168,
+"kh": 32,
+"vh": 64,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkvz 7168 → 24576 (fused)",
+"projSub": "in_proj_ba → β, α (64 v-heads) · conv over qkv 16384",
+"qsub": "L2 norm",
+"vsub": "64 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A_log · softplus(a + dt_bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → gated RMSNorm(128) ⊗ σ(z)×2",
+"outSub": "zero-centered sigmoid gate → out_proj 8192 → 7168",
+"cacheline": "no KV cache — recurrent state 32 k-heads × 128 × 256 ≈ 1.05 M el + conv state 16384 × 4 per layer"
+},
+"notes": [
+"GQA-style delta rule: 32 key heads × 128, 64 value heads × 128 (2 v-heads per k-head)",
+"q,k L2-normalized in kernel · chunked/fused recurrent via flash-linear-attention",
+"linear_gating_type gated_rmsnorm_sigmoid_zero_centered, gate scale 2.0"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA (10 layers — every 4th from layer 3)",
+"p": {
+"d": 7168,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": false,
+"yarn": "mscale² ×8 from 32768",
+"gate": "σ(gate_proj h) per head",
+"cache": "576 el/token × 10 MLA layers ≈ 11.5 KB/token bf16 — only these layers cache anything"
+},
+"notes": [
+"α scaling (use_mla_scaling_factor): α_q = √(7168/1536), α_kv = √(7168/512)",
+"interleaved RoPE (rope_interleave) · shared 64-d rope key via kv_a_proj_with_mqa",
+"per-head sigmoid output gate (gate_proj 7168 → 8192) before o_proj"
+]
+}
+]
+},
+{
+"id": "xing4-0-29b-a4b",
+"name": "Xing4.0-29B-A4B",
+"org": "China Telecom",
+"family": "Xing",
+"released": "2026-09",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 29,
+"params_active_B": 4,
+"n_layers": 40,
+"d_model": 3584,
+"d_ff": 9216,
+"d_ff_moe": 1024,
+"n_heads": 32,
+"n_kv_heads": 32,
+"head_dim": 192,
+"attention": "MLA",
+"attention_detail": "All 40 layers use Multi-head Latent Attention: q compressed to a 768-rank latent (RMSNorm) then expanded to 32 heads × 192 (128 nope + 64 rope); kv fused MQA projection to a 512-d latent + one shared 64-d rope key, kv_b_proj expands per head to k_nope 128 / v 128; scaling 192^−0.5 × mscale². YaRN ×64 (4096 original → 262144 positions). Per-layer residual stream is a 4-stream manifold-constrained hyper-connection (attn_hc + ffn_hc per layer, Sinkhorn-20 doubly-stochastic mixing, res clamp ±30); 1 MTP draft layer (num_nextn_predict_layers: 1) with shared_head/eh_proj/enorm/hnorm ships in the checkpoint.",
+"n_experts": 64,
+"active_experts": 4,
+"shared_experts": 1,
+"vocab_size": 131072,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "China Telecom AI's Xing series debut (Sep 16; formerly TeleChat, TeleChat3-MoE lineage arXiv 2512.24157): 29B total / 4B active MoE — 64 routed experts top-4 + 1 shared (expert d_ff 1024), first 2 layers dense (d_ff 9216), noaux_tc sigmoid routing with routed_scaling_factor 2.0. MLA everywhere with 262K native context (extensible to 512K) and 1 MTP draft layer. Residual stream uses 4-stream manifold-constrained hyper-connections (Sinkhorn-20) — the DeepSeek-V4 mHC design family. First model of this scale trained end-to-end on Ascend 910C NPUs with MindSpore/MindFormers (Ascend-C fused mHC operators; ~96% throughput gain from multi-level co-optimization). Apache-2.0, BF16 release (41 safetensors shards, ~62.4 GB index); agent-oriented benchmarks (SWE-bench Verified 75.0, Terminal-Bench 2.1 57.5) vs Gemma4-26B-A4B / Qwen3.6-35B-A3B.",
+"sources": [
+"https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+"https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B/raw/main/config.json",
+"https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B/raw/main/README.md",
+"https://arxiv.org/abs/2512.24157"
+],
+"confidence": "verified",
+"dense_first_layers": 2,
+"residual": {
+"kind": "mhc",
+"note": "Residuals: 4-stream manifold-constrained hyper-connections (attn_hc + ffn_hc per layer), Sinkhorn-20 doubly-stochastic mixing, res clamp ±30"
+},
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (all 40 layers)",
+"p": {
+"d": 3584,
+"nh": 32,
+"qlora": 768,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": false,
+"yarn": "mscale² ×64 from 4096",
+"cache": "KV cache: 576 el/token/layer × 40 ≈ 46 KB/token bf16"
+},
+"notes": [
+"q_a_proj 3584 → 768 latent (RMSNorm) → q_b_proj → 32 heads × 192 (128 nope + 64 rope)",
+"kv fused MQA → 512-d latent + one shared 64-d rope key; kv_b_proj expands per head",
+"1 MTP draft layer (shared_head + eh_proj + enorm/hnorm) in the checkpoint"
+]
+},
+{
+"kind": "mhc",
+"title": "mHC — manifold-constrained hyper-connections",
+"p": {
+"sinkhorn": 20,
+"cap": "4 residual streams (hc_mult 4) · H_res clamp ±30 · static hc_base + input-dynamic hc_fn parts"
+}
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
