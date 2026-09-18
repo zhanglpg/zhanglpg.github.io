@@ -176,8 +176,30 @@ function PriceChart(){
   const hvTicks=[0,20,40,60].filter(v=>v<=hhi);
   const monthMarks=[];let lastM='';
   dates.forEach((d,i)=>{const m=d.slice(0,7);if(m!==lastM&&d.slice(8,10)<='07'){lastM=m;monthMarks.push({i,label:d.slice(0,4)+'-'+d.slice(5,7)});}});
+
+  const [hover,setHover]=useState(null); // {i, mxPct}
+  const svgRef=useRef(null);
+  const onMove=(e)=>{
+    const svg=svgRef.current; if(!svg)return;
+    const rect=svg.getBoundingClientRect();
+    const px=(e.clientX-rect.left)/rect.width*W;
+    let i=Math.round((px-P.l)/(W-P.l-P.r)*(n-1));
+    i=Math.max(0,Math.min(n-1,i));
+    setHover({i, mxPct:(e.clientX-rect.left)/rect.width*100});
+  };
+  const hi_=hover?hover.i:null;
+  const hclose=hi_!=null?cl[hi_]:null;
+  const hchg=hi_!=null&&hi_>0?(cl[hi_]/cl[hi_-1]-1)*100:null;
+  const hhv=hi_!=null?hv[hi_]:null;
+  // tooltip flip side when near right edge
+  const tipLeft=hover?(hover.mxPct>62?undefined:(hover.mxPct+2)+'%'):undefined;
+  const tipRight=hover&&hover.mxPct>62?(102-hover.mxPct)+'%':undefined;
+
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block'}}>
+    <div style={{position:'relative'}}>
+    <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block',cursor:'crosshair',touchAction:'pan-y'}}
+      onMouseMove={onMove} onMouseLeave={()=>setHover(null)}
+      onTouchStart={onMove} onTouchMove={onMove} onTouchEnd={()=>setHover(null)}>
       <defs>
         <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#4cc9f0" stopOpacity=".22"/><stop offset="100%" stopColor="#4cc9f0" stopOpacity="0"/>
@@ -200,6 +222,11 @@ function PriceChart(){
           <line x1={P.l} x2={W-P.r} y1={y(v)} y2={y(v)} stroke={l[2]} strokeWidth="1" strokeDasharray="6 4" opacity=".55"/>
           <text x={P.l+6} y={y(v)-5} fill={l[2]} fontSize="11" fontWeight="600">{l[0]}</text>
         </g>;})}
+      {hi_!=null && <g pointerEvents="none">
+        <line x1={x(hi_)} x2={x(hi_)} y1={P.t} y2={H-P.b} stroke="#e8ebf0" strokeWidth="1" opacity=".35"/>
+        <circle cx={x(hi_)} cy={y(hclose)} r="4.5" fill="#0e1014" stroke="#4cc9f0" strokeWidth="2"/>
+        <circle cx={x(hi_)} cy={hy(hhv)} r="3.5" fill="#0e1014" stroke="#ffc857" strokeWidth="1.8"/>
+      </g>}
       <g>
         <rect x={W-250} y={P.t+2} width="238" height="42" rx="8" fill="#161a22" stroke="#242b38"/>
         <line x1={W-238} x2={W-218} y1={P.t+16} y2={P.t+16} stroke="#4cc9f0" strokeWidth="2"/>
@@ -208,6 +235,22 @@ function PriceChart(){
         <text x={W-212} y={P.t+37} fill="#9aa3b2" fontSize="11">HV21 已实现波动率（右轴%）</text>
       </g>
     </svg>
+    {hi_!=null && (
+      <div style={{position:'absolute',top:8,left:tipLeft,right:tipRight,pointerEvents:'none',zIndex:5,
+        background:'rgba(22,26,34,.96)',border:'1px solid #303848',borderRadius:10,padding:'8px 12px',
+        boxShadow:'0 6px 24px rgba(0,0,0,.5)',minWidth:170,backdropFilter:'blur(6px)'}}>
+        <div style={{fontSize:11,color:'#9aa3b2',marginBottom:4,fontWeight:600}}>{dates[hi_]}</div>
+        <div style={{fontSize:13,display:'flex',justifyContent:'space-between',gap:14}}>
+          <span><span style={{color:'#4cc9f0'}}>●</span> 收盘</span>
+          <b style={{fontVariantNumeric:'tabular-nums'}}>${hclose.toFixed(2)}{hchg!=null&&<span style={{fontSize:11,marginLeft:6,color:hchg>=0?'#3ddc84':'#ff5d5d'}}>{hchg>=0?'+':''}{hchg.toFixed(2)}%</span>}</b>
+        </div>
+        <div style={{fontSize:13,display:'flex',justifyContent:'space-between',gap:14,marginTop:2}}>
+          <span><span style={{color:'#ffc857'}}>●</span> HV21</span>
+          <b style={{fontVariantNumeric:'tabular-nums',color:'#ffc857'}}>{hhv.toFixed(1)}%</b>
+        </div>
+      </div>
+    )}
+    </div>
   );
 }
 
