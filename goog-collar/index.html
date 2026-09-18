@@ -269,8 +269,27 @@ function PayoffChart(){
   for(let s=xmin;s<=xmax;s+=(xmax-xmin)/120){up+=`${x(s).toFixed(1)},${y(Math.max(Math.min(unh(s),ymax),ymin)).toFixed(1)} `;cp+=`${x(s).toFixed(1)},${y(col(s)).toFixed(1)} `;}
   const ticks=[];for(let v=-600000;v<=800000;v+=200000)if(v>=ymin&&v<=ymax)ticks.push(v);
   const xt=[];for(let v=Math.ceil(xmin/50)*50;v<=xmax;v+=50)xt.push(v);
+
+  const [hover,setHover]=useState(null); // {s, mxPct}
+  const svgRef=useRef(null);
+  const onMove=(e)=>{
+    const svg=svgRef.current; if(!svg)return;
+    const rect=svg.getBoundingClientRect();
+    const px=(e.clientX-rect.left)/rect.width*W;
+    let s=xmin+(px-P.l)/(W-P.l-P.r)*(xmax-xmin);
+    s=Math.max(xmin,Math.min(xmax,s));
+    setHover({s, mxPct:(e.clientX-rect.left)/rect.width*100});
+  };
+  const hs=hover?hover.s:null;
+  const hu=hs!=null?unh(hs):null, hc=hs!=null?col(hs):null;
+  const tipLeft=hover?(hover.mxPct>62?undefined:(hover.mxPct+2)+'%'):undefined;
+  const tipRight=hover&&hover.mxPct>62?(102-hover.mxPct)+'%':undefined;
+
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block'}}>
+    <div style={{position:'relative'}}>
+    <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block',cursor:'crosshair',touchAction:'pan-y'}}
+      onMouseMove={onMove} onMouseLeave={()=>setHover(null)}
+      onTouchStart={onMove} onTouchMove={onMove} onTouchEnd={()=>setHover(null)}>
       {ticks.map((v,i)=><g key={i}>
         <line x1={P.l} x2={W-P.r} y1={y(v)} y2={y(v)} stroke="#242b38" strokeDasharray="3 5"/>
         <text x={P.l-8} y={y(v)+4} textAnchor="end" fill="#5d6675" fontSize="11">{v===0?'0':(v/1000)+'k'}</text>
@@ -285,6 +304,11 @@ function PayoffChart(){
         <line x1={x(k)} x2={x(k)} y1={P.t} y2={H-P.b} stroke={i===0?'#3ddc84':'#ff6b35'} strokeWidth="1" strokeDasharray="3 4" opacity=".5"/>
         <text x={x(k)+(i===0?-8:8)} y={H-P.b-8} textAnchor={i===0?'end':'start'} fill={i===0?'#3ddc84':'#ff6b35'} fontSize="11" fontWeight="600">{i===0?'Floor '+k:'Cap '+k}</text>
       </g>)}
+      {hs!=null && <g pointerEvents="none">
+        <line x1={x(hs)} x2={x(hs)} y1={P.t} y2={H-P.b} stroke="#e8ebf0" strokeWidth="1" opacity=".35"/>
+        <circle cx={x(hs)} cy={y(hc)} r="4.5" fill="#0e1014" stroke="#ff6b35" strokeWidth="2"/>
+        <circle cx={x(hs)} cy={y(hu)} r="3.5" fill="#0e1014" stroke="#8b93a3" strokeWidth="1.8"/>
+      </g>}
       <g>
         <rect x={P.l+8} y={P.t+2} width="290" height="42" rx="8" fill="#161a22" stroke="#242b38"/>
         <line x1={P.l+20} x2={P.l+40} y1={P.t+16} y2={P.t+16} stroke="#ff6b35" strokeWidth="2.6"/>
@@ -294,6 +318,26 @@ function PayoffChart(){
       </g>
       <text x={P.l} y={12} fill="#5d6675" fontSize="11">到期日损益 (USD, {DATA.position.contracts}张合约, 含净{A.net_mid>=0?'贷记':'借记'})</text>
     </svg>
+    {hs!=null && (
+      <div style={{position:'absolute',top:8,left:tipLeft,right:tipRight,pointerEvents:'none',zIndex:5,
+        background:'rgba(22,26,34,.96)',border:'1px solid #303848',borderRadius:10,padding:'8px 12px',
+        boxShadow:'0 6px 24px rgba(0,0,0,.5)',minWidth:190,backdropFilter:'blur(6px)'}}>
+        <div style={{fontSize:11,color:'#9aa3b2',marginBottom:4,fontWeight:600}}>到期价 ${hs.toFixed(0)} <span style={{fontWeight:400}}>（{(hs/spot*100-100>=0?'+':'')}{(hs/spot*100-100).toFixed(1)}%）</span></div>
+        <div style={{fontSize:13,display:'flex',justifyContent:'space-between',gap:14}}>
+          <span><span style={{color:'#ff6b35'}}>●</span> Collar</span>
+          <b style={{fontVariantNumeric:'tabular-nums',color:hc>=0?'#3ddc84':'#ff5d5d'}}>{fmt$(hc)}</b>
+        </div>
+        <div style={{fontSize:13,display:'flex',justifyContent:'space-between',gap:14,marginTop:2}}>
+          <span><span style={{color:'#8b93a3'}}>●</span> 裸持仓</span>
+          <b style={{fontVariantNumeric:'tabular-nums',color:hu>=0?'#3ddc84':'#ff5d5d'}}>{fmt$(hu)}</b>
+        </div>
+        <div style={{fontSize:12,display:'flex',justifyContent:'space-between',gap:14,marginTop:4,paddingTop:4,borderTop:'1px solid #242b38'}}>
+          <span className="dim">差额</span>
+          <b style={{fontVariantNumeric:'tabular-nums',color:(hc-hu)>=0?'#3ddc84':'#ff5d5d'}}>{fmt$(hc-hu)}</b>
+        </div>
+      </div>
+    )}
+    </div>
   );
 }
 
@@ -307,23 +351,64 @@ function TermChart(){
   const y=v=>P.t+(H-P.t-P.b)*(1-(v-lo)/(hi-lo));
   const pts=t.map((r,i)=>`${x(i).toFixed(1)},${y(r.iv).toFixed(1)}`).join(' ');
   const ei=DATA.termEarningsIdx;
+
+  const [hover,setHover]=useState(null); // {i, mxPct}
+  const svgRef=useRef(null);
+  const onMove=(e)=>{
+    const svg=svgRef.current; if(!svg)return;
+    const rect=svg.getBoundingClientRect();
+    const px=(e.clientX-rect.left)/rect.width*W;
+    let i=Math.round((px-P.l)/(W-P.l-P.r)*(t.length-1));
+    i=Math.max(0,Math.min(t.length-1,i));
+    setHover({i, mxPct:(e.clientX-rect.left)/rect.width*100});
+  };
+  const hi_=hover?hover.i:null;
+  const hrow=hi_!=null?t[hi_]:null;
+  const tipLeft=hover?(hover.mxPct>62?undefined:(hover.mxPct+2)+'%'):undefined;
+  const tipRight=hover&&hover.mxPct>62?(102-hover.mxPct)+'%':undefined;
+  const spot=DATA.position.spot;
+
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block'}}>
+    <div style={{position:'relative'}}>
+    <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{width:'100%',height:'auto',display:'block',cursor:'crosshair',touchAction:'pan-y'}}
+      onMouseMove={onMove} onMouseLeave={()=>setHover(null)}
+      onTouchStart={onMove} onTouchMove={onMove} onTouchEnd={()=>setHover(null)}>
       {Array.from({length:6},(_,i)=>lo+(hi-lo)*i/5).map((v,i)=><g key={i}>
         <line x1={P.l} x2={W-P.r} y1={y(v)} y2={y(v)} stroke="#242b38" strokeDasharray="3 5"/>
         <text x={P.l-8} y={y(v)+4} textAnchor="end" fill="#5d6675" fontSize="11">{v.toFixed(0)}</text>
       </g>)}
       <polyline points={pts} fill="none" stroke="#4cc9f0" strokeWidth="2.2"/>
       {t.map((r,i)=><g key={i}>
-        <circle cx={x(i)} cy={y(r.iv)} r={i===ei?6:4} fill={i===ei?'#ff6b35':'#0e1014'} stroke={i===ei?'#ff6b35':'#4cc9f0'} strokeWidth="2"/>
-        <text x={x(i)} y={H-22} textAnchor="middle" fill="#5d6675" fontSize="10" transform={`rotate(-38 ${x(i)} ${H-22})`}>{r.exp.slice(2)}</text>
+        <circle cx={x(i)} cy={y(r.iv)} r={i===hi_?7:(i===ei?6:4)} fill={i===hi_?'#4cc9f0':(i===ei?'#ff6b35':'#0e1014')} stroke={i===ei?'#ff6b35':'#4cc9f0'} strokeWidth="2"/>
+        <text x={x(i)} y={H-22} textAnchor="middle" fill={i===hi_?'#e8ebf0':'#5d6675'} fontSize="10" transform={`rotate(-38 ${x(i)} ${H-22})`}>{r.exp.slice(2)}</text>
         <text x={x(i)} y={y(r.iv)-10} textAnchor="middle" fill="#9aa3b2" fontSize="10.5">{r.iv.toFixed(1)}</text>
       </g>)}
       {ei>0 && <g>
         <line x1={x(ei)} x2={x(ei)} y1={P.t} y2={H-P.b} stroke="#ffc857" strokeWidth="1" strokeDasharray="4 4" opacity=".5"/>
         <text x={x(ei)+6} y={P.t+12} fill="#ffc857" fontSize="10.5">{DATA.snapshot.earnings}财报: IV台阶</text>
       </g>}
+      {hi_!=null && <line x1={x(hi_)} x2={x(hi_)} y1={P.t} y2={H-P.b} stroke="#e8ebf0" strokeWidth="1" opacity=".3" pointerEvents="none"/>}
     </svg>
+    {hrow && (
+      <div style={{position:'absolute',top:8,left:tipLeft,right:tipRight,pointerEvents:'none',zIndex:5,
+        background:'rgba(22,26,34,.96)',border:'1px solid #303848',borderRadius:10,padding:'8px 12px',
+        boxShadow:'0 6px 24px rgba(0,0,0,.5)',minWidth:190,backdropFilter:'blur(6px)'}}>
+        <div style={{fontSize:11,color:'#9aa3b2',marginBottom:4,fontWeight:600}}>到期 {hrow.exp} · {hrow.dte} DTE</div>
+        <div style={{fontSize:13,display:'flex',justifyContent:'space-between',gap:14}}>
+          <span><span style={{color:'#4cc9f0'}}>●</span> ATM IV</span>
+          <b style={{fontVariantNumeric:'tabular-nums',color:'#4cc9f0'}}>{hrow.iv.toFixed(1)}%</b>
+        </div>
+        <div style={{fontSize:13,display:'flex',justifyContent:'space-between',gap:14,marginTop:2}}>
+          <span><span style={{color:'#ffc857'}}>●</span> 偏度(P−C)</span>
+          <b style={{fontVariantNumeric:'tabular-nums',color:'#ffc857'}}>{hrow.skew>=0?'+':''}{hrow.skew.toFixed(1)} pts</b>
+        </div>
+        <div style={{fontSize:12,marginTop:4,paddingTop:4,borderTop:'1px solid #242b38'}} className="dim">
+          ±1σ 区间 ≈ ${(spot*Math.exp(-hrow.iv/100*Math.sqrt(hrow.dte/365))).toFixed(0)} – {(spot*Math.exp(hrow.iv/100*Math.sqrt(hrow.dte/365))).toFixed(0)}
+          {ei>=0&&<span> · {hi_>=ei?'含财报':'财报前到期'}</span>}
+        </div>
+      </div>
+    )}
+    </div>
   );
 }
 
