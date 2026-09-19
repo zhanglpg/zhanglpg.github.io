@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-18 10:58",
+  "last_run": "2026-09-19 09:26",
   "entries": [
+    {
+      "date": "2026-09-19",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Scanned HF newest-models (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video; createdAt ≥ Sep 17), a ~40-org sweep (DeepSeek, Qwen, zai-org, THUDM, moonshotai, meta, Mistral, google, nvidia, MiniMax, inclusionAI, internlm, BAAI, Agnes-AI, openbmb, nex-agi, m-a-p, TaichuAI, ibm-granite, Lightricks, et al.) and trending/likes top-40, plus web search for Sep 18–19 announcements. Everything new was derivative, out-of-scope, or already assessed: PrismML Bonsai 2 27B (926-like GGUF wave, Sep 18 press) remains a ternary quant of tracked Qwen3.8-27B per its base_model tag — 2nd consecutive skip; Local-Axiom-AI/Sabaki-Preview is a 0-like untrained GGUF research toy; akoumpa/Moonlight-V4-16B-A3B is an explicitly *untrained* architecture-only config (tags: untrained, architecture-config); convaiinnovations/laya is a non-autoregressive decision/router model (reinforcement-learning pipeline, no config.json) out of atlas scope; kpsss34/Walkyrie-7B-MoE is gated (401) and a finetune of its own 1.3B base; the text-to-image/video window was LoRA and quant churn only (Johnny-Z/Anima-Light-Lavender = circlestone-labs/Anima finetune; Jossbgo/Qwen-Image-2512 is a re-upload of the Dec 2025 Qwen official release; Ternary-Bonsai MLX/GGUF, FastH3 MLX, LTX-2.5 FP8, Wan2.2 GGUF re-uploads). Web search surfaced only closed-weight or platform news (Alibaba Qwen3.8-Omni-Flash is an API audio model with no open weights; Kimi K3 Bedrock GA and GitLab-hosted K3/M3/GLM-5.3 are distribution news for tracked models; nvidia Nemotron-3.5-Lightning-30B-A3B and Gemma-4 NVFP4 pages pre-date the window, Aug/Apr releases). Partial rechecks: inclusionAI/LLaDA2.2-flash README (lastModified Aug 20) still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 raw configs still gated HTTP 401 (20th run). No upgrades. 62 models unchanged."
+    },
     {
       "date": "2026-09-18",
       "added": [
@@ -140,16 +146,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, the week's standout trending model — its HF repos are gated, so no primary-source config exists for the released 22B; the arXiv paper documents the earlier LTX-2 at 14B+5B, which does not match. Revisit if the config becomes public), DeepSeek-V4-Pro-0813 (config identical to the existing DeepSeek-V4-Pro entry except speculative-decoding metadata — checkpoint refresh), Ornith-1.5-35B-A3B (continued pretraining on the Qwen3.5-397B base, same Qwen3_5Moe architecture already in the atlas), Muse Spark 1.2 (weights announced Aug 10, still unpublished), and Kimi K3's Aug 20 repo update (tokenizer fix only, no architecture change). All 46 existing entries remain verified; nothing to upgrade."
-    },
-    {
-      "date": "2026-08-17",
-      "added": [
-        "qwen3-8-max",
-        "qwen3-8-27b",
-        "muse-glimmer-30b"
-      ],
-      "upgraded": [],
-      "note": "Added the three big open-weight drops of the week, all verified from raw HF configs. Qwen3.8-Max (2.4T total / 95B active) is the largest open-weight model to date: 92 all-MoE layers (512 experts, top-10 + 1 shared) on a 3:1 Gated-DeltaNet + gated full-attention hybrid, text-only under a custom license. Qwen3.8-27B is its dense vision-language companion (same hybrid stack, Apache 2.0). Muse Glimmer 30B is Meta's return to open weights (first since Llama 4): a 30B dense VLM distilled from Muse Spark 1.2 — (SWA×3, Full)×13 with RoPE on sliding layers and NoPE on global ones, Apache 2.0. Skipped: Muse Spark 1.2 itself (weights announced but not yet published — revisit)."
     }
   ]
 };
