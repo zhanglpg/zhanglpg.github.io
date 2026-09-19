@@ -1627,7 +1627,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-06-03T07:03:06+00:00",
-      "last_event": "2026-09-02T06:01:50+00:00",
+      "last_event": "2026-09-19T05:33:01+00:00",
       "events": [
         {
           "type": "updated",
@@ -1688,13 +1688,18 @@
           "type": "other",
           "date": "2026-09-02T06:01:50+00:00",
           "subject": "[ATC '26] Response for #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-09-19T05:33:01+00:00",
+          "subject": "[ATC '26] Rejected submission #75 \"Slow Path, Fast Kill: Priority-Aware OOM...\""
         }
       ],
       "counts": {
         "updates": 9,
         "comments": 0,
         "reviews": 0,
-        "total": 12
+        "total": 13
       },
       "message_ids": [
         "<20260603070306.602148F10B2@mail.hotcrp.com>",
@@ -1708,7 +1713,8 @@
         "<20260611033928.2371290B8D6@mail.hotcrp.com>",
         "<20260711082244.485A29430D3@mail.hotcrp.com>",
         "<20260830042604.ADC8D9B3C8D@mail.hotcrp.com>",
-        "<20260902060150.9363C840DAE@mail.hotcrp.com>"
+        "<20260902060150.9363C840DAE@mail.hotcrp.com>",
+        "<20260919053301.33E739B36F5@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1727,10 +1733,10 @@
         "Minchen Yu"
       ],
       "site": "https://atc26.hotcrp.com/paper/473",
-      "status": "submitted",
+      "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-09-02T15:13:12+00:00",
+      "last_event": "2026-09-19T05:23:19+00:00",
       "events": [
         {
           "type": "updated",
@@ -1771,13 +1777,18 @@
           "type": "other",
           "date": "2026-09-02T15:13:12+00:00",
           "subject": "[ATC '26] Response for #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-19T05:23:19+00:00",
+          "subject": "[ATC '26] Accepted submission #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 5,
         "comments": 0,
         "reviews": 0,
-        "total": 8
+        "total": 9
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
@@ -1787,7 +1798,8 @@
         "<20260611104439.9DE3590B8F6@mail.hotcrp.com>",
         "<20260611115126.270A392D9BA@mail.hotcrp.com>",
         "<20260830042606.62321A056AE@mail.hotcrp.com>",
-        "<20260902151312.363E8840D91@mail.hotcrp.com>"
+        "<20260902151312.363E8840D91@mail.hotcrp.com>",
+        "<20260919052319.95534BE2DF5@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1811,10 +1823,10 @@
         "Wei Wang"
       ],
       "site": "https://atc26.hotcrp.com/paper/843",
-      "status": "submitted",
+      "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-09-03T11:14:56+00:00",
+      "last_event": "2026-09-19T05:23:20+00:00",
       "events": [
         {
           "type": "updated",
@@ -1905,13 +1917,18 @@
           "type": "other",
           "date": "2026-09-03T11:14:56+00:00",
           "subject": "[ATC '26] Response for #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-19T05:23:20+00:00",
+          "subject": "[ATC '26] Accepted submission #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
         "updates": 14,
         "comments": 0,
         "reviews": 0,
-        "total": 18
+        "total": 19
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
@@ -1931,7 +1948,8 @@
         "<20260611112559.09C0E90B8FE@mail.hotcrp.com>",
         "<20260830042607.A498EA0D438@mail.hotcrp.com>",
         "<20260902023342.41FB3841368@mail.hotcrp.com>",
-        "<20260903111456.A861D920EA7@mail.hotcrp.com>"
+        "<20260903111456.A861D920EA7@mail.hotcrp.com>",
+        "<20260919052320.26113C0154F@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1954,10 +1972,10 @@
         "Dan Pei"
       ],
       "site": "https://atc26.hotcrp.com/paper/471",
-      "status": "submitted",
+      "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T10:07:22+00:00",
-      "last_event": "2026-09-03T10:31:28+00:00",
+      "last_event": "2026-09-19T05:23:19+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2003,13 +2021,18 @@
           "type": "other",
           "date": "2026-09-03T10:31:28+00:00",
           "subject": "[ATC '26] Response for #471 \"TraJudger: Structure-Guided Failure...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-19T05:23:19+00:00",
+          "subject": "[ATC '26] Accepted submission #471 \"TraJudger: Structure-Guided Failure...\""
         }
       ],
       "counts": {
         "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 9
+        "total": 10
       },
       "message_ids": [
         "<20260610100722.87F3E92D996@mail.hotcrp.com>",
@@ -2020,7 +2043,8 @@
         "<20260611092310.BD80691608B@mail.hotcrp.com>",
         "<20260611095710.0D28B90B8F8@mail.hotcrp.com>",
         "<20260830042606.57F0EA056AC@mail.hotcrp.com>",
-        "<20260903103128.3643D920DF7@mail.hotcrp.com>"
+        "<20260903103128.3643D920DF7@mail.hotcrp.com>",
+        "<20260919052319.8E218BE2DF4@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2043,10 +2067,10 @@
         "ChengZhong Xu"
       ],
       "site": "https://atc26.hotcrp.com/paper/1518",
-      "status": "submitted",
+      "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T13:13:51+00:00",
-      "last_event": "2026-09-03T11:32:16+00:00",
+      "last_event": "2026-09-19T05:23:20+00:00",
       "events": [
         {
           "type": "updated",
@@ -2097,13 +2121,18 @@
           "type": "other",
           "date": "2026-09-03T11:32:16+00:00",
           "subject": "[ATC '26] Response for #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-19T05:23:20+00:00",
+          "subject": "[ATC '26] Accepted submission #1518 \"Axon: Asynchronous Global KV-Aware...\""
         }
       ],
       "counts": {
         "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 10
+        "total": 11
       },
       "message_ids": [
         "<20260610131351.6939590A6D8@mail.hotcrp.com>",
@@ -2115,7 +2144,8 @@
         "<20260830042609.61AA0AEBBE7@mail.hotcrp.com>",
         "<20260903104832.8B188920DF8@mail.hotcrp.com>",
         "<20260903105336.E2C2F920DF8@mail.hotcrp.com>",
-        "<20260903113216.5A813920EA7@mail.hotcrp.com>"
+        "<20260903113216.5A813920EA7@mail.hotcrp.com>",
+        "<20260919052320.DBF439208F8@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4075,7 +4105,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-17T07:16:02+00:00",
-      "last_event": "2026-09-18T03:25:43+00:00",
+      "last_event": "2026-09-19T05:39:23+00:00",
       "events": [
         {
           "type": "updated",
@@ -4126,13 +4156,18 @@
           "type": "updated",
           "date": "2026-09-18T03:25:43+00:00",
           "subject": "[NSDI '27 Fall] Updated #181 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "other",
+          "date": "2026-09-19T05:39:23+00:00",
+          "subject": "[NSDI '27 Fall] Withdrawn submission #181 \"Axon: Asynchronous Global KV-Aware...\""
         }
       ],
       "counts": {
         "updates": 9,
         "comments": 0,
         "reviews": 0,
-        "total": 10
+        "total": 11
       },
       "message_ids": [
         "<20260917071602.0B2FBBC2BE6@mail.hotcrp.com>",
@@ -4144,7 +4179,8 @@
         "<20260917132652.7C80A9B36C0@mail.hotcrp.com>",
         "<20260918021140.F31788A58AF@mail.hotcrp.com>",
         "<20260918023215.52CB28A58B4@mail.hotcrp.com>",
-        "<20260918032543.874728A58B3@mail.hotcrp.com>"
+        "<20260918032543.874728A58B3@mail.hotcrp.com>",
+        "<20260919053923.95243842040@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -4308,7 +4344,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-09-03T11:32:16+00:00"
+      "last_event": "2026-09-19T05:33:01+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -4328,7 +4364,7 @@
     },
     "NSDI '27 Fall": {
       "paper_count": 5,
-      "last_event": "2026-09-18T05:54:41+00:00"
+      "last_event": "2026-09-19T05:39:23+00:00"
     },
     "ASPLOS'27 - September cycle": {
       "paper_count": 1,
@@ -4555,6 +4591,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-19T04:02:05.602927+00:00",
-  "email_count": 515
+  "last_updated": "2026-09-19T08:02:44.993403+00:00",
+  "email_count": 521
 }
