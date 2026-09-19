@@ -1294,7 +1294,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-09-15T09:55:34+00:00",
+      "last_event": "2026-09-19T09:05:02+00:00",
       "events": [
         {
           "type": "updated",
@@ -1385,13 +1385,18 @@
           "type": "other",
           "date": "2026-09-15T09:55:34+00:00",
           "subject": "[EuroSys '27 Spring] Proceedings preparation for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-19T09:05:02+00:00",
+          "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
-        "comments": 4,
+        "comments": 5,
         "reviews": 0,
-        "total": 18
+        "total": 19
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1411,7 +1416,8 @@
         "<20260828181816.EA689927017@mail.hotcrp.com>",
         "<20260830091910.8CD1C920DF5@mail.hotcrp.com>",
         "<20260908113454.552A1AEBBCC@mail.hotcrp.com>",
-        "<20260915095534.EDE1ABE2DEF@mail.hotcrp.com>"
+        "<20260915095534.EDE1ABE2DEF@mail.hotcrp.com>",
+        "<20260919090502.599D891EAF7@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4340,7 +4346,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-09-15T09:55:34+00:00"
+      "last_event": "2026-09-19T09:05:02+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -4591,6 +4597,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-19T08:02:44.993403+00:00",
-  "email_count": 521
+  "last_updated": "2026-09-19T12:04:37.584908+00:00",
+  "email_count": 522
 }
