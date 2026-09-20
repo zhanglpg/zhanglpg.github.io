@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-19 09:26",
+  "last_run": "2026-09-20 09:55",
   "entries": [
+    {
+      "date": "2026-09-20",
+      "added": [
+        "realtime-venus-omni"
+      ],
+      "upgraded": [],
+      "note": "Added Realtime-Venus-Omni (Ant Group inclusionAI + Tsinghua, arXiv 2609.13814, Apache-2.0, verified against config.json + README + safetensors index): a 9B full-duplex realtime interaction model on the MiniCPM-o 4.5 / Omni-Flow backbone — Qwen3-8B language decoder (36L/4096d GQA 32/8), SigLIP2 vision tower + 64-query resampler, Whisper-Medium audio encoder with pool-5 projection, and discrete S3 speech tokens decoded by a bundled 20-layer Token2wav streaming flow-matching head. First model in the atlas built around a shared causal timeline: it perceives video+audio continuously, decides per-second listen-vs-speak, and emits in-stream <delegate> events executed asynchronously by an external harness (dual-loop runtime) so tools never block the dialogue; training-free long-video memory retrieves archived audio-visual evidence. Beats Gemini 3.1 Live and GPT-4o on Full-Duplex-Bench v1.5 continuation metrics (97/88/86%). Skipped this run: ginigen-ai/Edge-4B-TELL (verbatim Gemma-4-E4B q4_0 GGUF mirror + 10KB linear confidence probe — derivative), BAAI/Brainmu-Spike (spike-camera conv LoRA, out of scope), nvidia DeepSeek-V4.1-Flash-NVFP4 (quant of tracked model), MiniMax-H3 LoRA/GGUF churn, Johnny-Z/Anima-Light-Lavender (finetune). Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (21st run). 63 models, v25."
+    },
     {
       "date": "2026-09-19",
       "added": [],
@@ -140,12 +148,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, still top-trending at ~738k downloads, but both HF repos remain gated — HTTP 401 on config.json, so no primary source for the released model; revisit if the config goes public), Ornith-1.5-397B (ornith-ai's flagship claims Opus-4.8-level coding, but it's continued pretraining + self-improvement RL on the Qwen3.5-397B base — same Qwen3_5Moe architecture already in the atlas), and Muse Spark 1.2 (still unpublished on HF, carried over from Aug 17/23). Also confirmed: Qwen/Qwen3.8-2.4T-A95B's full 213-shard weights are now public (created Aug 8) and its raw config matches the existing verified qwen3-8-max entry field-for-field (92 all-MoE layers, 512 experts top-10+1, 3:1 Gated-DeltaNet hybrid, 2.4T/95B per README) — no update needed. All 46 entries remain verified; zero partial/estimated entries left to upgrade."
-    },
-    {
-      "date": "2026-08-23",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, the week's standout trending model — its HF repos are gated, so no primary-source config exists for the released 22B; the arXiv paper documents the earlier LTX-2 at 14B+5B, which does not match. Revisit if the config becomes public), DeepSeek-V4-Pro-0813 (config identical to the existing DeepSeek-V4-Pro entry except speculative-decoding metadata — checkpoint refresh), Ornith-1.5-35B-A3B (continued pretraining on the Qwen3.5-397B base, same Qwen3_5Moe architecture already in the atlas), Muse Spark 1.2 (weights announced Aug 10, still unpublished), and Kimi K3's Aug 20 repo update (tokenizer fix only, no architecture change). All 46 existing entries remain verified; nothing to upgrade."
     }
   ]
 };
