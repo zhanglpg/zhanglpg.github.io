@@ -1277,7 +1277,7 @@
     "EuroSys '27 Spring::#796": {
       "conference": "EuroSys '27 Spring",
       "paper_id": "796",
-      "title": "SUBench: A Benchmark for Large Language...",
+      "title": "SUBench: A Benchmark for Large Language Model Inference on GPU Supernodes",
       "authors": [
         "Shuangwei Li",
         "Jiaqi Shi",
@@ -1291,10 +1291,10 @@
         "Liping Zhang"
       ],
       "site": "https://eurosys27-spring.hotcrp.com/paper/796",
-      "status": "submitted",
+      "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-09-19T09:05:02+00:00",
+      "last_event": "2026-09-21T08:12:56+00:00",
       "events": [
         {
           "type": "updated",
@@ -1390,13 +1390,18 @@
           "type": "comment",
           "date": "2026-09-19T09:05:02+00:00",
           "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-21T08:12:56+00:00",
+          "subject": "[EuroSys '27 Spring] Updated accepted #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
         "comments": 5,
         "reviews": 0,
-        "total": 19
+        "total": 20
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1417,7 +1422,8 @@
         "<20260830091910.8CD1C920DF5@mail.hotcrp.com>",
         "<20260908113454.552A1AEBBCC@mail.hotcrp.com>",
         "<20260915095534.EDE1ABE2DEF@mail.hotcrp.com>",
-        "<20260919090502.599D891EAF7@mail.hotcrp.com>"
+        "<20260919090502.599D891EAF7@mail.hotcrp.com>",
+        "<20260921081256.E0010A04D0D@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4358,7 +4364,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-09-19T09:05:02+00:00"
+      "last_event": "2026-09-21T08:12:56+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -4609,6 +4615,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-20T12:02:23.646572+00:00",
-  "email_count": 524
+  "last_updated": "2026-09-21T12:05:06.977192+00:00",
+  "email_count": 525
 }
