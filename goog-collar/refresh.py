@@ -85,6 +85,11 @@ def main():
     qdt = datetime.datetime.fromtimestamp(meta['regularMarketTime'], ET)
     qdate = qdt.date()
     qdate_s = qdate.isoformat()
+    # intraday detection: ET weekday 09:30-16:00 and quote time is today
+    et_now = datetime.datetime.now(ET)
+    mkt_open = (et_now.weekday() < 5 and
+                (9*60+30) <= et_now.hour*60+et_now.minute < 16*60 and
+                qdate == et_now.date())
 
     if qdate_s == state.get('lastQuoteDate') and '--force' not in sys.argv:
         print(f"NO_CHANGE quoteDate={qdate_s} spot={spot:.2f}")
@@ -97,7 +102,8 @@ def main():
     ts = y['timestamp']; closes_raw = y['indicators']['quote'][0]['close']
     pairs = [(t, c) for t, c in zip(ts, closes_raw) if c is not None]
     if not prev_close or abs(prev_close - spot) / spot > 0.15:
-        prev_close = pairs[-2][1] if len(pairs) >= 2 and pairs[-1][1] == spot else (pairs[-1][1] if len(pairs) >= 1 else spot)
+        # pairs[-1] is today's bar (live intraday or settled close); pairs[-2] is prior session
+        prev_close = pairs[-2][1] if len(pairs) >= 2 else spot
     rets = [math.log(pairs[i][1]/pairs[i-1][1]) for i in range(1, len(pairs))]
     dates = [datetime.datetime.fromtimestamp(p[0], ET).date() for p in pairs[1:]]
     def hv(win, upto=None):
@@ -450,8 +456,9 @@ def main():
     data = {
         'meta': {
             'generated': prev.get('meta', {}).get('generated', '2026-09-18 (北京时间)'),
-            'updated': f"最后更新 {now_bj} 北京时间 · 数据截至 {qdate_s} 美股收盘",
+            'updated': f"最后更新 {now_bj} 北京时间 · 数据截至 {qdate_s} 美股{'盘中（实时价，未收盘）' if mkt_open else '收盘'}",
             'quoteDate': qdate_s,
+            'intraday': mkt_open,
             'quoteTs': 'CBOE delayed quotes + Yahoo Finance chart API',
             'ticker': 'GOOG',
             'disclaimer': prev.get('meta', {}).get('disclaimer',
@@ -489,6 +496,8 @@ def main():
             'preRange': pre_rng, 'postRange': post_rng,
             'premium': f"{prem_lo}–{prem_hi}",
             'bull': bull, 'bear': bear,
+            'marketContext': prev.get('timing', {}).get('marketContext', []),
+            'marketContextAsOf': prev.get('timing', {}).get('marketContextAsOf', ''),
             'conclusion': prev.get('timing', {}).get('conclusion', {
                 'title': '结论：当前是可评估的构建窗口',
                 'body': '（首次自动生成，待复核）结合 HV 分位、IV 期限结构与财报日历判断构建时机。',
@@ -513,10 +522,13 @@ def main():
         f.write(';\n')
 
     state.update({
-        'lastQuoteDate': qdate_s, 'prevSpot': spot,
+        'prevSpot': spot,
         'structure': {'expiry': exp_a.isoformat(), 'put': pk, 'call': ck},
         'earnings': earnings_s,
     })
+    if not mkt_open:
+        # only record settled closes; intraday runs must not suppress tomorrow's settled-close refresh
+        state['lastQuoteDate'] = qdate_s
     state.setdefault('buildDate', qdate_s)
     json.dump(state, open(os.path.join(HERE, 'state.json'), 'w'), indent=1)
 
@@ -526,7 +538,7 @@ def main():
     if iv30 and iv30 > 40: hit += f"; IV30={iv30:.0f}%>40% 事件溢价高"
     earn_in = 'yes' if earnings_d and qdate < earnings_d <= exp_a else 'no'
 
-    print(f"DATE={now_bj} quoteDate={qdate_s}")
+    print(f"DATE={now_bj} quoteDate={qdate_s} intraday={'yes' if mkt_open else 'no'}")
     print(f"SPOT={spot:.2f} chg={(spot/prev_close-1)*100:+.2f}% prevClose={prev_close:.2f} posValue=${spot*SHARES:,.0f}")
     print(f"STRUCTURE={exp_short(exp_a)} {pk:g}P/{ck:g}C DTE={dte(exp_a)} rolled={rolled} reanchored={','.join(reanchored) if reanchored else 'none'}")
     print(f"CREDIT mid={A['net_mid']:+.2f}/sh (${A['net_mid']*SHARES:+,.0f}) worst={A['net_worst']:+.2f}/sh ann={A['ann_yield']:+.1f}%")

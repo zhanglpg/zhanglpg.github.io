@@ -428,7 +428,7 @@ function App(){
   {/* ============ POSITION ============ */}
   <section id="pos">
     <div className="grid g4">
-      <Stat lab="持仓市值" big={<span ref={r1}>{v1}</span>} note={`GOOG ${pos.shares.toLocaleString()}股 @ ${fmt1(pos.spot)}${pos.chgPct!==0?`（较前收 ${pos.chgPct>0?'+':''}${pos.chgPct}%）`:''}`} cls="blue"/>
+      <Stat lab="持仓市值" big={<span ref={r1}>{v1}</span>} note={`GOOG ${pos.shares.toLocaleString()}股 @ ${fmt1(pos.spot)}${pos.chgPct!==0?`（${DATA.meta.intraday?'盘中':('较前收')} ${pos.chgPct>0?'+':''}${pos.chgPct}%）`:''}`} cls="blue"/>
       <Stat lab="HV21 已实现波动率" big={<span ref={r2} className={S.hv21Pctile<40?'green':'gold'}>{v2+'%'}</span>} note={`近1年 ${S.hv21Pctile}% 分位（区间 ${S.hvMin}–${S.hvMax}%）· HV252 ${S.hv252}%`}/>
       <Stat lab="IV30 隐含波动率" big={<span className="gold">{S.iv30||'—'}%</span>} note={`财报前到期约${T.preRange} · 财报后${T.postRange}`}/>
       <Stat lab="单日95% VaR" big={<span className="red">{fmt$(S.var95_1d)}</span>} note={`裸持仓 · 基于HV21≈${S.hv21r||Math.round(S.hv21)}%`}/>
@@ -466,6 +466,14 @@ function App(){
         </ul>
       </div>
     </div>
+    {T.marketContext && T.marketContext.length>0 && (
+      <div className="card reveal">
+        <div style={{fontWeight:700,marginBottom:8}}><span className="blue">📰 近期市场背景</span> <span className="dim" style={{fontWeight:400,fontSize:12}}>（人工维护 · 最后核对 {T.marketContextAsOf||'—'}）</span></div>
+        <ul className="tight">
+          {T.marketContext.map((m,i)=><li key={i}><b>{m.b}</b>{m.t}</li>)}
+        </ul>
+      </div>
+    )}
     <div className="callout reveal">
       <b>{T.conclusion.title}</b><br/>{T.conclusion.body}
       {T.conclusion.note && <><br/><span className="dim">{T.conclusion.note}</span></>}
@@ -674,9 +682,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 <script>
   (function () {
     document.getElementById("hdr-date").textContent = DATA.meta.updated || '';
+    if (DATA.meta.intraday) {
+      var kd = document.querySelector('.kicker');
+      kd.innerHTML += ' <span style="color:#ffc857;border:1px solid rgba(255,200,87,.4);border-radius:20px;padding:1px 10px;text-transform:none;letter-spacing:0">⚡ 美股盘中 · 实时价快照</span>';
+    }
     document.getElementById("hdr-sub").innerHTML =
       '持仓市值 <b>' + (DATA.position.value<0?'-':'') + '$' + Math.abs(DATA.position.value).toLocaleString('en-US') + '</b>（GOOG ' +
-      (DATA.position.chgPct>0?'+':(DATA.position.chgPct===0?'±':'')) + DATA.position.chgPct + '%，收 $' + DATA.position.spot + '，' + DATA.meta.quoteDate +
+      (DATA.position.chgPct>0?'+':(DATA.position.chgPct===0?'±':'')) + DATA.position.chgPct + '%，' + (DATA.meta.intraday?'盘中价':'收') + ' $' + DATA.position.spot + '，' + DATA.meta.quoteDate +
       '）。本报告回答三个问题：<b>何时</b>构建 collar、<b>如何</b>构建（行权价/期限/报价对比）、以及构建后<b>如何维持</b>（滚动与调整规则）。期权报价来自 CBOE 延时数据，按买卖中间价（mid）计算，并同时给出最坏成交价。<b>每个交易日早晨（北京时间 8:25）自动刷新全部数据与推荐结构。</b>';
     document.getElementById("foot-meta").textContent = (DATA.meta.updated||'') + ' · ' + DATA.meta.quoteTs;
     document.getElementById("foot-disclaimer").textContent = DATA.meta.disclaimer || '';
