@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-20 09:55",
+  "last_run": "2026-09-21 09:57",
   "entries": [
+    {
+      "date": "2026-09-21",
+      "added": [
+        "qwen-image-2-1"
+      ],
+      "upgraded": [],
+      "note": "Added Qwen-Image-2.1 (Alibaba, Qwen Research License, verified against transformer/config.json, weight index, the diffusers implementation and the official blog): a 7B / 32-layer single-stream flow-matching DiT that unifies text-to-image generation and image editing in one model, with native RGBA transparency (absorbs Dec-2025's Qwen-Image-Layered) and up to 10 reference images. Architecturally notable for its mixed-granularity block-causal mask — token-level causal across the packed [text ; reference latents ; target latents] stream, bidirectional inside each image block — plus a single shared SiLU+Linear(4096→4×4096) modulation tensor sliced by every block and a prefix KV cache valid because text/reference tokens modulate from t=0. Conditioned by a Qwen3-VL encoder (36L/4096d + 27L/1152d ViT), 64-ch residual VAE, 3-axis RoPE 16/56/56. The HF repo sat as a placeholder since Sep 14 and the weights + blog went live Sep 20, which is why the Sep-20 run missed it. Skipped this run: Altworld/Hemmingway-1 (114 likes, base_model finetune of tracked Qwen3.8-27B), XGENlabs/XGEN-JING (finetune of tracked MiniMax-H3), Cactus-Compute/needle3 (121M on-device tool-calling model, not frontier), Qwen-Image-2.1-PE-T2I/I2I (prompt-rewriter companion models), plus GGUF/LoRA churn (Bonsai-2, Qwen-Image-2.1 quants). Partial rechecks: LLaDA2.2-flash (lastModified Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (22nd run). 64 models, v26."
+    },
     {
       "date": "2026-09-20",
       "added": [
@@ -142,12 +150,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added K-EXAONE 2.0 (750B/37B), LG AI Research's frontier open MoE — published on HF 2026-07-29 but missed by the earlier scans: 78 layers (2 dense head + 76 MoE), 256 experts top-8 + 1 shared with sigmoid dropless routing, LLLG hybrid attention (58 sliding-window layers with RoPE θ1M + 20 global NoPE layers in 19 × (3×128 + 1 global) blocks), Clamped SwiGLU on the last 16 layers, MTP + DSpark speculative drafters; verified against the raw config.json and arXiv:2608.04505 (recomputed 748.7B vs claimed 750B). Considered and skipped: SenseNova-U1.5-8B-MoT (dual-pathway Qwen3-based MoT any-to-any unified model — architecturally interesting but niche, 134 likes), LTX-2.5 (HF repos still gated, 3rd consecutive run), Ornith-1.5-35B-A3B (continued pretraining on the Qwen3.5 base), Muse Spark 1.2 (still unpublished, 4th run). All 47 entries verified."
-    },
-    {
-      "date": "2026-08-24",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Considered and skipped: LTX-2.5 (Lightricks' 22B audiovisual DiT, still top-trending at ~738k downloads, but both HF repos remain gated — HTTP 401 on config.json, so no primary source for the released model; revisit if the config goes public), Ornith-1.5-397B (ornith-ai's flagship claims Opus-4.8-level coding, but it's continued pretraining + self-improvement RL on the Qwen3.5-397B base — same Qwen3_5Moe architecture already in the atlas), and Muse Spark 1.2 (still unpublished on HF, carried over from Aug 17/23). Also confirmed: Qwen/Qwen3.8-2.4T-A95B's full 213-shard weights are now public (created Aug 8) and its raw config matches the existing verified qwen3-8-max entry field-for-field (92 all-MoE layers, 512 experts top-10+1, 3:1 Gated-DeltaNet hybrid, 2.4T/95B per README) — no update needed. All 46 entries remain verified; zero partial/estimated entries left to upgrade."
     }
   ]
 };
