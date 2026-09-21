@@ -2319,6 +2319,70 @@ window.MODELS = [
 "confidence": "verified"
 },
 {
+"id": "qwen-image-2-1",
+"name": "Qwen-Image-2.1",
+"org": "Alibaba",
+"family": "Qwen-Image",
+"released": "2026-09",
+"license": "Qwen Research License",
+"modality": "image-gen",
+"decoder_type": "DiT (diffusion transformer)",
+"params_total_B": 7,
+"params_active_B": 7,
+"n_layers": 32,
+"d_model": 4096,
+"d_ff": 12288,
+"d_ff_moe": null,
+"n_heads": 32,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MHA",
+"attention_detail": "32 single-stream DiT blocks (32 heads x 128, d 4096) over one packed joint sequence of [text tokens ; condition-image latents ; target-image latents]. Mixed-granularity block-causal mask: token-level causal across the sequence, bidirectional within each image block ((q>=kv) OR same_image_block), so each of up to 10 reference images and the target image attend internally but never leak forward. Per-head QK-RMSNorm; 3-axis RoPE (axes 16/56/56, theta 10K) — text advances all three axes, image blocks freeze the frame axis and center an h/w grid on zero. Prefix KV cache: text + condition tokens modulate from the t=0 row, making their activations timestep-independent — computed once at the first denoising step and reused. One shared modulation tensor (SiLU + Linear 4096->4x4096, no bias) sliced by every block into scale+gate pairs; residual updates gated by tanh(gate).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "LayerNorm",
+"norm_placement": "pre",
+"pos_encoding": "3-axis RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Qwen's compact unified text-to-image + image-editing model: the visual generation component is a 7B, 32-layer single-stream flow-matching DiT (transformer index 14.23 GB bf16 = 7.12B params; FlowMatchEuler scheduler). Conditioning comes from a Qwen3-VL encoder (36L/4096d text decoder + 27L/1152d ViT with deepstack indexes 8/16/24, index 17.53 GB = 8.77B) projected through txt_in; a 64-channel residual VAE (AutoencoderKLQwenImage21, 16x spatial compression) supplies in/out latents (patch 1, 64 in/out channels). Native RGBA transparency generation and editing folds December 2025's Qwen-Image-Layered into the base model; editing takes up to 10 reference images plus circles/painted annotations/separate masks for local edits; 2K-native aspect ratios up to 2752x1536. Weights + blog live 2026-09-20 with day-0 diffusers (QwenImage21Pipeline, PR #14804), ComfyUI, vLLM-Omni and SGLang support; the mixed-granularity causal mask + prefix KV reuse are what make multi-reference editing cheap.",
+"sources": [
+"https://qwen.ai/blog?id=qwen-image-2.1",
+"https://github.com/QwenLM/Qwen-Image-2.1",
+"https://huggingface.co/Qwen/Qwen-Image-2.1",
+"https://huggingface.co/Qwen/Qwen-Image-2.1/raw/main/transformer/config.json",
+"https://huggingface.co/Qwen/Qwen-Image-2.1/raw/main/text_encoder/config.json",
+"https://raw.githubusercontent.com/huggingface/diffusers/main/src/diffusers/models/transformers/transformer_qwenimage21.py"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Single-stream DiT block attention (×32)",
+"p": {
+"d": 4096,
+"nq": 32,
+"nkv": 32,
+"dh": 128,
+"rope": "3-axis RoPE 16/56/56 · θ 10K",
+"qknorm": "per-head QK-RMSNorm",
+"gate": "× tanh(gate) residual",
+"cache": "prefix — text + reference-image tokens modulate from t=0, cached across denoising steps"
+},
+"notes": [
+"one packed joint stream: [ text ; up to 10 reference-image latents ; target-image latents ] — single-stream blocks, no separate text weights",
+"mixed-granularity block-causal mask: token-level causal across the sequence, bidirectional inside each image block",
+"shared modulation for ALL blocks: SiLU + Linear(4096 → 4×4096) sliced into scale/gate pairs; LayerNorm (parameter-free) × (1 + scale)",
+"SwiGLU MLP (gate/proj/out), d_ff 12,288 (mlp_ratio 3) — sequential attn→MLP, both tanh-gated residuals"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
