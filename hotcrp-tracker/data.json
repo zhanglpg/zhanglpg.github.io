@@ -1294,7 +1294,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-09-21T08:12:56+00:00",
+      "last_event": "2026-09-21T19:55:09+00:00",
       "events": [
         {
           "type": "updated",
@@ -1395,13 +1395,23 @@
           "type": "accepted",
           "date": "2026-09-21T08:12:56+00:00",
           "subject": "[EuroSys '27 Spring] Updated accepted #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-21T19:24:12+00:00",
+          "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "accepted",
+          "date": "2026-09-21T19:55:09+00:00",
+          "subject": "[EuroSys '27 Spring] Updated accepted #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
-        "comments": 5,
+        "comments": 6,
         "reviews": 0,
-        "total": 20
+        "total": 22
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1423,7 +1433,9 @@
         "<20260908113454.552A1AEBBCC@mail.hotcrp.com>",
         "<20260915095534.EDE1ABE2DEF@mail.hotcrp.com>",
         "<20260919090502.599D891EAF7@mail.hotcrp.com>",
-        "<20260921081256.E0010A04D0D@mail.hotcrp.com>"
+        "<20260921081256.E0010A04D0D@mail.hotcrp.com>",
+        "<20260921192412.E6D2082FFD4@mail.hotcrp.com>",
+        "<20260921195509.E9869841A43@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4364,7 +4376,7 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-09-21T08:12:56+00:00"
+      "last_event": "2026-09-21T19:55:09+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
@@ -4615,6 +4627,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-21T12:05:06.977192+00:00",
-  "email_count": 525
+  "last_updated": "2026-09-22T00:02:26.772574+00:00",
+  "email_count": 527
 }
