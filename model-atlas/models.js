@@ -2383,6 +2383,200 @@ window.MODELS = [
 ]
 },
 {
+"id": "mimo-v2-6-pro-rl",
+"name": "MiMo-V2.6-Pro-RL",
+"org": "Xiaomi",
+"family": "MiMo",
+"released": "2026-09",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 1020,
+"params_active_B": 42,
+"n_layers": 70,
+"d_model": 6144,
+"d_ff": 16384,
+"d_ff_moe": 2048,
+"n_heads": 128,
+"n_kv_heads": 8,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "70 layers follow hybrid_layer_pattern: 60 sliding-window attention layers (window 128, learned per-head attention-sink bias, 128 q / 8 kv heads, d_h 192, v_head 128) plus 10 full-attention layers (same head geometry) at indices 0, 7, 15, 23, 31, 39, 47, 55, 62, 69. Fused QKV projection layout; partial rotary (factor 0.334 = 64 of 192 dims), RoPE theta 1e7 (full) / 1e4 (SWA); softmax scale fix attention_value_scale 0.612. Layer 0 is a dense SwiGLU FFN (d_ff 16384); layers 1-69 are MoE (384 routed experts, top-8, sigmoid noaux_tc router with normalized top-k, no shared experts). A 5-layer non-causal DFlash speculative draft decoder (Qwen3-style, sliding window 1024, mask token, block size 8, anchored to layers 0/15/31/47/69) ships in dflash/.",
+"n_experts": 384,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 152576,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "MiMo ViT (28L/1280d, 24 SWA + 4 full)",
+"encoder_params_B": 0.68,
+"fusion": "adapter",
+"notes": "681M-param vision tower: 28 layers of 1280-dim (32-head, 8 kv-head) ViT with its own windowed attention (24 SWA + 4 full layers at 0/9/18/27, window 128, sink bias), patch 16, temporal patch 2, 2x2 spatial merge into the 6144-dim decoder. Audio enters via a 308M AudioTokenizer plus 127M audio patch encoder (6-layer 1024-dim local-attention front end, group size 4, 2-layer projection to 6144). Native text + image + video + audio input."
+},
+"notes": "Xiaomi's Sep-21-2026 open-sourced omnimodal agent flagship: 1.02T total / 42B activated sparse MoE taking text, image, video and audio at 1M-token context. Trained with one mixed-domain fully-asynchronous GRPO run ('You Only RL Once', 1,568 prompts x 16 rollouts per step) plus Groupwise Agentic Grading — Groupwise Reward Synthesis builds task rubrics from contrasting rollouts and Groupwise Advantage Redistribution re-ranks passing trajectories — and MOPD2 multi-prefix multi-teacher on-policy distillation, forming a recursive self-improvement loop. Weights ship MXFP4-stored (566 GB index; fp8/e4m3 dynamic-activation scheme with every attention o_proj layer excluded from quantization). DeepSWE v1.1 71.9, OSWorld-Verified 82.0, CyberGym 94.0 — pitched as the top open-weights model; MIT license.",
+"sources": [
+"https://mimo.xiaomi.com/mimo-v2-6",
+"https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL/blob/main/MiMo_V2_6_technical_report.pdf",
+"https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
+"https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL/raw/main/config.json"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"attention_split": {
+"parts": [
+{
+"name": "Full GQA",
+"n": 10,
+"type": "global",
+"sub": "128q/8kv · d_h 192"
+},
+{
+"name": "SWA",
+"n": 60,
+"type": "sliding",
+"sub": "win 128 · sink bias"
+}
+],
+"pattern": "fssssssfsssssssfsssssssfsssssssfsssssssfsssssssfsssssssfssssssfssssssf",
+"pattern_map": {
+"f": "global",
+"s": "sliding"
+}
+}
+},
+{
+"id": "mimo-v2-6-flash-rl",
+"name": "MiMo-V2.6-Flash-RL",
+"org": "Xiaomi",
+"family": "MiMo",
+"released": "2026-09",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 309,
+"params_active_B": 15,
+"n_layers": 48,
+"d_model": 4096,
+"d_ff": 16384,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 4,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "48 layers follow hybrid_layer_pattern: 39 sliding-window attention layers (window 128, learned attention-sink bias, 64 q / 8 kv heads, d_h 192, v_head 128) plus 9 full-attention layers (64 q / 4 kv heads — SWA layers double the KV heads) at indices 0, 5, 11, 17, 23, 29, 35, 41, 47. Fused QKV projection; partial rotary (factor 0.334), RoPE theta 1e7 (full) / 1e4 (SWA); attention_value_scale 0.707. Layer 0 dense SwiGLU FFN (d_ff 16384); layers 1-47 MoE (256 routed experts, top-8, sigmoid noaux_tc router, no shared experts). Ships 3 MTP next-n prediction layers plus a 5-layer non-causal DFlash speculative draft decoder (sliding window 1024, mask token, block size 8, anchored to layers 0/11/23/35/47).",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 152576,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "MiMo ViT (28L/1280d, 24 SWA + 4 full)",
+"encoder_params_B": 0.68,
+"fusion": "adapter",
+"notes": "Same 681M vision tower as Pro (28 layers, 1280-dim, windowed attention 24 SWA + 4 full at 0/9/18/27, patch 16, temporal patch 2, 2x2 spatial merge) projecting into the 4096-dim decoder; audio via the 308M AudioTokenizer + 127M patch encoder (6-layer 1024-dim local-attention front end). Native text + image + video + audio input."
+},
+"notes": "The efficiency-balanced checkpoint of Xiaomi's MiMo-V2.6 RL series (Sep 21, 2026): 309B total / 15B activated omnimodal MoE with the same text+image+video+audio, 1M-context recipe as Pro at roughly a third of the total and active budget. Same 'You Only RL Once' mixed-domain asynchronous GRPO training with Groupwise Agentic Grading (GRS rubrics + GAR advantage redistribution) and MOPD2 distillation; adds 3 MTP layers and the DFlash 5-layer speculative draft for serving throughput. MXFP4-stored release: 172.9 GB across 65 shards (fp8/e4m3 dynamic-activation scheme, o_proj layers unquantized). DeepSWE v1.1 67.9, Toolathlon-Verified 73.6, CyberGym 95.1. MIT license.",
+"sources": [
+"https://mimo.xiaomi.com/mimo-v2-6",
+"https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL/blob/main/MiMo_V2_6_technical_report.pdf",
+"https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL",
+"https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL/raw/main/config.json"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"attention_split": {
+"parts": [
+{
+"name": "Full GQA",
+"n": 9,
+"type": "global",
+"sub": "64q/4kv · d_h 192"
+},
+{
+"name": "SWA",
+"n": 39,
+"type": "sliding",
+"sub": "win 128 · sink bias"
+}
+],
+"pattern": "fssssfsssssfsssssfsssssfsssssfsssssfsssssfsssssf",
+"pattern_map": {
+"f": "global",
+"s": "sliding"
+}
+}
+},
+{
+"id": "aliceai-foundation-80b-a3b",
+"name": "AliceAI-Foundation-80B-A3B",
+"org": "Yandex",
+"family": "AliceAI",
+"released": "2026-09",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 80,
+"params_active_B": 3,
+"n_layers": 48,
+"d_model": 2048,
+"d_ff": null,
+"d_ff_moe": 512,
+"n_heads": 16,
+"n_kv_heads": 2,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "48 layers laid out as 12 x (3 x (KDA -> MoE) -> 1 x (Gated Attention -> MoE)) per layer_types: 36 Kimi-style KDA linear-attention layers (32 key / 32 value heads of 128 dims, causal conv kernel 4, delta-rule state update, negative eigenvalues disallowed, 3 conv states) plus 12 gated full-attention layers (16 q / 2 kv heads, d_h 256, Attention Residuals with block_attn_res_block_size 4). Partial rotary factor 0.25, RoPE theta 1e6. Every layer's FFN is MoE: 512 experts, top-10 routed + 1 shared (expert d_ff 512), sigmoid router with bias correction. 1 MTP layer.",
+"n_experts": 512,
+"active_experts": 10,
+"shared_experts": 1,
+"vocab_size": 129024,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Yandex's from-scratch 80B-total / 3B-active base model (Sep 2026, Russian+English), released with two new Russian-language factual benchmarks (WikiWebFacts, HardMultiQA) and their protocols. The hybrid KDA + gated-attention layout keeps only 12 of 48 layers on a growing KV cache, and the MoE is extremely sparse — 512 tiny SwiGLU experts (d_ff 512), top-10 + 1 shared. BF16 index 162.6 GB = 81.3B params vs official 80B; 262K context. On reasoning tasks it reports parity with larger open bases (Nemotron-3-Super-120B-A12B, DeepSeek-V4-Flash-Base) and leads on Russian factuality; sibling of the tracked AliceAI-T5-35B-A0.6B encoder-decoder. Apache-2.0.",
+"sources": [
+"https://huggingface.co/yandex/AliceAI-Foundation-80B-A3B-Base",
+"https://huggingface.co/yandex/AliceAI-Foundation-80B-A3B-Base/raw/main/config.json",
+"https://huggingface.co/yandex/AliceAI-Foundation-80B-A3B-Base/raw/main/README_en.md"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "KDA",
+"n": 36,
+"type": "linear",
+"sub": "delta rule · conv k4"
+},
+{
+"name": "Gated Attn",
+"n": 12,
+"type": "global",
+"sub": "GQA 16/2 · d_h 256"
+}
+],
+"pattern": "kkkfkkkfkkkfkkkfkkkfkkkfkkkfkkkfkkkfkkkfkkkfkkkf",
+"pattern_map": {
+"k": "linear",
+"f": "global"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
