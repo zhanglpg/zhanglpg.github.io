@@ -2976,7 +2976,7 @@
             },
             "AP US History": {
               "full_name": "AP US History - 1750: RoyS p3 T1",
-              "grade": "B",
+              "grade": "B+",
               "percentage": "",
               "term": "26-27 T1",
               "assignments": [
@@ -3009,13 +3009,25 @@
                   "score": "25/27",
                   "percentage": 92.6,
                   "perfect": false
+                },
+                {
+                  "name": "American Revolution Socratic Seminar",
+                  "score": "14/15",
+                  "percentage": 93.3,
+                  "perfect": false
+                },
+                {
+                  "name": "Ch 4 Reading Quiz",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
                 }
               ]
             },
             "AP Physics C:Mech": {
               "full_name": "AP Physics C:Mech - 3730: NguyenT p1 T1",
               "grade": "A",
-              "percentage": "100%",
+              "percentage": "98.33%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -3041,6 +3053,24 @@
                   "score": "16/16",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "FRQ Progress Check",
+                  "score": "15/15",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "MCQ Progress Check",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "CH 3 Quiz",
+                  "score": "14/16",
+                  "percentage": 87.5,
+                  "perfect": false
                 }
               ]
             },
@@ -3068,13 +3098,43 @@
                   "score": "5/5",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "Contact Sheet 5: Focus on Composition",
+                  "score": "20/20",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "9/11 WIP: Depth of Field Redux and 2 Best Edited Photos",
+                  "score": "5/5",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Contact Sheet 4: Redux of Depth of Field",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Contact Sheet 3A/3B: Experimenting with Depth of Field Inside/Outside.",
+                  "score": "20/20",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Place and Time Contact Sheet 2: Focus on the 4 Building Blocks",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
                 }
               ]
             },
             "AP Statistics": {
               "full_name": "AP Statistics - 2460: IamsK p7 T1",
-              "grade": "A",
-              "percentage": "93.98%",
+              "grade": "B+",
+              "percentage": "89.13%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -3181,6 +3241,36 @@
                 },
                 {
                   "name": "5A_B - Assignment 5 Part B) pages 75-78 / 48,50 (no reports, just write a few sentences) pages 95-100 / #7, 28, 30.",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "9M_B - pg. 131-133 / 25, 26, 31, 32, 44",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "8A_B - Assignment 8 Part B) p.129-133 / 7, 9, 10, 38, 40, 45",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "9Q Quiz on Ch.6 (70 points, (20 *3.5))",
+                  "score": "17/20",
+                  "percentage": 85.0,
+                  "perfect": false
+                },
+                {
+                  "name": "7Q Quiz Chapters 4 and 5 (99 points, 35 curved to 33*3)",
+                  "score": "24/33",
+                  "percentage": 72.7,
+                  "perfect": false
+                },
+                {
+                  "name": "9A_A - Complete the class notes.",
                   "score": "10/10",
                   "percentage": 100.0,
                   "perfect": true
@@ -6220,7 +6310,7 @@
             },
             "US History": {
               "full_name": "US History - 1730: HowdenK p5 T1",
-              "grade": "A+",
+              "grade": "B+",
               "percentage": "",
               "term": "26-27 T1",
               "assignments": [
@@ -6265,6 +6355,24 @@
                   "score": "2/2",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "Practice Essay on the War of 1812",
+                  "score": "0/3",
+                  "percentage": 0.0,
+                  "perfect": false
+                },
+                {
+                  "name": "Unit 1- Review MC EXAM",
+                  "score": "19/20",
+                  "percentage": 95.0,
+                  "perfect": false
+                },
+                {
+                  "name": "PRACTICE MCE",
+                  "score": "0/6",
+                  "percentage": 0.0,
+                  "perfect": false
                 }
               ]
             },
@@ -6278,7 +6386,7 @@
             "AP Physics C:Mech": {
               "full_name": "AP Physics C:Mech - 3730: NguyenT p1 T1",
               "grade": "A",
-              "percentage": "98.48%",
+              "percentage": "97.08%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -6304,6 +6412,24 @@
                   "score": "15/16",
                   "percentage": 93.8,
                   "perfect": false
+                },
+                {
+                  "name": "FRQ Progress Check",
+                  "score": "15/15",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "MCQ Progress Check",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "CH 3 Quiz",
+                  "score": "13/16",
+                  "percentage": 81.2,
+                  "perfect": false
                 }
               ]
             },
@@ -6316,7 +6442,7 @@
             },
             "3D Sculpture and Design 1": {
               "full_name": "3D Sculpture and Design 1 - 6210: KrukC p1 T1",
-              "grade": "A+",
+              "grade": "A-",
               "percentage": "",
               "term": "26-27 T1",
               "assignments": []
@@ -6394,219 +6520,9 @@
       }
     }
   },
-  "last_updated": "2026-09-15T13:28:06.338093+00:00",
-  "email_count": 70,
+  "last_updated": "2026-09-22T00:02:17.459959+00:00",
+  "email_count": 71,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Lang/Comp",
-      "subject": "APLAC Course Syllabus Exam",
-      "grade": "100/100",
-      "percentage": 100.0,
-      "date": "2026-08-24T22:04:02+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "US History",
-      "subject": "Signed Greensheet",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-08-24T22:04:02+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "US History",
-      "subject": "Historiography Columbus Hard Copy WS",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-08-24T22:04:02+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "Amer Lit/Writ",
-      "subject": "Name Pronounciation",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP US History",
-      "subject": "Pres./Geo. Test",
-      "grade": "9/22",
-      "percentage": 40.9,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP US History",
-      "subject": "Jamestown Documents HIPPO",
-      "grade": "4/4",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP US History",
-      "subject": "Snapshot Autobiography",
-      "grade": "4/4",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP US History",
-      "subject": "Signed Greensheet",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "Photo and Design",
-      "subject": "8/26 WIP: Screenshot Research Slide",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "4A_D Assignment 4 Part D) Join our AP Section on your College Board Account",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "2A_B - Assignment 2 part B) Handout (Smoking and Education) (see Ch. 3 example problems for hints)",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "4A_A Assignment 4 Part A Edpuzzle (11points curved to 9)",
-      "grade": "8/9",
-      "percentage": 88.9,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "3D Video Review Ch3 SMTW",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "3D Warm UP Day 3 Are you ready for Th/Fri Quiz?",
-      "grade": "6/10",
-      "percentage": 60.0,
-      "date": "2026-08-31T22:05:38+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "HW Pack 1",
-      "grade": "20/20",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "Back & Forth Motion Lab",
-      "grade": "25/25",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "Graph Matching Lab",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "6A_C Ch 4-5 Vocabulary Skills Check",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "4Q Quiz on Chapters 1-3 (105 points, 30*3.5)",
-      "grade": "27/30",
-      "percentage": 90.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "6A_A 9/12 Mon. in class assignment - Submit your work for the video and class problems.",
-      "grade": "5/5",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "5A_A Standard Deviation Proof",
-      "grade": "11/10",
-      "percentage": 110.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Glenn",
@@ -6896,9 +6812,219 @@
       "grade": "10/10",
       "percentage": 100.0,
       "date": "2026-09-14T22:13:08+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP US History",
+      "subject": "American Revolution Socratic Seminar",
+      "grade": "14/15",
+      "percentage": 93.3,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP US History",
+      "subject": "Ch 4 Reading Quiz",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "FRQ Progress Check",
+      "grade": "15/15",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "MCQ Progress Check",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "CH 3 Quiz",
+      "grade": "14/16",
+      "percentage": 87.5,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "Contact Sheet 5: Focus on Composition",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "9/11 WIP: Depth of Field Redux and 2 Best Edited Photos",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "Contact Sheet 4: Redux of Depth of Field",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "Contact Sheet 3A/3B: Experimenting with Depth of Field Inside/Outside.",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "Place and Time Contact Sheet 2: Focus on the 4 Building Blocks",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "9M_B - pg. 131-133 / 25, 26, 31, 32, 44",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "8A_B - Assignment 8 Part B) p.129-133 / 7, 9, 10, 38, 40, 45",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "9Q Quiz on Ch.6 (70 points, (20 *3.5))",
+      "grade": "17/20",
+      "percentage": 85.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "7Q Quiz Chapters 4 and 5 (99 points, 35 curved to 33*3)",
+      "grade": "24/33",
+      "percentage": 72.7,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "9A_A - Complete the class notes.",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "US History",
+      "subject": "Practice Essay on the War of 1812",
+      "grade": "0/3",
+      "percentage": 0.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "US History",
+      "subject": "Unit 1- Review MC EXAM",
+      "grade": "19/20",
+      "percentage": 95.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "US History",
+      "subject": "PRACTICE MCE",
+      "grade": "0/6",
+      "percentage": 0.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "FRQ Progress Check",
+      "grade": "15/15",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "MCQ Progress Check",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "CH 3 Quiz",
+      "grade": "13/16",
+      "percentage": 81.2,
+      "date": "2026-09-21T22:07:10+00:00"
     }
   ],
-  "week_start": "9/07/26",
-  "week_end": "9/14/26",
+  "week_start": "9/14/26",
+  "week_end": "9/21/26",
   "current_year": "2026-27"
 }
