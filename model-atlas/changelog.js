@@ -1,8 +1,18 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-21 09:57",
+  "last_run": "2026-09-22 10:19",
   "entries": [
+    {
+      "date": "2026-09-22",
+      "added": [
+        "mimo-v2-6-pro-rl",
+        "mimo-v2-6-flash-rl",
+        "aliceai-foundation-80b-a3b"
+      ],
+      "upgraded": [],
+      "note": "Added Xiaomi MiMo-V2.6-Pro-RL and MiMo-V2.6-Flash-RL (MIT, open-sourced Sep 21 with tech report; verified against config.json + weight index + modeling code): omnimodal (text/image/video/audio) sparse-MoE agent models at 1M context trained by one mixed-domain asynchronous GRPO run with Groupwise Agentic Grading (GRS rubrics + GAR advantage redistribution) toward recursive self-improvement — Pro 1.02T/42B (70L/6144d, 384 experts top-8) and Flash 309B/15B (48L/4096d, 256 experts top-8), both on a hybrid full-GQA + sliding-window-128 attention backbone (10+60 and 9+39 layers, learned attention-sink bias, d_h 192/v 128, partial rotary 0.334) with a dense first block, MXFP4-stored releases (566 GB / 172.9 GB), and a 5-layer non-causal DFlash speculative draft decoder (Flash also carries 3 MTP layers); recomputed totals match the official counts 1.00x. Also added Yandex AliceAI-Foundation-80B-A3B-Base (Apache-2.0, Sep 12, never previously assessed): a from-scratch 80B/3B base with a 12x(3 KDA linear + 1 gated-attention) hybrid layout, 512 tiny experts top-10+1 shared, 262K context, shipped with new Russian factuality benchmarks. Skipped: StepFun Step-5 Preview (API-only Sep 20; official HF repo still a 401 placeholder, weights promised Oct 15; the public Step-5-Preview-BF16 mirrors carry step3p5v/Step4 configs — not primary sources), XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B (distill), upstage solar-pro4-tokenizer (tokenizer only), nvidia/Kumo-Forecast (time-series, out of scope), TencentARC WorldCrafter (no tech report), plus quant/LoRA churn. Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (23rd run). 67 models, v27."
+    },
     {
       "date": "2026-09-21",
       "added": [
@@ -142,14 +152,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added the four frontier open-weight drops of the week, all verified from raw HF configs + official cards. GLM-5.3-Flash (320B/18B, MIT): Z.ai's first natively multimodal GLM-5 — a sparse + linear attention hybrid (34 KDA gated-linear layers, 64×128, conv 4, interleaved 3:1 with 11 DSA sparse layers on full-NoPE MLA; indexer 32×128 top-2048 with 4-key pooling), 288 experts top-8 + 1 shared with sigmoid dropless routing, mHC residuals, 1M context. Qwen3.8-Flash-Next (125B/6B + 51B n-gram embeddings + 4B MTP, Qwen Community License): the experimental Qwen4-architecture preview — 3:1 Gated DeltaNet + QSA (Qwen Sparse Attention) hybrid where a 4-Q-head MQA indexer selects 4-token micro-blocks (512 blocks = 2048-token budget) instead of per-token top-k, plus a Gated Residual (4 branches, rank-320). Hunyuan Hy4 preview (770B/49B, Apache-2.0): Tencent's flagship — Gated MLA + Gated DSA on all 78 layers with IndexCache cross-layer index reuse (21 of 78 layers run the indexer), iHC hyper-connections, native MTP drafter. DeepSeek-V4-Flash-Vision-Exp (~297B estimated, partial confidence — DeepSeek's first multimodal model): V4-Flash stack + 32-layer ViT tower, 3 MTP drafters, DSpark noise-token decoding. Considered and skipped: GLM-5.3 (text-only — config is byte-identical to the GLM-5.2 base except transformers_version; a post-training-only refresh, so the existing GLM-5.2 entry already covers the architecture), LTX-2.5 (still gated, 6th consecutive run), Muse Spark 1.2 (still unpublished). 51 models total."
-    },
-    {
-      "date": "2026-08-25",
-      "added": [
-        "k-exaone-2-0"
-      ],
-      "upgraded": [],
-      "note": "Added K-EXAONE 2.0 (750B/37B), LG AI Research's frontier open MoE — published on HF 2026-07-29 but missed by the earlier scans: 78 layers (2 dense head + 76 MoE), 256 experts top-8 + 1 shared with sigmoid dropless routing, LLLG hybrid attention (58 sliding-window layers with RoPE θ1M + 20 global NoPE layers in 19 × (3×128 + 1 global) blocks), Clamped SwiGLU on the last 16 layers, MTP + DSpark speculative drafters; verified against the raw config.json and arXiv:2608.04505 (recomputed 748.7B vs claimed 750B). Considered and skipped: SenseNova-U1.5-8B-MoT (dual-pathway Qwen3-based MoT any-to-any unified model — architecturally interesting but niche, 134 likes), LTX-2.5 (HF repos still gated, 3rd consecutive run), Ornith-1.5-35B-A3B (continued pretraining on the Qwen3.5 base), Muse Spark 1.2 (still unpublished, 4th run). All 47 entries verified."
     }
   ]
 };
