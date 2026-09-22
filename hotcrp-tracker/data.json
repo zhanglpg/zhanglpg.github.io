@@ -4049,7 +4049,7 @@
     "EuroSys '27 Fall::#1544": {
       "conference": "EuroSys '27 Fall",
       "paper_id": "1544",
-      "title": "MoECompass: A Unified Performance Model...",
+      "title": "MoECompass: A Unified Performance Model for Selecting and Optimizing Strategies in MoE Inference",
       "authors": [
         "Chutong Ding",
         "Kaixuan Zhang",
@@ -4064,7 +4064,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-16T03:44:11+00:00",
-      "last_event": "2026-09-20T11:31:50+00:00",
+      "last_event": "2026-09-22T04:31:47+00:00",
       "events": [
         {
           "type": "updated",
@@ -4100,13 +4100,33 @@
           "type": "submitted",
           "date": "2026-09-20T11:31:50+00:00",
           "subject": "[EuroSys '27 Fall] Submission #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-22T04:16:54+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-22T04:23:15+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-22T04:26:55+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-22T04:31:47+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
         }
       ],
       "counts": {
-        "updates": 5,
+        "updates": 9,
         "comments": 0,
         "reviews": 0,
-        "total": 7
+        "total": 11
       },
       "message_ids": [
         "<20260916034411.94E36866771@mail.hotcrp.com>",
@@ -4115,7 +4135,11 @@
         "<20260916051109.C7AD3BD5FE8@mail.hotcrp.com>",
         "<20260917113104.AC4A49B36D1@mail.hotcrp.com>",
         "<20260919034956.A399C841A6D@mail.hotcrp.com>",
-        "<20260920113150.43AC2B1B3E2@mail.hotcrp.com>"
+        "<20260920113150.43AC2B1B3E2@mail.hotcrp.com>",
+        "<20260922041654.0DD68B41411@mail.hotcrp.com>",
+        "<20260922042315.9E8F9B4140F@mail.hotcrp.com>",
+        "<20260922042655.B8018B4140F@mail.hotcrp.com>",
+        "<20260922043147.DCF4AB41411@mail.hotcrp.com>"
       ],
       "deadline": "Friday Sep 25, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4327,6 +4351,49 @@
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "ATC '26 Artifact Evaluation::#17": {
+      "conference": "ATC '26 Artifact Evaluation",
+      "paper_id": "17",
+      "title": "Model-as-a-Service in the Wild: Characterizing Production LLM Inference Clusters at Scale",
+      "authors": [
+        "Yiyun Zheng",
+        "Lingyun Yang",
+        "Yinghao Yu",
+        "Guodong Yang",
+        "Liping Zhang",
+        "Minchen Yu"
+      ],
+      "site": "https://atc26ae.hotcrp.com/paper/17",
+      "status": "submitted",
+      "status_source": "canonical",
+      "first_seen": "2026-09-22T05:22:08+00:00",
+      "last_event": "2026-09-22T05:33:25+00:00",
+      "events": [
+        {
+          "type": "submitted",
+          "date": "2026-09-22T05:22:08+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Registered #17 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-22T05:33:25+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Updated #17 \"Model-as-a-Service in the Wild:...\""
+        }
+      ],
+      "counts": {
+        "updates": 1,
+        "comments": 0,
+        "reviews": 0,
+        "total": 2
+      },
+      "message_ids": [
+        "<20260922052208.5C4D0B41407@mail.hotcrp.com>",
+        "<20260922053325.A8D4582FFD4@mail.hotcrp.com>"
+      ],
+      "deadline": "Wednesday Sep 23, 2026, 7:59:59 AM EDT",
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -4412,7 +4479,11 @@
     },
     "EuroSys '27 Fall": {
       "paper_count": 1,
-      "last_event": "2026-09-20T11:31:50+00:00"
+      "last_event": "2026-09-22T04:31:47+00:00"
+    },
+    "ATC '26 Artifact Evaluation": {
+      "paper_count": 1,
+      "last_event": "2026-09-22T05:33:25+00:00"
     }
   },
   "announcements": [
@@ -4627,6 +4698,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-22T00:02:26.772574+00:00",
-  "email_count": 527
+  "last_updated": "2026-09-22T08:01:55.909745+00:00",
+  "email_count": 533
 }
