@@ -4076,7 +4076,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-16T03:44:11+00:00",
-      "last_event": "2026-09-22T04:31:47+00:00",
+      "last_event": "2026-09-23T04:42:48+00:00",
       "events": [
         {
           "type": "updated",
@@ -4132,13 +4132,33 @@
           "type": "updated",
           "date": "2026-09-22T04:31:47+00:00",
           "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-23T04:39:18+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-23T04:39:42+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-23T04:42:20+00:00",
+          "subject": "[EuroSys '27 Fall] Submitted #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-23T04:42:48+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
         }
       ],
       "counts": {
-        "updates": 9,
+        "updates": 12,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 15
       },
       "message_ids": [
         "<20260916034411.94E36866771@mail.hotcrp.com>",
@@ -4151,7 +4171,11 @@
         "<20260922041654.0DD68B41411@mail.hotcrp.com>",
         "<20260922042315.9E8F9B4140F@mail.hotcrp.com>",
         "<20260922042655.B8018B4140F@mail.hotcrp.com>",
-        "<20260922043147.DCF4AB41411@mail.hotcrp.com>"
+        "<20260922043147.DCF4AB41411@mail.hotcrp.com>",
+        "<20260923043918.5CF2C9B36C7@mail.hotcrp.com>",
+        "<20260923043942.75E699B36C7@mail.hotcrp.com>",
+        "<20260923044220.E49ECBE2DF2@mail.hotcrp.com>",
+        "<20260923044248.ECAE9BE2DEC@mail.hotcrp.com>"
       ],
       "deadline": "Friday Sep 25, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4491,7 +4515,7 @@
     },
     "EuroSys '27 Fall": {
       "paper_count": 1,
-      "last_event": "2026-09-22T04:31:47+00:00"
+      "last_event": "2026-09-23T04:42:48+00:00"
     },
     "ATC '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -4710,6 +4734,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-23T00:01:39.701877+00:00",
-  "email_count": 535
+  "last_updated": "2026-09-23T08:02:13.199415+00:00",
+  "email_count": 539
 }
