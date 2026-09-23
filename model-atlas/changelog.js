@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-22 10:19",
+  "last_run": "2026-09-23 09:34",
   "entries": [
+    {
+      "date": "2026-09-23",
+      "added": [
+        "ming-image-0-1-design"
+      ],
+      "upgraded": [],
+      "note": "Added Ming-Image-0.1-Design (Ant Group inclusionAI, MIT, weights live Sep 17/announced Sep 22, verified against transformer/config.json + mllm/config.json + weight index + GitHub modeling code): a 6B graphic-design text-to-image model (UI, infographics, posters) with native RGBA transparent output and strong in-image text rendering. Generation core is a 6.15B-BF16 single-stream flow-matching DiT (30 blocks, 30 heads × 128, d 3840, SwiGLU FFN 10240, QK-RMSNorm, 3-axis RoPE 32/48/48, adaLN-Zero scale+gate modulation, 2 extra refiner blocks, FlowMatchEuler shift 6.0); conditioning comes from a 17B BailingMM2 MoE-VLM (BailingMoeV2 20L/2048d, 256 experts top-8, sliding window 4096 + Qwen2.5-ViT + Qwen2 text encoder) projecting hidden states at layers 5/12/20 to 2560-d caption features. Companion Ming-Image-0.1-Design-Layer (same DiT, multi_frame_output) decomposes flat designs into RGBA layers and is noted on the card rather than tracked separately. Skipped: GPT-6 Sol/Luna and Claude Opus 5.5 (closed API-only, no weights), NVIDIA–Hugging Face acquisition (not a model), plus the usual finetune/quant churn (Bonsai-2 GGUF wave, Qwen-Image-2.1 quants/LoRAs, MiMo-V2.6 distills). Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still 401-gated, North-Small-Translate-1.0 and LTX-2.5 still gated (24th run). 68 models, v28."
+    },
     {
       "date": "2026-09-22",
       "added": [
@@ -141,17 +149,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Considered and skipped: Spark-X2.5-4B/1.7B (iFlytek's XHToken dense on-device models with a 3×sliding-window + full hybrid attention and native 1M context — verified from raw configs, but small-scale/niche and the SWA/full hybrid is already represented in the gallery), LTX-2.5 (still gated — HTTP 401 on config.json, 7th consecutive run), and Muse Spark 1.2 (still only a README placeholder on HF, no weights, 6th run). Re-checked the one partial entry, DeepSeek-V4-Flash-Vision-Exp: the official README still discloses no total parameter count, so its ~297B estimate stands. All 51 models unchanged."
-    },
-    {
-      "date": "2026-09-01",
-      "added": [
-        "glm-5-3-flash",
-        "qwen3-8-flash-next",
-        "hy4-preview",
-        "deepseek-v4-flash-vision-exp"
-      ],
-      "upgraded": [],
-      "note": "Added the four frontier open-weight drops of the week, all verified from raw HF configs + official cards. GLM-5.3-Flash (320B/18B, MIT): Z.ai's first natively multimodal GLM-5 — a sparse + linear attention hybrid (34 KDA gated-linear layers, 64×128, conv 4, interleaved 3:1 with 11 DSA sparse layers on full-NoPE MLA; indexer 32×128 top-2048 with 4-key pooling), 288 experts top-8 + 1 shared with sigmoid dropless routing, mHC residuals, 1M context. Qwen3.8-Flash-Next (125B/6B + 51B n-gram embeddings + 4B MTP, Qwen Community License): the experimental Qwen4-architecture preview — 3:1 Gated DeltaNet + QSA (Qwen Sparse Attention) hybrid where a 4-Q-head MQA indexer selects 4-token micro-blocks (512 blocks = 2048-token budget) instead of per-token top-k, plus a Gated Residual (4 branches, rank-320). Hunyuan Hy4 preview (770B/49B, Apache-2.0): Tencent's flagship — Gated MLA + Gated DSA on all 78 layers with IndexCache cross-layer index reuse (21 of 78 layers run the indexer), iHC hyper-connections, native MTP drafter. DeepSeek-V4-Flash-Vision-Exp (~297B estimated, partial confidence — DeepSeek's first multimodal model): V4-Flash stack + 32-layer ViT tower, 3 MTP drafters, DSpark noise-token decoding. Considered and skipped: GLM-5.3 (text-only — config is byte-identical to the GLM-5.2 base except transformers_version; a post-training-only refresh, so the existing GLM-5.2 entry already covers the architecture), LTX-2.5 (still gated, 6th consecutive run), Muse Spark 1.2 (still unpublished). 51 models total."
     }
   ]
-};
+}
