@@ -3647,7 +3647,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-02T04:56:51+00:00",
-      "last_event": "2026-09-18T03:23:59+00:00",
+      "last_event": "2026-09-23T22:52:20+00:00",
       "events": [
         {
           "type": "submitted",
@@ -3683,13 +3683,23 @@
           "type": "updated",
           "date": "2026-09-18T03:23:59+00:00",
           "subject": "[NSDI '27 Fall] Updated #117 \"Webb: Turning Fleet-Wide Profiling into...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-23T22:49:37+00:00",
+          "subject": "[NSDI '27 Fall] Submission #117: watermarking your paper"
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-23T22:52:20+00:00",
+          "subject": "[NSDI '27 Fall] Updated #117 \"Webb: Turning Fleet-Wide Profiling into...\""
         }
       ],
       "counts": {
-        "updates": 5,
+        "updates": 6,
         "comments": 0,
         "reviews": 0,
-        "total": 7
+        "total": 9
       },
       "message_ids": [
         "<20260902045651.E51A5840DB1@mail.hotcrp.com>",
@@ -3698,7 +3708,9 @@
         "<20260917154143.1FE999B36DA@mail.hotcrp.com>",
         "<20260917161236.AD26D8A5884@mail.hotcrp.com>",
         "<20260918032125.2D7998A58BB@mail.hotcrp.com>",
-        "<20260918032359.287A1866740@mail.hotcrp.com>"
+        "<20260918032359.287A1866740@mail.hotcrp.com>",
+        "<20260923224937.0515EA54B31@mail.hotcrp.com>",
+        "<20260923225220.2B60A844C77@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -3890,7 +3902,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-10T09:01:29+00:00",
-      "last_event": "2026-09-18T03:21:23+00:00",
+      "last_event": "2026-09-23T22:51:50+00:00",
       "events": [
         {
           "type": "updated",
@@ -3946,13 +3958,23 @@
           "type": "updated",
           "date": "2026-09-18T03:21:23+00:00",
           "subject": "[NSDI '27 Fall] Updated #35 \"Agentic Sandboxes in the Wild:...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-23T22:49:35+00:00",
+          "subject": "[NSDI '27 Fall] Submission #35: watermarking your paper"
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-23T22:51:50+00:00",
+          "subject": "[NSDI '27 Fall] Updated #35 \"Agentic Sandboxes in the Wild:...\""
         }
       ],
       "counts": {
-        "updates": 10,
+        "updates": 11,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 13
       },
       "message_ids": [
         "<20260910090129.D9A6D837FE2@mail.hotcrp.com>",
@@ -3965,7 +3987,9 @@
         "<20260917154510.104FD9B36C0@mail.hotcrp.com>",
         "<20260918012054.389DD8A58AF@mail.hotcrp.com>",
         "<20260918023237.E49F78A58B3@mail.hotcrp.com>",
-        "<20260918032123.1CABF9B04C0@mail.hotcrp.com>"
+        "<20260918032123.1CABF9B04C0@mail.hotcrp.com>",
+        "<20260923224935.7F9CC844C7F@mail.hotcrp.com>",
+        "<20260923225150.39AA8844C6F@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -4319,7 +4343,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-18T03:14:11+00:00",
-      "last_event": "2026-09-18T05:54:41+00:00",
+      "last_event": "2026-09-23T22:55:52+00:00",
       "events": [
         {
           "type": "updated",
@@ -4375,13 +4399,23 @@
           "type": "updated",
           "date": "2026-09-18T05:54:41+00:00",
           "subject": "[NSDI '27 Fall] Updated #724 \"Blink: Proactive Failure Recovery...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-23T22:49:45+00:00",
+          "subject": "[NSDI '27 Fall] Submission #724: watermarking your paper"
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-23T22:55:52+00:00",
+          "subject": "[NSDI '27 Fall] Updated #724 \"Blink: Proactive Failure Recovery...\""
         }
       ],
       "counts": {
-        "updates": 10,
+        "updates": 11,
         "comments": 0,
         "reviews": 0,
-        "total": 11
+        "total": 13
       },
       "message_ids": [
         "<20260918031411.5684B866740@mail.hotcrp.com>",
@@ -4394,7 +4428,9 @@
         "<20260918034850.D9D7E9B04DF@mail.hotcrp.com>",
         "<20260918035252.EDB749B36D6@mail.hotcrp.com>",
         "<20260918035856.464D89B36D6@mail.hotcrp.com>",
-        "<20260918055441.F349F91EAF7@mail.hotcrp.com>"
+        "<20260918055441.F349F91EAF7@mail.hotcrp.com>",
+        "<20260923224945.35FE99D311A@mail.hotcrp.com>",
+        "<20260923225552.85D1F8A58BE@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Sep 17, 2026, 8:59 PM PDT",
       "review_scores": [],
@@ -4416,7 +4452,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-22T05:22:08+00:00",
-      "last_event": "2026-09-23T10:22:08+00:00",
+      "last_event": "2026-09-23T12:45:42+00:00",
       "events": [
         {
           "type": "submitted",
@@ -4432,18 +4468,24 @@
           "type": "submitted",
           "date": "2026-09-23T10:22:08+00:00",
           "subject": "[ATC '26 Artifact Evaluation] Submitted #17 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-23T12:45:42+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Submission #17 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 1,
         "comments": 0,
         "reviews": 0,
-        "total": 3
+        "total": 4
       },
       "message_ids": [
         "<20260922052208.5C4D0B41407@mail.hotcrp.com>",
         "<20260922053325.A8D4582FFD4@mail.hotcrp.com>",
-        "<20260923102208.D036CBE2DF2@mail.hotcrp.com>"
+        "<20260923102208.D036CBE2DF2@mail.hotcrp.com>",
+        "<20260923124542.33418844C5D@mail.hotcrp.com>"
       ],
       "deadline": "Wednesday Sep 23, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4521,7 +4563,7 @@
     },
     "NSDI '27 Fall": {
       "paper_count": 5,
-      "last_event": "2026-09-19T05:39:23+00:00"
+      "last_event": "2026-09-23T22:55:52+00:00"
     },
     "ASPLOS'27 - September cycle": {
       "paper_count": 1,
@@ -4537,7 +4579,7 @@
     },
     "ATC '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-09-23T10:22:08+00:00"
+      "last_event": "2026-09-23T12:45:42+00:00"
     }
   },
   "announcements": [
@@ -4752,6 +4794,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-23T12:04:42.914142+00:00",
-  "email_count": 542
+  "last_updated": "2026-09-24T00:01:29.240677+00:00",
+  "email_count": 549
 }
