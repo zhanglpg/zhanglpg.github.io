@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-23 09:34",
+  "last_run": "2026-09-24 09:37",
   "entries": [
+    {
+      "date": "2026-09-24",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window covered only Sep 23–24 (last run added Ming-Image-0.1-Design yesterday): swept ~45 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video) since Sep 22, trendingScore + likes7d top-40, and web search for Sep 23–24 announcements. Everything found was out of atlas scope or previously assessed: black-forest-labs FLUX-3-Action base/so101/droid (7B world-action model outputting robot joint targets — robotics policy, its text encoder is the tracked Qwen3-VL-4B); TencentARC GAE-D64-1B + WorldCrafter-Fast (camera-control video adapters, no tech report — consistent with the Sep-22 WorldCrafter skip); nvidia Nemotron-3-Diarization + sortformer family (speaker diarization, ASR-adjacent) and NVIDIA-NemotronLabs-VoiceChat-11B (speech, pre-dates window); moondream parakeet-ultra/redux (ASR); internlm Intern-S2-397B re-assessed after its Sep-22 README/deployment-guide refresh — still Qwen3_5MoeForConditionalGeneration on the tracked Qwen3.5-397B-A17B backbone (60L/d4096/512-expert-top-10 Gated-DeltaNet 3:1 hybrid, 403.4B BF16 per weight index), a Shanghai AI Lab scientific-agent post-train — skip per no-finetune rule; XiaomiMiMo MiMo-V2.6-Distill-Qwen-9B (distill of tracked family); AlexWortega/openjev (Qwen3.5-4B reranker finetune); Altworld Hemmingway-1 (Qwen3.8-27B creative finetune, skipped Sep 21); stealth-model space-bunny-alpha (README-only placeholder, no weights); Sep-24 text-generation feed was zero-like GGUF/ONNX/SFT churn. Closed API-only news (Claude Opus 5.5, GPT-6 Sol/Luna) remains out of scope. Partial rechecks: inclusionAI/LLaDA2.2-flash lastModified 2026-08-20 unchanged (still no official active-param count); deepseek-ai/DeepSeek-V4-Flash-Vision-Exp lastModified 2026-09-01 unchanged (~297B stays estimated); stepfun-ai/Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 raw configs still 401-gated (25th run). No upgrades. 68 models unchanged, v28."
+    },
     {
       "date": "2026-09-23",
       "added": [
@@ -143,12 +149,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Considered and skipped: OpenVDN/vdn-minimax-h3 (hybrid linear+softmax attention branch bolted onto MiniMax H3 — a community speed-up add-on, not a new base model), microsoft VibeVoice-ASR-Streaming 1.5B/7B (ASR, out of gallery scope), inclusionAI Ling-3.0 singprobe (5.18M-param streaming guardrail probe), internlm InternLumina-U2 (README-only placeholder, no weights), Whittle-Next-26B-A3B (GGUF research preview with no config.json), and LTX-2.5 / Muse Spark 1.2 (still gated or unpublished — 8th and 7th consecutive runs). DeepSeek-V4-Flash-Vision-Exp's README gained vLLM/SGLang serving recipes but still no total param count, so its ~297B estimate stands. All 51 models unchanged."
-    },
-    {
-      "date": "2026-09-02",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Considered and skipped: Spark-X2.5-4B/1.7B (iFlytek's XHToken dense on-device models with a 3×sliding-window + full hybrid attention and native 1M context — verified from raw configs, but small-scale/niche and the SWA/full hybrid is already represented in the gallery), LTX-2.5 (still gated — HTTP 401 on config.json, 7th consecutive run), and Muse Spark 1.2 (still only a README placeholder on HF, no weights, 6th run). Re-checked the one partial entry, DeepSeek-V4-Flash-Vision-Exp: the official README still discloses no total parameter count, so its ~297B estimate stands. All 51 models unchanged."
     }
   ]
 }
