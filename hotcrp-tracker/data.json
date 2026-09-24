@@ -1772,7 +1772,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-09-19T05:23:19+00:00",
+      "last_event": "2026-09-24T10:04:26+00:00",
       "events": [
         {
           "type": "updated",
@@ -1818,13 +1818,18 @@
           "type": "accepted",
           "date": "2026-09-19T05:23:19+00:00",
           "subject": "[ATC '26] Accepted submission #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-24T10:04:26+00:00",
+          "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 5,
-        "comments": 0,
+        "comments": 1,
         "reviews": 0,
-        "total": 9
+        "total": 10
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
@@ -1835,7 +1840,8 @@
         "<20260611115126.270A392D9BA@mail.hotcrp.com>",
         "<20260830042606.62321A056AE@mail.hotcrp.com>",
         "<20260902151312.363E8840D91@mail.hotcrp.com>",
-        "<20260919052319.95534BE2DF5@mail.hotcrp.com>"
+        "<20260919052319.95534BE2DF5@mail.hotcrp.com>",
+        "<20260924100426.E5E7291EBC9@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -2011,7 +2017,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T10:07:22+00:00",
-      "last_event": "2026-09-19T05:23:19+00:00",
+      "last_event": "2026-09-24T08:26:53+00:00",
       "events": [
         {
           "type": "submitted",
@@ -2062,13 +2068,18 @@
           "type": "accepted",
           "date": "2026-09-19T05:23:19+00:00",
           "subject": "[ATC '26] Accepted submission #471 \"TraJudger: Structure-Guided Failure...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-24T08:26:53+00:00",
+          "subject": "[ATC '26] Comment for #471 \"TraJudger: Structure-Guided Failure...\""
         }
       ],
       "counts": {
         "updates": 6,
-        "comments": 0,
+        "comments": 1,
         "reviews": 0,
-        "total": 10
+        "total": 11
       },
       "message_ids": [
         "<20260610100722.87F3E92D996@mail.hotcrp.com>",
@@ -2080,7 +2091,8 @@
         "<20260611095710.0D28B90B8F8@mail.hotcrp.com>",
         "<20260830042606.57F0EA056AC@mail.hotcrp.com>",
         "<20260903103128.3643D920DF7@mail.hotcrp.com>",
-        "<20260919052319.8E218BE2DF4@mail.hotcrp.com>"
+        "<20260919052319.8E218BE2DF4@mail.hotcrp.com>",
+        "<20260924082653.02CB7A54B08@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4549,7 +4561,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-09-24T06:15:18+00:00"
+      "last_event": "2026-09-24T10:04:26+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -4800,6 +4812,6 @@
       "date": "2026-09-15T12:03:49+00:00"
     }
   ],
-  "last_updated": "2026-09-24T08:01:24.782646+00:00",
-  "email_count": 550
+  "last_updated": "2026-09-24T12:01:34.309460+00:00",
+  "email_count": 552
 }
