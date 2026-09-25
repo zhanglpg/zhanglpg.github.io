@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-24 09:37",
+  "last_run": "2026-09-25 09:23",
   "entries": [
+    {
+      "date": "2026-09-25",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Sep 24 09:37 → Sep 25 09:23: swept ~50 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video) since Sep 23, and trendingScore top-40. Everything found was out of atlas scope, a finetune/quant, or previously assessed: apple LensVLM-9B (192 likes, new — a visual-text-compression inference framework SFT+RL post-trained on the tracked Qwen3.5-9B backbone with an Expand(k) tool; architecture identical to Qwen3.5-9B + ViT, novelty is the post-training recipe, skip per no-finetune rule — same precedent as Intern-S2-397B); nvidia NV-Reason-CT (medical-CT 3D-VLM finetune on a qwen3_5 backbone, 1 like); alibabagroup SparkWan2.1/2.2 (sparsity-pruned Wan video quants); iknownuting Sulphur-2-base (LTX-2.3 quant); memset0 vsqa-preview (Wan2.1 DMD NVFP4 quant); alibaba-pai Qwen-Image-2.1-Fun Controlnet/LoRA adapters; AikidoSec altar-1 (GLM-5.3 AWQ int4 quant); Akhilaaa3 Jev-Omni (gemma-4-12B finetune, assessed Sep 15); plus previously skipped convaiinnovations laya (non-autoregressive router, out of scope), TaichuAI ZDTaichu5.0-9B, netease-youdao Confucius4-R2T2 (ASR), m-a-p YuE2-3B (music) & SheetSage2 (music transcription), internlm InternLumina-U2 (still a README-only placeholder), inclusionAI Ling/Ring 2.x refresh (org-wide repo touch, no new models), internlm Intern-S2-397B (assessed Sep 24), AlexWortega openjev, TencentARC GAE-D64-1B (assessed Sep 24). Closed API-only news out of scope. Partial rechecks: inclusionAI/LLaDA2.2-flash lastModified 2026-08-20 unchanged (still no official active-param count); deepseek-ai/DeepSeek-V4-Flash-Vision-Exp 2026-09-01 unchanged (~297B stays estimated); stepfun-ai/Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 raw configs still gated (26th run). No upgrades. 68 models unchanged, v28."
+    },
     {
       "date": "2026-09-24",
       "added": [],
@@ -143,12 +149,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Muse Spark 1.3 launched Sep 2 but Meta shipped it proprietary (API/Muse Code only); the MuseSparkAI HF repos are empty README placeholders, so no open weights or config to verify (9th consecutive run watching Muse Spark). Considered and skipped: inclusionAI/Ling-3.0-flash-Fin (financial-domain variant of Ling-3.0-flash, same BailingMoeV3 architecture already judged small-scale/niche), BAAI ConsiSpace & MobileVLA-R1 (zip-dump repos with no config.json), BAAI Recon2Reason-Reasoning-4B (Qwen3-VL-4B finetune), and LTX-2.5 (still gated — HTTP 401 on config.json, 9th consecutive run). Re-checked the one partial entry, DeepSeek-V4-Flash-Vision-Exp: config unchanged and the README still discloses no total param count, so its ~297B estimate stands. All 51 models unchanged."
-    },
-    {
-      "date": "2026-09-03",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Considered and skipped: OpenVDN/vdn-minimax-h3 (hybrid linear+softmax attention branch bolted onto MiniMax H3 — a community speed-up add-on, not a new base model), microsoft VibeVoice-ASR-Streaming 1.5B/7B (ASR, out of gallery scope), inclusionAI Ling-3.0 singprobe (5.18M-param streaming guardrail probe), internlm InternLumina-U2 (README-only placeholder, no weights), Whittle-Next-26B-A3B (GGUF research preview with no config.json), and LTX-2.5 / Muse Spark 1.2 (still gated or unpublished — 8th and 7th consecutive runs). DeepSeek-V4-Flash-Vision-Exp's README gained vLLM/SGLang serving recipes but still no total param count, so its ~297B estimate stands. All 51 models unchanged."
     }
   ]
-}
+};
