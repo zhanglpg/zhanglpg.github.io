@@ -1294,7 +1294,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-05-11T07:52:53+00:00",
-      "last_event": "2026-09-22T17:54:11+00:00",
+      "last_event": "2026-09-24T14:48:15+00:00",
       "events": [
         {
           "type": "updated",
@@ -1415,13 +1415,23 @@
           "type": "comment",
           "date": "2026-09-22T17:54:11+00:00",
           "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-24T14:18:52+00:00",
+          "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-24T14:48:15+00:00",
+          "subject": "[EuroSys '27 Spring] Comment for #796 \"SUBench: A Benchmark for Large Language...\""
         }
       ],
       "counts": {
         "updates": 10,
-        "comments": 8,
+        "comments": 10,
         "reviews": 0,
-        "total": 24
+        "total": 26
       },
       "message_ids": [
         "<20260511075253.692CD869629@mail.hotcrp.com>",
@@ -1447,7 +1457,9 @@
         "<20260921192412.E6D2082FFD4@mail.hotcrp.com>",
         "<20260921195509.E9869841A43@mail.hotcrp.com>",
         "<20260922175257.3CA7E8A588C@mail.hotcrp.com>",
-        "<20260922175411.5D3CA9B36C2@mail.hotcrp.com>"
+        "<20260922175411.5D3CA9B36C2@mail.hotcrp.com>",
+        "<20260924141852.20099844C49@mail.hotcrp.com>",
+        "<20260924144815.9BBF4841A69@mail.hotcrp.com>"
       ],
       "deadline": "Friday May 15, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -1868,7 +1880,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-09-19T05:23:20+00:00",
+      "last_event": "2026-09-24T15:46:35+00:00",
       "events": [
         {
           "type": "updated",
@@ -1964,13 +1976,18 @@
           "type": "accepted",
           "date": "2026-09-19T05:23:20+00:00",
           "subject": "[ATC '26] Accepted submission #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-24T15:46:35+00:00",
+          "subject": "[ATC '26] Comment for #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
         "updates": 14,
-        "comments": 0,
+        "comments": 1,
         "reviews": 0,
-        "total": 19
+        "total": 20
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
@@ -1991,7 +2008,8 @@
         "<20260830042607.A498EA0D438@mail.hotcrp.com>",
         "<20260902023342.41FB3841368@mail.hotcrp.com>",
         "<20260903111456.A861D920EA7@mail.hotcrp.com>",
-        "<20260919052320.26113C0154F@mail.hotcrp.com>"
+        "<20260919052320.26113C0154F@mail.hotcrp.com>",
+        "<20260924154635.4A626841A69@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4118,7 +4136,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-16T03:44:11+00:00",
-      "last_event": "2026-09-23T11:41:08+00:00",
+      "last_event": "2026-09-24T13:08:01+00:00",
       "events": [
         {
           "type": "updated",
@@ -4204,13 +4222,28 @@
           "type": "updated",
           "date": "2026-09-23T11:41:08+00:00",
           "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-24T12:38:46+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-24T13:06:17+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
+        },
+        {
+          "type": "updated",
+          "date": "2026-09-24T13:08:01+00:00",
+          "subject": "[EuroSys '27 Fall] Updated #1544 \"MoECompass: A Unified Performance Model...\""
         }
       ],
       "counts": {
-        "updates": 14,
+        "updates": 17,
         "comments": 0,
         "reviews": 0,
-        "total": 17
+        "total": 20
       },
       "message_ids": [
         "<20260916034411.94E36866771@mail.hotcrp.com>",
@@ -4229,7 +4262,10 @@
         "<20260923044220.E49ECBE2DF2@mail.hotcrp.com>",
         "<20260923044248.ECAE9BE2DEC@mail.hotcrp.com>",
         "<20260923114056.486F88404CA@mail.hotcrp.com>",
-        "<20260923114108.BF586844C47@mail.hotcrp.com>"
+        "<20260923114108.BF586844C47@mail.hotcrp.com>",
+        "<20260924123846.44005A54B20@mail.hotcrp.com>",
+        "<20260924130617.C286D842080@mail.hotcrp.com>",
+        "<20260924130801.477ED842080@mail.hotcrp.com>"
       ],
       "deadline": "Friday Sep 25, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4557,11 +4593,11 @@
     },
     "EuroSys '27 Spring": {
       "paper_count": 3,
-      "last_event": "2026-09-22T17:54:11+00:00"
+      "last_event": "2026-09-24T14:48:15+00:00"
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-09-24T10:04:26+00:00"
+      "last_event": "2026-09-24T15:46:35+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -4593,7 +4629,7 @@
     },
     "EuroSys '27 Fall": {
       "paper_count": 1,
-      "last_event": "2026-09-23T11:41:08+00:00"
+      "last_event": "2026-09-24T13:08:01+00:00"
     },
     "ATC '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -4810,8 +4846,14 @@
       "type": "announcement",
       "subject": "[EuroSys '27 Spring] Correction: proceedings preparation",
       "date": "2026-09-15T12:03:49+00:00"
+    },
+    {
+      "conference": "ASE 2026",
+      "type": "announcement",
+      "subject": "[ASE 2026] Please update details on the ASE website",
+      "date": "2026-09-24T15:39:32+00:00"
     }
   ],
-  "last_updated": "2026-09-24T12:01:34.309460+00:00",
-  "email_count": 552
+  "last_updated": "2026-09-25T00:02:16.796708+00:00",
+  "email_count": 559
 }
