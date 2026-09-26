@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-25 09:23",
+  "last_run": "2026-09-26 09:29",
   "entries": [
+    {
+      "date": "2026-09-26",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Sep 25 09:23 → Sep 26 09:23: swept ~50 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video) since Sep 24, and trendingScore/likes7d top-40. Everything found was a finetune/quant of tracked models (Qwen3.8-27B, Qwen-Image-2.1, MiniMax-H3 churn), previously assessed (laya, needle3, Hemmingway-1, TeleOCR, Ternary-Bonsai, LensVLM-9B), or out of scope (ASR/diarization/music). CohereLabs tiny-aya-* metadata refresh (3B translation models, 9 likes) — not notable. Partial entries rechecked: LLaDA2.2-flash (no official active-param count yet) and DeepSeek-V4-Flash-Vision-Exp (unchanged since Sep 1) stay partial; Step-5-Preview-BF16 still 401; LTX-2.5 + North-Small-Translate still gated."
+    },
     {
       "date": "2026-09-25",
       "added": [],
@@ -143,12 +149,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added the K2-Horizon family from IFM (LLM360 lineage, Apache-2.0, released 2026-09-04): the 375B-A23B open MoE flagship (375B/23B active, 61 layers, 192 experts top-8 + 1 shared, 3 dense head layers, 512K context, partial-RoPE GQA) and the architecturally novel MoVA-36B-A4B — Mixture-of-Values attention, where 45 of 48 layers replace v_proj with 64 routed value experts (top-4, sigmoid) plus a per-head softplus output gate, stacked on a 100-expert FFN MoE. Both verified from the official config.json, README, modeling code, and safetensors index (379.2B raw params). Considered and skipped: K2-Horizon-32B (Stage1 intermediate checkpoint, final pending), 7B/3.7B/0.9B family members (not notable), Kimi-Linear-48B-A3B (2025 release), Zing-0.5 world model (Wan2.2-TI2V-5B derivative), and OpenAI GPT-6 Astra / World Labs Atlas (proprietary, no open weights)."
-    },
-    {
-      "date": "2026-09-04",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Muse Spark 1.3 launched Sep 2 but Meta shipped it proprietary (API/Muse Code only); the MuseSparkAI HF repos are empty README placeholders, so no open weights or config to verify (9th consecutive run watching Muse Spark). Considered and skipped: inclusionAI/Ling-3.0-flash-Fin (financial-domain variant of Ling-3.0-flash, same BailingMoeV3 architecture already judged small-scale/niche), BAAI ConsiSpace & MobileVLA-R1 (zip-dump repos with no config.json), BAAI Recon2Reason-Reasoning-4B (Qwen3-VL-4B finetune), and LTX-2.5 (still gated — HTTP 401 on config.json, 9th consecutive run). Re-checked the one partial entry, DeepSeek-V4-Flash-Vision-Exp: config unchanged and the README still discloses no total param count, so its ~297B estimate stands. All 51 models unchanged."
     }
   ]
 };
