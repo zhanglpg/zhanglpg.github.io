@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-26 09:29",
+  "last_run": "2026-09-27 09:37",
   "entries": [
+    {
+      "date": "2026-09-27",
+      "added": [
+        "internlumina-u2"
+      ],
+      "upgraded": [],
+      "note": "Added InternLumina-U2 (Shanghai AI Lab, Apache-2.0; weights landed Sep 24 after a Sep 1 README-only placeholder — verified against nvidia/config.json + weight index + GitHub inference code): a 16B-A1B fully-discrete multi-codebook unified model — a LLaDA-2.0 MoE masked-diffusion backbone (20L/2048d, 256 experts top-8 + 1 shared, first layer dense) handles text QA, text-to-image generation, image editing and image/video/3D understanding through one discrete-token interface. Visual positions use Apple's AToken tokenizer with 8 complementary codebooks: input-side the 8 per-codebook embeddings concatenate and project into a single backbone token; output-side the dLLM denoises masked spatial positions in parallel while a codebook-depth AR head predicts each position's 8 codes. Dual Ascend/NVIDIA-trained checkpoints ship in one repo; on-disk 16.9B BF16 vs the official 16B claim (computed ratio 0.98). Skipped: internlm Intern-Decision-0.8/2/4B (Qwen3.5-0.8/2/4B decision-making finetunes), orcarouter OrcaSAQ-2-27B (Qwen3.8-27B exl3 3-bit quant + agentic post-train), Contrastive-LM CLM-v0.1-8B (assessed Sep 26), and the usual Qwen3.8-27B / Qwen-Image-2.1 / MiniMax-H3 GGUF-MLX-LoRA churn. Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still gated (28th run). 69 models, v29."
+    },
     {
       "date": "2026-09-26",
       "added": [],
@@ -140,15 +148,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added the LLaDA2.2 agentic diffusion-language-model family from Ant Group's InclusionAI — the gallery's first masked-diffusion LLMs (bidirectional attention, parallel block generation, Levenshtein Editing via DELETE/INSERT control tokens, Block Routing bounding MoE activation per 32-token block, L-EBPO agentic RL). LLaDA2.2-flash: 100B MoE, 32 layers, 256 experts top-8 + 1 shared, 128K context (config-verified; active params not officially disclosed — ~4.9B derived, so confidence=partial on that field alone). LLaDA2.2-mini (released 2026-09-05): 16B/1.4B active, 20 layers, same routing scheme (verified). Considered and skipped: openbmb/MiniCPM5-2B (dense Llama-arch 2B on-device model — no architectural novelty, small scale), tencent/EVIE-8B & 4.5B (visual-document-retrieval Colbert heads on a Qwen3.5 base — retrieval niche, previously skipped), Viggle/Viggle-Animate (MiniMax-H3 video blocks repackaged as pt2 modules — derivative), inclusionAI/LLaDA-Image (Aug 28 diffusion image generator built on LLaDA2 text encoder — outside the discovery window, revisit next run for the image-gen slot), Novasy/nova-video-gen (CogVideoX-2b re-upload), BAAI/ConsiSpace (still a zip dump). DeepSeek-V4-Flash-Vision-Exp re-checked: README still discloses no total param count — ~297B estimate and partial confidence stand."
-    },
-    {
-      "date": "2026-09-07",
-      "added": [
-        "k2-horizon-375b-a23b",
-        "k2-horizon-mova-36b-a4b"
-      ],
-      "upgraded": [],
-      "note": "Added the K2-Horizon family from IFM (LLM360 lineage, Apache-2.0, released 2026-09-04): the 375B-A23B open MoE flagship (375B/23B active, 61 layers, 192 experts top-8 + 1 shared, 3 dense head layers, 512K context, partial-RoPE GQA) and the architecturally novel MoVA-36B-A4B — Mixture-of-Values attention, where 45 of 48 layers replace v_proj with 64 routed value experts (top-4, sigmoid) plus a per-head softplus output gate, stacked on a 100-expert FFN MoE. Both verified from the official config.json, README, modeling code, and safetensors index (379.2B raw params). Considered and skipped: K2-Horizon-32B (Stage1 intermediate checkpoint, final pending), 7B/3.7B/0.9B family members (not notable), Kimi-Linear-48B-A3B (2025 release), Zing-0.5 world model (Wan2.2-TI2V-5B derivative), and OpenAI GPT-6 Astra / World Labs Atlas (proprietary, no open weights)."
     }
   ]
 };
