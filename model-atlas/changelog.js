@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-27 09:37",
+  "last_run": "2026-09-28 09:35",
   "entries": [
+    {
+      "date": "2026-09-28",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Sep 27 09:37 → Sep 28 09:25: swept ~55 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 27, and trendingScore/likes7d top-40. The only fresh official releases were XiaomiMiMo/MiMo-V2.6-{Flash,Pro}-MOPD (Sep 27) — explicitly the MOPD2 multi-teacher on-policy-distillation upgrade of the already-tracked MiMo-V2.6-{Flash,Pro}-RL checkpoints (same MiMoV2ForCausalLM architecture, 48L/9-full+39-SWA hybrid unchanged); skip per no-distill rule — same precedent as MiMo-V2.6-Distill-Qwen-9B. Qwen3Guard-Stream-* were Sep-2025 guard classifiers with a metadata refresh; SupersonicLabs/Julia-1 (195 likes) is a 144M mmBERT-small decision/router classifier — not frontier, out of scope; tsinghua VeriLoop-E2 is a Qwen3.8-27B post-train. naiveailab (Jifeng Dai's Tencent-backed startup rumored to drop its first open-weight LLM this month) has no HF org/models yet — watching. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); North-Small-Translate-1.0 and LTX-2.5 still gated (29th run). 69 models unchanged, v29."
+    },
     {
       "date": "2026-09-27",
       "added": [
@@ -139,15 +145,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added InclusionAI's Ling-3.0-flash-VL (Sep 4): a 124B/5.5B-active native-multimodal MoE whose 42-layer backbone alternates KDA linear attention and gated MLA 5:1 (35 KDA + 7 MLA, layer pattern verified from the safetensors weight map), 512 experts top-8 + 1 shared, clamped SwiGLU, and a Qwen3-style ViT feeding M-RoPE video positions — config + README + safetensors index verified (124.9B on disk, computed ratio 1.00). Also added LLaDA-Image (Sep 4, arXiv:2609.03796): a 6B single-stream flow-matching DiT conditioned by a FROZEN LLaDA2.0-Mini masked-diffusion VLM through a residual-query adapter + 6-layer connector — the gallery's first image generator with a diffusion-LLM text encoder, and open-source SOTA on Qwen-Image-Bench (53.53 EN / 53.38 ZH); DiT config + weights verified (6.54B on disk). Considered and skipped: openbmb/MiniCPM5-2B (2.5B dense Llama-arch on-device model, no architectural novelty — 2nd run), tencent/EVIE-8B/4.5B (Colbert retrieval heads on a Qwen3.5 base — niche, 2nd run), inclusionAI/Ling-3.0-flash-VL-fp8 (quant of a tracked-family model), IFM K2-Horizon-32B (still Stage-1, final checkpoint unreleased), Lightricks LTX-2.5 (config still gated HTTP 401 — 11th run), BAAI ConsiSpace (Qwen2.5-VL-3B + VGGT geometry head — derivative, small). Partial rechecks: deepseek-v4-flash-vision-exp README still discloses no total param count and llada2-2-flash still has no official active count — both stay partial."
-    },
-    {
-      "date": "2026-09-08",
-      "added": [
-        "llada2-2-flash",
-        "llada2-2-mini"
-      ],
-      "upgraded": [],
-      "note": "Added the LLaDA2.2 agentic diffusion-language-model family from Ant Group's InclusionAI — the gallery's first masked-diffusion LLMs (bidirectional attention, parallel block generation, Levenshtein Editing via DELETE/INSERT control tokens, Block Routing bounding MoE activation per 32-token block, L-EBPO agentic RL). LLaDA2.2-flash: 100B MoE, 32 layers, 256 experts top-8 + 1 shared, 128K context (config-verified; active params not officially disclosed — ~4.9B derived, so confidence=partial on that field alone). LLaDA2.2-mini (released 2026-09-05): 16B/1.4B active, 20 layers, same routing scheme (verified). Considered and skipped: openbmb/MiniCPM5-2B (dense Llama-arch 2B on-device model — no architectural novelty, small scale), tencent/EVIE-8B & 4.5B (visual-document-retrieval Colbert heads on a Qwen3.5 base — retrieval niche, previously skipped), Viggle/Viggle-Animate (MiniMax-H3 video blocks repackaged as pt2 modules — derivative), inclusionAI/LLaDA-Image (Aug 28 diffusion image generator built on LLaDA2 text encoder — outside the discovery window, revisit next run for the image-gen slot), Novasy/nova-video-gen (CogVideoX-2b re-upload), BAAI/ConsiSpace (still a zip dump). DeepSeek-V4-Flash-Vision-Exp re-checked: README still discloses no total param count — ~297B estimate and partial confidence stand."
     }
   ]
 };
