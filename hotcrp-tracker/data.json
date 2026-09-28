@@ -2172,7 +2172,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T13:13:51+00:00",
-      "last_event": "2026-09-24T06:15:18+00:00",
+      "last_event": "2026-09-28T09:36:16+00:00",
       "events": [
         {
           "type": "updated",
@@ -2233,13 +2233,18 @@
           "type": "comment",
           "date": "2026-09-24T06:15:18+00:00",
           "subject": "[ATC '26] Comment for #1518 \"Axon: Asynchronous Global KV-Aware...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-28T09:36:16+00:00",
+          "subject": "[ATC '26] Comment for #1518 \"Axon: Asynchronous Global KV-Aware...\""
         }
       ],
       "counts": {
         "updates": 6,
-        "comments": 1,
+        "comments": 2,
         "reviews": 0,
-        "total": 12
+        "total": 13
       },
       "message_ids": [
         "<20260610131351.6939590A6D8@mail.hotcrp.com>",
@@ -2253,7 +2258,8 @@
         "<20260903105336.E2C2F920DF8@mail.hotcrp.com>",
         "<20260903113216.5A813920EA7@mail.hotcrp.com>",
         "<20260919052320.DBF439208F8@mail.hotcrp.com>",
-        "<20260924061518.C9F13A54B03@mail.hotcrp.com>"
+        "<20260924061518.C9F13A54B03@mail.hotcrp.com>",
+        "<20260928093616.5E4EA9B36EC@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4633,7 +4639,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-09-25T02:01:00+00:00"
+      "last_event": "2026-09-28T09:36:16+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -4890,6 +4896,6 @@
       "date": "2026-09-24T15:39:32+00:00"
     }
   ],
-  "last_updated": "2026-09-27T12:01:37.312204+00:00",
-  "email_count": 565
+  "last_updated": "2026-09-28T12:02:25.863227+00:00",
+  "email_count": 566
 }
