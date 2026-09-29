@@ -2937,7 +2937,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-16T05:31:15+00:00",
-      "last_event": "2026-08-01T07:52:36+00:00",
+      "last_event": "2026-09-28T19:08:33+00:00",
       "events": [
         {
           "type": "submitted",
@@ -3123,13 +3123,18 @@
           "type": "updated",
           "date": "2026-08-01T07:52:36+00:00",
           "subject": "[HPCA 2027] Updated #1013 \"RelayServe: Accelerating Serverless LLM...\""
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-28T19:08:33+00:00",
+          "subject": "[HPCA 2027] Submission #1013 \"RelayServe: Accelerating Serverless LLM...\""
         }
       ],
       "counts": {
         "updates": 30,
         "comments": 0,
         "reviews": 0,
-        "total": 37
+        "total": 38
       },
       "message_ids": [
         "<20260716053115.1A8D5A0DFEB@mail.hotcrp.com>",
@@ -3168,7 +3173,8 @@
         "<20260801044230.AC1E28E9ED8@mail.hotcrp.com>",
         "<20260801074437.60394AE6F1B@mail.hotcrp.com>",
         "<20260801074825.C2D61AE6F1F@mail.hotcrp.com>",
-        "<20260801075236.8C18AAE6F24@mail.hotcrp.com>"
+        "<20260801075236.8C18AAE6F24@mail.hotcrp.com>",
+        "<20260928190833.AD1D99B4BFB@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -3193,7 +3199,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-07-17T09:53:46+00:00",
-      "last_event": "2026-07-30T21:53:09+00:00",
+      "last_event": "2026-09-28T19:11:58+00:00",
       "events": [
         {
           "type": "submitted",
@@ -3299,13 +3305,18 @@
           "type": "other",
           "date": "2026-07-30T21:53:09+00:00",
           "subject": "[HPCA 2027] Conflict updates for submission #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\"."
+        },
+        {
+          "type": "submitted",
+          "date": "2026-09-28T19:11:58+00:00",
+          "subject": "[HPCA 2027] Submission #1182 \"WaveWeaver: Wave-aware Bilinear Modeling...\""
         }
       ],
       "counts": {
         "updates": 15,
         "comments": 0,
         "reviews": 0,
-        "total": 21
+        "total": 22
       },
       "message_ids": [
         "<20260717095346.B8469AF027E@mail.hotcrp.com>",
@@ -3328,7 +3339,8 @@
         "<20260727061402.E516499ABC7@mail.hotcrp.com>",
         "<20260728212029.00DF4A57798@mail.hotcrp.com>",
         "<20260730060935.056B3A0E774@mail.hotcrp.com>",
-        "<20260730215309.A6AEDA0D4FF@mail.hotcrp.com>"
+        "<20260730215309.A6AEDA0D4FF@mail.hotcrp.com>",
+        "<20260928191158.D63829E5619@mail.hotcrp.com>"
       ],
       "deadline": "Saturday Aug 1, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4548,7 +4560,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-22T05:22:08+00:00",
-      "last_event": "2026-09-23T12:45:42+00:00",
+      "last_event": "2026-09-28T22:37:38+00:00",
       "events": [
         {
           "type": "submitted",
@@ -4569,19 +4581,37 @@
           "type": "submitted",
           "date": "2026-09-23T12:45:42+00:00",
           "subject": "[ATC '26 Artifact Evaluation] Submission #17 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-28T16:40:37+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Comment for #17 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-28T17:26:05+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Comment for #17 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-09-28T22:37:38+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Comment for #17 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 1,
-        "comments": 0,
+        "comments": 3,
         "reviews": 0,
-        "total": 4
+        "total": 7
       },
       "message_ids": [
         "<20260922052208.5C4D0B41407@mail.hotcrp.com>",
         "<20260922053325.A8D4582FFD4@mail.hotcrp.com>",
         "<20260923102208.D036CBE2DF2@mail.hotcrp.com>",
-        "<20260923124542.33418844C5D@mail.hotcrp.com>"
+        "<20260923124542.33418844C5D@mail.hotcrp.com>",
+        "<20260928164037.817F7842BC0@mail.hotcrp.com>",
+        "<20260928172605.938459B36EC@mail.hotcrp.com>",
+        "<20260928223738.8E9BB9B41E4@mail.hotcrp.com>"
       ],
       "deadline": "Wednesday Sep 23, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4643,7 +4673,7 @@
     },
     "HPCA 2027": {
       "paper_count": 5,
-      "last_event": "2026-09-19T15:39:03+00:00"
+      "last_event": "2026-09-28T19:11:58+00:00"
     },
     "SOSP '26 Artifact Evaluation": {
       "paper_count": 1,
@@ -4675,7 +4705,7 @@
     },
     "ATC '26 Artifact Evaluation": {
       "paper_count": 1,
-      "last_event": "2026-09-23T12:45:42+00:00"
+      "last_event": "2026-09-28T22:37:38+00:00"
     }
   },
   "announcements": [
@@ -4896,6 +4926,6 @@
       "date": "2026-09-24T15:39:32+00:00"
     }
   ],
-  "last_updated": "2026-09-28T12:02:25.863227+00:00",
-  "email_count": 566
+  "last_updated": "2026-09-29T00:03:54.936398+00:00",
+  "email_count": 571
 }
