@@ -3,7 +3,13 @@
     "Glenn": {
       "grade": 11,
       "school": "Lynbrook High School",
-      "overdue": [],
+      "overdue": [
+        {
+          "assignment": "Test on Chapters 1-6, 56.5 graded from 60 curved to 57 (380 points = 57*6.667)",
+          "due_date": "Tuesday, 09/22/2026",
+          "days_overdue": 6
+        }
+      ],
       "years": {
         "2025-26": {
           "grade_level": 10,
@@ -2962,8 +2968,8 @@
             },
             "Amer Lit/Writ": {
               "full_name": "Amer Lit/Writ - 1130: SignoreL p2 T1",
-              "grade": "-",
-              "percentage": "100%",
+              "grade": "A",
+              "percentage": "91.75%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -3021,13 +3027,31 @@
                   "score": "10/10",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "Shays' Rebellion Video Guide",
+                  "score": "2/2",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Ch 6 Reading Quiz",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "In-Class Graded SAQ #1",
+                  "score": "16/20",
+                  "percentage": 80.0,
+                  "perfect": false
                 }
               ]
             },
             "AP Physics C:Mech": {
               "full_name": "AP Physics C:Mech - 3730: NguyenT p1 T1",
               "grade": "A",
-              "percentage": "98.33%",
+              "percentage": "96.01%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -3071,6 +3095,24 @@
                   "score": "14/16",
                   "percentage": 87.5,
                   "perfect": false
+                },
+                {
+                  "name": "Atwood Machine Pre-Lab (online submission)",
+                  "score": "5/5",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Unit 1 Exam",
+                  "score": "46/50",
+                  "percentage": 92.0,
+                  "perfect": false
+                },
+                {
+                  "name": "HW Pack 2",
+                  "score": "20/20",
+                  "percentage": 100.0,
+                  "perfect": true
                 }
               ]
             },
@@ -3083,7 +3125,7 @@
             },
             "Photo and Design": {
               "full_name": "Photo and Design - 7670: ReynoldsM p4 T1",
-              "grade": "-",
+              "grade": "A+",
               "percentage": "100%",
               "term": "26-27 T1",
               "assignments": [
@@ -3128,13 +3170,25 @@
                   "score": "10/10",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "Signed Syllabus/ Equipment Checkout form (and donation if you like!)",
+                  "score": "5/5",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Final Contact Sheet (7): Highlighting Your Understanding of Unit Concepts",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
                 }
               ]
             },
             "AP Statistics": {
               "full_name": "AP Statistics - 2460: IamsK p7 T1",
               "grade": "B+",
-              "percentage": "89.13%",
+              "percentage": "89.18%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -3271,6 +3325,18 @@
                 },
                 {
                   "name": "9A_A - Complete the class notes.",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "12A_A Assignment 12 Part A) Turn in the completed class notes",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "11M_A Monday in class worksheet",
                   "score": "10/10",
                   "percentage": 100.0,
                   "perfect": true
@@ -6278,8 +6344,8 @@
           "courses": {
             "AP Lang/Comp": {
               "full_name": "AP Lang/Comp - 1190: SeikeA p6 T1",
-              "grade": "-",
-              "percentage": "",
+              "grade": "A",
+              "percentage": "93.75%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -6305,12 +6371,30 @@
                   "score": "100/100",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "1st Rhetorical Analysis In-Class Essay",
+                  "score": "100/100",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "26-27 Fact or Fiction Submission Box",
+                  "score": "50/100",
+                  "percentage": 50.0,
+                  "perfect": false
+                },
+                {
+                  "name": "Native American Exam 2026 - do not click until given permission",
+                  "score": "57/100",
+                  "percentage": 57.0,
+                  "perfect": false
                 }
               ]
             },
             "US History": {
               "full_name": "US History - 1730: HowdenK p5 T1",
-              "grade": "B+",
+              "grade": "A",
               "percentage": "",
               "term": "26-27 T1",
               "assignments": [
@@ -6358,9 +6442,9 @@
                 },
                 {
                   "name": "Practice Essay on the War of 1812",
-                  "score": "0/3",
-                  "percentage": 0.0,
-                  "perfect": false
+                  "score": "3/3",
+                  "percentage": 100.0,
+                  "perfect": true
                 },
                 {
                   "name": "Unit 1- Review MC EXAM",
@@ -6372,6 +6456,12 @@
                   "name": "PRACTICE MCE",
                   "score": "0/6",
                   "percentage": 0.0,
+                  "perfect": false
+                },
+                {
+                  "name": "Unit 1- Review SAQ",
+                  "score": "8/10",
+                  "percentage": 80.0,
                   "perfect": false
                 }
               ]
@@ -6386,7 +6476,7 @@
             "AP Physics C:Mech": {
               "full_name": "AP Physics C:Mech - 3730: NguyenT p1 T1",
               "grade": "A",
-              "percentage": "97.08%",
+              "percentage": "94.93%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -6430,6 +6520,24 @@
                   "score": "13/16",
                   "percentage": 81.2,
                   "perfect": false
+                },
+                {
+                  "name": "Atwood Machine Pre-Lab (online submission)",
+                  "score": "5/5",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Unit 1 Exam",
+                  "score": "45/50",
+                  "percentage": 90.0,
+                  "perfect": false
+                },
+                {
+                  "name": "HW Pack 2",
+                  "score": "20/20",
+                  "percentage": 100.0,
+                  "perfect": true
                 }
               ]
             },
@@ -6442,15 +6550,15 @@
             },
             "3D Sculpture and Design 1": {
               "full_name": "3D Sculpture and Design 1 - 6210: KrukC p1 T1",
-              "grade": "A-",
+              "grade": "B+",
               "percentage": "",
               "term": "26-27 T1",
               "assignments": []
             },
             "AP Statistics": {
               "full_name": "AP Statistics - 2460: BlaschkeB p6 T1",
-              "grade": "-",
-              "percentage": "93%",
+              "grade": "A",
+              "percentage": "94%",
               "term": "26-27 T1",
               "assignments": [
                 {
@@ -6512,6 +6620,36 @@
                   "score": "10/10",
                   "percentage": 100.0,
                   "perfect": true
+                },
+                {
+                  "name": "Lesson 21-24 Skills Check",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Lesson 24 Notes & HW",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Lesson 23 Notes & HW",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Lesson 22 Notes & HW",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
+                },
+                {
+                  "name": "Lesson 21 Notes & HW",
+                  "score": "10/10",
+                  "percentage": 100.0,
+                  "perfect": true
                 }
               ]
             }
@@ -6520,229 +6658,9 @@
       }
     }
   },
-  "last_updated": "2026-09-22T00:02:17.459959+00:00",
-  "email_count": 71,
+  "last_updated": "2026-09-29T00:03:45.440121+00:00",
+  "email_count": 72,
   "events": [
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "5A_B Assignment 5 Part B Book Problems",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Lang/Comp",
-      "subject": "26-27 Revolutionary Packet Annotations Submission Box - scan as one doc, see important links on how to make it one doc",
-      "grade": "100/100",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "US History",
-      "subject": "Bacon's Rebellion/Growth of Slavery In-class Groupwork",
-      "grade": "2/2",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "Back & Forth Motion Lab",
-      "grade": "25/25",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "Graph Matching Lab",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "HW Pack 1",
-      "grade": "20/20",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "Lesson 11-13 Skills Check",
-      "grade": "25/25",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "Lesson 14 Notes and HW",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "Lesson 13 Notes and HW",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "Lesson 12 Notes + HW",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "Lesson 11 Notes + HW",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-07T22:03:51+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP US History",
-      "subject": "Ch 1-3 Test",
-      "grade": "25/27",
-      "percentage": 92.6,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Physics C:Mech",
-      "subject": "CH 2 Quiz",
-      "grade": "16/16",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "7A_B - Assignment 7 Part B) p.129-130 / 3, 6, 11, 12, 16, 18, 22.",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "8A_A - Assignment 8 Part A) submit a pdf of the completed class notes.",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "7A_A - Assignment 7 Part A) Complete and submit the class notes.",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "6A_B Assignment 6 Part B) Complete the Decathlon Investigation handout – both sides",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Glenn",
-      "year": "2026-27",
-      "course": "AP Statistics",
-      "subject": "5A_B - Assignment 5 Part B) pages 75-78 / 48,50 (no reports, just write a few sentences) pages 95-100 / #7, 28, 30.",
-      "grade": "10/10",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "AP Lang/Comp",
-      "subject": "Rhetorical Device Exam (worth 2x or 3x)",
-      "grade": "100/100",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "US History",
-      "subject": "Comparing the Declaration of Independence and the Consitution",
-      "grade": "3/3",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "US History",
-      "subject": "Middle Ground Activity",
-      "grade": "3/3",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
-    {
-      "type": "grade_posted",
-      "student": "Sheldon",
-      "year": "2026-27",
-      "course": "US History",
-      "subject": "Shays' Rebellion Video Guide",
-      "grade": "1/1",
-      "percentage": 100.0,
-      "date": "2026-09-14T22:13:08+00:00"
-    },
     {
       "type": "grade_posted",
       "student": "Sheldon",
@@ -7022,9 +6940,229 @@
       "grade": "13/16",
       "percentage": 81.2,
       "date": "2026-09-21T22:07:10+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP US History",
+      "subject": "Shays' Rebellion Video Guide",
+      "grade": "2/2",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP US History",
+      "subject": "Ch 6 Reading Quiz",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP US History",
+      "subject": "In-Class Graded SAQ #1",
+      "grade": "16/20",
+      "percentage": 80.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "Atwood Machine Pre-Lab (online submission)",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "Unit 1 Exam",
+      "grade": "46/50",
+      "percentage": 92.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "HW Pack 2",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "Signed Syllabus/ Equipment Checkout form (and donation if you like!)",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "Photo and Design",
+      "subject": "Final Contact Sheet (7): Highlighting Your Understanding of Unit Concepts",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "12A_A Assignment 12 Part A) Turn in the completed class notes",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Glenn",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "11M_A Monday in class worksheet",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Lang/Comp",
+      "subject": "1st Rhetorical Analysis In-Class Essay",
+      "grade": "100/100",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Lang/Comp",
+      "subject": "26-27 Fact or Fiction Submission Box",
+      "grade": "50/100",
+      "percentage": 50.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Lang/Comp",
+      "subject": "Native American Exam 2026 - do not click until given permission",
+      "grade": "57/100",
+      "percentage": 57.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "US History",
+      "subject": "Unit 1- Review SAQ",
+      "grade": "8/10",
+      "percentage": 80.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "Atwood Machine Pre-Lab (online submission)",
+      "grade": "5/5",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "Unit 1 Exam",
+      "grade": "45/50",
+      "percentage": 90.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Physics C:Mech",
+      "subject": "HW Pack 2",
+      "grade": "20/20",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "Lesson 21-24 Skills Check",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "Lesson 24 Notes & HW",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "Lesson 23 Notes & HW",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "Lesson 22 Notes & HW",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
+    },
+    {
+      "type": "grade_posted",
+      "student": "Sheldon",
+      "year": "2026-27",
+      "course": "AP Statistics",
+      "subject": "Lesson 21 Notes & HW",
+      "grade": "10/10",
+      "percentage": 100.0,
+      "date": "2026-09-28T22:07:50+00:00"
     }
   ],
-  "week_start": "9/14/26",
-  "week_end": "9/21/26",
+  "week_start": "9/21/26",
+  "week_end": "9/28/26",
   "current_year": "2026-27"
 }

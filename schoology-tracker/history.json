@@ -610,6 +610,43 @@
           }
         }
       }
+    },
+    {
+      "date": "2026-09-29",
+      "captured_at": "2026-09-29T00:03:45.440121+00:00",
+      "grades": {
+        "Glenn": {
+          "2025-26": {
+            "AP Chinese Lng/Cul": 96.7,
+            "World Lit/Writ": 97.86,
+            "Chemistry H": 92.24,
+            "AP Calculus BC": 91.0,
+            "AP Comp Sci A": 95.22,
+            "PE 10-12": 94.67
+          },
+          "2026-27": {
+            "Amer Lit/Writ": 91.75,
+            "AP Physics C:Mech": 96.01,
+            "Photo and Design": 100.0,
+            "AP Statistics": 89.18
+          }
+        },
+        "Sheldon": {
+          "2025-26": {
+            "AP Chinese Lng/Cul": 91.42,
+            "World Lit/Writ": 85.0,
+            "Chemistry H": 82.11,
+            "Art 1": 88.74,
+            "AP Calculus BC": 88.0,
+            "AP Comp Sci A": 90.01
+          },
+          "2026-27": {
+            "AP Lang/Comp": 93.75,
+            "AP Physics C:Mech": 94.93,
+            "AP Statistics": 94.0
+          }
+        }
+      }
     }
   ]
 }
