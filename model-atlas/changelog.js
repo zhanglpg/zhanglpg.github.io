@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-28 09:35",
+  "last_run": "2026-09-29 09:31",
   "entries": [
+    {
+      "date": "2026-09-29",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Sep 28 09:35 → Sep 29 09:24: swept ~55 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 27, and trendingScore/likes7d top-40. The window's headline release is H Company's Holo4 family (blog Sep 28, weights landed Sep 24): Holo4-27B is a computer-use VLM tagged base_model:finetune of the tracked Qwen/Qwen3.8-27B (Qwen3_5ForConditionalGeneration, 64L/5120d linear+full 3:1 hybrid, cc-by-nc-4.0), Holo4-35B-A3B is a finetune of Qwen/Qwen3.6-35B-A3B (apache-2.0), and Holotron4-30B-A3B is a NemotronH-Nano-Omni finetune — agentic post-trains of existing architectures, skipped per the no-finetune rule (LensVLM-9B / Intern-S2-397B precedent). Also skipped: autotrust/JEV-27B (Sep 27 blog; Qwen3.8-27B decision-model student distilled from TypeSafe Jev outputs — distill + out-of-scope router class), manjunathshiva OpenDecider (400M Ettin-encoder / Qwen3-4B-LoRA decision models, out of scope), SIZWL/NVIDIA-Nemotron-3-Super-120B-A12B-BF16 (third-party re-upload of the March nvidia release), nvidia metadata refreshes (Kumo-Relational = TabICL finetune, Kumo-Tabular = tabular foundation model, SOMA-X = parametric human-body model, NV-Generate-CT = medical latent diffusion, AI-for-Media-Sports-Tennis = Nemotron-3-Nano-Omni any-to-any finetune — all non-LLM or finetunes), BernaLabs berna-r7 (from-scratch 0-like toy), yava-code Tessera-1B-Nano (SmolLM2-360M concept-LM), introvoyz043 BioMatrix-1.7B (Qwen3-1.7B finetune), 0xSojalSec REDCELL-26B-A4B (gemma-4 finetune), and the usual zero-like GLM-5.3/Qwen3.8-27B/Qwen-Image-2.1/LTX-2.5/MiniMax-H3 GGUF-quant-LoRA churn. naiveailab (Jifeng Dai startup) still has no HF org/models — watching. GPT-6 Astra DevDay news (Sep 29) is closed API-only, out of scope. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); North-Small-Translate-1.0 and LTX-2.5 still gated (30th run). 69 models unchanged, v29."
+    },
     {
       "date": "2026-09-28",
       "added": [],
@@ -136,15 +142,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. The only notable release since the last run was nex-agi's Nex-N2.5 family (Sep 7-8): Nex-N2.5-Max is a post-trained variant of the DeepSeek-V4-Pro architecture already in the gallery (its config.json is the identical DeepseekV4ForCausalLM spec — 61L, d7168, 384 experts top-6+1 shared, hash-routed first 3 MoE layers, CSA/HCA, 1M context), and Nex-N2.5-mini/Pro are post-trained variants of the Qwen3.5-MoE hybrid architecture already covered by Qwen3.5-397B-A17B — both skipped per the no-finetune-of-tracked-models rule. Also skipped: Ling-3.0-flash-VL fp4/fp8/int4 quants, MiniCPM5-2B-DSpark-GGUF, NVIDIA NVFP4 quants, and Qwen3.8-Flash-Next-FP8 (all of models present). Partial rechecks: deepseek-v4-flash-vision-exp README still discloses no total param count (~297B stays estimated) and LLaDA2.2-flash still has no official active-param count — both remain partial. Note: the 2026-09-09 run deployed to GitHub Pages but its source-repo commit was missed; it was committed today as 6000f0f."
-    },
-    {
-      "date": "2026-09-09",
-      "added": [
-        "ling-3-0-flash-vl",
-        "llada-image"
-      ],
-      "upgraded": [],
-      "note": "Added InclusionAI's Ling-3.0-flash-VL (Sep 4): a 124B/5.5B-active native-multimodal MoE whose 42-layer backbone alternates KDA linear attention and gated MLA 5:1 (35 KDA + 7 MLA, layer pattern verified from the safetensors weight map), 512 experts top-8 + 1 shared, clamped SwiGLU, and a Qwen3-style ViT feeding M-RoPE video positions — config + README + safetensors index verified (124.9B on disk, computed ratio 1.00). Also added LLaDA-Image (Sep 4, arXiv:2609.03796): a 6B single-stream flow-matching DiT conditioned by a FROZEN LLaDA2.0-Mini masked-diffusion VLM through a residual-query adapter + 6-layer connector — the gallery's first image generator with a diffusion-LLM text encoder, and open-source SOTA on Qwen-Image-Bench (53.53 EN / 53.38 ZH); DiT config + weights verified (6.54B on disk). Considered and skipped: openbmb/MiniCPM5-2B (2.5B dense Llama-arch on-device model, no architectural novelty — 2nd run), tencent/EVIE-8B/4.5B (Colbert retrieval heads on a Qwen3.5 base — niche, 2nd run), inclusionAI/Ling-3.0-flash-VL-fp8 (quant of a tracked-family model), IFM K2-Horizon-32B (still Stage-1, final checkpoint unreleased), Lightricks LTX-2.5 (config still gated HTTP 401 — 11th run), BAAI ConsiSpace (Qwen2.5-VL-3B + VGGT geometry head — derivative, small). Partial rechecks: deepseek-v4-flash-vision-exp README still discloses no total param count and llada2-2-flash still has no official active count — both stay partial."
     }
   ]
 };
