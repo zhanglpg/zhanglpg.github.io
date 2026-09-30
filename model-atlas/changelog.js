@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-09-29 09:31",
+  "last_run": "2026-09-30 09:30",
   "entries": [
+    {
+      "date": "2026-09-30",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Sep 29 09:31 → Sep 30 09:23: swept ~50 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 28 23:00, and trendingScore/likes7d top-40. Everything found was a finetune/quant of tracked models or out of scope: BAAI/AREX-2 (Sep 29; base_model:finetune of Qwen/Qwen3.8-27B deep-research agent — no-finetune rule, Holo4/JEV-27B precedent), freelawproject/surya-ocr-2 + dots.mocr (Sep 29; OCR doc-parsing models, surya-ocr-2 tagged qwen3_5 finetune — same skip as TeleOCR), internlm/AdvancedMathBench-AutoVerifier (Sep 29; qwen3_5_moe math proof-verifier finetune), inclusionAI/Ming-flash-omni-2.0 (mod Sep 29 was README + TDS-summary-PDF upload only; Feb release unchanged), nvidia/cbottle (Sep 29 mod; FourCastNet-style weather diffusion, non-LLM), nvidia/GLM-5.3-Flash-NVFP4 + SOMA-X + AI-for-Media-Sports-Tennis metadata refreshes, Efficient-Large-Model/LongLive-Plug-* (Wan/MiniMax-H3 long-video plugins, not standalone models), IFM/K2-Horizon family (Sep 28 mods only; tracked), and the usual GLM-5.3/Qwen3.8-27B/Qwen-Image-2.1/MiMo-V2.6-MOPD/Holo4 GGUF-NVFP4-MLX-LoRA quant churn (bartowski/AxionML/DavidAU/ISTA-DASLab/unsloth etc). naiveailab org still 401/empty — watching for the Jifeng Dai first release. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still HTTP 401 gated (31st run). 69 models unchanged, v29."
+    },
     {
       "date": "2026-09-29",
       "added": [],
@@ -136,12 +142,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added DeepSeek-V4.1-Flash (Sep 10): a 552B-backbone/16B-decode-active native-multimodal MoE and the gallery's first Causal Encoder-Decoder — 20 causal encoder + 20 decoder layers whose global KV is projected from the final encoder hidden state, activating only 8B params during prefill and 16B during decode. It replaces V4's CSA/HCA hybrid with pure CSA2: every layer runs a 128-token SWA while the global branch is statically split into Full (4 layers: own main KV + indexer, Top-512), Reindex (4: shared KV, fresh indices, 2048-block candidate pool) and Reuse (30: shared KV + indices) modes — and FP4 (E2M1) main KV caching shrinks the global cache to 890 B/token (¼ of V4-Flash) with SWA Bounded Replay cutting persistent KV to ⅛. Also adds 196B Engram conditional memory (763B on disk incl. vision + 3 DSpark drafters), Single-Pass mHC, and DSpark speculative decoding — config.json + tech report + 510 GB weights verified. Considered and skipped: Lightricks LTX-2.5 LoRAs (base model still config-gated — 12th run), BAAI AIDD (no pipeline tag), NVIDIA DeepSeek-V4-Pro-0813-NVFP4-DSpark and MiniCPM5-2B-DSpark-GGUF (quants of tracked models), XHToken/Spark-X2.5-4B (4B dense, minor org), Nex-N2.5-Pro (weights still unreleased). Partial rechecks: deepseek-v4-flash-vision-exp and llada2-2-flash disclosures unchanged — both stay partial."
-    },
-    {
-      "date": "2026-09-10",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. The only notable release since the last run was nex-agi's Nex-N2.5 family (Sep 7-8): Nex-N2.5-Max is a post-trained variant of the DeepSeek-V4-Pro architecture already in the gallery (its config.json is the identical DeepseekV4ForCausalLM spec — 61L, d7168, 384 experts top-6+1 shared, hash-routed first 3 MoE layers, CSA/HCA, 1M context), and Nex-N2.5-mini/Pro are post-trained variants of the Qwen3.5-MoE hybrid architecture already covered by Qwen3.5-397B-A17B — both skipped per the no-finetune-of-tracked-models rule. Also skipped: Ling-3.0-flash-VL fp4/fp8/int4 quants, MiniCPM5-2B-DSpark-GGUF, NVIDIA NVFP4 quants, and Qwen3.8-Flash-Next-FP8 (all of models present). Partial rechecks: deepseek-v4-flash-vision-exp README still discloses no total param count (~297B stays estimated) and LLaDA2.2-flash still has no official active-param count — both remain partial. Note: the 2026-09-09 run deployed to GitHub Pages but its source-repo commit was missed; it was committed today as 6000f0f."
     }
   ]
 };
