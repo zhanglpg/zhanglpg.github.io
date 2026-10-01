@@ -2661,6 +2661,68 @@ window.MODELS = [
 "dense_first_layers": 1
 },
 {
+"id": "naive-n0-5-flash",
+"name": "Naive-N0.5-Flash",
+"org": "NaiveAI",
+"family": "Naive",
+"released": "2026-09",
+"license": "MIT",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 309,
+"params_active_B": 15.5,
+"n_layers": 48,
+"d_model": 4096,
+"d_ff": 16384,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 4,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "No full-attention layers anywhere: 39 SWA layers (128-token window, 64 Q heads / 8 KV heads, head_dim 192, v_dim 128, learned attention-sink bias, rope_theta 10k) interleaved with 9 lightweight-DSA layers (DeepSeek Sparse Attention re-implemented with GQA4 instead of MLA: 64 Q / 4 KV heads, rope_theta 10M, no sink bias) in eight 6-layer modules — each module is 5 SWA + 1 DSA, and layer 0 is also DSA (DSA at 0, 5, 11, 17, 23, 29, 35, 41, 47). Each DSA layer carries a lightweight indexer (16 query heads x 128-dim, 1 KV head, ReLU-scored, fp8-e4m3 activations, per-head learned weight projection) that scans the full history and selects the top 2,048 tokens for backbone attention; the full KV cache is retained. Both attention types use partial RoPE (0.334 of head dims) and attention_value_scale 0.707.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 152576,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "First open-weight release from NaiveAI (the AI-centered-R&D lab previously watched as 'naiveailab'): a 309B/15.5B coding + AI-R&D MoE trained on top of Xiaomi's open MiMo-V2.5 base with 3.25T tokens of continued multi-stage training (50B indexer warmup, 3T sparse-attention training, 200B LR decay) to adapt the backbone from global attention to DeepSeek Sparse Attention. DeepSeek-V3-style routed experts (256 experts, sigmoid scoring, noaux_tc, top-8 normalized, no shared expert); only layer 0 is dense (d_ff 16384). Native 1M context with zero full-attention layers — per-token decode cost stays flat because everything is local (SWA w128) or sparse (DSA top-2048). MIT license; also shipped as FP8 (weights ~315 GB) plus an FP8 draft model for the NaiveRT speculative-decoding stack (up to 2,000 tok/s ultrafast).",
+"sources": [
+"https://naive.ai/en/research/",
+"https://huggingface.co/NaiveAI/Naive-N0.5-Flash",
+"https://huggingface.co/NaiveAI/Naive-N0.5-Flash/raw/main/config.json",
+"https://huggingface.co/NaiveAI/Naive-N0.5-Flash/raw/main/modeling_naive_n05_flash.py"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 39,
+"type": "sliding",
+"sub": "window 128"
+},
+{
+"name": "DSA",
+"n": 9,
+"type": "sparse",
+"sub": "indexer top-2048"
+}
+],
+"pattern": "dssssdsssssdsssssdsssssdsssssdsssssdsssssdsssssd",
+"pattern_map": {
+"s": "sliding",
+"d": "sparse"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
