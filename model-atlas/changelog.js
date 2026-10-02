@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-01 09:52",
+  "last_run": "2026-10-02 09:47",
   "entries": [
+    {
+      "date": "2026-10-02",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Oct 1 09:23 → Oct 2 09:23 CST: swept ~55 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text, text-to-audio, any-to-any) since Oct 1, and trendingScore/likes7d top-40, plus web search for Oct 1–2 announcements. The window's headline release was Cloudflare's first open models, Clef + Clef-Flash (336/107 likes, Oct 1 blog): multimodal decision models post-trained from tracked Qwen3.8-27B / Qwen3.5-9B (base_model:finetune tags) that return one logit per schema option via a joint-schema head with no free-form text generation — skipped per the no-finetune rule and the established decision-router/classifier class skip (laya, Julia-1, Jev-Omni, JEV-27B, OpenDecider precedents). nvidia/PixelUMM (Oct 1, silent research drop, 5 likes): 15.2B unified multimodal on a Qwen3-8B backbone (base_model:finetune tag), restrictive 'other' license, no NVIDIA announcement — skipped per no-finetune rule (LensVLM-9B precedent); watching in case NVIDIA officially launches it. FINAL-Bench/Darwin-180B-RSI (98 likes, Sep 28; R3 finetune + GGUF quant Oct 1–2): RSI self-improvement post-train of tracked Qwen3.8-Flash-Next — README lineage table is explicit ('Parent: Qwen/Qwen3.8-Flash-Next'; 512 routed experts, router and vision encoder preserved untouched; config is the same qwen4_exp 3:1 linear/full hybrid) — skipped per no-finetune rule. Also skipped: metaresearch/Muse-Glimmer-30B (0-like third-party re-upload of tracked meta-models model — not primary), Synin/Synin-1.0-Omni-Inquisitive (README is a verbatim Qwen3-Omni copy — re-upload/finetune), gowdavidwan2003/ARACHNE-FOUNDATION-50B (0-like experimental 'NULLXES' video DiT, no official backing, marketing-heavy card), nvidia/PixelDiT2-ImageNet (ImageNet class-conditional DiT research artifact, no model card), eulogik/nirnay-450m (450M decision classifier — out-of-scope class), PSRben/VisionHOPE (image classification), FermionResearch/Phonon-2 (parakeet-tdt-0.6b MLX quant — ASR + quant), abdur-rahman97/Dahono-4B (Qwen3.5-4B-Base legal finetune), deepseek-ai/DeepSeek-V4.1-Flash Oct 1 'Adding chat template' commit (tracked, no spec change), IFM K2-Horizon family + black-forest-labs/flux-3-action-base ('Add root config.json manifest') + BAAI/AREX-2 metadata-only touches, Lightricks LTX-2.5-IC-LoRA (LoRA of gated tracked model), OsGo gemma-4 QAT variants, MiniMax-Music3/ACE-Step-1.5 mirrors, MiniMax-H3 ComfyUI workflow churn, allenai Olmo-core 3 (training infrastructure, not a model), Gemini 4 Argon (closed API). Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still HTTP 401 gated (33rd run). 70 models, v30 unchanged."
+    },
     {
       "date": "2026-10-01",
       "added": [
@@ -136,12 +142,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Scanned HF newest-models across text-generation, image-text-to-text, text-to-image and text-to-video since Sep 11, plus 16 major orgs (moonshotai, google, Qwen, deepseek-ai, THUDM, MiniMaxAI, zai-org, OpenBMB, inclusionAI, BAAI, Lightricks, CohereLabs, unsloth, meta-llama, stabilityai, mistralai): everything new was a quant/merge/finetune of tracked models (DeepSeek-V4.1-Flash GGUF/FP8/MLX wave, Qwen3.8-27B quants incl. abliterated GGUFs, MiniMax-H3 video derivatives, SD/Wan/Z-Image re-uploads). AlayaLab/Evoke-Turbo (Sep 11) is a controllability distill of the small Aug EVOKE world-model (26 likes) — not frontier, low traction, skipped; xagent2025/VelaVec-T2I is a 9.8M-param retrieval encoder, not a generator; BAAI/AIDD is a resource index, not a model. CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 both still gated HTTP 401 (LTX-2.5 — 14th run) so unverifiable from primary sources. Partial rechecks: llada2-2-flash README still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial (56/58 verified)."
-    },
-    {
-      "date": "2026-09-12",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Scanned HF newest-1000 across text-generation, image-text-to-text, and image/video-gen filters since Sep 10: everything notable was a quant, merge, or finetune of tracked models (DeepSeek-V4.1-Flash GGUF/MLX/EXL3/NVFP4 wave, Boulesis-26B-A4B = Gemma-4 RP merge). nex-agi/Nex-N2.5-Pro weights went live (123 shards, Sep 11) but its config.json is Qwen3_5MoeForConditionalGeneration — a post-trained variant of the tracked Qwen3.5-397B-A17B architecture, skipped per the no-finetune rule. CohereLabs/North-Small-Translate-1.0 (218B/25B MoE translation model, announced Sep 10) is auto-gated — config.json and README both HTTP 401, so it cannot be verified from primary sources; revisit once ungated. thesysdev/OUI-1 (26B diffusion-Gemma generative-UI model, Sep 7) is a LoRA/adapter finetune of google/diffusiongemma-26B-A4B-it (June release, previously assessed) — skipped. Partial rechecks: deepseek-v4-flash-vision-exp README still discloses no total param count (~297B stays estimated) and llada2-2-flash still has no official active-param count — both remain partial."
     }
   ]
 };
