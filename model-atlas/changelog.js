@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-03 09:35",
+  "last_run": "2026-10-04 09:54",
   "entries": [
+    {
+      "date": "2026-10-04",
+      "added": [
+        "kolibri-1"
+      ],
+      "upgraded": [],
+      "note": "Added Aleph Alpha Kolibri 1 (78.1B/3.46B, Apache-2.0, verified): the first frontier-scale sovereign-EU open-weight release — trained end-to-end in Germany/Finland on 24T tokens with a public 189-page tech report. Architecturally notable on three axes: (1) the most aggressive sparse-MoE shape in the atlas — 384 very narrow routed experts (d_ff 512) with only 6 firing per token plus 1 shared, i.e. 4.4% activation and zero leading dense layers; (2) a strict 4:1 sliding/full attention interleave (40 SWA @ window 512 + 10 full) where RoPE is applied ONLY in the sliding layers and the full-attention layers carry NO positional encoding, which lets the 262K native context extend to 1M with no position scaling; (3) sandwich normalisation (RMSNorm before and after both sublayers) and a sigmoid router without top-k renormalisation, load-balanced by Exact Quantile Balancing. Param math reproduces the official 78,103,074,560 total to within 2,560 params. The HF release is FP8 (128×128 blocks) with embeddings/LM head/norms/routers kept in BF16; the BF16 twin carries an identical config. Discovery note: the repo was created Oct 2 as a placeholder and the weights + blog landed Oct 3, so a createdAt-in-window sweep would have missed it — caught via the likes7d trending sweep. Skipped this window: IFM K2-Horizon FP8/NVFP4 quant refreshes, allenai/AstaBrief_8B (Qwen3 DPO finetune), Cloudflare Clef + laya (decision-router class, unchanged), and the usual zero-like GGUF/LoRA churn."
+    },
     {
       "date": "2026-10-03",
       "added": [],
@@ -133,15 +141,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Two Shanghai AI Lab releases since Sep 13 were both post-trained variants of tracked architectures: internlm/Intern-S2-397B (40 likes) is Qwen3_5MoeForConditionalGeneration — the identical 60L/d4096/512-expert-top-10 Gated-DeltaNet 3:1 hybrid spec as the tracked Qwen3.5-397B-A17B — and internlm/Atria-Dawn-Preview (57 likes, agentic research model) is GlmMoeDsaForCausalLM with the exact GLM-5.2 config (78L/d6144/256 experts, MLA+DSA with 21-of-78 IndexShare layers), its README stating it is built on the 744B GLM-5.2 foundation — both skipped per the no-finetune-of-tracked-models rule (consistent with the Nex-N2.5 decisions). Also skipped: tencent/Simple-Attention-Sparsification (research attention-gate weights for Qwen3-4B/14B, arXiv 2609.13141), OPENGCM/GTM-3-base (75M single-GPU nanoGPT toy), zeromodels SD/SDXL re-uploads, and the DeepSeek-V4.1-Flash / Qwen3.8 / GLM-5.3 quant wave (soyrsoyr NVFP4/MXFP4/FP8 validation builds, MLX, GGUF, thoughtworks backdoor research checkpoints). Partial rechecks: llada2-2-flash README still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1, ~297B stays estimated) — both remain partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 still gated HTTP 401 (16th run). 60 models unchanged."
-    },
-    {
-      "date": "2026-09-14",
-      "added": [
-        "agnes-3-0-flash",
-        "aliceai-t5-35b-a0-6b"
-      ],
-      "upgraded": [],
-      "note": "Added Agnes-3.0-Flash Preview (Sep 11, Agnes AI): a 33B dense multimodal hybrid-attention decoder in the gated-delta-net lineage — 54 delta-rule recurrent layers (16k/48v heads, conv k4, fp32 state) alternating 3:1 with 18 GQA global-attention layers (24q/4kv, d_h 256), so only 18 of 72 layers hold a growing KV cache; 262K context, parallel SwiGLU 2048 branch in every layer, 27L/1152d ViT, Apache-2.0, verified against config.json + README + 19-shard bf16 weights (66.2 GB). New 3:1 delta/global split diagram with a 72-tick layer strip. Also added Yandex AliceAI-T5-35B-A0.6B (Sep 10): a UL2-style encoder-decoder (16L encoder + 12L decoder, d1536) whose FFNs in all 28 layers are dMoE blocks with 512 tiny SwiGLU experts (d_ff 512) top-8 via a learned sigmoid router with L1-normalized weights and aux-loss-free bias updates — 34.35B unique but only ~0.6B active per token; 128K context via YaRN, tied shared embeddings, Apache-2.0, verified against config.json + README + 15-shard weights. Considered and skipped: Edge0-35B-A3B-preview (4-bit MLX quant of Qwen3.5-35B-A3B), NeoHorse-1-4B (Qwen3.5-4B finetune), Lotus-1 (Qwen3.5-35B-A3B RP finetune), Odette-26B-A4B (Gemma-4 merge), FlyGPT (fruit-fly-connectome toy), GeoCore-9B (domain DiT re-upload), the PYTHAI fork wave and the usual DeepSeek/Qwen/MiniMax-H3 quant wave. Partial rechecks: llada2-2-flash and deepseek-v4-flash-vision-exp disclosures unchanged — both stay partial (58/60 verified)."
     }
   ]
 };

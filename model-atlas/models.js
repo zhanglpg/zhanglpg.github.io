@@ -2723,6 +2723,67 @@ window.MODELS = [
 }
 },
 {
+"id": "kolibri-1",
+"name": "Kolibri 1",
+"org": "Aleph Alpha",
+"family": "Kolibri",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 78.1,
+"params_active_B": 3.46,
+"n_layers": 50,
+"d_model": 2560,
+"d_ff": null,
+"d_ff_moe": 512,
+"n_heads": 48,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "50 GQA layers (48 query heads / 4 KV heads, head_dim 128 — attention width 6144 > d_model 2560) in a strict 4:1 sliding-to-full interleave: every fifth layer (5, 10, … 50) is full-context attention and the other 40 are sliding-window over the 512 preceding tokens plus the query token. Unusually, RoPE is applied ONLY in the sliding-window layers; the 10 full-attention layers use NO positional encoding at all — positional information enters the stream locally, and because no layer ever rescales positions the context extends past the 262,144 training length to 1,048,576 with no RoPE-scaling trick. Queries and keys are RMS-normalised per head before RoPE. Sandwich normalisation (RMSNorm before AND after both the attention and the MoE sublayer, 4 RMSNorms per block).",
+"n_experts": 384,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 128000,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Aleph Alpha's sovereign open-weight reasoning model — the first frontier-scale, from-scratch German/English release trained entirely in the EU (Germany + Finland, 768 B200s, 24T tokens), published under Apache 2.0 with a public tech report. Architecturally the most aggressive sparse-MoE shape in the atlas: 384 very narrow routed experts (d_ff just 512) of which only 6 fire per token, plus 1 always-on shared expert, giving 3.46B active of 78.1B total — 4.4% activation, the lowest ratio among comparable models. Zero leading dense layers (unlike most MoE releases). Router uses sigmoid scores without top-k renormalisation, with Exact Quantile Balancing + Load-Error Injection for load balance; trained with Muon. Hybrid 4:1 sliding/full attention with positional encoding only in the sliding layers, so 262K native context extends to 1M with no position scaling. Custom UniBPE 128K tokenizer (BPE merges selected by Unigram loss) reaches 4.90 bytes/token on German — best German compression of the twelve tokenizers benchmarked — and 4.58 on English, beating GPT-5's 4.67. HF release Aleph-Alpha/Kolibri-1 is FP8 (float8_e4m3fn in 128×128 blocks, dynamically quantised activations, FP8 KV cache; embeddings, LM head, norms and the 50 MoE routers kept in bfloat16); Aleph-Alpha/Kolibri-1-BF16 carries the identical config in full precision. Successor to the unreleased 30.6B-A3.27B Kolibri Origin (50 full-attention layers, 128 experts top-8, 2 leading dense layers).",
+"sources": [
+"https://aleph-alpha.com/downloads/tech-report.pdf",
+"https://aleph-alpha.com/en/blog/kolibri-has-landed-a-sovereign-open-weight-model/",
+"https://huggingface.co/Aleph-Alpha/Kolibri-1",
+"https://huggingface.co/Aleph-Alpha/Kolibri-1-BF16/raw/main/config.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 40,
+"type": "sliding",
+"sub": "win 512 · RoPE"
+},
+{
+"name": "Full NoPE",
+"n": 10,
+"type": "global",
+"sub": "no pos enc"
+}
+],
+"pattern": "ssssgssssgssssgssssgssssgssssgssssgssssgssssgssssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
