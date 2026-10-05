@@ -1946,7 +1946,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-10T09:30:24+00:00",
-      "last_event": "2026-09-25T02:01:00+00:00",
+      "last_event": "2026-10-04T13:44:31+00:00",
       "events": [
         {
           "type": "updated",
@@ -2052,13 +2052,18 @@
           "type": "comment",
           "date": "2026-09-25T02:01:00+00:00",
           "subject": "[ATC '26] Comment for #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-04T13:44:31+00:00",
+          "subject": "[ATC '26] Comment for #843 \"Chorus: GPU–CPU Cooperative LLM Serving...\""
         }
       ],
       "counts": {
         "updates": 14,
-        "comments": 2,
+        "comments": 3,
         "reviews": 0,
-        "total": 21
+        "total": 22
       },
       "message_ids": [
         "<20260610093024.0F4FE91608B@mail.hotcrp.com>",
@@ -2081,7 +2086,8 @@
         "<20260903111456.A861D920EA7@mail.hotcrp.com>",
         "<20260919052320.26113C0154F@mail.hotcrp.com>",
         "<20260924154635.4A626841A69@mail.hotcrp.com>",
-        "<20260925020100.0C056842BC8@mail.hotcrp.com>"
+        "<20260925020100.0C056842BC8@mail.hotcrp.com>",
+        "<20261004134431.5A1B484539F@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4753,7 +4759,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-10-02T10:05:41+00:00"
+      "last_event": "2026-10-04T13:44:31+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -5034,6 +5040,6 @@
       "date": "2026-09-30T06:38:26+00:00"
     }
   ],
-  "last_updated": "2026-10-04T04:02:31.225731+00:00",
-  "email_count": 589
+  "last_updated": "2026-10-05T00:01:36.043384+00:00",
+  "email_count": 590
 }
