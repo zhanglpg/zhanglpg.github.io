@@ -2784,6 +2784,68 @@ window.MODELS = [
 }
 },
 {
+"id": "iquest-q1",
+"name": "IQuest-Q1",
+"org": "IQuest",
+"family": "IQuest",
+"released": "2026-09",
+"license": "iquest-q1 (Modified MIT)",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 320.3,
+"params_active_B": 15,
+"n_layers": 88,
+"d_model": 3072,
+"d_ff": 12288,
+"d_ff_moe": 1536,
+"n_heads": 48,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "88 GQA layers (48 query heads / 8 KV heads, head_dim 128) in a repeating 1 full-attention + 3 sliding-window block: layer 0 full, then 21 blocks of [full, SWA, SWA, SWA], then 3 trailing full layers — 25 full + 63 sliding total (derived from config first_layers_types + hybrid_layers_types_block×21 + last_layers_types). Sliding window 4096. Partial RoPE on only 32 of 128 head dims, with separate thetas: rope_theta 1,000,000 for full-attention layers and swa_rope_theta 10,000 for sliding layers. Sink attention enabled and fused (per-layer learned sink_k token). Q and K are RMS-normalised per head (q_norm/k_norm). Layer 0 has full attention with a dense FFN (mlp_only_layers); all 88 layers carry attention. Sandwich normalisation: 4 RMSNorms per block (attention_norm, attn_out_norm, feed_forward_norm, ffn_out_norm), plus scaled attention/FFN sublayer outputs (ffn_out_scale 0.539). A separate MTP module (mtp/, IQuestQ1MTP) ships for speculative decoding: 2 independent MTP layers in training, 1 recursive ×8 at inference with a 512-token sliding window and 7 draft slots.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 160000,
+"context_length": 524288,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "IQuest Lab's agentic-coding flagship — a 320.3B/15B sparse MoE built for CLI agent harnesses (Claude Code / Codex CLI integration with custom tool-call and reasoning parsers), benchmarked against DeepSeek-V4-Flash/Pro on agentic coding, Terminal-Bench 2.1, CyberGym and Humanity's Last Exam. Post-training uses multi-harness RL (one policy trained across several agent harnesses, failures attributed before optimisation) consolidated via multi-teacher on-policy distillation (MOPD) plus stabilised model merging of four RL expert branches. Experts are stored fused (single experts.fc / experts.proj tensors per layer) and routed 8-of-256 with an fp32 router; layer 0 is a dense SwiGLU layer (d_ff 12288). 512K native context from partial 32-dim RoPE with the 3:1 SWA(4096)/full interleave and fused sink attention. Lineage: same lab as IQuest-Coder-V1 (7B/14B/40B/40B-Loop). License is Modified MIT — free use with a UI attribution clause requiring products to display 'IQuest-Q1'. No tech report PDF as of this release; specs from the official model card, GitHub page and raw config.json (HF safetensors metadata reports 320,318,615,552 BF16 params, matching the claimed 320B).",
+"sources": [
+"https://iquestlab.github.io/",
+"https://github.com/IQuestLab/IQuest-Q1",
+"https://huggingface.co/IQuestLab/IQuest-Q1",
+"https://huggingface.co/IQuestLab/IQuest-Q1/raw/main/config.json"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 63,
+"type": "sliding",
+"sub": "win 4096"
+},
+{
+"name": "Full",
+"n": 25,
+"type": "global",
+"sub": "partial RoPE"
+}
+],
+"pattern": "ggsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssggg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
