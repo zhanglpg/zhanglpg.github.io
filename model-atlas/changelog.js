@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-04 09:54",
+  "last_run": "2026-10-05 09:40",
   "entries": [
+    {
+      "date": "2026-10-05",
+      "added": [
+        "iquest-q1"
+      ],
+      "upgraded": [],
+      "note": "Added IQuest-Q1 (320.3B/15B sparse MoE, Modified MIT, verified): an agentic-CLI foundation model benchmarked against DeepSeek-V4 on Terminal-Bench/CyberGym/HLE, with 88 layers in a 25-full + 63-sliding-window (4096) hybrid attention pattern, partial 32-dim RoPE with dual thetas, fused sink attention, a dense layer-0 FFN, 256 experts top-8 (fused tensors), sandwich RMSNorm, and a separate recursive-×8 MTP module for speculative decoding. Considered and skipped: Cloudflare Clef (Qwen3.8-27B decision-model finetune, no-finetune rule), BFL FLUX 3 Image (launched Oct 2 but open weights not shipped — commercial license only for now), google/DiarizationLM-Gemma-4-E4B-v1 (speaker-diarization task model, out of scope)."
+    },
     {
       "date": "2026-10-04",
       "added": [
@@ -135,12 +143,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Scanned HF newest-models (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video; createdAt ≥ Sep 14), ~40 org sweeps, trendingScore top-40, and web search. Everything new was a derivative or re-upload of tracked/previously-assessed models: Accio-Lab/occamy-1.0 (81 likes, the 'Alibaba co-work agent' in Sep 15 press) is an agentic post-train of Qwen3.6-35B-A3B per its own README (base_model tag) — skipped per the no-finetune rule; cloudyu/GLM-5.3-SLIM-E192 is an expert-pruned FP8 cut of GLM-5.3 (itself config-identical to tracked GLM-5.2); Cyclone-Labs/Solar-Griffin-26B-A4B is a mergekit merge of Gemma-4 finetunes; aoiandroid/LFM2.5-2.6B re-uploads the August LiquidAI release (pre-window); the inclusionAI *-singprobe wave (Sep 14) are eval probes of 15 tracked models; qikuanz/Spark-X2.5-4B and Sonorix/pulsar-v0.7 are a GGUF of an already-skipped 4B and a Qwen2.5-0.5B LoRA; nvidia foundationpose/c-foundationstereo are 3D pose/stereo models, out of atlas scope; the rest was the usual Qwen3.8/GLM-5.3/DeepSeek-V4.1 quant + SDXL/Wan/LTX LoRA churn. Web search surfaced only closed-weight items (Salesforce Koa pilot, TypeSafe Jev early-access). Partial rechecks: llada2-2-flash README still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 still gated HTTP 401 (17th run). 60 models unchanged."
-    },
-    {
-      "date": "2026-09-15",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Two Shanghai AI Lab releases since Sep 13 were both post-trained variants of tracked architectures: internlm/Intern-S2-397B (40 likes) is Qwen3_5MoeForConditionalGeneration — the identical 60L/d4096/512-expert-top-10 Gated-DeltaNet 3:1 hybrid spec as the tracked Qwen3.5-397B-A17B — and internlm/Atria-Dawn-Preview (57 likes, agentic research model) is GlmMoeDsaForCausalLM with the exact GLM-5.2 config (78L/d6144/256 experts, MLA+DSA with 21-of-78 IndexShare layers), its README stating it is built on the 744B GLM-5.2 foundation — both skipped per the no-finetune-of-tracked-models rule (consistent with the Nex-N2.5 decisions). Also skipped: tencent/Simple-Attention-Sparsification (research attention-gate weights for Qwen3-4B/14B, arXiv 2609.13141), OPENGCM/GTM-3-base (75M single-GPU nanoGPT toy), zeromodels SD/SDXL re-uploads, and the DeepSeek-V4.1-Flash / Qwen3.8 / GLM-5.3 quant wave (soyrsoyr NVFP4/MXFP4/FP8 validation builds, MLX, GGUF, thoughtworks backdoor research checkpoints). Partial rechecks: llada2-2-flash README still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1, ~297B stays estimated) — both remain partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 still gated HTTP 401 (16th run). 60 models unchanged."
     }
   ]
 };
