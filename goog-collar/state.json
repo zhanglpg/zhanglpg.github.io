@@ -1,11 +1,21 @@
 {
  "lastQuoteDate": "2026-10-02",
- "prevSpot": 344.225,
+ "prevSpot": 343.725,
  "buildDate": "2026-09-18",
  "earnings": "2026-10-28",
  "earningsNote": "\u5468\u4e09\u76d8\u540e\uff08\u672a\u7ecf\u516c\u53f8\u786e\u8ba4\uff0c\u534e\u5c14\u8857\u9884\u671f\u53e3\u5f84\uff09",
  "divYield": 0.25,
  "divQ": 0.22,
+ "mode": "maintenance",
+ "live": {
+  "expiry": "2027-01-15",
+  "put": 305,
+  "call": 410,
+  "contracts": 58,
+  "entryDate": "2026-10-05",
+  "entrySpot": null,
+  "entry_credit": null
+ },
  "structure": {
   "expiry": "2027-01-15",
   "put": 300.0,

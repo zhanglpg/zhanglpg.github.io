@@ -92,7 +92,7 @@
 <body>
 
 <nav class="nav"><div class="wrap">
-  <a href="#pos">持仓</a><a href="#timing">① 时机</a><a href="#build">② 构建</a><a href="#alts">③ 备选</a><a href="#pnl">④ 损益</a><a href="#maint">⑤ 维持</a><a href="#risk">⑥ 风险</a>
+  <a href="#pos">持仓</a><a href="#live">★实盘</a><a href="#timing">① 时机</a><a href="#build">② 构建</a><a href="#alts">③ 备选</a><a href="#pnl">④ 损益</a><a href="#maint">⑤ 维持</a><a href="#risk">⑥ 风险</a>
 </div></nav>
 
 <div class="wrap">
@@ -444,6 +444,44 @@ function App(){
     </div>
   </section>
 
+  {/* ============ LIVE POSITION ============ */}
+  {DATA.live && (
+  <section id="live">
+    <h2><span className="n">★</span>实盘持仓跟踪（维护模式）</h2>
+    <p className="sec-desc">以下为已建仓的实际 collar，每日随行情按 mid 价盯市。下方②③章的结构评估仍基于理论推荐（A–E），实盘维护以本节为准。</p>
+    <div className="card reveal">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10,marginBottom:14}}>
+        <div style={{fontSize:17,fontWeight:700}}>
+          {DATA.live.expiry} · <span className="green">买 {DATA.live.put} Put</span> / <span className="orange">卖 {DATA.live.call} Call</span> × {DATA.live.contracts}
+          <span className={"pill " + (DATA.live.status==='HOLD'?'ok':'warn')} style={{marginLeft:10}}>
+            {DATA.live.status==='HOLD'?'✓ 持有 · 无需操作':DATA.live.status==='NEAR_CAP'?'⚠ 接近Cap':DATA.live.status==='CALL_ITM'?'⚠ Call实值':DATA.live.status==='NEAR_FLOOR'?'⚠ 接近Floor':'⚠ Put实值'}
+          </span>
+        </div>
+        <div className="dim" style={{fontSize:13}}>剩余 {DATA.live.dte} DTE · 建仓 {DATA.live.entryDate||'—'}</div>
+      </div>
+      <div className="grid g4">
+        <Stat lab="Put 现值 (mid)" big={<span className="green">${DATA.live.putMid.toFixed(2)}</span>} note={`Δ ${DATA.live.putDelta.toFixed(2)} · IV ${DATA.live.putIV}% · 持仓价值 ${fmt$(DATA.live.putValue)}`}/>
+        <Stat lab="Call 现值 (mid)" big={<span className="orange">${DATA.live.callMid.toFixed(2)}</span>} note={`Δ +${DATA.live.callDelta.toFixed(2)} · IV ${DATA.live.callIV}% · 负债 ${fmt$(DATA.live.callValue)}`}/>
+        <Stat lab="净 Delta" big={<span className="blue">{DATA.live.netDelta.toFixed(2)}</span>} note={`等效持股 ${Math.round(DATA.live.netDelta*DATA.live.shares).toLocaleString()}股（裸持1.00）`}/>
+        <Stat lab="平掉两腿成本" big={<span className={DATA.live.openCost<=0?'green':'red'}>{fmt1(DATA.live.openCost)}/股</span>} note={DATA.live.mtmPnl!=null?`期权腿盯市盈亏 ${fmt$(DATA.live.mtmPnl)}`:`合计 ${fmt$(DATA.live.openCost*DATA.live.shares)}（建仓净贷记待补录）`}/>
+      </div>
+      <div className="grid g4" style={{marginTop:14}}>
+        <div className="stat"><div className="lab">Roll Up 触发线</div><div className="big gold">${DATA.live.upTrigger}</div><div className="note">cap-3% · 现价距 {DATA.live.distUp>0?'+':''}{DATA.live.distUp}%</div></div>
+        <div className="stat"><div className="lab">Roll Down 检查线</div><div className="big gold">${DATA.live.downTrigger}</div><div className="note">floor+3% · 现价距 {DATA.live.distDown>0?'-':''}{DATA.live.distDown}%</div></div>
+        <div className="stat"><div className="lab">滚动窗口开启</div><div className="big orange">{DATA.live.rollStart}</div><div className="note">剩余30 DTE时启动评估</div></div>
+        <div className="stat"><div className="lab">财报（窗口内）</div><div className="big gold">{DATA.snapshot.earnings}</div><div className="note">财报日规则：不操作</div></div>
+      </div>
+      <div className="callout green" style={{marginTop:14}}>
+        <b>当前状态解读：</b>{
+          DATA.live.status==='HOLD'
+            ? `股价 $${DATA.position.spot} 位于 ${DATA.live.put}–${DATA.live.call} 区间中段，两条触发线均未接近（上距 +${DATA.live.distUp}%，下距 -${DATA.live.distDown}%）。保护完好、无需任何操作，下一个日历节点是 ${DATA.snapshot.earnings} 财报（规则：不操作，次日复盘）。`
+            : `股价已接近/越过触发区域（status: ${DATA.live.status}），请按第⑤章事件响应规则处理。`
+        }
+      </div>
+    </div>
+  </section>
+  )}
+
   {/* ============ TIMING ============ */}
   <section id="timing">
     <h2><span className="n">01</span>最佳构建时机</h2>
@@ -685,6 +723,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
     if (DATA.meta.intraday) {
       var kd = document.querySelector('.kicker');
       kd.innerHTML += ' <span style="color:#ffc857;border:1px solid rgba(255,200,87,.4);border-radius:20px;padding:1px 10px;text-transform:none;letter-spacing:0">⚡ 美股盘中 · 实时价快照</span>';
+    }
+    if (DATA.mode === 'maintenance') {
+      var kd2 = document.querySelector('.kicker');
+      kd2.innerHTML += ' <span style="color:#3ddc84;border:1px solid rgba(61,220,132,.4);border-radius:20px;padding:1px 10px;text-transform:none;letter-spacing:0;margin-left:6px">🛡️ 已建仓 · 维护模式</span>';
     }
     document.getElementById("hdr-sub").innerHTML =
       '持仓市值 <b>' + (DATA.position.value<0?'-':'') + '$' + Math.abs(DATA.position.value).toLocaleString('en-US') + '</b>（GOOG ' +

@@ -180,35 +180,46 @@ def main():
     if earnings_d and earnings_d <= qdate:
         FLAGS.append('WARN_EARNINGS_PASSED')
 
-    # ---------- structure A (sticky, with hysteresis) ----------
+    # ---------- structure A (sticky, with hysteresis; frozen when LIVE) ----------
+    mode = state.get('mode', 'screening')
+    live = state.get('live')
     st = state.get('structure', {})
     exp_a = None
-    if st.get('expiry'):
-        e = datetime.date.fromisoformat(st['expiry'])
-        if e in exps and dte(e) >= 45:
-            exp_a = e
     rolled = False
-    if exp_a is None:
-        exp_a = pick_expiry(90, 150, 120)
-        if exp_a is None:
-            print("ERROR=no_expiry_in_90_150_window"); sys.exit(1)
-        rolled = bool(st.get('expiry'))
-        if rolled: FLAGS.append('WARN_ROLL')
-    tA = dte(exp_a)/365
-
-    pm, cm = MOONEY['A']
-    pk = st.get('put'); ck = st.get('call')
     reanchored = []
-    tgt_p, tgt_c = spot*pm, spot*cm
-    if rolled or pk is None or abs(pk - tgt_p)/tgt_p > REANCHOR_TOL or (exp_a, 'P', pk) not in by:
-        new_pk = nearest_strike(exp_a, 'P', tgt_p)
-        if pk and new_pk != pk: reanchored.append(f"put {pk}->{new_pk:g}")
-        pk = new_pk
-    if rolled or ck is None or abs(ck - tgt_c)/tgt_c > REANCHOR_TOL or (exp_a, 'C', ck) not in by:
-        new_ck = nearest_strike(exp_a, 'C', tgt_c)
-        if ck and new_ck != ck: reanchored.append(f"call {ck}->{new_ck:g}")
-        ck = new_ck
-    if reanchored: FLAGS.append('INFO_REANCHORED ' + ','.join(reanchored))
+    if mode == 'maintenance' and live:
+        exp_a = datetime.date.fromisoformat(live['expiry'])
+        if exp_a not in exps:
+            print(f"ERROR=live_expiry_not_in_chain {exp_a}"); sys.exit(1)
+        pk, ck = float(live['put']), float(live['call'])
+        if (exp_a, 'P', pk) not in by or (exp_a, 'C', ck) not in by:
+            print("ERROR=live_strikes_not_in_chain"); sys.exit(1)
+        if dte(exp_a) <= 30:
+            FLAGS.append('WARN_ROLL_WINDOW')
+    else:
+        if st.get('expiry'):
+            e = datetime.date.fromisoformat(st['expiry'])
+            if e in exps and dte(e) >= 45:
+                exp_a = e
+        if exp_a is None:
+            exp_a = pick_expiry(90, 150, 120)
+            if exp_a is None:
+                print("ERROR=no_expiry_in_90_150_window"); sys.exit(1)
+            rolled = bool(st.get('expiry'))
+            if rolled: FLAGS.append('WARN_ROLL')
+        pm, cm = MOONEY['A']
+        pk = st.get('put'); ck = st.get('call')
+        tgt_p, tgt_c = spot*pm, spot*cm
+        if rolled or pk is None or abs(pk - tgt_p)/tgt_p > REANCHOR_TOL or (exp_a, 'P', pk) not in by:
+            new_pk = nearest_strike(exp_a, 'P', tgt_p)
+            if pk and new_pk != pk: reanchored.append(f"put {pk}->{new_pk:g}")
+            pk = new_pk
+        if rolled or ck is None or abs(ck - tgt_c)/tgt_c > REANCHOR_TOL or (exp_a, 'C', ck) not in by:
+            new_ck = nearest_strike(exp_a, 'C', tgt_c)
+            if ck and new_ck != ck: reanchored.append(f"call {ck}->{new_ck:g}")
+            ck = new_ck
+        if reanchored: FLAGS.append('INFO_REANCHORED ' + ','.join(reanchored))
+    tA = dte(exp_a)/365
 
     # ---------- candidates ----------
     def build_cand(letter, exp, put_k, call_k, name, note_fn):
@@ -276,7 +287,7 @@ def main():
     get = lambda L: next((c for c in cands if c['letter'] == L), None)
     B, C, D, E = get('B'), get('C'), get('D'), get('E')
 
-    if A['net_worst'] < 0:
+    if A['net_worst'] < 0 and mode != 'maintenance':
         FLAGS.append('WARN_CREDIT_NEG')
 
     # ---------- probabilities / EV / CVaR ----------
@@ -374,6 +385,13 @@ def main():
         {'t': f"T+0 · {qdate_s}", 'cls': 'blue',
          'd': f"当前评估结构：{exp_short(exp_a)} {A['pk']:g}P/{A['ck']:g}C ×{CONTRACTS}，净贷记(mid) {A['net_mid']:+.2f}/股"},
     ]
+    if mode == 'maintenance' and live:
+        ec = live.get('entry_credit')
+        ec_s = f"{ec:+.2f}/股" if ec is not None else "（待补录）"
+        es = live.get('entrySpot')
+        es_s = f" @ 股价 {es}" if es else ""
+        timeline[0] = {'t': f"已建仓 · {live.get('entryDate','')}", 'cls': 'blue',
+                       'd': f"实际持仓：{exp_short(exp_a)} {pk:g}P/{ck:g}C ×{CONTRACTS}，建仓净贷记 {ec_s}{es_s}"}
     if earnings_d and qdate < earnings_d <= exp_a:
         timeline.append({'t': earnings_s, 'cls': 'gold',
                          'd': '财报日：不做任何操作，让 collar 工作；财报后次日复盘 delta 与触发价'})
@@ -451,6 +469,48 @@ def main():
 
     exec_limit = math.floor((A['net_mid'] + A['net_worst'])/2*20)/20 if A['net_mid'] >= 0 else None
 
+    # ---------- live position tracking (maintenance mode) ----------
+    live_block = None
+    if mode == 'maintenance' and live:
+        po = by[(exp_a, 'P', pk)]; co = by[(exp_a, 'C', ck)]
+        po_mid = price(po); co_mid = price(co)
+        entry_credit = live.get('entry_credit')
+        # mark-to-market P&L of the option legs vs entry (credit received minus cost to close)
+        open_cost = po_mid - co_mid          # cost to close both legs now (buy call back, sell put)
+        mtm_pnl = (entry_credit - open_cost) * SHARES if entry_credit is not None else None
+        net_delta = 1 + (po.get('delta') or 0) - (co.get('delta') or 0)
+        put_value = po_mid * SHARES
+        call_value = co_mid * SHARES
+        up_trig = round(ck*0.97); dn_trig = round(pk*1.03)
+        dist_up = (ck*0.97/spot - 1)*100
+        dist_dn = (spot/(pk*1.03) - 1)*100
+        status = 'HOLD'
+        if spot >= ck: status = 'CALL_ITM'
+        elif spot >= ck*0.97: status = 'NEAR_CAP'
+        elif spot <= pk: status = 'PUT_ITM'
+        elif spot <= pk*1.03: status = 'NEAR_FLOOR'
+        live_block = {
+            'expiry': exp_a.isoformat(), 'put': pk, 'call': ck,
+            'contracts': CONTRACTS, 'shares': SHARES,
+            'entryDate': live.get('entryDate'), 'entryCredit': entry_credit,
+            'entrySpot': live.get('entrySpot'),
+            'dte': dte(exp_a),
+            'putMid': round(po_mid, 2), 'callMid': round(co_mid, 2),
+            'putDelta': round(po.get('delta') or 0, 3), 'callDelta': round(co.get('delta') or 0, 3),
+            'netDelta': round(net_delta, 3),
+            'putValue': round(put_value), 'callValue': round(call_value),
+            'openCost': round(open_cost, 2),
+            'mtmPnl': round(mtm_pnl) if mtm_pnl is not None else None,
+            'putIV': round((po.get('iv') or 0)*100, 1), 'callIV': round((co.get('iv') or 0)*100, 1),
+            'putOI': int(po.get('open_interest') or 0), 'callOI': int(co.get('open_interest') or 0),
+            'upTrigger': up_trig, 'downTrigger': dn_trig,
+            'distUp': round(dist_up, 1), 'distDown': round(dist_dn, 1),
+            'status': status,
+            'rollStart': roll_start.isoformat(),
+        }
+        if status != 'HOLD':
+            FLAGS.append(f'WARN_LIVE_{status}')
+
     # ---------- assemble ----------
     now_bj = datetime.datetime.now(BJ).strftime('%Y-%m-%d %H:%M')
     data = {
@@ -487,6 +547,8 @@ def main():
         'term': term, 'termNote': term_note, 'termEarningsIdx': term_e_idx,
         'candidates': cands,
         'scenarios': scenarios,
+        'live': live_block,
+        'mode': mode,
         'probs': {'A_probs': A_probs, 'B_probs': B_probs,
                   'ev': {'unhedged': round(ev_u), 'A': round(ev_a), 'B': round(ev_b)},
                   'p_loss100k': {'unhedged': round(pl_u*100, 1), 'A': round(pl_a*100, 1)}},
@@ -523,9 +585,10 @@ def main():
 
     state.update({
         'prevSpot': spot,
-        'structure': {'expiry': exp_a.isoformat(), 'put': pk, 'call': ck},
         'earnings': earnings_s,
     })
+    if mode != 'maintenance':
+        state['structure'] = {'expiry': exp_a.isoformat(), 'put': pk, 'call': ck}
     if not mkt_open:
         # only record settled closes; intraday runs must not suppress tomorrow's settled-close refresh
         state['lastQuoteDate'] = qdate_s
@@ -538,10 +601,16 @@ def main():
     if iv30 and iv30 > 40: hit += f"; IV30={iv30:.0f}%>40% 事件溢价高"
     earn_in = 'yes' if earnings_d and qdate < earnings_d <= exp_a else 'no'
 
-    print(f"DATE={now_bj} quoteDate={qdate_s} intraday={'yes' if mkt_open else 'no'}")
+    print(f"DATE={now_bj} quoteDate={qdate_s} intraday={'yes' if mkt_open else 'no'} mode={mode}")
     print(f"SPOT={spot:.2f} chg={(spot/prev_close-1)*100:+.2f}% prevClose={prev_close:.2f} posValue=${spot*SHARES:,.0f}")
-    print(f"STRUCTURE={exp_short(exp_a)} {pk:g}P/{ck:g}C DTE={dte(exp_a)} rolled={rolled} reanchored={','.join(reanchored) if reanchored else 'none'}")
-    print(f"CREDIT mid={A['net_mid']:+.2f}/sh (${A['net_mid']*SHARES:+,.0f}) worst={A['net_worst']:+.2f}/sh ann={A['ann_yield']:+.1f}%")
+    if live_block:
+        L = live_block
+        print(f"LIVE {L['expiry']} {L['put']:g}P/{L['call']:g}C x{L['contracts']} DTE={L['dte']} status={L['status']} entry={L['entryDate']} entryCredit={('%+.2f/sh' % L['entryCredit']) if L['entryCredit'] is not None else 'UNKNOWN'} entrySpot={L['entrySpot']}")
+        print(f"LIVE_MTM putMid={L['putMid']:.2f} callMid={L['callMid']:.2f} openCost={L['openCost']:+.2f}/sh mtmPnl={('$%+,.0f' % L['mtmPnl']) if L['mtmPnl'] is not None else 'N/A'} netDelta={L['netDelta']:.2f}")
+        print(f"LIVE_TRIG up={L['upTrigger']}({L['distUp']:+.1f}%) down={L['downTrigger']}({L['distDown']:+.1f}%) rollStart={L['rollStart']}")
+    else:
+        print(f"STRUCTURE={exp_short(exp_a)} {pk:g}P/{ck:g}C DTE={dte(exp_a)} rolled={rolled} reanchored={','.join(reanchored) if reanchored else 'none'}")
+        print(f"CREDIT mid={A['net_mid']:+.2f}/sh (${A['net_mid']*SHARES:+,.0f}) worst={A['net_worst']:+.2f}/sh ann={A['ann_yield']:+.1f}%")
     print(f"RANGE floor={A['floor_pct']:.1f}% cap=+{A['cap_pct']:.1f}% maxLoss=-${A['max_loss']:,.0f} maxGain=+${A['max_gain']:,.0f}")
     print(f"PROBS belowFloor={A_probs[0]}% between={A_probs[1]}% aboveCap={A_probs[2]}%")
     print(f"VOL HV21={hv21:.1f}(pctile {hv21_pctile:.0f}) IV30={iv30:.1f} preEarningsIV={pre_rng} postEarningsIV={post_rng} skew={skew_jan:+.1f}")
