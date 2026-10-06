@@ -96,14 +96,17 @@ def main():
         sys.exit(0)
 
     hi52 = float(meta['fiftyTwoWeekHigh']); lo52 = float(meta['fiftyTwoWeekLow'])
-    prev_close = float(meta.get('previousClose') or 0)
 
     # price history + HV
     ts = y['timestamp']; closes_raw = y['indicators']['quote'][0]['close']
     pairs = [(t, c) for t, c in zip(ts, closes_raw) if c is not None]
-    if not prev_close or abs(prev_close - spot) / spot > 0.15:
-        # pairs[-1] is today's bar (live intraday or settled close); pairs[-2] is prior session
-        prev_close = pairs[-2][1] if len(pairs) >= 2 else spot
+    # prev close: if the series' last bar is the quote date, use pairs[-2];
+    # else the settled series lags the quote (last bar = prior session) -> use pairs[-1].
+    last_bar_date = datetime.datetime.fromtimestamp(pairs[-1][0], ET).date()
+    if last_bar_date >= qdate and len(pairs) >= 2:
+        prev_close = pairs[-2][1]
+    else:
+        prev_close = pairs[-1][1]
     rets = [math.log(pairs[i][1]/pairs[i-1][1]) for i in range(1, len(pairs))]
     dates = [datetime.datetime.fromtimestamp(p[0], ET).date() for p in pairs[1:]]
     def hv(win, upto=None):
@@ -605,8 +608,10 @@ def main():
     print(f"SPOT={spot:.2f} chg={(spot/prev_close-1)*100:+.2f}% prevClose={prev_close:.2f} posValue=${spot*SHARES:,.0f}")
     if live_block:
         L = live_block
-        print(f"LIVE {L['expiry']} {L['put']:g}P/{L['call']:g}C x{L['contracts']} DTE={L['dte']} status={L['status']} entry={L['entryDate']} entryCredit={('%+.2f/sh' % L['entryCredit']) if L['entryCredit'] is not None else 'UNKNOWN'} entrySpot={L['entrySpot']}")
-        print(f"LIVE_MTM putMid={L['putMid']:.2f} callMid={L['callMid']:.2f} openCost={L['openCost']:+.2f}/sh mtmPnl={('$%+,.0f' % L['mtmPnl']) if L['mtmPnl'] is not None else 'N/A'} netDelta={L['netDelta']:.2f}")
+        ec_str = f"{L['entryCredit']:+.2f}/sh" if L['entryCredit'] is not None else 'UNKNOWN'
+        mtm_str = f"${L['mtmPnl']:+,.0f}" if L['mtmPnl'] is not None else 'N/A'
+        print(f"LIVE {L['expiry']} {L['put']:g}P/{L['call']:g}C x{L['contracts']} DTE={L['dte']} status={L['status']} entry={L['entryDate']} entryCredit={ec_str} entrySpot={L['entrySpot']}")
+        print(f"LIVE_MTM putMid={L['putMid']:.2f} callMid={L['callMid']:.2f} openCost={L['openCost']:+.2f}/sh mtmPnl={mtm_str} netDelta={L['netDelta']:.2f}")
         print(f"LIVE_TRIG up={L['upTrigger']}({L['distUp']:+.1f}%) down={L['downTrigger']}({L['distDown']:+.1f}%) rollStart={L['rollStart']}")
     else:
         print(f"STRUCTURE={exp_short(exp_a)} {pk:g}P/{ck:g}C DTE={dte(exp_a)} rolled={rolled} reanchored={','.join(reanchored) if reanchored else 'none'}")
