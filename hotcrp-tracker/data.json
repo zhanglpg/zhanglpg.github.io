@@ -1850,7 +1850,7 @@
       "status": "accepted",
       "status_source": "canonical",
       "first_seen": "2026-06-09T12:16:55+00:00",
-      "last_event": "2026-09-24T10:04:26+00:00",
+      "last_event": "2026-10-06T11:54:35+00:00",
       "events": [
         {
           "type": "updated",
@@ -1901,13 +1901,38 @@
           "type": "comment",
           "date": "2026-09-24T10:04:26+00:00",
           "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-06T11:52:15+00:00",
+          "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-06T11:52:50+00:00",
+          "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-06T11:53:17+00:00",
+          "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-06T11:54:03+00:00",
+          "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-06T11:54:35+00:00",
+          "subject": "[ATC '26] Comment for #473 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 5,
-        "comments": 1,
+        "comments": 6,
         "reviews": 0,
-        "total": 10
+        "total": 15
       },
       "message_ids": [
         "<20260609121655.6B36B8E3B53@mail.hotcrp.com>",
@@ -1919,7 +1944,12 @@
         "<20260830042606.62321A056AE@mail.hotcrp.com>",
         "<20260902151312.363E8840D91@mail.hotcrp.com>",
         "<20260919052319.95534BE2DF5@mail.hotcrp.com>",
-        "<20260924100426.E5E7291EBC9@mail.hotcrp.com>"
+        "<20260924100426.E5E7291EBC9@mail.hotcrp.com>",
+        "<20261006115215.9C780823D36@mail.hotcrp.com>",
+        "<20261006115250.79DFD823D36@mail.hotcrp.com>",
+        "<20261006115317.80D9E823D36@mail.hotcrp.com>",
+        "<20261006115403.19B70823D36@mail.hotcrp.com>",
+        "<20261006115435.87C4A823D36@mail.hotcrp.com>"
       ],
       "deadline": "Thursday Jun 11, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4765,7 +4795,7 @@
     },
     "ATC '26": {
       "paper_count": 6,
-      "last_event": "2026-10-05T07:06:43+00:00"
+      "last_event": "2026-10-06T11:54:35+00:00"
     },
     "HPCA 2027": {
       "paper_count": 5,
@@ -5046,6 +5076,6 @@
       "date": "2026-09-30T06:38:26+00:00"
     }
   ],
-  "last_updated": "2026-10-05T08:01:53.794788+00:00",
-  "email_count": 591
+  "last_updated": "2026-10-06T12:09:24.608653+00:00",
+  "email_count": 596
 }
