@@ -141,7 +141,9 @@ def main():
 
     # ---------- option chain ----------
     def parse(sym):
-        b = sym[4:]; ymd = b[:6]
+        i = 0
+        while i < len(sym) and sym[i].isalpha(): i += 1  # variable-length ticker prefix (GOOG=4, GOOGL=5)
+        b = sym[i:]; ymd = b[:6]
         return (datetime.date(2000+int(ymd[:2]), int(ymd[2:4]), int(ymd[4:6])), b[6], int(b[7:])/1000.0)
     by = {}
     for o in cb['options']:
@@ -472,47 +474,89 @@ def main():
 
     exec_limit = math.floor((A['net_mid'] + A['net_worst'])/2*20)/20 if A['net_mid'] >= 0 else None
 
-    # ---------- live position tracking (maintenance mode) ----------
-    live_block = None
-    if mode == 'maintenance' and live:
-        po = by[(exp_a, 'P', pk)]; co = by[(exp_a, 'C', ck)]
+    # ---------- live position tracking (maintenance mode; multi-position) ----------
+    live_block = None       # primary (GOOG) for backward compat
+    live_positions = []
+    chain_cache = {'GOOG': cb}
+    def get_chain(tk):
+        if tk not in chain_cache:
+            try:
+                chain_cache[tk] = fetch(f'https://cdn.cboe.com/api/global/delayed_quotes/options/{tk}.json')['data']
+            except Exception as e:
+                FLAGS.append(f'ERROR_CHAIN_{tk}:{type(e).__name__}')
+                chain_cache[tk] = None
+        return chain_cache[tk]
+
+    lps = state.get('livePositions') or ([dict(live, id='goog', ticker='GOOG', shares=SHARES, contracts=CONTRACTS)] if (mode == 'maintenance' and live) else [])
+    for lp in lps:
+        tk = lp.get('ticker', 'GOOG')
+        cdata = get_chain(tk)
+        if not cdata: continue
+        tby = {}
+        for o in cdata['options']:
+            try:
+                e2, cp2, k2 = parse(o['option'])
+                tby[(e2, cp2, k2)] = o
+            except Exception:
+                continue
+        lexp = datetime.date.fromisoformat(lp['expiry'])
+        lpk, lck = float(lp['put']), float(lp['call'])
+        lshares = int(lp.get('shares', SHARES)); lcontracts = lshares // 100
+        po = tby.get((lexp, 'P', lpk)); co = tby.get((lexp, 'C', lck))
+        if po is None or co is None:
+            FLAGS.append(f'ERROR_LIVE_{tk}_legs_missing'); continue
+        tk_spot = float(cdata.get('current_price') or spot)
         po_mid = price(po); co_mid = price(co)
-        entry_credit = live.get('entry_credit')
-        # mark-to-market P&L of the option legs vs entry (credit received minus cost to close)
-        open_cost = po_mid - co_mid          # cost to close both legs now (buy call back, sell put)
-        mtm_pnl = (entry_credit - open_cost) * SHARES if entry_credit is not None else None
+        entry_credit = lp.get('entry_credit')
+        open_cost = po_mid - co_mid          # proceeds to close both legs now (sell put, buy back call)
+        # P&L = cash at open (entry_credit) + cash to close (open_cost). Both signed:
+        # entry_credit >0 = net credit received at open; open_cost >0 = receive cash closing.
+        mtm_pnl = (entry_credit + open_cost) * lshares if entry_credit is not None else None
         net_delta = 1 + (po.get('delta') or 0) - (co.get('delta') or 0)
-        put_value = po_mid * SHARES
-        call_value = co_mid * SHARES
-        up_trig = round(ck*0.97); dn_trig = round(pk*1.03)
-        dist_up = (ck*0.97/spot - 1)*100
-        dist_dn = (spot/(pk*1.03) - 1)*100
-        status = 'HOLD'
-        if spot >= ck: status = 'CALL_ITM'
-        elif spot >= ck*0.97: status = 'NEAR_CAP'
-        elif spot <= pk: status = 'PUT_ITM'
-        elif spot <= pk*1.03: status = 'NEAR_FLOOR'
-        live_block = {
-            'expiry': exp_a.isoformat(), 'put': pk, 'call': ck,
-            'contracts': CONTRACTS, 'shares': SHARES,
-            'entryDate': live.get('entryDate'), 'entryCredit': entry_credit,
-            'entrySpot': live.get('entrySpot'),
-            'dte': dte(exp_a),
+        up_trig_l = round(lck*0.97); dn_trig_l = round(lpk*1.03)
+        dist_up_l = (lck*0.97/tk_spot - 1)*100
+        dist_dn_l = (tk_spot/(lpk*1.03) - 1)*100
+        status_l = 'HOLD'
+        if tk_spot >= lck: status_l = 'CALL_ITM'
+        elif tk_spot >= lck*0.97: status_l = 'NEAR_CAP'
+        elif tk_spot <= lpk: status_l = 'PUT_ITM'
+        elif tk_spot <= lpk*1.03: status_l = 'NEAR_FLOOR'
+        dte_l = (lexp - qdate).days
+        roll_start_l = lexp - datetime.timedelta(days=30)
+        blk = {
+            'id': lp.get('id', tk.lower()), 'ticker': tk,
+            'spot': round(tk_spot, 2),
+            'expiry': lexp.isoformat(), 'put': lpk, 'call': lck,
+            'contracts': lcontracts, 'shares': lshares,
+            'posValue': round(tk_spot*lshares),
+            'entryDate': lp.get('entryDate'), 'entryCredit': entry_credit,
+            'entrySpot': lp.get('entrySpot'),
+            'dte': dte_l,
             'putMid': round(po_mid, 2), 'callMid': round(co_mid, 2),
             'putDelta': round(po.get('delta') or 0, 3), 'callDelta': round(co.get('delta') or 0, 3),
             'netDelta': round(net_delta, 3),
-            'putValue': round(put_value), 'callValue': round(call_value),
+            'putValue': round(po_mid*lshares), 'callValue': round(co_mid*lshares),
             'openCost': round(open_cost, 2),
             'mtmPnl': round(mtm_pnl) if mtm_pnl is not None else None,
             'putIV': round((po.get('iv') or 0)*100, 1), 'callIV': round((co.get('iv') or 0)*100, 1),
             'putOI': int(po.get('open_interest') or 0), 'callOI': int(co.get('open_interest') or 0),
-            'upTrigger': up_trig, 'downTrigger': dn_trig,
-            'distUp': round(dist_up, 1), 'distDown': round(dist_dn, 1),
-            'status': status,
-            'rollStart': roll_start.isoformat(),
+            'upTrigger': up_trig_l, 'downTrigger': dn_trig_l,
+            'distUp': round(dist_up_l, 1), 'distDown': round(dist_dn_l, 1),
+            'maxLoss': round((tk_spot-lpk)*lshares - (entry_credit or 0)*lshares),
+            'maxGain': round((lck-tk_spot)*lshares + (entry_credit or 0)*lshares),
+            'floorPct': round((lpk/tk_spot-1)*100, 1), 'capPct': round((lck/tk_spot-1)*100, 1),
+            'status': status_l,
+            'rollStart': roll_start_l.isoformat(),
         }
-        if status != 'HOLD':
-            FLAGS.append(f'WARN_LIVE_{status}')
+        live_positions.append(blk)
+        if tk == 'GOOG' and live_block is None:
+            live_block = blk
+        if status_l != 'HOLD':
+            FLAGS.append(f'WARN_LIVE_{tk}_{status_l}')
+        if dte_l <= 30:
+            FLAGS.append(f'WARN_ROLL_WINDOW_{tk}')
+    if live_positions and live_block is None:
+        live_block = live_positions[0]
 
     # ---------- assemble ----------
     now_bj = datetime.datetime.now(BJ).strftime('%Y-%m-%d %H:%M')
@@ -551,6 +595,7 @@ def main():
         'candidates': cands,
         'scenarios': scenarios,
         'live': live_block,
+        'livePositions': live_positions,
         'mode': mode,
         'probs': {'A_probs': A_probs, 'B_probs': B_probs,
                   'ev': {'unhedged': round(ev_u), 'A': round(ev_a), 'B': round(ev_b)},
@@ -606,13 +651,16 @@ def main():
 
     print(f"DATE={now_bj} quoteDate={qdate_s} intraday={'yes' if mkt_open else 'no'} mode={mode}")
     print(f"SPOT={spot:.2f} chg={(spot/prev_close-1)*100:+.2f}% prevClose={prev_close:.2f} posValue=${spot*SHARES:,.0f}")
-    if live_block:
-        L = live_block
-        ec_str = f"{L['entryCredit']:+.2f}/sh" if L['entryCredit'] is not None else 'UNKNOWN'
-        mtm_str = f"${L['mtmPnl']:+,.0f}" if L['mtmPnl'] is not None else 'N/A'
-        print(f"LIVE {L['expiry']} {L['put']:g}P/{L['call']:g}C x{L['contracts']} DTE={L['dte']} status={L['status']} entry={L['entryDate']} entryCredit={ec_str} entrySpot={L['entrySpot']}")
-        print(f"LIVE_MTM putMid={L['putMid']:.2f} callMid={L['callMid']:.2f} openCost={L['openCost']:+.2f}/sh mtmPnl={mtm_str} netDelta={L['netDelta']:.2f}")
-        print(f"LIVE_TRIG up={L['upTrigger']}({L['distUp']:+.1f}%) down={L['downTrigger']}({L['distDown']:+.1f}%) rollStart={L['rollStart']}")
+    if live_positions:
+        for L in live_positions:
+            ec_str = f"{L['entryCredit']:+.2f}/sh" if L['entryCredit'] is not None else 'UNKNOWN'
+            mtm_str = f"${L['mtmPnl']:+,.0f}" if L['mtmPnl'] is not None else 'N/A'
+            print(f"LIVE[{L['ticker']}] spot={L['spot']:.2f} {L['expiry']} {L['put']:g}P/{L['call']:g}C x{L['contracts']} ({L['shares']}sh ${L['posValue']:,.0f}) DTE={L['dte']} status={L['status']} entry={L['entryDate']} entryCredit={ec_str}")
+            print(f"LIVE[{L['ticker']}]_MTM putMid={L['putMid']:.2f} callMid={L['callMid']:.2f} openCost={L['openCost']:+.2f}/sh mtmPnl={mtm_str} netDelta={L['netDelta']:.2f}")
+            print(f"LIVE[{L['ticker']}]_TRIG up={L['upTrigger']}({L['distUp']:+.1f}%) down={L['downTrigger']}({L['distDown']:+.1f}%) rollStart={L['rollStart']}")
+        tot_val = sum(L['posValue'] for L in live_positions)
+        tot_mtm = sum(L['mtmPnl'] for L in live_positions if L['mtmPnl'] is not None)
+        print(f"LIVE_TOTAL posValue=${tot_val:,.0f} optionsMtm=${tot_mtm:+,.0f} positions={len(live_positions)}")
     else:
         print(f"STRUCTURE={exp_short(exp_a)} {pk:g}P/{ck:g}C DTE={dte(exp_a)} rolled={rolled} reanchored={','.join(reanchored) if reanchored else 'none'}")
         print(f"CREDIT mid={A['net_mid']:+.2f}/sh (${A['net_mid']*SHARES:+,.0f}) worst={A['net_worst']:+.2f}/sh ann={A['ann_yield']:+.1f}%")

@@ -1,21 +1,40 @@
 {
- "lastQuoteDate": "2026-10-06",
- "prevSpot": 344.59,
+ "lastQuoteDate": "2026-10-07",
+ "prevSpot": 347.37,
  "buildDate": "2026-09-18",
  "earnings": "2026-10-28",
  "earningsNote": "\u5468\u4e09\u76d8\u540e\uff08\u672a\u7ecf\u516c\u53f8\u786e\u8ba4\uff0c\u534e\u5c14\u8857\u9884\u671f\u53e3\u5f84\uff09",
  "divYield": 0.25,
  "divQ": 0.22,
  "mode": "maintenance",
- "live": {
-  "expiry": "2027-01-15",
-  "put": 305,
-  "call": 410,
-  "contracts": 58,
-  "entryDate": "2026-10-05",
-  "entrySpot": null,
-  "entry_credit": 1.45
- },
+ "livePositions": [
+  {
+   "id": "goog",
+   "ticker": "GOOG",
+   "shares": 5800,
+   "contracts": 58,
+   "expiry": "2027-01-15",
+   "put": 305,
+   "call": 410,
+   "entryDate": "2026-10-05",
+   "entrySpot": null,
+   "entry_credit": -1.45,
+   "entryNote": "\u7528\u6237\u53e3\u8ff0'\u51c0\u8d37\u8bb01.45'\uff1b\u4f46\u5efa\u4ed3\u65e5\u5e02\u573amid\u4e3a\u51c0\u501f\u8bb0~1.45\uff08305P 6.92 / 410C 5.47\uff09\uff0c\u8d37\u8bb0\u6210\u4ea4\u7269\u7406\u4e0a\u4e0d\u53ef\u80fd\uff0c\u6309\u501f\u8bb0\u8bb0\u5f55\uff0c\u5f85\u7528\u6237\u51ed\u5238\u5546\u6210\u4ea4\u5355\u786e\u8ba4\uff08\u82e5\u786e\u4e3a\u8d37\u8bb0\u6539\u56de+1.45\uff09"
+  },
+  {
+   "id": "googl",
+   "ticker": "GOOGL",
+   "shares": 1700,
+   "contracts": 17,
+   "expiry": "2027-01-15",
+   "put": 305,
+   "call": 410,
+   "entryDate": "2026-10-07",
+   "entrySpot": null,
+   "entry_credit": -0.95,
+   "entryNote": "net debit 0.95/\u80a1\uff0c\u7528\u6237\u786e\u8ba4\uff0810/7\u76d8\u4e2d\u5efa\u4ed3\uff0c\u6536\u76d8GOOGL\u6da8\u81f3350.5\u540e\u8be5\u7ed3\u6784mid\u5df2\u7ffb\u4e3a\u8d37\u8bb0\u4fa7\uff09"
+  }
+ ],
  "structure": {
   "expiry": "2027-01-15",
   "put": 300.0,

@@ -97,8 +97,8 @@
 
 <div class="wrap">
 <header>
-  <div class="kicker">Options Risk Management · Alphabet (GOOG) · <span id="hdr-date"></span></div>
-  <h1>5,800股 GOOG 重仓<br><span class="accent">Collar 领口策略</span> 全景报告</h1>
+  <div class="kicker">Options Risk Management · Alphabet (GOOG + GOOGL) · <span id="hdr-date"></span></div>
+  <h1 id="hdr-title">5,800股 GOOG 重仓<br><span class="accent">Collar 领口策略</span> 全景报告</h1>
   <p class="sub" id="hdr-sub"></p>
 </header>
 
@@ -445,40 +445,52 @@ function App(){
   </section>
 
   {/* ============ LIVE POSITION ============ */}
-  {DATA.live && (
+  {DATA.livePositions && DATA.livePositions.length>0 && (
   <section id="live">
-    <h2><span className="n">★</span>实盘持仓跟踪（维护模式）</h2>
-    <p className="sec-desc">以下为已建仓的实际 collar，每日随行情按 mid 价盯市。下方②③章的结构评估仍基于理论推荐（A–E），实盘维护以本节为准。</p>
-    <div className="card reveal">
+    <h2><span className="n">★</span>实盘持仓跟踪（维护模式 · {DATA.livePositions.length} 个 collar）</h2>
+    <p className="sec-desc">已建仓的实际 collar，每日随行情按 mid 价盯市（GOOG 与 GOOGL 分别取各自期权链报价）。下方②③章的结构评估基于理论推荐，实盘维护以本节为准。</p>
+    {DATA.livePositions.map(L => (
+    <div className="card reveal" key={L.id}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10,marginBottom:14}}>
         <div style={{fontSize:17,fontWeight:700}}>
-          {DATA.live.expiry} · <span className="green">买 {DATA.live.put} Put</span> / <span className="orange">卖 {DATA.live.call} Call</span> × {DATA.live.contracts}
-          <span className={"pill " + (DATA.live.status==='HOLD'?'ok':'warn')} style={{marginLeft:10}}>
-            {DATA.live.status==='HOLD'?'✓ 持有 · 无需操作':DATA.live.status==='NEAR_CAP'?'⚠ 接近Cap':DATA.live.status==='CALL_ITM'?'⚠ Call实值':DATA.live.status==='NEAR_FLOOR'?'⚠ 接近Floor':'⚠ Put实值'}
+          <span style={{color:L.ticker==='GOOG'?'var(--blue)':'var(--gold)'}}>{L.ticker}</span> {L.expiry} · <span className="green">买 {L.put} Put</span> / <span className="orange">卖 {L.call} Call</span> × {L.contracts}
+          <span className={"pill " + (L.status==='HOLD'?'ok':'warn')} style={{marginLeft:10}}>
+            {L.status==='HOLD'?'✓ 持有 · 无需操作':L.status==='NEAR_CAP'?'⚠ 接近Cap':L.status==='CALL_ITM'?'⚠ Call实值':L.status==='NEAR_FLOOR'?'⚠ 接近Floor':'⚠ Put实值'}
           </span>
         </div>
-        <div className="dim" style={{fontSize:13}}>剩余 {DATA.live.dte} DTE · 建仓 {DATA.live.entryDate||'—'}</div>
+        <div className="dim" style={{fontSize:13}}>{L.shares.toLocaleString()} 股 · ${L.spot} · DTE {L.dte} · 建仓 {L.entryDate||'—'}{L.entryCredit!=null?`（净${L.entryCredit>=0?'贷记':'借记'} ${Math.abs(L.entryCredit).toFixed(2)}/股）`:''}</div>
       </div>
       <div className="grid g4">
-        <Stat lab="Put 现值 (mid)" big={<span className="green">${DATA.live.putMid.toFixed(2)}</span>} note={`Δ ${DATA.live.putDelta.toFixed(2)} · IV ${DATA.live.putIV}% · 持仓价值 ${fmt$(DATA.live.putValue)}`}/>
-        <Stat lab="Call 现值 (mid)" big={<span className="orange">${DATA.live.callMid.toFixed(2)}</span>} note={`Δ +${DATA.live.callDelta.toFixed(2)} · IV ${DATA.live.callIV}% · 负债 ${fmt$(DATA.live.callValue)}`}/>
-        <Stat lab="净 Delta" big={<span className="blue">{DATA.live.netDelta.toFixed(2)}</span>} note={`等效持股 ${Math.round(DATA.live.netDelta*DATA.live.shares).toLocaleString()}股（裸持1.00）`}/>
-        <Stat lab="平掉两腿成本" big={<span className={DATA.live.openCost<=0?'green':'red'}>{fmt1(DATA.live.openCost)}/股</span>} note={DATA.live.mtmPnl!=null?`期权腿盯市盈亏 ${fmt$(DATA.live.mtmPnl)}`:`合计 ${fmt$(DATA.live.openCost*DATA.live.shares)}（建仓净贷记待补录）`}/>
+        <Stat lab="Put 现值 (mid)" big={<span className="green">${L.putMid.toFixed(2)}</span>} note={`Δ ${L.putDelta.toFixed(2)} · IV ${L.putIV}% · 持仓价值 ${fmt$(L.putValue)}`}/>
+        <Stat lab="Call 现值 (mid)" big={<span className="orange">${L.callMid.toFixed(2)}</span>} note={`Δ +${L.callDelta.toFixed(2)} · IV ${L.callIV}% · 负债 ${fmt$(L.callValue)}`}/>
+        <Stat lab="净 Delta" big={<span className="blue">{L.netDelta.toFixed(2)}</span>} note={`等效持股 ${Math.round(L.netDelta*L.shares).toLocaleString()}股（裸持${L.shares.toLocaleString()}）`}/>
+        <Stat lab="期权腿盯市盈亏" big={<span className={(L.mtmPnl||0)>=0?'green':'red'}>{L.mtmPnl!=null?fmt$(L.mtmPnl):'N/A'}</span>} note={L.mtmPnl!=null?`平掉两腿可得 ${fmt1(L.openCost)}/股`:`建仓净${(L.entryCredit||0)>=0?'贷记':'借记'}待补录`}/>
       </div>
       <div className="grid g4" style={{marginTop:14}}>
-        <div className="stat"><div className="lab">Roll Up 触发线</div><div className="big gold">${DATA.live.upTrigger}</div><div className="note">cap-3% · 现价距 {DATA.live.distUp>0?'+':''}{DATA.live.distUp}%</div></div>
-        <div className="stat"><div className="lab">Roll Down 检查线</div><div className="big gold">${DATA.live.downTrigger}</div><div className="note">floor+3% · 现价距 {DATA.live.distDown>0?'-':''}{DATA.live.distDown}%</div></div>
-        <div className="stat"><div className="lab">滚动窗口开启</div><div className="big orange">{DATA.live.rollStart}</div><div className="note">剩余30 DTE时启动评估</div></div>
-        <div className="stat"><div className="lab">财报（窗口内）</div><div className="big gold">{DATA.snapshot.earnings}</div><div className="note">财报日规则：不操作</div></div>
+        <div className="stat"><div className="lab">Roll Up 触发线</div><div className="big gold">${L.upTrigger}</div><div className="note">cap-3% · 冲上需 +{((L.upTrigger/L.spot-1)*100).toFixed(1)}%</div></div>
+        <div className="stat"><div className="lab">Roll Down 检查线</div><div className="big gold">${L.downTrigger}</div><div className="note">floor+3% · 跌破需 {((L.downTrigger/L.spot-1)*100).toFixed(1)}%</div></div>
+        <div className="stat"><div className="lab">最大亏损 / 盈利</div><div className="big" style={{fontSize:22}}><span className="red">-{fmt$(L.maxLoss)}</span> <span className="dim">/</span> <span className="green">+{fmt$(L.maxGain)}</span></div><div className="note">floor {L.floorPct}% / cap +{L.capPct}%（含建仓现金流）</div></div>
+        <div className="stat"><div className="lab">滚动窗口</div><div className="big orange">{L.rollStart}</div><div className="note">剩余30 DTE时启动评估</div></div>
       </div>
       <div className="callout green" style={{marginTop:14}}>
-        <b>当前状态解读：</b>{
-          DATA.live.status==='HOLD'
-            ? `股价 $${DATA.position.spot} 位于 ${DATA.live.put}–${DATA.live.call} 区间中段，两条触发线均未接近（上距 +${DATA.live.distUp}%，下距 -${DATA.live.distDown}%）。保护完好、无需任何操作，下一个日历节点是 ${DATA.snapshot.earnings} 财报（规则：不操作，次日复盘）。`
-            : `股价已接近/越过触发区域（status: ${DATA.live.status}），请按第⑤章事件响应规则处理。`
+        <b>{L.ticker} 状态解读：</b>{
+          L.status==='HOLD'
+            ? `股价 $${L.spot} 位于 ${L.put}–${L.call} 区间中段，两条触发线均未接近（冲上 ${L.upTrigger} 还需 +${((L.upTrigger/L.spot-1)*100).toFixed(1)}%，跌破 ${L.downTrigger} 需 ${((L.downTrigger/L.spot-1)*100).toFixed(1)}%）。保护完好、无需操作，下一个日历节点是 ${DATA.snapshot.earnings} 财报（规则：不操作，次日复盘）。`
+            : `股价已接近/越过触发区域（${L.status}），请按第⑤章事件响应规则处理。`
         }
       </div>
     </div>
+    ))}
+    {DATA.livePositions.length>1 && (()=>{
+      const tv=DATA.livePositions.reduce((s,L)=>s+L.posValue,0);
+      const tm=DATA.livePositions.reduce((s,L)=>s+(L.mtmPnl||0),0);
+      const td=DATA.livePositions.reduce((s,L)=>s+L.netDelta*L.shares,0);
+      return <div className="card reveal"><div className="grid g3">
+        <Stat lab="合计股票市值" big={<span className="blue">{fmt$(tv)}</span>} note={`${DATA.livePositions.map(L=>L.ticker+' '+L.shares.toLocaleString()+'股').join(' + ')}`}/>
+        <Stat lab="合计净Delta敞口" big={<span className="gold">{Math.round(td).toLocaleString()}</span>} note={`等效持股股数（未对冲为 ${DATA.livePositions.reduce((s,L)=>s+L.shares,0).toLocaleString()}）`}/>
+        <Stat lab="期权腿合计盈亏" big={<span className={tm>=0?'green':'red'}>{fmt$(tm)}</span>} note="两腿盯市合计（不含正股浮盈）"/>
+      </div></div>;
+    })()}
   </section>
   )}
 
@@ -720,6 +732,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 <script>
   (function () {
     document.getElementById("hdr-date").textContent = DATA.meta.updated || '';
+    if (DATA.livePositions && DATA.livePositions.length) {
+      document.getElementById("hdr-title").innerHTML =
+        DATA.livePositions.map(function(L){ return L.shares.toLocaleString() + '股 ' + L.ticker; }).join(' + ') +
+        ' 重仓<br><span class="accent">Collar 领口策略</span> 全景报告';
+    }
     if (DATA.meta.intraday) {
       var kd = document.querySelector('.kicker');
       kd.innerHTML += ' <span style="color:#ffc857;border:1px solid rgba(255,200,87,.4);border-radius:20px;padding:1px 10px;text-transform:none;letter-spacing:0">⚡ 美股盘中 · 实时价快照</span>';
@@ -728,10 +745,19 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
       var kd2 = document.querySelector('.kicker');
       kd2.innerHTML += ' <span style="color:#3ddc84;border:1px solid rgba(61,220,132,.4);border-radius:20px;padding:1px 10px;text-transform:none;letter-spacing:0;margin-left:6px">🛡️ 已建仓 · 维护模式</span>';
     }
-    document.getElementById("hdr-sub").innerHTML =
-      '持仓市值 <b>' + (DATA.position.value<0?'-':'') + '$' + Math.abs(DATA.position.value).toLocaleString('en-US') + '</b>（GOOG ' +
-      (DATA.position.chgPct>0?'+':(DATA.position.chgPct===0?'±':'')) + DATA.position.chgPct + '%，' + (DATA.meta.intraday?'盘中价':'收') + ' $' + DATA.position.spot + '，' + DATA.meta.quoteDate +
-      '）。本报告回答三个问题：<b>何时</b>构建 collar、<b>如何</b>构建（行权价/期限/报价对比）、以及构建后<b>如何维持</b>（滚动与调整规则）。期权报价来自 CBOE 延时数据，按买卖中间价（mid）计算，并同时给出最坏成交价。<b>每个交易日早晨（北京时间 8:25）自动刷新全部数据与推荐结构。</b>';
+    (function () {
+      var subHtml;
+      if (DATA.livePositions && DATA.livePositions.length) {
+        var totVal = DATA.livePositions.reduce(function(s,L){return s+L.posValue;},0);
+        var parts = DATA.livePositions.map(function(L){ return L.ticker + ' ' + L.shares.toLocaleString() + '股 @ $' + L.spot; }).join(' · ');
+        subHtml = '合计持仓市值 <b>$' + totVal.toLocaleString('en-US') + '</b>（' + parts + '，' + DATA.meta.quoteDate + '）。已建仓 ' + DATA.livePositions.length + ' 个 collar（GOOG 58张 + GOOGL 17张，Jan15\'27 305P/410C），进入维护模式：每日盯市两腿 mid 价、监控触发线（cap-3% / floor+3%）、30 DTE 滚动提醒。理论结构评估（①–④章）保留作参考。<b>每个交易日早晨（北京时间 8:25）自动刷新并推送维护日报。</b>';
+      } else {
+        subHtml = '持仓市值 <b>' + (DATA.position.value<0?'-':'') + '$' + Math.abs(DATA.position.value).toLocaleString('en-US') + '</b>（GOOG ' +
+          (DATA.position.chgPct>0?'+':(DATA.position.chgPct===0?'±':'')) + DATA.position.chgPct + '%，' + (DATA.meta.intraday?'盘中价':'收') + ' $' + DATA.position.spot + '，' + DATA.meta.quoteDate +
+          '）。本报告回答三个问题：<b>何时</b>构建 collar、<b>如何</b>构建（行权价/期限/报价对比）、以及构建后<b>如何维持</b>（滚动与调整规则）。期权报价来自 CBOE 延时数据，按买卖中间价（mid）计算，并同时给出最坏成交价。<b>每个交易日早晨（北京时间 8:25）自动刷新全部数据与推荐结构。</b>';
+      }
+      document.getElementById("hdr-sub").innerHTML = subHtml;
+    })();
     document.getElementById("foot-meta").textContent = (DATA.meta.updated||'') + ' · ' + DATA.meta.quoteTs;
     document.getElementById("foot-disclaimer").textContent = DATA.meta.disclaimer || '';
     var src = document.getElementById("app-code").textContent;
