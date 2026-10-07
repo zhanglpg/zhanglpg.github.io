@@ -2846,6 +2846,117 @@ window.MODELS = [
 }
 },
 {
+"id": "minicpm-v-4-7-35b-a3b",
+"name": "MiniCPM-V 4.7 (35B-A3B)",
+"org": "OpenBMB",
+"family": "MiniCPM-V",
+"released": "2026-10",
+"license": "Undeclared (no model card or LICENSE at release)",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 35.2,
+"params_active_B": 3,
+"n_layers": 40,
+"d_model": 2048,
+"d_ff": null,
+"d_ff_moe": 512,
+"n_heads": 16,
+"n_kv_heads": 2,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "3:1 hybrid — 30 Gated DeltaNet linear-attention layers (16 K / 32 V heads, head_dim 128, short conv k4, fused in_proj_qkv 2048→8192 + z-gate) interleaved with 10 gated full-attention GQA layers (16 Q / 2 KV, head_dim 256, attn_output_gate doubles q_proj, q/k-norm, partial RoPE 0.25 of 256 dims, interleaved MRoPE sections [11,11,10], θ 10M); full_attention_interval 4.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 248144,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "MiniCPM-V ViT (27L × 1152d, patch 14, img 980)",
+"encoder_params_B": 0.55,
+"fusion": "adapter",
+"notes": "27-layer GELU-tanh ViT (16 heads, learned position embeddings for 980px) with two-stage 2×2 merging: an intra-ViT attention merger (4608 → 17216 → 1152, insert_layer_id 6 — MiniCPM-V 4.6's LLaVA-UHD-v4 early-compression lineage) then a projector MLP (4608 → 4608 → 2048) into the 2048-dim decoder. 16x visual-token downsample (downsample_mode '16x'), max_slice_nums 9 high-res slicing; native image + video input (video_token_id 248057)."
+},
+"notes": "First MiniCPM-V on a Qwen-MoE text backbone (model_type qwen3_5_moe_text): 40 layers × 256 experts top-8 + 1 shared (sigmoid shared_expert_gate), expert d_ff 512, every layer MoE (no dense first layer). Uploaded Oct 6 2026 with no README, no model card, no LICENSE and no benchmarks — license is undeclared (all-rights-reserved by default) as of the Oct 7 check; treat accordingly until a card lands. Config declares 1 MTP layer but the released index contains no MTP tensors. Computed params reproduce the 35.21B safetensors index within 2%; active ≈3.1B incl. embeddings (A3B). 256K context, 248K vocab, untied embeddings.",
+"sources": [
+"https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B",
+"https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B/raw/main/config.json",
+"https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B/raw/main/model.safetensors.index.json",
+"https://www.orcarouter.ai/blog/minicpm-v-4-7-shipped-quietly"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 30,
+"type": "linear",
+"sub": "gated linear"
+},
+{
+"name": "Full GQA",
+"n": 10,
+"type": "GQA",
+"sub": "16/2 · RoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (30 layers)",
+"p": {
+"d": 2048,
+"kh": 16,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 2048 → 8192 · in_proj_z → 4096",
+"projSub": "split projections · in_proj_b / a → β, α",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 4096 → 2048",
+"cacheline": "no KV cache on linear layers — state 32 × 128 × 128 ≈ 0.52 M el (fp32) + conv state 8192 × 4 per layer"
+},
+"notes": [
+"same Qwen3.5 Gated DeltaNet module as qwen3-5-397b-a17b (32 V / 16 K heads, dh 128)"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (10 layers — every 4th)",
+"p": {
+"d": 2048,
+"nq": 16,
+"nkv": 2,
+"dh": 256,
+"rope": "iMRoPE 64/256",
+"qknorm": "QK-norm / head",
+"gate": "σ(gate) per head",
+"cache": "1,024 el/token/layer × 10 full-attention layers"
+},
+"notes": [
+"attn_output_gate doubles q_proj (2048 → 8192)",
+"partial_rotary_factor 0.25 — only 64 of 256 head dims rotated"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
