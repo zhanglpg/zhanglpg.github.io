@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-06 09:40",
+  "last_run": "2026-10-07 10:14",
   "entries": [
+    {
+      "date": "2026-10-07",
+      "added": [
+        "minicpm-v-4-7-35b-a3b"
+      ],
+      "upgraded": [],
+      "note": "Added OpenBMB MiniCPM-V 4.7 (35B-A3B) — a silent Oct 6 upload (16 BF16 shards, no model card, no license, no benchmarks) that is the first MiniCPM-V on a Qwen3.5-MoE text backbone: 30 Gated DeltaNet + 10 gated full-GQA layers (3:1), 256 experts top-8 + 1 shared, 256K context, 16x-downsample ViT; verified against config.json + safetensors index (computed 35.2B vs 35.21B, ratio 1.03), license left undeclared in the entry until a card lands. Skipped per the placeholder rule: Mistral Large 4 (1T/49B, announced Oct 6, weights end of month) and Reflection AI Beam (still no HF org); also FrancisRing/Prism (Tencent-Hunyuan joint video+audio DiT — preview checkpoint, no architecture config) and the usual quant/finetune churn (clef, JEV/GEV, apex-flash-1 = GLM-5.3-Flash FT, Ornith = Qwen3.5-35B-A3B FT). Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged; Step-5-Preview-BF16, Kimi-K3-Base, LTX-2.5, North-Small-Translate-1.0 still gated."
+    },
     {
       "date": "2026-10-06",
       "added": [],
@@ -137,12 +145,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added two open-weight frontier-class MoEs verified against HF config.json + README: GigaChat 3.5 Reasoning (Sber, 432B/28B, MIT — 256-expert top-8 + 1 shared over 30 GatedDeltaNet / 10 gated-MLA hybrid layers, ZeroCenteredGatedNorm pre+post, 3 MTP heads, six domain experts merged by online-RL + on-policy distillation, natively FP8-trained) and Xing4.0-29B-A4B (China Telecom, TeleChat lineage, 29B/4B Apache-2.0 — all-MLA MoE with 4-stream mHC hyper-connected residuals, 1 MTP draft layer, first model of its scale trained end-to-end on Ascend NPUs). Skipped as derivatives: prism-ml Ternary-Bonsai-2-27B (ternary quant of tracked Qwen3.8-27B per base_model tag), nvidia DeepSeek-V4.1-Flash-NVFP4, ZGCM-1-7B (small dense, no novelty). 62 models, v24."
-    },
-    {
-      "date": "2026-09-17",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Scanned HF newest-models (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video; createdAt ≥ Sep 15), ~40-org sweep (DeepSeek, Qwen, zai-org, THUDM, moonshotai, meta, Mistral, google, nvidia, MiniMax, inclusionAI, internlm, BAAI, Agnes-AI, openbmb, nex-agi, m-a-p, TaichuAI, ibm-granite, Lightricks, et al.), trendingScore + likes7d top-40, and web search. Everything new since the last run was a derivative or re-upload of tracked/previously-assessed models: empero-ai/Qwen3.8-35B-A3B-Distill (12 likes) is an SFT distillation of tracked Qwen3.6-35B-A3B per its base_model tag — no-distill rule; harshatheg/Qwen-2.5-1B-RLCD (127 likes) is an MLX constrained-decoding finetune of Qwen2.5-1.5B-Instruct; CrowtherLabs/atom-proton-1.0 and Mapika/decider-2b-vision are Qwen3.8-27B-FP8 / Qwen3.5-2B finetunes; x-square-robot/X-Planner-9B and keepstar/Kali-Lite-Vision-9B are qwen3_5-arch domain VLMs; BAAI/Brainmu-Spike is a spike-camera reconstruction LoRA (out of atlas scope); internlm/Atria-Dawn-Preview-Ascend-w8a8 is a quant of the Sep-15-skipped Atria (config-identical to tracked GLM-5.2); PrismLive-2B/4B are MLX quants of gemma-4-E4B; TaichuAI/ZDTaichu5.0-9B-FP8/MLX/GGUF are quants of the already-assessed Sep-4 9B; plus the usual luganoquant/kingjones777/comatto/Abiray quant-GGUF wave over DeepSeek-V4.1-Flash, GLM-5.3-Flash, Kimi-K3, Agnes-3.0-Flash, Qwen3.8-Flash-Next, LTX-2.5, MiniMax-H3 and Wan2.2, the frtertaer LTX-2.5-uncensored FP8 re-upload, FastVideo-FastH3 LoRAs, and SDXL/Flux/Krea/Z-Image LoRA churn. Web search surfaced only closed-weight or derivative items (Abacus Smaug = Kimi-K3/V4-Flash/Qwen3.8-27B post-trains; State-of-Open-Source report mentions no new open weights). Partial rechecks: llada2-2-flash README still discloses no official active-param count (lastModified Aug 20) and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 still gated HTTP 401 (18th run). 60 models unchanged."
     }
   ]
 };
