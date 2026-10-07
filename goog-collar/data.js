@@ -2,7 +2,7 @@
 const DATA = {
  "meta": {
   "generated": "首版 2026-09-18 (北京时间)",
-  "updated": "最后更新 2026-10-08 07:33 北京时间 · 数据截至 2026-10-07 美股收盘",
+  "updated": "最后更新 2026-10-08 07:45 北京时间 · 数据截至 2026-10-07 美股收盘",
   "quoteDate": "2026-10-07",
   "intraday": false,
   "quoteTs": "CBOE delayed quotes + Yahoo Finance chart API",
@@ -16,7 +16,7 @@ const DATA = {
   "value": 2014746,
   "prevSpot": 344.59,
   "chgPct": 0.81,
-  "cboeSpot": 347.255
+  "cboeSpot": 347.19
  },
  "snapshot": {
   "low52": 236.69,
@@ -1139,13 +1139,13 @@ const DATA = {
  "live": {
   "id": "goog",
   "ticker": "GOOG",
-  "spot": 347.25,
+  "spot": 347.19,
   "expiry": "2027-01-15",
   "put": 305.0,
   "call": 410.0,
   "contracts": 58,
   "shares": 5800,
-  "posValue": 2014079,
+  "posValue": 2013702,
   "entryDate": "2026-10-05",
   "entryCredit": -1.45,
   "entrySpot": null,
@@ -1167,8 +1167,8 @@ const DATA = {
   "downTrigger": 314,
   "distUp": 14.5,
   "distDown": 10.5,
-  "maxLoss": 253489,
-  "maxGain": 355511,
+  "maxLoss": 253112,
+  "maxGain": 355888,
   "floorPct": -12.2,
   "capPct": 18.1,
   "status": "HOLD",
@@ -1178,13 +1178,13 @@ const DATA = {
   {
    "id": "goog",
    "ticker": "GOOG",
-   "spot": 347.25,
+   "spot": 347.19,
    "expiry": "2027-01-15",
    "put": 305.0,
    "call": 410.0,
    "contracts": 58,
    "shares": 5800,
-   "posValue": 2014079,
+   "posValue": 2013702,
    "entryDate": "2026-10-05",
    "entryCredit": -1.45,
    "entrySpot": null,
@@ -1206,8 +1206,8 @@ const DATA = {
    "downTrigger": 314,
    "distUp": 14.5,
    "distDown": 10.5,
-   "maxLoss": 253489,
-   "maxGain": 355511,
+   "maxLoss": 253112,
+   "maxGain": 355888,
    "floorPct": -12.2,
    "capPct": 18.1,
    "status": "HOLD",
@@ -1216,13 +1216,13 @@ const DATA = {
   {
    "id": "googl",
    "ticker": "GOOGL",
-   "spot": 350.43,
+   "spot": 350.48,
    "expiry": "2027-01-15",
    "put": 305.0,
    "call": 410.0,
    "contracts": 17,
    "shares": 1700,
-   "posValue": 595731,
+   "posValue": 595815,
    "entryDate": "2026-10-07",
    "entryCredit": -0.95,
    "entrySpot": null,
@@ -1243,9 +1243,9 @@ const DATA = {
    "upTrigger": 398,
    "downTrigger": 314,
    "distUp": 13.5,
-   "distDown": 11.5,
-   "maxLoss": 78846,
-   "maxGain": 99654,
+   "distDown": 11.6,
+   "maxLoss": 78930,
+   "maxGain": 99570,
    "floorPct": -13.0,
    "capPct": 17.0,
    "status": "HOLD",
@@ -1338,7 +1338,7 @@ const DATA = {
   "conclusion": {
    "title": "结论：两个 collar 已建仓（GOOG 58张 + GOOGL 17张），维护模式运行中——状态均为 HOLD，无需操作。",
    "body": "合计对冲 7,500 股 Alphabet（$2,609,280），两笔均为 Jan15'27 305P/410C。GOOG（建仓 10/5，净借记 $1.45/股）：盯市 $-6,670，净delta 0.60。GOOGL（建仓 10/7，净借记 $0.95/股）：盯市 $-3,400，净delta 0.59。期权腿合计 $-10,070——建仓后股价上涨使 put 变便宜、call 变贵，collar 腿小幅回撤属正常（这正是 collar 用上行空间换保护的机制体现，正股浮盈远大于此）。合计净delta敞口约 4,515 股等效（未对冲 7,500 股），股票敞口削减约 40%。",
-   "note": "触发线（两笔相同行权价）：roll-up $398（GOOG 距 +14.5% / GOOGL 距 +13.5%）；roll-down $314（GOOG 距 -10.5% / GOOGL 距 -11.5%）。日历节点：10/28 财报（规则：不操作，次日复盘）→ 12/16 滚动窗口开启（30 DTE）→ 1/15 到期。注意：GOOG 建仓现金流按市场证据记为净借记 $1.45/股（用户口述为净贷记，但建仓日 mid 报价下贷记成交不可能），待券商成交单核对。"
+   "note": "触发线（两笔相同行权价）：roll-up $398（GOOG 距 +14.5% / GOOGL 距 +13.5%）；roll-down $314（GOOG 距 -10.5% / GOOGL 距 -11.5%）。日历节点：10/28 财报（规则：不操作，次日复盘）→ 12/16 滚动窗口开启（30 DTE）→ 1/15 到期。两笔建仓现金流均为净借记（GOOG 1.45/股、GOOGL 0.95/股，已确认）。"
   }
  },
  "build": {
