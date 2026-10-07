@@ -4742,6 +4742,36 @@
       "deadline": "Wednesday Sep 23, 2026, 7:59:59 AM EDT",
       "review_scores": [],
       "review_mean": null
+    },
+    "ATC '26 Artifact Evaluation::#473": {
+      "conference": "ATC '26 Artifact Evaluation",
+      "paper_id": "473",
+      "title": "Model-as-a-Service in the Wild: Characterizing Production LLM Inference Clusters at Scale",
+      "authors": [],
+      "site": "https://atc26ae.hotcrp.com/paper/17",
+      "status": "unknown",
+      "status_source": null,
+      "first_seen": "2026-10-07T00:08:00+00:00",
+      "last_event": "2026-10-07T00:08:00+00:00",
+      "events": [
+        {
+          "type": "announcement",
+          "date": "2026-10-07T00:08:00+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Artifact availability"
+        }
+      ],
+      "counts": {
+        "updates": 0,
+        "comments": 0,
+        "reviews": 0,
+        "total": 1
+      },
+      "message_ids": [
+        "<20261007000800.64D05823030@mail.hotcrp.com>"
+      ],
+      "deadline": null,
+      "review_scores": [],
+      "review_mean": null
     }
   },
   "conferences": {
@@ -4830,8 +4860,8 @@
       "last_event": "2026-09-24T13:08:01+00:00"
     },
     "ATC '26 Artifact Evaluation": {
-      "paper_count": 1,
-      "last_event": "2026-09-30T15:17:58+00:00"
+      "paper_count": 2,
+      "last_event": "2026-10-07T00:08:00+00:00"
     }
   },
   "announcements": [
@@ -5076,6 +5106,6 @@
       "date": "2026-09-30T06:38:26+00:00"
     }
   ],
-  "last_updated": "2026-10-06T12:09:24.608653+00:00",
-  "email_count": 596
+  "last_updated": "2026-10-07T04:02:47.772483+00:00",
+  "email_count": 597
 }
