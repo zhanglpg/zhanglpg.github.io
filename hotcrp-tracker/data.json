@@ -5122,8 +5122,14 @@
       "type": "announcement",
       "subject": "[ATC '26] Student scholarships and travel grants",
       "date": "2026-09-30T06:38:26+00:00"
+    },
+    {
+      "conference": "ASE 2026",
+      "type": "announcement",
+      "subject": "[ASE 2026] Important information on presentations",
+      "date": "2026-10-08T11:46:18+00:00"
     }
   ],
-  "last_updated": "2026-10-08T08:07:41.389192+00:00",
-  "email_count": 600
+  "last_updated": "2026-10-08T12:04:36.706687+00:00",
+  "email_count": 601
 }
