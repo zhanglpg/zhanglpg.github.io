@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-07 10:14",
+  "last_run": "2026-10-09 09:55",
   "entries": [
+    {
+      "date": "2026-10-09",
+      "added": [
+        "kandinsky-6-0-pro"
+      ],
+      "upgraded": [],
+      "note": "Added Kandinsky 6.0 Video Pro (29B, MIT) — Kandinsky Lab's dual-stream CrossDiT for synchronized video+audio generation (5 s clips with lip-synced 44 kHz audio, Full-HD via a separate 1.41B SR-DiT): 60 paired blocks of a 4096-d video stream + 2048-d audio stream joined by gated bidirectional cross-attention (19B + 5B + 5B per the arXiv 2610.05608 tech report; ungated Pro-pretrain safetensors header measures 30.14B, ratio 0.96), 3D RoPE video / 1D RoPE audio, Qwen2.5-VL-7B + CLIP text conditioning. Verified against transformer configs + safetensors tensor headers + report Table 2. Late-window catch: repo created Sep 9 but the tech report landed Oct 4 and the final Pro checkpoint appeared gated this week; the Lite sister (3B) and quant churn were skipped as derivatives. Skipped per the placeholder rule: Reflection AI Beam (501B/23B — still no HF org), Mistral Large 4 'le Chonk' (mistralai newest is still Jul 16), FLUX 3 Image (no open weights); also LiquidAI d1-3B/d1-omni-600M (decision-router class — standing Clef/JEV skip, plus base_model:finetune LFM2.5-VL), interfaze-1-lite (mixture-of-architectures tool-orchestration product, not a single-model architecture), Underdog-Saluki (Qwen3.8-27B GGUF quant), and the usual LoRA/GGUF/MLX churn. Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged; Step-5-Preview-BF16, Kimi-K3-Base, LTX-2.5, North-Small-Translate-1.0 still gated 401."
+    },
     {
       "date": "2026-10-07",
       "added": [
@@ -136,15 +144,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Scanned HF newest-models (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video; createdAt ≥ Sep 17), a ~40-org sweep (DeepSeek, Qwen, zai-org, THUDM, moonshotai, meta, Mistral, google, nvidia, MiniMax, inclusionAI, internlm, BAAI, Agnes-AI, openbmb, nex-agi, m-a-p, TaichuAI, ibm-granite, Lightricks, et al.) and trending/likes top-40, plus web search for Sep 18–19 announcements. Everything new was derivative, out-of-scope, or already assessed: PrismML Bonsai 2 27B (926-like GGUF wave, Sep 18 press) remains a ternary quant of tracked Qwen3.8-27B per its base_model tag — 2nd consecutive skip; Local-Axiom-AI/Sabaki-Preview is a 0-like untrained GGUF research toy; akoumpa/Moonlight-V4-16B-A3B is an explicitly *untrained* architecture-only config (tags: untrained, architecture-config); convaiinnovations/laya is a non-autoregressive decision/router model (reinforcement-learning pipeline, no config.json) out of atlas scope; kpsss34/Walkyrie-7B-MoE is gated (401) and a finetune of its own 1.3B base; the text-to-image/video window was LoRA and quant churn only (Johnny-Z/Anima-Light-Lavender = circlestone-labs/Anima finetune; Jossbgo/Qwen-Image-2512 is a re-upload of the Dec 2025 Qwen official release; Ternary-Bonsai MLX/GGUF, FastH3 MLX, LTX-2.5 FP8, Wan2.2 GGUF re-uploads). Web search surfaced only closed-weight or platform news (Alibaba Qwen3.8-Omni-Flash is an API audio model with no open weights; Kimi K3 Bedrock GA and GitLab-hosted K3/M3/GLM-5.3 are distribution news for tracked models; nvidia Nemotron-3.5-Lightning-30B-A3B and Gemma-4 NVFP4 pages pre-date the window, Aug/Apr releases). Partial rechecks: inclusionAI/LLaDA2.2-flash README (lastModified Aug 20) still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 raw configs still gated HTTP 401 (20th run). No upgrades. 62 models unchanged."
-    },
-    {
-      "date": "2026-09-18",
-      "added": [
-        "gigachat3-5-reasoning",
-        "xing4-0-29b-a4b"
-      ],
-      "upgraded": [],
-      "note": "Added two open-weight frontier-class MoEs verified against HF config.json + README: GigaChat 3.5 Reasoning (Sber, 432B/28B, MIT — 256-expert top-8 + 1 shared over 30 GatedDeltaNet / 10 gated-MLA hybrid layers, ZeroCenteredGatedNorm pre+post, 3 MTP heads, six domain experts merged by online-RL + on-policy distillation, natively FP8-trained) and Xing4.0-29B-A4B (China Telecom, TeleChat lineage, 29B/4B Apache-2.0 — all-MLA MoE with 4-stream mHC hyper-connected residuals, 1 MTP draft layer, first model of its scale trained end-to-end on Ascend NPUs). Skipped as derivatives: prism-ml Ternary-Bonsai-2-27B (ternary quant of tracked Qwen3.8-27B per base_model tag), nvidia DeepSeek-V4.1-Flash-NVFP4, ZGCM-1-7B (small dense, no novelty). 62 models, v24."
     }
   ]
 };
