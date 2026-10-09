@@ -187,7 +187,7 @@ def main():
 
     # ---------- structure A (sticky, with hysteresis; frozen when LIVE) ----------
     mode = state.get('mode', 'screening')
-    live = state.get('live')
+    live = state.get('live') or (state.get('livePositions') or [None])[0]
     st = state.get('structure', {})
     exp_a = None
     rolled = False
@@ -296,6 +296,12 @@ def main():
         FLAGS.append('WARN_CREDIT_NEG')
 
     # ---------- probabilities / EV / CVaR ----------
+    # in maintenance mode, P&L is computed from ENTRY cash flow (what was actually paid/received),
+    # not the current mid; baseline spot = today's price (P&L to expiry from here).
+    cash = A['net_mid']
+    if mode == 'maintenance' and live and live.get('entry_credit') is not None:
+        cash = live['entry_credit']
+    A['cash'] = round(cash, 2)
     def d2(K, sig, T): return (math.log(spot/K) + (R - sig**2/2)*T)/(sig*math.sqrt(T))
     def probs(c):
         T = c['dte']/365
@@ -316,7 +322,7 @@ def main():
             S = spot*math.exp((R - sig_ev**2/2)*TA + sig_ev*math.sqrt(TA)*z)
             tot += pdf(z)*step*fn(S)
         return tot
-    collar_pnl = lambda S: (min(max(S, A['pk']), A['ck']) - spot)*SHARES + A['net_mid']*SHARES
+    collar_pnl = lambda S: (min(max(S, A['pk']), A['ck']) - spot)*SHARES + A['cash']*SHARES
     ev_u = integrate(lambda S: (S-spot)*SHARES)
     ev_a = integrate(collar_pnl)
     ev_b = integrate(lambda S: (min(max(S, B['pk']), B['ck']) - spot)*SHARES + B['net_mid']*SHARES) if B else 0
@@ -344,7 +350,7 @@ def main():
     scenarios = []
     for S in sorted(grid):
         unh = (S-spot)*SHARES
-        hed = (min(max(S, A['pk']), A['ck']) - spot)*SHARES + A['net_mid']*SHARES
+        hed = (min(max(S, A['pk']), A['ck']) - spot)*SHARES + cash*SHARES
         scenarios.append([S, round(unh), round(hed), round(hed-unh)])
 
     # ---------- IV term structure ----------
@@ -392,11 +398,11 @@ def main():
     ]
     if mode == 'maintenance' and live:
         ec = live.get('entry_credit')
-        ec_s = f"{ec:+.2f}/股" if ec is not None else "（待补录）"
+        ec_s = (f"净{'贷记' if ec >= 0 else '借记'} ${abs(ec):.2f}/股") if ec is not None else "（现金流待补录）"
         es = live.get('entrySpot')
         es_s = f" @ 股价 {es}" if es else ""
         timeline[0] = {'t': f"已建仓 · {live.get('entryDate','')}", 'cls': 'blue',
-                       'd': f"实际持仓：{exp_short(exp_a)} {pk:g}P/{ck:g}C ×{CONTRACTS}，建仓净贷记 {ec_s}{es_s}"}
+                       'd': f"实际持仓：{exp_short(exp_a)} {pk:g}P/{ck:g}C ×{CONTRACTS}，{ec_s}{es_s}"}
     if earnings_d and qdate < earnings_d <= exp_a:
         timeline.append({'t': earnings_s, 'cls': 'gold',
                          'd': '财报日：不做任何操作，让 collar 工作；财报后次日复盘 delta 与触发价'})
@@ -467,10 +473,6 @@ def main():
     }
     cvar_cut = round((1 - abs(cvar_a)/abs(cvar_u))*100) if cvar_u else 0
     hv_desc = 'HV 低位 + 财报前 IV 台阶' if hv21_pctile < 40 and term_e_idx >= 0 else ('当前波动率环境' )
-    summary = (f"以 {exp_short(exp_a)} {A['pk']:g}P/{A['ck']:g}C ×{CONTRACTS} 的{'净贷记' if A['net_mid'] >= 0 else '净借记'} collar，"
-               f"把 ${spot*SHARES:,.0f} 持仓的最大亏损锁定在 -${A['max_loss']:,.0f}（{A['floor_pct']:.1f}% 处封底，约 {-A['max_loss']/(spot*SHARES)*100:.1f}%）、"
-               f"上行保留到 +${A['max_gain']:,.0f}（+{A['cap_pct']:.1f}%）；5% 尾部损失从 {fmtD(cvar_u)} 削减到 {fmtD(cvar_a)}（-{cvar_cut}%）。"
-               f"之后按\"剩余30天滚动 + 触发规则 + 年度仓位重估\"维持。")
 
     exec_limit = math.floor((A['net_mid'] + A['net_worst'])/2*20)/20 if A['net_mid'] >= 0 else None
 
@@ -557,6 +559,23 @@ def main():
             FLAGS.append(f'WARN_ROLL_WINDOW_{tk}')
     if live_positions and live_block is None:
         live_block = live_positions[0]
+
+    # maintenance mode: summary reflects the ACTUAL live position(s) with entry cash flow
+    if mode == 'maintenance' and live_positions:
+        tot_shares = sum(L['shares'] for L in live_positions)
+        tot_val = sum(L['posValue'] for L in live_positions)
+        tot_mtm = sum((L['mtmPnl'] or 0) for L in live_positions)
+        legs = '、'.join(f"{L['ticker']} {L['contracts']}张（净{'贷记' if (L['entryCredit'] or 0)>=0 else '借记'} ${abs(L['entryCredit'] or 0):.2f}/股）" for L in live_positions)
+        g = live_positions[0]
+        summary = (f"已建仓 {len(live_positions)} 个 collar（{legs}，均 {exp_short(exp_a)} {g['put']:g}P/{g['call']:g}C），"
+                   f"对冲 {tot_shares:,} 股 Alphabet（市值 ${tot_val:,.0f}）。以 GOOG 主仓计：floor {g['floorPct']}% 封底、cap +{g['capPct']}% 封顶，"
+                   f"5% 尾部损失削减 {cvar_cut}%。期权腿合计盯市 {'+' if tot_mtm>=0 else '-'}${abs(tot_mtm):,.0f}。"
+                   f"维持规则：剩余30天滚动 + 触发线（cap-3%/floor+3%）响应 + 财报日不操作 + 年度仓位重估。")
+    else:
+        summary = (f"以 {exp_short(exp_a)} {A['pk']:g}P/{A['ck']:g}C ×{CONTRACTS} 的{'净贷记' if A['net_mid'] >= 0 else '净借记'} collar，"
+                   f"把 ${spot*SHARES:,.0f} 持仓的最大亏损锁定在 -${A['max_loss']:,.0f}（{A['floor_pct']:.1f}% 处封底，约 {-A['max_loss']/(spot*SHARES)*100:.1f}%）、"
+                   f"上行保留到 +${A['max_gain']:,.0f}（+{A['cap_pct']:.1f}%）；5% 尾部损失从 {fmtD(cvar_u)} 削减到 {fmtD(cvar_a)}（-{cvar_cut}%）。"
+                   f"之后按\"剩余30天滚动 + 触发规则 + 年度仓位重估\"维持。")
 
     # ---------- assemble ----------
     now_bj = datetime.datetime.now(BJ).strftime('%Y-%m-%d %H:%M')

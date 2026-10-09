@@ -92,7 +92,7 @@
 <body>
 
 <nav class="nav"><div class="wrap">
-  <a href="#pos">持仓</a><a href="#live">★实盘</a><a href="#timing">① 时机</a><a href="#build">② 构建</a><a href="#alts">③ 备选</a><a href="#pnl">④ 损益</a><a href="#maint">⑤ 维持</a><a href="#risk">⑥ 风险</a>
+  <a href="#pos">持仓</a><a href="#live">★实盘</a><a href="#mkt">① 市场</a><a href="#pnl">② 损益</a><a href="#maint">③ 维持</a><a href="#risk">④ 风险</a>
 </div></nav>
 
 <div class="wrap">
@@ -258,13 +258,14 @@ function PriceChart(){
 function PayoffChart(){
   const W=1020,H=320,P={l:70,r:16,t:18,b:34};
   const spot=DATA.position.spot, sh=DATA.position.shares;
+  const cash=(A.cash!=null?A.cash:A.net_mid);
   const xmin=A.pk*0.7, xmax=A.ck*1.18;
   const f=s=>Math.min(Math.max(s,A.pk),A.ck);
   const yhi=(xmax-spot)*sh;
-  const ymin=Math.min((A.pk-spot)*sh+A.net_mid*sh,-500000), ymax=Math.min(yhi,700000);
+  const ymin=Math.min((A.pk-spot)*sh+cash*sh,-500000), ymax=Math.min(yhi,700000);
   const x=v=>P.l+(W-P.l-P.r)*(v-xmin)/(xmax-xmin);
   const y=v=>P.t+(H-P.t-P.b)*(1-(v-ymin)/(ymax-ymin));
-  const unh=s=>(s-spot)*sh, col=s=>(f(s)-spot)*sh+A.net_mid*sh;
+  const unh=s=>(s-spot)*sh, col=s=>(f(s)-spot)*sh+cash*sh;
   let up='',cp='';
   for(let s=xmin;s<=xmax;s+=(xmax-xmin)/120){up+=`${x(s).toFixed(1)},${y(Math.max(Math.min(unh(s),ymax),ymin)).toFixed(1)} `;cp+=`${x(s).toFixed(1)},${y(col(s)).toFixed(1)} `;}
   const ticks=[];for(let v=-600000;v<=800000;v+=200000)if(v>=ymin&&v<=ymax)ticks.push(v);
@@ -316,7 +317,7 @@ function PayoffChart(){
         <line x1={P.l+20} x2={P.l+40} y1={P.t+33} y2={P.t+33} stroke="#5d6675" strokeWidth="1.6" strokeDasharray="5 4"/>
         <text x={P.l+46} y={P.t+37} fill="#9aa3b2" fontSize="11">不对冲（裸持仓）</text>
       </g>
-      <text x={P.l} y={12} fill="#5d6675" fontSize="11">到期日损益 (USD, {DATA.position.contracts}张合约, 含净{A.net_mid>=0?'贷记':'借记'})</text>
+      <text x={P.l} y={12} fill="#5d6675" fontSize="11">到期日损益 (USD, {DATA.position.contracts}张合约, 含建仓净{cash>=0?'贷记':'借记'} {Math.abs(cash).toFixed(2)}/股)</text>
     </svg>
     {hs!=null && (
       <div style={{position:'absolute',top:8,left:tipLeft,right:tipRight,pointerEvents:'none',zIndex:5,
@@ -415,7 +416,6 @@ function TermChart(){
 /* ---------- main ---------- */
 function App(){
   const ref=useReveal();
-  const B=DATA.candidates.find(c=>c.letter==='B');
   const S=DATA.snapshot, pos=DATA.position, M=DATA.maint, T=DATA.timing;
 
   const [r1,v1]=useCountUp(pos.value,1200,0,'$');
@@ -448,7 +448,7 @@ function App(){
   {DATA.livePositions && DATA.livePositions.length>0 && (
   <section id="live">
     <h2><span className="n">★</span>实盘持仓跟踪（维护模式 · {DATA.livePositions.length} 个 collar）</h2>
-    <p className="sec-desc">已建仓的实际 collar，每日随行情按 mid 价盯市（GOOG 与 GOOGL 分别取各自期权链报价）。下方②③章的结构评估基于理论推荐，实盘维护以本节为准。</p>
+    <p className="sec-desc">已建仓的实际 collar，每日随行情按 mid 价盯市（GOOG 与 GOOGL 分别取各自期权链报价）。下方各章（损益/维持/风险）均基于实盘结构计算。</p>
     {DATA.livePositions.map(L => (
     <div className="card reveal" key={L.id}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10,marginBottom:14}}>
@@ -494,27 +494,13 @@ function App(){
   </section>
   )}
 
-  {/* ============ TIMING ============ */}
-  <section id="timing">
-    <h2><span className="n">01</span>最佳构建时机</h2>
-    <p className="sec-desc">Collar 的成本 = 买 Put 的权利金 − 卖 Call 的权利金。时机判断的核心是：<b>在波动率便宜时买保护，在波动率昂贵时卖上行</b>，并让期权窗口覆盖已知的事件风险。当前 GOOG 的信号（每日随行情自动重算）：</p>
+  {/* ============ MARKET CONTEXT ============ */}
+  <section id="mkt">
+    <h2><span className="n">01</span>市场环境与状态结论</h2>
+    <p className="sec-desc">IV 期限结构是滚动决策的主要定价参考：远月 contango 陡 → 滚动时优先锁远月；平坦/倒挂 → 短周期滚动更划算。每日随行情自动重算。</p>
     <div className="card reveal">
       <TermChart/>
       <p className="dim" style={{fontSize:12.5,marginTop:6}}>{DATA.termNote}</p>
-    </div>
-    <div className="grid g2">
-      <div className="card reveal">
-        <div style={{fontWeight:700,marginBottom:8}}><span className="green">✓ 有利信号</span></div>
-        <ul className="tight">
-          {T.bull.map((b,i)=><li key={i}><b>{b.b}</b>{b.t}</li>)}
-        </ul>
-      </div>
-      <div className="card reveal">
-        <div style={{fontWeight:700,marginBottom:8}}><span className="gold">⚠ 不利/待权衡</span></div>
-        <ul className="tight">
-          {T.bear.map((b,i)=><li key={i}><b>{b.b}</b>{b.t}</li>)}
-        </ul>
-      </div>
     </div>
     {T.marketContext && T.marketContext.length>0 && (
       <div className="card reveal">
@@ -530,94 +516,22 @@ function App(){
     </div>
   </section>
 
-  {/* ============ BUILD ============ */}
-  <section id="build">
-    <h2><span className="n">02</span>构建策略：推荐结构 A</h2>
-    <p className="sec-desc">原则：Put 行权价 ≈ 1.3σ 下行（按当前 IV），Call 行权价压在技术位（52周高点 {S.high52} 附近）之下，期限选 <b>{A.expFmt}（{A.dte} DTE）</b>。{pos.contracts} 张合约对应 {pos.shares.toLocaleString()} 股，恰好整数倍，无零股缺口。行权价随每日股价自动复核（偏离目标 moneyness ±2.5% 才重设，避免频繁换仓）。</p>
-    <div className="card reveal">
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10,marginBottom:14}}>
-        <div style={{fontSize:17,fontWeight:700}}>{A.expFmt} · {A.pk} Put / {A.ck} Call × {pos.contracts} <span className="pill rec" style={{marginLeft:10}}>推荐 · 净{A.net_mid>=0?'贷记':'借记'}</span></div>
-        <div className="dim" style={{fontSize:13}}>{A.dte} DTE · 到期 {A.exp}</div>
-      </div>
-      <div className="legrow"><div className="legtag hold">持有</div><div>GOOG 正股 {pos.shares.toLocaleString()} 股 @ {fmt1(pos.spot)}，市值 {fmt$(pos.value)}</div></div>
-      <div className="legrow"><div className="legtag buy">买入</div><div><b>{pos.contracts} × {A.putSym}</b> — mid {fmt1(A.pmid)}（价差 {fmt1(A.psprd)}），Δ {A.pD.toFixed(2)}，IV {A.pIV.toFixed(1)}%，OI {A.pOI.toLocaleString()} · 支出 {fmt$(A.pmid*pos.shares)}</div></div>
-      <div className="legrow"><div className="legtag sell">卖出</div><div><b>{pos.contracts} × {A.callSym}</b> — mid {fmt1(A.cmid)}（价差 {fmt1(A.csprd)}），Δ +{A.cD.toFixed(2)}，IV {A.cIV.toFixed(1)}%，OI {A.cOI.toLocaleString()} · 收入 {fmt$(A.cmid*pos.shares)}</div></div>
-      <div className="grid g4" style={{marginTop:16}}>
-        <Stat lab={`净${A.net_mid>=0?'贷记':'借记'} (mid)`} big={<span ref={r3} className={A.net_mid>=0?'green':'red'}>{v3}</span>} note={`${fmt1(Math.abs(A.net_mid))}/股 · 年化 ${A.ann_yield>=0?'+':''}${A.ann_yield}%`}/>
-        <Stat lab={`最坏成交净${A.net_worst>=0?'贷记':'借记'}`} big={<span className={A.net_worst>=0?'green':'red'}>{fmt$(A.net_worst*pos.shares)}</span>} note="Call按bid卖、Put按ask买"/>
-        <Stat lab="最大亏损（封底）" big={<span ref={r4} className="red">{v4}</span>} note={`-${(A.max_loss/pos.value*100).toFixed(1)}% · 股价≤${A.pk}时`}/>
-        <Stat lab="最大盈利（封顶）" big={<span className="gold">{fmt$(A.max_gain)}</span>} note={`+${(A.max_gain/pos.value*100).toFixed(1)}% · 股价≥${A.ck}时`}/>
-      </div>
-      <div className="callout blue" style={{marginTop:14}}>
-        <b>为什么是这组行权价：</b>
-        <ul className="tight" style={{marginTop:6}}>
-          {DATA.build.why.map((w,i)=><li key={i}><b>{w.b}</b>{w.t}</li>)}
-        </ul>
-      </div>
-      <div style={{marginTop:14}}>
-        <div style={{fontWeight:700,marginBottom:8}}>到期概率分布（风险中性，Black-Scholes，每日随 IV 重算）</div>
-        <div className="grid g3">
-          <div className="stat"><div className="lab">跌破 Floor（&lt;${A.pk}）</div><div className="big red">{DATA.probs.A_probs[0]}%</div><div className="note">Put 生效，亏损封顶</div></div>
-          <div className="stat"><div className="lab">区间内（${A.pk}–{A.ck}）</div><div className="big green">{DATA.probs.A_probs[1]}%</div><div className="note">两腿均作废，正股自由涨跌</div></div>
-          <div className="stat"><div className="lab">突破 Cap（&gt;${A.ck}）</div><div className="big gold">{DATA.probs.A_probs[2]}%</div><div className="note">被指派交出股票 @{A.ck}（+{A.cap_pct.toFixed(1)}%），或提前滚动</div></div>
-        </div>
-      </div>
-      <div style={{marginTop:18}}>
-        <PayoffChart/>
-      </div>
-    </div>
-
-    <div className="card reveal">
-      <div style={{fontWeight:700,marginBottom:10}}>执行细节（{pos.contracts}张 × 2腿，规模不小，滑点要管理）</div>
-      <ul className="tight">
-        <li><b>用组合单（Combo/Spread order）一次成交</b>：券商支持 "Collar" 或自定义 multi-leg net credit 单。{DATA.build.execLimit!=null && <>限价挂 <b>净贷记 ≥ +${DATA.build.execLimit.toFixed(2)}</b>（mid 与最坏成交之间），不追价。</>}GOOG 期权深度足够，{pos.contracts} 张分 2–4 笔在 1–2 天内完成即可。</li>
-        <li><b>时间选择</b>：避开开盘前 15 分钟和收盘前 5 分钟（价差最宽）；美股盘中流动性最好。北京时间 22:00–次日 03:00。</li>
-        <li><b>保证金</b>：持股覆盖的 Call 为 covered call，无裸卖保证金要求；多数券商只冻结股票交割（锁定 {pos.shares.toLocaleString()} 股）。确认账户为 Level 2/3 期权权限。</li>
-        <li><b>先卖 Call 还是先买 Put？</b>用组合单则无腿风险；若分开成交，<b>先卖 Call 后买 Put</b>（Call 的 IV 台阶是时间敏感的；Put 在波动放大时反而更好买）。</li>
-        <li><b>税务（美股账户）</b>：卖 Call 若被判定为 "qualified covered call" 且期限 ≤ 一年、非深度实值，不会中断持股期。若持仓有巨额浮盈且在意长期资本利得税率，执行前与税务顾问确认 constructive sale 规则。</li>
-        <li><b>除息与提前指派</b>：GOOG 季度股息 ~${S.divQ}/股（年化 {S.divYield}%）。Call 深度虚值时提前指派概率极低；若 Call 转为实值且临近除息日，指派风险上升——见维持章节的滚动规则。</li>
-      </ul>
-    </div>
-  </section>
-
-  {/* ============ ALTERNATIVES ============ */}
-  <section id="alts">
-    <h2><span className="n">03</span>备选结构对比（最新真实报价）</h2>
-    <p className="sec-desc">五个候选全部用最新 CBOE mid 价定价（{DATA.meta.quoteDate} 收盘）。B 适合"宁可贴小钱也要更近的 floor"；D 适合"只对冲近期事件、之后按季滚动"；E 适合"讨厌操作、接受更贵保护"。</p>
-    <div className="card reveal table-scroll">
-      <table>
-        <thead><tr>
-          <th>结构</th><th>到期/DTE</th><th className="num">Put</th><th className="num">Call</th><th className="num">净成本(mid)</th><th className="num">最坏成交</th><th className="num">Floor</th><th className="num">Cap</th><th className="num">最大亏损</th><th className="num">最大盈利</th><th className="num">年化</th>
-        </tr></thead>
-        <tbody>
-          {DATA.candidates.map((c,i)=>(
-            <tr key={i} style={c.letter==='A'?{background:'rgba(255,107,53,.07)'}:{}}>
-              <td style={{whiteSpace:'normal',minWidth:180}}><b>{c.name}</b>{c.letter==='A'&&<span className="pill rec" style={{marginLeft:6}}>推荐</span>}<div className="dim" style={{fontSize:11.5,whiteSpace:'normal'}}>{c.note}</div></td>
-              <td>{c.exp.slice(2)}<div className="dim" style={{fontSize:11}}>{c.dte}天</div></td>
-              <td className="num">{c.pk}<div className="dim" style={{fontSize:11}}>{fmt1(c.pmid)} · Δ{c.pD.toFixed(2)} · OI {(c.pOI/1000).toFixed(1)}k</div></td>
-              <td className="num">{c.ck}<div className="dim" style={{fontSize:11}}>{fmt1(c.cmid)} · Δ{c.cD.toFixed(2)} · OI {(c.cOI/1000).toFixed(1)}k</div></td>
-              <td className="num" style={{color:c.net_mid>=0?'var(--green)':'var(--red)'}}><b>{fmt$(c.net_mid*pos.shares)}</b><div className="dim" style={{fontSize:11}}>{fmt1(Math.abs(c.net_mid))}/股</div></td>
-              <td className="num dim">{fmt$(c.net_worst*pos.shares)}</td>
-              <td className="num red">{c.floor_pct.toFixed(1)}%</td>
-              <td className="num gold">+{c.cap_pct.toFixed(1)}%</td>
-              <td className="num red">{fmt$(-c.max_loss)}<div className="dim" style={{fontSize:11}}>-{(c.max_loss/pos.value*100).toFixed(1)}%</div></td>
-              <td className="num green">{fmt$(c.max_gain)}<div className="dim" style={{fontSize:11}}>+{(c.max_gain/pos.value*100).toFixed(1)}%</div></td>
-              <td className="num">{c.ann_yield>=0?'+':''}{c.ann_yield.toFixed(1)}%</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <div className="callout gold reveal">
-      <b>取舍说明：</b>{DATA.alts.takeaway}
-    </div>
-  </section>
-
   {/* ============ P&L ============ */}
   <section id="pnl">
-    <h2><span className="n">04</span>到期损益情景表（结构 A）</h2>
-    <p className="sec-desc">{DATA.scenarios.length} 个到期价格情景，{pos.contracts} 张合约、{pos.shares.toLocaleString()} 股、含净{A.net_mid>=0?'贷记':'借记'} {fmt$(A.net_mid*pos.shares)}。"差额" = Collar − 裸持仓：Floor 下方恒为保护价值，Cap 上方为让出的上行。</p>
-    <div className="card reveal table-scroll">
+    <h2><span className="n">02</span>到期损益与概率分布（实盘结构）</h2>
+    <p className="sec-desc">以 GOOG 实盘结构（{A.pk}P/{A.ck}C × {pos.contracts}，建仓净{A.cash>=0?'贷记':'借记'} ${Math.abs(A.cash).toFixed(2)}/股）计算：从现在到 {A.exp} 到期的损益情景、损益曲线与风险中性概率分布。损益基线 = 现价 ${pos.spot}，已含建仓现金流，不含正股历史成本。</p>
+    <div className="card reveal">
+      <PayoffChart/>
+    </div>
+    <div style={{marginTop:14}} className="card reveal">
+      <div style={{fontWeight:700,marginBottom:8}}>到期概率分布（风险中性，Black-Scholes，每日随 IV 重算）</div>
+      <div className="grid g3">
+        <div className="stat"><div className="lab">跌破 Floor（&lt;${A.pk}）</div><div className="big red">{DATA.probs.A_probs[0]}%</div><div className="note">Put 生效，亏损封底 -{fmt$(Math.abs(DATA.scenarios[0][2]))} 左右</div></div>
+        <div className="stat"><div className="lab">区间内（${A.pk}–{A.ck}）</div><div className="big green">{DATA.probs.A_probs[1]}%</div><div className="note">两腿均作废，正股自由涨跌（净成本 = 建仓借记）</div></div>
+        <div className="stat"><div className="lab">突破 Cap（&gt;${A.ck}）</div><div className="big gold">{DATA.probs.A_probs[2]}%</div><div className="note">被指派交出股票 @{A.ck}（+{A.cap_pct.toFixed(1)}%），或提前 roll up</div></div>
+      </div>
+    </div>
+    <div className="card reveal table-scroll" style={{marginTop:14}}>
       <table>
         <thead><tr><th className="num">到期价</th><th className="num">裸持仓损益</th><th className="num">Collar损益</th><th className="num">差额(保护/让渡)</th><th>状态</th></tr></thead>
         <tbody>
@@ -637,13 +551,14 @@ function App(){
     <div className="grid g3">
       <Stat lab="5% CVaR（尾部均损）" big={<span className="red">{fmt$(DATA.cvar.A)}</span>} note={`裸持仓为 ${fmt$(DATA.cvar.unhedged)} — 尾部风险削减 ${DATA.cvar.cut}%`}/>
       <Stat lab={`${A.dte}天期望损益差`} big={<span className="dim">{fmt$(DATA.probs.ev.A-DATA.probs.ev.unhedged)}</span>} note={`Collar EV ${fmt$(DATA.probs.ev.A)} vs 裸持仓 ${fmt$(DATA.probs.ev.unhedged)} — 让渡期望换尾部保险`}/>
-      <Stat lab="盈亏平衡点" big={<span className="blue">{(pos.spot-A.net_mid).toFixed(2)}</span>} note="现价减去净贷记，比裸持仓更低"/>
+      <Stat lab="建仓现金流合计" big={<span className={A.cash>=0?'green':'red'}>{fmt$(A.cash*pos.shares)}</span>} note={`净${A.cash>=0?'贷记':'借记'} ${Math.abs(A.cash).toFixed(2)}/股 × ${pos.shares.toLocaleString()}股（已含在上方损益中）`}/>
     </div>
+    <p className="dim" style={{fontSize:12.5,marginTop:10}}>注：GOOGL（17张）与 GOOG 行权价相同、到期日相同，损益结构按比例缩放（17/58），建仓借记更小（$0.95/股）。</p>
   </section>
 
   {/* ============ MAINTENANCE ============ */}
   <section id="maint">
-    <h2><span className="n">05</span>构建后的维持策略</h2>
+    <h2><span className="n">03</span>维持策略与滚动规则</h2>
     <p className="sec-desc">Collar 不是"设完就忘"。维持动作分三类：<b>定期滚动</b>（日历驱动）、<b>事件响应</b>（价格/财报驱动）、<b>年度重估</b>（仓位驱动）。触发价随结构自动更新。</p>
 
     <div className="card reveal">
@@ -665,10 +580,10 @@ function App(){
       <table>
         <thead><tr><th>触发条件</th><th>动作</th><th>理由</th></tr></thead>
         <tbody>
-          <tr><td style={{whiteSpace:'normal',minWidth:150}}><b>股价触及 Call 行权价 -3%（≥${M.triggers.up}）</b>且距到期 &gt;30天</td><td style={{whiteSpace:'normal',minWidth:220}}>评估 roll up：平掉 {A.ck}C（认亏时间价值），卖更高行权价 Call + 同时上移 Put，保持净贷记≥0</td><td style={{whiteSpace:'normal',minWidth:140}}>保住上行空间；delta 对冲随股价上移，floor 也自然抬高</td></tr>
+          <tr><td style={{whiteSpace:'normal',minWidth:150}}><b>股价触及 Call 行权价 -3%（≥${M.triggers.up}）</b>且距到期 &gt;30天</td><td style={{whiteSpace:'normal',minWidth:220}}>评估 roll up：平掉 {A.ck}C（认亏时间价值），卖更高行权价 Call + 同时上移 Put，滚动净现金流不劣于建仓借记</td><td style={{whiteSpace:'normal',minWidth:140}}>保住上行空间；delta 对冲随股价上移，floor 也自然抬高</td></tr>
           <tr><td style={{whiteSpace:'normal'}}><b>距到期 &lt;21天 且股价 &gt; ${A.ck}</b></td><td style={{whiteSpace:'normal'}}>二选一：① roll up & out（更高行权价+更远到期）；② 接受指派 @{A.ck} 交出股票（+{A.cap_pct.toFixed(1)}%落袋），用 proceeds 重新建仓+新 collar</td><td style={{whiteSpace:'normal'}}>避免除息日被提前指派打乱计划；{A.ck} 卖出本身是预设好的止盈</td></tr>
           <tr><td style={{whiteSpace:'normal'}}><b>股价跌破 Put 行权价 +3%（≤${M.triggers.down}）</b></td><td style={{whiteSpace:'normal'}}>不平仓、不恐慌——保护已生效。若基本面恶化（而非市场普跌），考虑 roll down：平掉 {A.pk}P（深实值、delta≈-0.8），买更低行权价 Put 释放权利金补贴，同步下移 Call</td><td style={{whiteSpace:'normal'}}>把"已经用掉的保险"变现，重建更便宜的下层保护</td></tr>
-          <tr><td style={{whiteSpace:'normal'}}><b>财报前 IV 异常抬升（ATM IV &gt;40%）</b></td><td style={{whiteSpace:'normal'}}>若尚未建仓：等财报后 IV crush 再建；若已建仓：不动。可在财报前 1–2 周加卖近月小额虚值 Call（约1/3仓位）吃 IV 溢价，财报后作废即白赚</td><td style={{whiteSpace:'normal'}}>卖方在事件 IV 峰值有正期望；但仅限小比例，不破坏主结构</td></tr>
+          <tr><td style={{whiteSpace:'normal'}}><b>财报前 IV 异常抬升（ATM IV &gt;40%）</b></td><td style={{whiteSpace:'normal'}}>主结构不动。可在财报前 1–2 周加卖近月小额虚值 Call（约1/3仓位）吃 IV 溢价，财报后作废即白赚</td><td style={{whiteSpace:'normal'}}>卖方在事件 IV 峰值有正期望；但仅限小比例，不破坏主结构</td></tr>
           <tr><td style={{whiteSpace:'normal'}}><b>公司公告重大事件</b>（并购、分拆、监管裁决、CEO变更）</td><td style={{whiteSpace:'normal'}}>当日重估：事件若改变长期逻辑 → 直接减仓股票而非依赖期权；若只是短期波动源 → 确认 collar 仍覆盖新波动区间，必要时加宽</td><td style={{whiteSpace:'normal'}}>期权对冲价格风险，不对冲 thesis 风险</td></tr>
           <tr><td style={{whiteSpace:'normal'}}><b>HV21 跌破 15%（极度平静）</b></td><td style={{whiteSpace:'normal'}}>下一轮滚动时改用更近的 Put（-8%~-10%）——便宜的波动率买更贵的保护合算</td><td style={{whiteSpace:'normal'}}>保护成本与波动率成正比，低波环境是收紧 collar 的时机</td></tr>
         </tbody>
@@ -699,7 +614,7 @@ function App(){
 
   {/* ============ RISKS ============ */}
   <section id="risk">
-    <h2><span className="n">06</span>残余风险与注意事项</h2>
+    <h2><span className="n">04</span>残余风险与注意事项</h2>
     <div className="grid g2">
       <div className="card reveal">
         <div style={{fontWeight:700,marginBottom:8}}>Collar 管不住的风险</div>
@@ -715,7 +630,7 @@ function App(){
         <ul className="tight">
           <li>{pos.contracts}张×2腿共{pos.contracts*2}张合约：务必组合单/分批，勿市价单。当前 Put 侧价差 ${A.psprd.toFixed(2)}，Call 侧 ${A.csprd.toFixed(2)}——挂 mid 附近大概率成交。</li>
           <li>财报日期 {S.earnings} 为华尔街预期口径、<b>未经公司确认</b>，关注 Alphabet IR 公告，确认其在窗口内。</li>
-          <li>本报告数据基于 {DATA.meta.quoteDate} 收盘（CBOE 延时）；实际下单日以盘中实时报价复核净贷记目标。</li>
+          <li>本报告数据基于 {DATA.meta.quoteDate} 收盘（CBOE 延时）；执行任何滚动/调整时以盘中实时报价复核目标净现金流。</li>
           <li>若使用非美股原生券商（如通过 CFD/差价合约通道），确认其支持多腿期权组合单与美式提前指派处理。</li>
         </ul>
       </div>
@@ -750,7 +665,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
       if (DATA.livePositions && DATA.livePositions.length) {
         var totVal = DATA.livePositions.reduce(function(s,L){return s+L.posValue;},0);
         var parts = DATA.livePositions.map(function(L){ return L.ticker + ' ' + L.shares.toLocaleString() + '股 @ $' + L.spot; }).join(' · ');
-        subHtml = '合计持仓市值 <b>$' + totVal.toLocaleString('en-US') + '</b>（' + parts + '，' + DATA.meta.quoteDate + '）。已建仓 ' + DATA.livePositions.length + ' 个 collar（GOOG 58张 + GOOGL 17张，Jan15\'27 305P/410C），进入维护模式：每日盯市两腿 mid 价、监控触发线（cap-3% / floor+3%）、30 DTE 滚动提醒。理论结构评估（①–④章）保留作参考。<b>每个交易日早晨（北京时间 8:25）自动刷新并推送维护日报。</b>';
+        subHtml = '合计持仓市值 <b>$' + totVal.toLocaleString('en-US') + '</b>（' + parts + '，' + DATA.meta.quoteDate + '）。已建仓 ' + DATA.livePositions.length + ' 个 collar（GOOG 58张 + GOOGL 17张，Jan15\'27 305P/410C），维护模式：每日盯市两腿 mid 价、监控触发线（cap-3% / floor+3%）、30 DTE 滚动提醒、财报事件规则。<b>每个交易日早晨（北京时间 8:25）自动刷新并推送维护日报。</b>';
       } else {
         subHtml = '持仓市值 <b>' + (DATA.position.value<0?'-':'') + '$' + Math.abs(DATA.position.value).toLocaleString('en-US') + '</b>（GOOG ' +
           (DATA.position.chgPct>0?'+':(DATA.position.chgPct===0?'±':'')) + DATA.position.chgPct + '%，' + (DATA.meta.intraday?'盘中价':'收') + ' $' + DATA.position.spot + '，' + DATA.meta.quoteDate +
