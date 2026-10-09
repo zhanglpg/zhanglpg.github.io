@@ -2957,6 +2957,88 @@ window.MODELS = [
 ]
 },
 {
+"id": "kandinsky-6-0-pro",
+"name": "Kandinsky 6.0 Video Pro",
+"org": "Kandinsky Lab",
+"family": "Kandinsky",
+"released": "2026-09",
+"license": "MIT",
+"modality": "video-gen",
+"decoder_type": "DiT (video diffusion transformer)",
+"params_total_B": 29,
+"params_active_B": 29,
+"n_layers": 60,
+"d_model": 4096,
+"d_ff": 16384,
+"d_ff_moe": null,
+"n_heads": 32,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MHA",
+"attention_detail": "Dual-stream CrossDiT: 60 paired blocks, each holding a video-stream sub-block (4096-d, 32 heads × 128, FFN 16384) and an audio-stream sub-block (2048-d, 16 heads × 128, FFN 7168), joined by blockwise bidirectional cross-attention (va: video queries attend audio keys/values; av: audio queries attend video) with gated cross-attention residuals (cross_gates). Self-attention is full bidirectional (FlashAttention; sparse NABLA in the SR stage). Q/K are RMS-normalised per head; adaLN-Zero modulation (time_dim 1024) drives scale/shift/gate on every sub-layer. Video tokens carry 3D RoPE with head-dim split (32,48,48) over (t,h,w) and frame index normalised by fps/24; audio tokens carry 1D RoPE (ca_rope). Patchify (1,2,2) over Hunyuan-Video VAE latents. 2 text-refiner blocks per stream condition on Qwen2.5-VL-7B-Instruct hidden states (3584) plus pooled CLIP ViT-L/14 (768).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "3D RoPE (video) + 1D RoPE (audio)",
+"activation": "GELU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Kandinsky Lab's flagship synchronized text/image-to-audio-video model: generates 5-second clips with lip-synced 44 kHz audio in one diffusion pass (T2AV + I2AV), upscaled to Full-HD 1920×1080 by a separate text-free 1.41B SR-DiT (32 blocks, 1792-d, K-VAE 64-ch latent space, NABLA sparse attention). Tech report (arXiv 2610.05608, Oct 4 2026) splits the 29B as 19B video stream + 5B audio stream + 5B cross-attention; the ungated Pro-pretrain transformer safetensors header measures 30.14B tensors incl. fp32 modulation/norm params (claimed/computed 0.96). Training: audio stream pretrained from scratch, then continuous joint pretraining preserving unimodal fidelity, SFT (model-soup merged), OmniNFT-adapted RL, and two-stage π-Flow + Sim-LADD distillation (few-step distill checkpoints). Sister model Lite (3B: 32 blocks, video 1792-d 28 heads × 64, audio 896-d, measured 3.18B) shares the architecture. Final Pro checkpoint is gated on HF; pretrain/distill checkpoints and all configs are open. MIT, with diffusers/vLLM-omni/SGLang/ComfyUI integrations.",
+"sources": [
+"https://arxiv.org/abs/2610.05608",
+"https://huggingface.co/kandinskylab/Kandinsky-6.0-Pro-5s-Diffusers",
+"https://huggingface.co/kandinskylab/Kandinsky-6.0-Pro-pretrain-5s-Diffusers/raw/main/transformer/config.json",
+"https://kandinskylab.ai/models/video/"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Video-stream self-attention (×60 blocks)",
+"p": {
+"d": 4096,
+"nq": 32,
+"nkv": 32,
+"dh": 128,
+"nocache": true,
+"rope": "3D RoPE (32,48,48) t,h,w · fps/24 frame index",
+"qknorm": "per-head QK-RMSNorm",
+"cache": "none — full bidirectional attention over video tokens, recomputed every denoising step"
+},
+"notes": [
+"video_dec_block: self-attn + text cross-attn + FFN 16384 (GELU) per block",
+"adaLN-Zero: timestep 1024 → 6×4096 mod vectors per stream",
+"text cond. = Qwen2.5-VL-7B (3584) + pooled CLIP ViT-L/14 (768) via 2 refiner blocks",
+"patchify (1,2,2) over Hunyuan-Video VAE latents (16 ch, 8× spatial / 4× temporal)"
+]
+},
+{
+"kind": "gqa",
+"title": "Audio-stream self-attention (×60 blocks)",
+"p": {
+"d": 2048,
+"nq": 16,
+"nkv": 16,
+"dh": 128,
+"nocache": true,
+"rope": "1D RoPE (ca_rope) · temporal position",
+"qknorm": "per-head QK-RMSNorm",
+"cache": "none — bidirectional attention over MMAudio-VAE latents (44 kHz, 40 ch)"
+},
+"notes": [
+"audio_dec_block mirrors the video block at half width (FFN 7168)",
+"blockwise bidirectional cross-attn: va (video→audio QK) + av (audio→video QK), gated",
+"cross-attn layers are 5B of the 29B total — the audio–video sync mechanism",
+"output: vocoder renders 40-dim audio latents to 44 kHz waveform (MMAudioVocoder)"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
