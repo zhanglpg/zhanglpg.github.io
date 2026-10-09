@@ -4680,7 +4680,7 @@
       "status": "submitted",
       "status_source": "canonical",
       "first_seen": "2026-09-22T05:22:08+00:00",
-      "last_event": "2026-09-30T15:17:58+00:00",
+      "last_event": "2026-10-08T12:50:05+00:00",
       "events": [
         {
           "type": "submitted",
@@ -4736,13 +4736,18 @@
           "type": "comment",
           "date": "2026-09-30T15:17:58+00:00",
           "subject": "[ATC '26 Artifact Evaluation] Comment for #17 \"Model-as-a-Service in the Wild:...\""
+        },
+        {
+          "type": "comment",
+          "date": "2026-10-08T12:50:05+00:00",
+          "subject": "[ATC '26 Artifact Evaluation] Comment for #17 \"Model-as-a-Service in the Wild:...\""
         }
       ],
       "counts": {
         "updates": 1,
-        "comments": 7,
+        "comments": 8,
         "reviews": 0,
-        "total": 11
+        "total": 12
       },
       "message_ids": [
         "<20260922052208.5C4D0B41407@mail.hotcrp.com>",
@@ -4755,7 +4760,8 @@
         "<20260930143007.3D991842080@mail.hotcrp.com>",
         "<20260930143627.3CCB49AF4B8@mail.hotcrp.com>",
         "<20260930150006.0F5879AF4B8@mail.hotcrp.com>",
-        "<20260930151758.32BE1840D85@mail.hotcrp.com>"
+        "<20260930151758.32BE1840D85@mail.hotcrp.com>",
+        "<20261008125005.842EF820F4A@mail.hotcrp.com>"
       ],
       "deadline": "Wednesday Sep 23, 2026, 7:59:59 AM EDT",
       "review_scores": [],
@@ -4879,7 +4885,7 @@
     },
     "ATC '26 Artifact Evaluation": {
       "paper_count": 2,
-      "last_event": "2026-10-07T00:08:00+00:00"
+      "last_event": "2026-10-08T12:50:05+00:00"
     }
   },
   "announcements": [
@@ -5130,6 +5136,6 @@
       "date": "2026-10-08T11:46:18+00:00"
     }
   ],
-  "last_updated": "2026-10-08T12:04:36.706687+00:00",
-  "email_count": 601
+  "last_updated": "2026-10-09T00:02:04.447962+00:00",
+  "email_count": 602
 }
