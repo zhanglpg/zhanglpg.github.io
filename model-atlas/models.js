@@ -3039,6 +3039,172 @@ window.MODELS = [
 ]
 },
 {
+"id": "youtu-parsing-omni",
+"name": "Youtu-Parsing-Omni",
+"org": "Tencent",
+"family": "Youtu",
+"released": "2026-10",
+"license": "Youtu-Parsing License (custom; not for use within the EU)",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 5,
+"params_active_B": 5,
+"n_layers": 40,
+"d_model": 2560,
+"d_ff": 9728,
+"d_ff_moe": null,
+"n_heads": 32,
+"n_kv_heads": 8,
+"head_dim": 192,
+"attention": "MLA",
+"attention_detail": "40-layer decoder uses Multi-head Latent Attention (MLA): q_lora_rank 1536 up-projects to 32 heads × (qk_nope 128 + qk_rope 64 = 192); K/V are compressed to a single 512-d latent (kv_lora_rank 512) plus a 64-d shared k_R (MQA-style, so the KV cache is head-count independent), v_head_dim 128. RoPE θ 1.6M with rope_interleave over the 64 rotary dims. Dense SwiGLU FFN (intermediate 9728), pre-norm RMSNorm, 1M-token context, tied embeddings. The separate 28-layer omni encoder runs full bidirectional GQA attention (16 q / 8 kv heads, head_dim 128, SwiGLU 3072) with video group-attention and 4 audio-visual fusion layers (indices 12,13,26,27).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 133632,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": true,
+"vision": {
+"encoder": "Youtu-Omni-Encoder (28L/1024d, unified image+audio+video)",
+"encoder_params_B": 0.48,
+"fusion": "adapter",
+"notes": "A single 28-layer bidirectional Transformer (1024-d, 16 heads × 128, GQA 8 KV, SwiGLU FFN 3072) initialized from a pre-trained text LM, replacing the usual two separately-pretrained vision + audio towers. Thin modality-specific stems map inputs to tokens (vision: 16×16 patch-embed over RGB; audio: 3-layer conv2d stem over 128-bin log-mel + linear proj), a shared (t,h,w) positional encoding packs an arbitrary mix of images / audio chunks / video frames, and 4 fusion layers open a new attention window at each audio-to-frame boundary so a frame attends to co-temporal sound. Modality-specific mergers (2×2 spatial merge → 2560-d) and projectors feed tokens to the LLM decoder. audio_config is null — audio is handled inside the omni encoder."
+},
+"notes": "Tencent Youtu Lab's compact 5B omni-modal parser: one model that reads documents, natural images, charts/flowcharts, geometry figures, audio and audio-visual video into a single structured OmniSchema JSON envelope (layout elements, text/LaTeX/OTSL tables/Mermaid flowcharts, bounding boxes, timestamps, ASR, acoustic events, captions). The architecture pairs a novel unified Youtu-Omni-Encoder (one 28-layer bidirectional Transformer initialized from a text LM, so almost all perception parameters are shared across modalities, with audio-visual alignment computed inside perception via fusion layers) with a 40-layer MLA text decoder (2560-d, DeepSeek-style latent KV compression, 1M context). Post-training uses OmniSchema-Aware On-Policy Distillation (OSAD): the student samples its own parses, a frozen reference-seeing copy scores each token as content (Jensen-Shannon) or structure (forward-KL at higher temperature), and LoRA adapters are merged each round so the student becomes the next teacher. SOTA on OmniDocBench v1.6 (96.96 Overall) and best open-weight model on OmniParsingBench (75.08 Avg., second only to Gemini-3-Pro). Measured 5.33B params on disk (BF16: 4.51B decoder + 0.48B omni encoder + 0.34B lm_head) vs the official 5B claim. Custom Youtu-Parsing license (not intended for use within the EU); technical report, vLLM plugin and inference examples released Oct 2026.",
+"sources": [
+"https://github.com/TencentCloudADP/youtu-parsing/tree/main/youtu_parsing_omni",
+"https://huggingface.co/tencent/Youtu-Parsing-Omni",
+"https://huggingface.co/tencent/Youtu-Parsing-Omni/raw/main/config.json",
+"https://huggingface.co/tencent/Youtu-Parsing-Omni/raw/main/README.md"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "mla",
+"title": "Multi-head Latent Attention (MLA) decoder module (×40)",
+"p": {
+"d": 2560,
+"nh": 32,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"cache": "c_KV 512 + k_R 64 = 576 el/token/layer — head-count independent; × 40 layers ≈ 45 KB/token bf16 → ~14× smaller than full-head MHA"
+},
+"notes": [
+"RMSNorm on both latents (c_Q 1536, c_KV 512) — k_R not normed",
+"k_R shared by all 32 heads (MQA-style)",
+"rope_interleave: rotary dims interleaved; θ 1.6M, 1M context",
+"tied embeddings (lm_head shares embed_tokens)"
+]
+},
+{
+"kind": "gqa",
+"title": "Omni encoder bidirectional GQA (×28)",
+"p": {
+"d": 1024,
+"nq": 16,
+"nkv": 8,
+"dh": 128,
+"nocache": true,
+"rope": "(t,h,w) pos enc θ 10K",
+"qknorm": "per-head QK-RMSNorm"
+},
+"notes": [
+"one shared trunk for image patches + log-mel audio + video — initialized from a text LM",
+"frames and audio chunks share one temporal coordinate (t,h,w); audio takes h = w = 0",
+"4 fusion layers (12, 13, 26, 27) open a window at each audio-to-frame boundary",
+"video group attention; 2×2 spatial merger → 2560-d into the decoder"
+]
+}
+]
+},
+{
+"id": "iris-3b",
+"name": "Iris-3B",
+"org": "SperidLabs",
+"family": "Iris",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "image-gen",
+"decoder_type": "DiT (diffusion transformer)",
+"params_total_B": 3,
+"params_active_B": 3,
+"n_layers": 24,
+"d_model": 2560,
+"d_ff": 6826,
+"d_ff_moe": null,
+"n_heads": 20,
+"n_kv_heads": 5,
+"head_dim": 128,
+"attention": "MMDiT",
+"attention_detail": "Dual-level pixel-space DiT with NO VAE. Patch stage = 24 blocks over 16×16 RGB pixel patches (in_channels 3): the first 8 are dual-stream MMDiT blocks (separate image/text weights fused by joint attention) and the remaining 16 are single-stream blocks (text+image concatenated, shared weights). All blocks use grouped-query attention (20 query heads / 5 KV heads, head_dim 128) with a sigmoid content gate (gated_attention), sandwich RMSNorm (pre- and post-norm on each branch), per-head QK-RMSNorm, and SwiGLU FFN (intermediate 6826). 2D RoPE on image tokens (θ 10000, scale 16) + 1D RoPE/absolute position on text. A shared adaLN-Zero modulation core (rank 64) drives scale/shift/gate per stream. Pixel stage = a 4-block PiTBlock refinement head (16-d pixel tokens, 1280-d attention, 10 heads) that turns each patch back into pixels. Text conditioning: frozen Qwen3-VL-4B-Instruct via a 12-layer layerwise adapter (lap_blocks2) + 2-block refiner → 2560-d, 300 tokens. Rectified-flow velocity prediction, 1000 train timesteps.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "RMSNorm (sandwich)",
+"norm_placement": "pre",
+"pos_encoding": "2D RoPE (image) + 1D RoPE (text)",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "SperidLabs' Iris-3B is the gallery's first pixel-space image generator: it skips the lossy VAE/latent entirely — the diffusion transformer operates directly on 16×16 RGB pixel patches (in_channels 3) and predicts pixel-space velocities via rectified flow, so nothing is lost to a texture-biased latent. Dual-level design: a 24-block patch-stage transformer (8 dual-stream MMDiT + 16 single-stream blocks, 2560-d, GQA 20/5, sigmoid-gated attention, sandwich RMSNorm) followed by a shallow 4-block pixel-refinement head (PiTBlock, 16-d pixel tokens) that paints every output pixel. Text conditioning comes from a frozen Qwen3-VL-4B-Instruct through a 12-layer layerwise adapter + refiner. Trained from scratch on a 256→512→1024 px curriculum (665K steps total). The same backbone, fine-tuned with no architectural change, also does monocular depth estimation and image restoration/super-resolution (both ship in the repo, run in a single forward pass with an empty prompt). The accompanying paper (arXiv 2610.09450) also converts a pretrained latent model (FLUX.2 Klein 4B) to pixel space and reports no significant downstream advantage for the pixel-space prior, but releases the full training/conversion/fine-tuning recipe. Measured 2.99B params (FP32 EMA checkpoint, 11.95 GB) vs the claimed 3B. Apache-2.0.",
+"sources": [
+"https://arxiv.org/abs/2610.09450",
+"https://huggingface.co/speridlabs/iris-3b",
+"https://huggingface.co/speridlabs/iris-3b/raw/main/config.yaml",
+"https://github.com/speridlabs/iris-3b"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Dual-stream MMDiT joint attention (×8)",
+"p": {
+"d": 2560,
+"nq": 20,
+"nkv": 5,
+"dh": 128,
+"nocache": true,
+"rope": "2D RoPE (img, θ 10K, scale 16) · 1D RoPE + abs pos (txt)",
+"qknorm": "per-head QK-RMSNorm",
+"gate": "sigmoid content gate per stream"
+},
+"notes": [
+"separate img/text weights (q 2560→2560, k/v 2560→640 GQA) fused only in the joint attention op",
+"6 adaLN mods per stream — shared weight core + per-block bias (shared_bias)",
+"sandwich RMSNorm: pre- and post-norm on attention and MLP branches",
+"pixel space: tokens are 16×16×3 RGB patches — no VAE latent anywhere"
+]
+},
+{
+"kind": "gqa",
+"title": "Single-stream block attention (×16)",
+"p": {
+"d": 2560,
+"nq": 20,
+"nkv": 5,
+"dh": 128,
+"nocache": true,
+"rope": "2D RoPE (img) · 1D RoPE (txt)",
+"qknorm": "per-head QK-RMSNorm",
+"gate": "sigmoid content gate"
+},
+"notes": [
+"text+image tokens concatenated — one shared weight set: attention, SwiGLU 6826, norms, adaLN",
+"follows the 8 dual-stream blocks; text stream kept through the final block (final_block_text: keep)"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",

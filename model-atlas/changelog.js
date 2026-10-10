@@ -1,8 +1,17 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-09 09:55",
+  "last_run": "2026-10-10 10:44",
   "entries": [
+    {
+      "date": "2026-10-10",
+      "added": [
+        "youtu-parsing-omni",
+        "iris-3b"
+      ],
+      "upgraded": [],
+      "note": "Added two architecturally novel open-weight releases, both verified against primary sources. Tencent Youtu-Parsing-Omni (5B, custom Youtu-Parsing license) — an omni-modal parser that turns documents, natural images, charts/flowcharts, geometry figures, audio and audio-visual video into one structured OmniSchema JSON envelope; its novelty is a single unified Youtu-Omni-Encoder (one 28-layer bidirectional GQA transformer initialized from a text LM, thin modality stems, shared (t,h,w) positional encoding, 4 audio-visual fusion layers) feeding a 40-layer MLA decoder (2560-d, q_lora 1536 / kv_lora 512, 1M context, tied embeddings); verified vs config.json + modeling code + safetensors header (5.33B measured vs 5B claimed, 0.94); SOTA on OmniDocBench v1.6 (96.96). SperidLabs Iris-3B (3B, Apache-2.0) — the atlas's first pixel-space image generator: no VAE anywhere; a dual-level rectified-flow DiT (8 dual-stream MMDiT + 16 single-stream blocks, 2560-d, GQA 20/5, sigmoid-gated attention, sandwich RMSNorm) over 16x16 RGB patches plus a 4-block pixel-refinement head, frozen Qwen3-VL-4B text adapter; verified vs config.yaml + GitHub modeling code + safetensors header (2.99B FP32 measured vs 3B claimed); arXiv 2610.09450. Skipped per the placeholder rule: Mistral Large 4 'le Chonk' (weights promised end of October; mistralai newest is still LIDstral-Arabic) and Reflection AI Beam (still no HF org); also Qwen-Image-2.1-Turbo (8-step distill checkpoint of tracked Qwen-Image-2.1), IQuestLab/SAIL (post-training of Qwen3.6-35B-A3B), JetBrains Mellum2.1 (Sep 20, pre-window), LightOnOCR-3 (Qwen3.5 finetune), Phocinae-Largha/neuphonic neudecide/pplx-decider (decision-router class), XiaomiMiMo MOPD pair (distills of tracked checkpoints), and the usual GGUF/MLX/LoRA churn. Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged; Step-5-Preview-BF16, Kimi-K3-Base, LTX-2.5, North-Small-Translate-1.0, MiniCPM-V-4.7 and Kandinsky-6.0-Pro still gated 401. 76 models, v35."
+    },
     {
       "date": "2026-10-09",
       "added": [
@@ -138,12 +147,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added Realtime-Venus-Omni (Ant Group inclusionAI + Tsinghua, arXiv 2609.13814, Apache-2.0, verified against config.json + README + safetensors index): a 9B full-duplex realtime interaction model on the MiniCPM-o 4.5 / Omni-Flow backbone — Qwen3-8B language decoder (36L/4096d GQA 32/8), SigLIP2 vision tower + 64-query resampler, Whisper-Medium audio encoder with pool-5 projection, and discrete S3 speech tokens decoded by a bundled 20-layer Token2wav streaming flow-matching head. First model in the atlas built around a shared causal timeline: it perceives video+audio continuously, decides per-second listen-vs-speak, and emits in-stream <delegate> events executed asynchronously by an external harness (dual-loop runtime) so tools never block the dialogue; training-free long-video memory retrieves archived audio-visual evidence. Beats Gemini 3.1 Live and GPT-4o on Full-Duplex-Bench v1.5 continuation metrics (97/88/86%). Skipped this run: ginigen-ai/Edge-4B-TELL (verbatim Gemma-4-E4B q4_0 GGUF mirror + 10KB linear confidence probe — derivative), BAAI/Brainmu-Spike (spike-camera conv LoRA, out of scope), nvidia DeepSeek-V4.1-Flash-NVFP4 (quant of tracked model), MiniMax-H3 LoRA/GGUF churn, Johnny-Z/Anima-Light-Lavender (finetune). Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (21st run). 63 models, v25."
-    },
-    {
-      "date": "2026-09-19",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Scanned HF newest-models (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video; createdAt ≥ Sep 17), a ~40-org sweep (DeepSeek, Qwen, zai-org, THUDM, moonshotai, meta, Mistral, google, nvidia, MiniMax, inclusionAI, internlm, BAAI, Agnes-AI, openbmb, nex-agi, m-a-p, TaichuAI, ibm-granite, Lightricks, et al.) and trending/likes top-40, plus web search for Sep 18–19 announcements. Everything new was derivative, out-of-scope, or already assessed: PrismML Bonsai 2 27B (926-like GGUF wave, Sep 18 press) remains a ternary quant of tracked Qwen3.8-27B per its base_model tag — 2nd consecutive skip; Local-Axiom-AI/Sabaki-Preview is a 0-like untrained GGUF research toy; akoumpa/Moonlight-V4-16B-A3B is an explicitly *untrained* architecture-only config (tags: untrained, architecture-config); convaiinnovations/laya is a non-autoregressive decision/router model (reinforcement-learning pipeline, no config.json) out of atlas scope; kpsss34/Walkyrie-7B-MoE is gated (401) and a finetune of its own 1.3B base; the text-to-image/video window was LoRA and quant churn only (Johnny-Z/Anima-Light-Lavender = circlestone-labs/Anima finetune; Jossbgo/Qwen-Image-2512 is a re-upload of the Dec 2025 Qwen official release; Ternary-Bonsai MLX/GGUF, FastH3 MLX, LTX-2.5 FP8, Wan2.2 GGUF re-uploads). Web search surfaced only closed-weight or platform news (Alibaba Qwen3.8-Omni-Flash is an API audio model with no open weights; Kimi K3 Bedrock GA and GitLab-hosted K3/M3/GLM-5.3 are distribution news for tracked models; nvidia Nemotron-3.5-Lightning-30B-A3B and Gemma-4 NVFP4 pages pre-date the window, Aug/Apr releases). Partial rechecks: inclusionAI/LLaDA2.2-flash README (lastModified Aug 20) still discloses no official active-param count and deepseek-v4-flash-vision-exp is unchanged (lastModified Sep 1) — both stay partial; CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 raw configs still gated HTTP 401 (20th run). No upgrades. 62 models unchanged."
     }
   ]
 };
