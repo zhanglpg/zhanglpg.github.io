@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-10 10:44",
+  "last_run": "2026-10-11 09:30",
   "entries": [
+    {
+      "date": "2026-10-11",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Oct 10 10:44 → Oct 11 09:24 CST (~23h): swept 42 tracked orgs by lastModified (only hits: yandex/AliceAI-Foundation-80B-A3B-Base README-only edit — entry already in atlas; stabilityai audio touch; nvidia robotics/AGILE checkpoints + SOMA-X body model — out of scope), HF newest per pipeline (text-generation, image-text-to-text, text-to-image, image-to-image, text-to-video, image-to-video, any-to-any, text-to-audio, video-to-video), likes7d + trendingScore top-150 (nothing created in-window above the already-assessed Qwen-Image-2.1-Turbo distill, LiquidAI d1 decision pair, LightOnOCR-3, Mellum2.1 GGUF), and a global newest sweep (zero repos created in-window with ≥25 likes). News check surfaced nothing new: Wan 3.0 (calamansi/wan-3-0-video text stub) is API-only with no open weights — open Wan line still ends at 2.2; Microsoft-Decision-1 and h2oai/h2o-lightning-31b are Qwen3.5-9B/gemma-4-31B decision-model class (standing JEV/Clef/d1 skip); unbiased Pareto 26.9 'official release' is a closed blended router, no weights. WATCH unchanged: Reflection AI Beam (501B/23B) still no HF org, Mistral Large 4 'le Chonk' still absent from mistralai (weights promised end of October), Step-5-Preview-BF16 / Kimi-K3-Base / LTX-2.5 / North-Small-Translate-1.0 / MiniCPM-V-4.7 / Kandinsky-6.0-Pro all still gated 401, FrancisRing/Prism config.json still flags-only (no DiT arch; report 'stay tuned'). Partial rechecks: inclusionAI/LLaDA2.2-flash and deepseek-ai/DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 76 models unchanged, v35."
+    },
     {
       "date": "2026-10-10",
       "added": [
@@ -139,14 +145,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added Qwen-Image-2.1 (Alibaba, Qwen Research License, verified against transformer/config.json, weight index, the diffusers implementation and the official blog): a 7B / 32-layer single-stream flow-matching DiT that unifies text-to-image generation and image editing in one model, with native RGBA transparency (absorbs Dec-2025's Qwen-Image-Layered) and up to 10 reference images. Architecturally notable for its mixed-granularity block-causal mask — token-level causal across the packed [text ; reference latents ; target latents] stream, bidirectional inside each image block — plus a single shared SiLU+Linear(4096→4×4096) modulation tensor sliced by every block and a prefix KV cache valid because text/reference tokens modulate from t=0. Conditioned by a Qwen3-VL encoder (36L/4096d + 27L/1152d ViT), 64-ch residual VAE, 3-axis RoPE 16/56/56. The HF repo sat as a placeholder since Sep 14 and the weights + blog went live Sep 20, which is why the Sep-20 run missed it. Skipped this run: Altworld/Hemmingway-1 (114 likes, base_model finetune of tracked Qwen3.8-27B), XGENlabs/XGEN-JING (finetune of tracked MiniMax-H3), Cactus-Compute/needle3 (121M on-device tool-calling model, not frontier), Qwen-Image-2.1-PE-T2I/I2I (prompt-rewriter companion models), plus GGUF/LoRA churn (Bonsai-2, Qwen-Image-2.1 quants). Partial rechecks: LLaDA2.2-flash (lastModified Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (22nd run). 64 models, v26."
-    },
-    {
-      "date": "2026-09-20",
-      "added": [
-        "realtime-venus-omni"
-      ],
-      "upgraded": [],
-      "note": "Added Realtime-Venus-Omni (Ant Group inclusionAI + Tsinghua, arXiv 2609.13814, Apache-2.0, verified against config.json + README + safetensors index): a 9B full-duplex realtime interaction model on the MiniCPM-o 4.5 / Omni-Flow backbone — Qwen3-8B language decoder (36L/4096d GQA 32/8), SigLIP2 vision tower + 64-query resampler, Whisper-Medium audio encoder with pool-5 projection, and discrete S3 speech tokens decoded by a bundled 20-layer Token2wav streaming flow-matching head. First model in the atlas built around a shared causal timeline: it perceives video+audio continuously, decides per-second listen-vs-speak, and emits in-stream <delegate> events executed asynchronously by an external harness (dual-loop runtime) so tools never block the dialogue; training-free long-video memory retrieves archived audio-visual evidence. Beats Gemini 3.1 Live and GPT-4o on Full-Duplex-Bench v1.5 continuation metrics (97/88/86%). Skipped this run: ginigen-ai/Edge-4B-TELL (verbatim Gemma-4-E4B q4_0 GGUF mirror + 10KB linear confidence probe — derivative), BAAI/Brainmu-Spike (spike-camera conv LoRA, out of scope), nvidia DeepSeek-V4.1-Flash-NVFP4 (quant of tracked model), MiniMax-H3 LoRA/GGUF churn, Johnny-Z/Anima-Light-Lavender (finetune). Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (21st run). 63 models, v25."
     }
   ]
 };
