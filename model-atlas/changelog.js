@@ -1,8 +1,14 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-11 09:30",
+  "last_run": "2026-10-13 09:35",
   "entries": [
+    {
+      "date": "2026-10-13",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Oct 11 09:30 → Oct 13 09:25 CST (~48h): swept ~70 tracked orgs by lastModified, likes7d top-40 + trendingScore top-60, HF newest across 11 pipelines (218 in-window repos, all zero/low-like churn), global-newest sweep (zero repos created in-window with ≥20 likes), and web news (theopenweights timeline/editions). Considered and skipped: vllm-sr/d3 + five size variants (Oct 10-12, trending; single-forward structured decision models, finetune of Qwen3.8-27B — standing no-finetune + decision-router skip, Clef/JEV/d1/pplx-decider precedents); autotrust/JEV-35B + NVFP4 (Oct 11, 196 likes — same decision class, Qwen3.5-35B-A3B finetune); openbmb/Trident-Qwen3VL-2B (Oct 12 — multimodal-embedding/retrieval finetune of Qwen3-VL-2B, out-of-scope task); TencentARC/Multics (Oct 12, 3 likes — multi-player world-model research checkpoint finetuned from Wan2.1/2.2, no architecture novelty); FenomAI/YuE2-3B (mirror of Sep 9 m-a-p/YuE2-3B); the MiniCPM-V 4.7 quant wave (GGUF/GPTQ/AWQ/FP8/int4/DSpark), LiquidAI MLX ports, gemma-4 quants, and metadata/README touches (DeepSeek-V4.1-Flash indexer-cache fix, GLM-5.3 card benchmarks, Qwen-Image-2.1-Turbo README, Ling-3.0-flash MTP fix — no spec changes). Qwen3.8-2.4T-A95B resurfaced on openweights news = already in atlas as qwen3-8-max (verified). Kimi-K3 cross-check: moonshotai/Kimi-K3 config.json now readable — 93L / 7168d / 896 experts top-16 + 2 shared / 69 KDA + 24 MLA / situ / MXFP4 all match the stored verified entry; Kimi-K3-Base still 401. WATCH unchanged: Reflection AI Beam (org endpoint now returns an empty list instead of 404 — possibly provisioned; reflection-ai/beam still 401, weights promised by end of Oct), Mistral Large 4 'le Chonk' (absent from mistralai org; guessed repo names 401), FrancisRing/Prism (root config still flags-only, no DiT arch), Step-5-Preview-BF16 / FLUX.3-Image / LTX-2.5 still gated 401. Partial rechecks: inclusionAI/LLaDA2.2-flash and deepseek-ai/DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) configs unchanged — both stay partial. 76 models unchanged, v35."
+    },
     {
       "date": "2026-10-11",
       "added": [],
@@ -137,14 +143,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added Xiaomi MiMo-V2.6-Pro-RL and MiMo-V2.6-Flash-RL (MIT, open-sourced Sep 21 with tech report; verified against config.json + weight index + modeling code): omnimodal (text/image/video/audio) sparse-MoE agent models at 1M context trained by one mixed-domain asynchronous GRPO run with Groupwise Agentic Grading (GRS rubrics + GAR advantage redistribution) toward recursive self-improvement — Pro 1.02T/42B (70L/6144d, 384 experts top-8) and Flash 309B/15B (48L/4096d, 256 experts top-8), both on a hybrid full-GQA + sliding-window-128 attention backbone (10+60 and 9+39 layers, learned attention-sink bias, d_h 192/v 128, partial rotary 0.334) with a dense first block, MXFP4-stored releases (566 GB / 172.9 GB), and a 5-layer non-causal DFlash speculative draft decoder (Flash also carries 3 MTP layers); recomputed totals match the official counts 1.00x. Also added Yandex AliceAI-Foundation-80B-A3B-Base (Apache-2.0, Sep 12, never previously assessed): a from-scratch 80B/3B base with a 12x(3 KDA linear + 1 gated-attention) hybrid layout, 512 tiny experts top-10+1 shared, 262K context, shipped with new Russian factuality benchmarks. Skipped: StepFun Step-5 Preview (API-only Sep 20; official HF repo still a 401 placeholder, weights promised Oct 15; the public Step-5-Preview-BF16 mirrors carry step3p5v/Step4 configs — not primary sources), XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B (distill), upstage solar-pro4-tokenizer (tokenizer only), nvidia/Kumo-Forecast (time-series, out of scope), TencentARC WorldCrafter (no tech report), plus quant/LoRA churn. Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (23rd run). 67 models, v27."
-    },
-    {
-      "date": "2026-09-21",
-      "added": [
-        "qwen-image-2-1"
-      ],
-      "upgraded": [],
-      "note": "Added Qwen-Image-2.1 (Alibaba, Qwen Research License, verified against transformer/config.json, weight index, the diffusers implementation and the official blog): a 7B / 32-layer single-stream flow-matching DiT that unifies text-to-image generation and image editing in one model, with native RGBA transparency (absorbs Dec-2025's Qwen-Image-Layered) and up to 10 reference images. Architecturally notable for its mixed-granularity block-causal mask — token-level causal across the packed [text ; reference latents ; target latents] stream, bidirectional inside each image block — plus a single shared SiLU+Linear(4096→4×4096) modulation tensor sliced by every block and a prefix KV cache valid because text/reference tokens modulate from t=0. Conditioned by a Qwen3-VL encoder (36L/4096d + 27L/1152d ViT), 64-ch residual VAE, 3-axis RoPE 16/56/56. The HF repo sat as a placeholder since Sep 14 and the weights + blog went live Sep 20, which is why the Sep-20 run missed it. Skipped this run: Altworld/Hemmingway-1 (114 likes, base_model finetune of tracked Qwen3.8-27B), XGENlabs/XGEN-JING (finetune of tracked MiniMax-H3), Cactus-Compute/needle3 (121M on-device tool-calling model, not frontier), Qwen-Image-2.1-PE-T2I/I2I (prompt-rewriter companion models), plus GGUF/LoRA churn (Bonsai-2, Qwen-Image-2.1 quants). Partial rechecks: LLaDA2.2-flash (lastModified Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (22nd run). 64 models, v26."
     }
   ]
 };
