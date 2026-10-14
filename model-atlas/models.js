@@ -3205,6 +3205,69 @@ window.MODELS = [
 ]
 },
 {
+"id": "lfm2-5-24b-a2b",
+"name": "LFM2.5-24B-A2B",
+"org": "Liquid AI",
+"family": "LFM",
+"released": "2026-10",
+"license": "LFM Open License v1.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 24.0,
+"params_active_B": 2.45,
+"n_layers": 40,
+"d_model": 2048,
+"d_ff": 11776,
+"d_ff_moe": 1536,
+"n_heads": 32,
+"n_kv_heads": 8,
+"head_dim": 64,
+"attention": "hybrid",
+"attention_detail": "Liquid AI's LFM2 hybrid backbone — 30 double-gated short-convolution blocks (depthwise causal conv1d, kernel 3 = conv_L_cache, in_proj 2048→6144 split into B/C/x with h=B⊙x gating, out_proj 2048→2048, operator_norm RMSNorm; no KV cache — fixed conv state) interleaved every 4th layer with 10 full-attention GQA layers (32 Q / 8 KV heads, head_dim 64, per-head q_layernorm + k_layernorm RMSNorm, RoPE θ 1e7). Full-attention at layer indices 2,6,10,…,38.",
+"n_experts": 64,
+"active_experts": 4,
+"shared_experts": 0,
+"vocab_size": 128000,
+"context_length": 131072,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": true,
+"vision": null,
+"notes": "Largest and final model in Liquid AI's LFM2.5 family (230M→24B-A2B), a 24B-total / 2.45B-active reasoning MoE built for fast on-device agents (184 tok/s on Apple M5 Max). Keeps the LFM2-24B-A2B architecture but grows context 32K→131K and doubles vocab 65K→128K via in-place tokenizer expansion for better non-Latin tokenization. Hybrid token mixing: 30 short-conv blocks (no attention) + 10 GQA layers every 4th; every layer except the first 2 (dense SwiGLU, d_ff 11776) is a 64-expert top-4 MoE (expert d_ff 1536) with aux-loss-free expert_bias routing and norm_topk_prob. Tied embeddings (no separate lm_head). Trained on ~36T tokens (33T pre + 2T mid @32K + 300B long-ctx @131K), always-thinks reasoning (<think> tag), agentic RL inside OpenClaw / Hermes Agent / Pi / OpenCode harnesses. safetensors index total_size 47.94 GB / 2 = 23.97B, reproducing the 24B claim to 1.00.",
+"sources": [
+"https://www.liquid.ai/blog/lfm2-5-24b-a2b",
+"https://huggingface.co/LiquidAI/LFM2.5-24B-A2B",
+"https://huggingface.co/LiquidAI/LFM2.5-24B-A2B/raw/main/config.json",
+"https://huggingface.co/LiquidAI/LFM2.5-24B-A2B/raw/main/model.safetensors.index.json",
+"https://github.com/huggingface/transformers/blob/main/src/transformers/models/lfm2_moe/modeling_lfm2_moe.py"
+],
+"confidence": "verified",
+"dense_first_layers": 2,
+"attention_split": {
+"parts": [
+{
+"name": "Short Conv",
+"n": 30,
+"type": "linear",
+"sub": "gated · conv k3"
+},
+{
+"name": "GQA",
+"n": 10,
+"type": "GQA",
+"sub": "32/8 · RoPE"
+}
+],
+"pattern": "ccfcccfcccfcccfcccfcccfcccfcccfcccfcccfc",
+"pattern_map": {
+"c": "linear",
+"f": "GQA"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",

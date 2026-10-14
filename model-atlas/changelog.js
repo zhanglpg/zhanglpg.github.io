@@ -1,8 +1,16 @@
 // Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
 // Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-13 09:35",
+  "last_run": "2026-10-14 09:52",
   "entries": [
+    {
+      "date": "2026-10-14",
+      "added": [
+        "lfm2-5-24b-a2b"
+      ],
+      "upgraded": [],
+      "note": "Added Liquid AI LFM2.5-24B-A2B (24B total / 2.45B active, LFM Open License v1.0, confidence verified) — the largest and final model of the LFM2.5 family (230M→24B), an always-thinking on-device agent MoE (184 tok/s on Apple M5 Max) on Liquid AI's hybrid LFM2 backbone: 30 double-gated short-convolution blocks (depthwise causal conv1d kernel 3, in_proj 2048→6144 split B/C/x with B⊙x gating, no KV cache) interleaved every 4th layer with 10 full-attention GQA layers (32 Q / 8 KV, head_dim 64, per-head QK RMSNorm, RoPE θ 1e7); 64-expert top-4 MoE on every layer except 2 dense SwiGLU first layers (d_ff 11776), aux-loss-free expert_bias routing with norm_topk_prob, tied embeddings, 128K vocab and 131K context (both doubled vs LFM2-24B-A2B via in-place tokenizer expansion), ~36T training tokens with agentic RL in OpenClaw/Hermes/Pi/OpenCode harnesses. Verified against HF config.json + README + model.safetensors.index.json (23.97B measured vs 24B claimed) + transformers modeling_lfm2_moe.py (conv/attention module shapes confirm head_dim 64, kernel 3, dense layers 0-1); param self-consistency ratio 1.01. Considered and skipped: Qwen-Image-2.1-Turbo (8-step distill of tracked Qwen-Image-2.1), openbmb/MiniCPM-V-4.7-1B (small sibling of tracked 35B-A3B), ConwayResearch/Underdog-Saluki-27B-1.0 (2-bit GGUF quant of Qwen3.8-27B), LiquidAI d1-3B + d1-omni-600M (single-forward decision-router class, standing skip), LightOnOCR-3-4B (Qwen3.5 OCR finetune), JetBrains Mellum2.1 (Sep 20, pre-window), ai-forever Zarya-4B (4B diffusion-LM, minor org, 2 likes), fishaudio/drama-3 (TTS, out of scope), autotrust/JEV-35B + vllm-sr/d3 (decision class). WATCH rechecks: reflection-ai org endpoint still returns an empty list and reflection-ai/beam still 401 (weights promised end of Oct); Mistral Large 4 'le Chonk' still absent from mistralai; FrancisRing/Prism root config still flags-only; Step-5-Preview-BF16, Kimi-K3-Base, FLUX.3-Image and LTX-2.5 still gated 401. Partial rechecks: inclusionAI/LLaDA2.2-flash and deepseek-ai/DeepSeek-V4-Flash-Vision-Exp configs unchanged — both stay partial. 77 models, v36."
+    },
     {
       "date": "2026-10-13",
       "added": [],
@@ -133,16 +141,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added Ming-Image-0.1-Design (Ant Group inclusionAI, MIT, weights live Sep 17/announced Sep 22, verified against transformer/config.json + mllm/config.json + weight index + GitHub modeling code): a 6B graphic-design text-to-image model (UI, infographics, posters) with native RGBA transparent output and strong in-image text rendering. Generation core is a 6.15B-BF16 single-stream flow-matching DiT (30 blocks, 30 heads × 128, d 3840, SwiGLU FFN 10240, QK-RMSNorm, 3-axis RoPE 32/48/48, adaLN-Zero scale+gate modulation, 2 extra refiner blocks, FlowMatchEuler shift 6.0); conditioning comes from a 17B BailingMM2 MoE-VLM (BailingMoeV2 20L/2048d, 256 experts top-8, sliding window 4096 + Qwen2.5-ViT + Qwen2 text encoder) projecting hidden states at layers 5/12/20 to 2560-d caption features. Companion Ming-Image-0.1-Design-Layer (same DiT, multi_frame_output) decomposes flat designs into RGBA layers and is noted on the card rather than tracked separately. Skipped: GPT-6 Sol/Luna and Claude Opus 5.5 (closed API-only, no weights), NVIDIA–Hugging Face acquisition (not a model), plus the usual finetune/quant churn (Bonsai-2 GGUF wave, Qwen-Image-2.1 quants/LoRAs, MiMo-V2.6 distills). Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still 401-gated, North-Small-Translate-1.0 and LTX-2.5 still gated (24th run). 68 models, v28."
-    },
-    {
-      "date": "2026-09-22",
-      "added": [
-        "mimo-v2-6-pro-rl",
-        "mimo-v2-6-flash-rl",
-        "aliceai-foundation-80b-a3b"
-      ],
-      "upgraded": [],
-      "note": "Added Xiaomi MiMo-V2.6-Pro-RL and MiMo-V2.6-Flash-RL (MIT, open-sourced Sep 21 with tech report; verified against config.json + weight index + modeling code): omnimodal (text/image/video/audio) sparse-MoE agent models at 1M context trained by one mixed-domain asynchronous GRPO run with Groupwise Agentic Grading (GRS rubrics + GAR advantage redistribution) toward recursive self-improvement — Pro 1.02T/42B (70L/6144d, 384 experts top-8) and Flash 309B/15B (48L/4096d, 256 experts top-8), both on a hybrid full-GQA + sliding-window-128 attention backbone (10+60 and 9+39 layers, learned attention-sink bias, d_h 192/v 128, partial rotary 0.334) with a dense first block, MXFP4-stored releases (566 GB / 172.9 GB), and a 5-layer non-causal DFlash speculative draft decoder (Flash also carries 3 MTP layers); recomputed totals match the official counts 1.00x. Also added Yandex AliceAI-Foundation-80B-A3B-Base (Apache-2.0, Sep 12, never previously assessed): a from-scratch 80B/3B base with a 12x(3 KDA linear + 1 gated-attention) hybrid layout, 512 tiny experts top-10+1 shared, 262K context, shipped with new Russian factuality benchmarks. Skipped: StepFun Step-5 Preview (API-only Sep 20; official HF repo still a 401 placeholder, weights promised Oct 15; the public Step-5-Preview-BF16 mirrors carry step3p5v/Step4 configs — not primary sources), XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B (distill), upstage solar-pro4-tokenizer (tokenizer only), nvidia/Kumo-Forecast (time-series, out of scope), TencentARC WorldCrafter (no tech report), plus quant/LoRA churn. Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; North-Small-Translate-1.0 and LTX-2.5 still 401-gated (23rd run). 67 models, v27."
     }
   ]
 };
