@@ -3268,6 +3268,126 @@ window.MODELS = [
 }
 },
 {
+"id": "ling-3-1-flash",
+"name": "Ling-3.1-flash",
+"org": "InclusionAI",
+"family": "Ling",
+"released": "2026-10",
+"license": "MIT",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 560,
+"params_active_B": 25,
+"n_layers": 72,
+"d_model": 4096,
+"d_ff": 10240,
+"d_ff_moe": 1280,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "7:1 hybrid-linear — 63 KDA (Kimi-style Delta Attention) linear layers interleaved with 9 gated-MLA full-attention layers, one MLA every 8th layer (indices 7/15/.../71, verified from the FP8 modules_to_not_convert g_proj list + safetensors weight map). KDA: 64 heads × 128, depthwise causal conv k=4 on q/k/v, per-channel decay f_proj 4096→8192 with per-head A_log + dt_bias, safe gate bounded by kda_lower_bound −5, full-rank sigmoid output gate g_proj 4096→8192, o_norm RMSNorm(128); no RoPE — position comes from the recurrence. Gated MLA: q_a_proj 4096→1536 latent + q_a_layernorm, q_b_proj → 64×192 (128 nope + 64 rope), kv_a_proj_with_mqa → 512-d latent + 64-d shared rope key, kv_b_proj → 64×256 (128 nope-k + 128 v), head-wise sigmoid output gate (gated_attention_proj_granularity_type: head_wise); partial RoPE factor 0.5 on the 64-d slot, rope_theta 6e6, rope_interleave.",
+"n_experts": 512,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 157184,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial RoPE (MLA layers only)",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Ant Group InclusionAI's upgraded native hybrid reasoning flagship of the Ling-3.0-flash line (HF weights landed Oct 14, repo created Oct 13): 560B total / 25B active per token, 1M-token context window claimed (native max_position_embeddings 262144, like Ling-3.0-flash-VL's 1M claim over a 131K native window — extended context runs via the official SGLang/vLLM recipes). Ultra-sparse 512-expert MoE (top-8 + 1 shared, expert d_ff 1280; sigmoid scoring with aux-loss-free expert_bias, 8 groups / top-4 group-limited, routed_scaling 2.5, normalized top-k, fp32 router); first 4 layers dense (d_ff 10240). SwiGLU clamped to limit 10 on the last 7 expert layers / last 8 shared-expert layers (expert_swiglu_limit_list, linear_silu). Shipped in FP8 (e4m3, 128×128 block-wise, dynamic activation quant; index total_size 573.75 GB ≈ 560B params × 1 byte — embeddings, lm_head, router gate, KDA b_proj and MLA g_proj kept BF16/F32). Carries one MTP (NEXTN) speculative-decoding layer (num_nextn_predict_layers 1; index layer 72 with enorm/hnorm/eh_proj). Day-0 SGLang + vLLM support, MIT license. Param self-consistency: computed 560.1B vs claimed 560B (ratio 1.00).",
+"sources": [
+"https://huggingface.co/inclusionAI/Ling-3.1-flash",
+"https://huggingface.co/inclusionAI/Ling-3.1-flash/raw/main/README.md",
+"https://huggingface.co/inclusionAI/Ling-3.1-flash/raw/main/config.json",
+"https://huggingface.co/inclusionAI/Ling-3.1-flash/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 4,
+"attention_split": {
+"parts": [
+{
+"name": "KDA",
+"n": 63,
+"type": "linear",
+"sub": "delta rule · conv k4 · gated"
+},
+{
+"name": "Gated MLA",
+"n": 9,
+"type": "MLA",
+"sub": "latent KV 512 · RoPE"
+}
+],
+"pattern": "kkkkkkkmkkkkkkkmkkkkkkkmkkkkkkkmkkkkkkkmkkkkkkkmkkkkkkkmkkkkkkkmkkkkkkkm",
+"pattern_map": {
+"k": "linear",
+"m": "MLA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "KDA — Kimi Delta Attention (63 layers)",
+"p": {
+"d": 4096,
+"kh": 64,
+"vh": 64,
+"dh": 128,
+"conv": 4,
+"proj": "q / k / v projections 4096 → 8192",
+"projSub": "β: b_proj → 64 · decay: f_proj → 8192 (no LoRA)",
+"qsub": "L2 norm",
+"vsub": "64 × 128",
+"update": "S ← Diag(e^g)·S + β·k⊗(v − (Diag(e^g)S)ᵀk)",
+"decayName": "per-channel decay Diag(e^g)",
+"decaySub": "g = −5·σ(·) ∈ (−5, 0)",
+"beta": "β = σ(b) per head ∈ (0,1)",
+"out": "o = Sᵀq → RMSNorm(128) ⊗ σ(g_proj h)",
+"outSub": "full-rank gate → o_proj 8192 → 4096",
+"cacheline": "no KV cache — recurrent state 64 × 128 × 128 ≈ 1.05 M el + 3 conv states (8192 × 4) per layer"
+},
+"notes": [
+"same KDA kernel family as Kimi K3 / Ling-3.0-flash-VL (per-channel diagonal decay, kda_safe_gate)",
+"no_kda_lora: f_proj / g_proj run directly from the 4096-d hidden state (8192 = 64×128)",
+"q,k L2-normalized in kernel · position comes from the recurrence — no RoPE on KDA layers"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA + partial RoPE (9 layers — every 8th)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": false,
+"gate": "σ(g_proj h) per head",
+"cache": "576 el/token × 9 MLA layers ≈ 10 KB/token — only these layers cache anything"
+},
+"notes": [
+"q_a_proj 4096 → 1536 latent + q_a_layernorm; q_b_proj expands to 64 × 192 (128 nope + 64 rope)",
+"kv_a_proj_with_mqa → one 512-d MQA latent + 64-d shared rope key; kv_b_proj → 64 × 256",
+"partial RoPE factor 0.5 (64 of 128 q/k dims), rope_theta 6e6, rope_interleave",
+"head-wise sigmoid output gate before dense 8192 → 4096"
+]
+}
+],
+"attn_bullets": [
+"native hybrid reasoning model — 1M-token context claimed over a 262K native window (official SGLang/vLLM recipes)",
+"512 experts top-8 + 1 shared (sigmoid + aux-loss-free expert_bias, 8 groups / top-4, routed_scaling 2.5); 4 dense head layers (d_ff 10240)",
+"ships 1 MTP (NEXTN) speculative layer — a full gated-MLA + MoE block (layer 72 in the index, enorm/hnorm/eh_proj fusion); SGLang --speculative-algorithm NEXTN, vLLM mtp ×3",
+"SwiGLU clamped (limit 10) on the last 7 expert layers / last 8 shared-expert layers",
+"FP8 e4m3 block-quantized release (128×128 weights, dynamic activations); router, embeddings, gates stay BF16/F32"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
