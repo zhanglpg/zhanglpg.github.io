@@ -3388,6 +3388,74 @@ window.MODELS = [
 ]
 },
 {
+"id": "step-5-preview",
+"name": "Step 5 Preview",
+"org": "StepFun",
+"family": "Step",
+"released": "2026-10",
+"license": "StepFun Model License 1.0",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 600,
+"params_active_B": 27,
+"n_layers": 92,
+"d_model": 4096,
+"d_ff": 13824,
+"d_ff_moe": 1536,
+"n_heads": 64,
+"n_kv_heads": 4,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "3:1 sliding/full hybrid — 69 sliding-window GQA layers (window 512, 64 Q heads / 4 KV groups = 4 KV heads, head_dim 192, RoPE θ 10K, full rotary factor 1.0) interleaved with 23 sparse full-attention layers (one every 4th layer, indices 3/7/11/…/91, RoPE θ 10M, partial rotary factor 1/3, YaRN scaling applied to full-attention layers only). The 23 full layers each carry a lightweight DSA-style sparse indexer (sparse_config: proxy_dim 256, 16 indexer Q heads / 1 K head with RMSNorm-Q + LayerNorm-K, indexer RoPE dim 32, ssmax softmax variant with per-head learned scale, csa_block_compress with region_block_size 8, top-k 512 tokens) that selects the attended span while the full KV cache is retained. All 92 layers use head-wise sigmoid output gating (use_head_wise_attn_gate, g_proj 4096→64) plus per-head QK RMSNorm (q_norm/k_norm) and fp32 residual connections.",
+"n_experts": 352,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 128896,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Step perception encoder (47L/1536d)",
+"encoder_params_B": 1.96,
+"fusion": "adapter",
+"notes": "47-layer CLIP-style perception encoder (width 1536, 16 heads, quick_gelu MLP 8960, LayerScale γ on both sublayers, no CLS token, no LN-post), patch 14 over 728×728 with a 2704-slot learned positional embedding; a single vit_large_projector (6144→4096) merges the 2×2 patch neighbourhood selected by understand_projector_stride 2 into decoder space. Measured 1.956B params from the dedicated model-vit-00001 shard. Text + image input, text output."
+},
+"notes": "StepFun's flagship agentic model: 600B total / 27B active sparse MoE with a 1M-token context window, announced Sep 20 2026 behind an API and opened as weights on Oct 15 (this BF16 repo, plus an FP8 sibling; both were gated 401 for weeks — the BF16 config went readable Oct 15). 92 transformer layers = 88 MoE layers (indices 3–90: 352 routed experts top-8 + 1 shared expert, expert d_ff 1536, SwiGLU clamped to limit 7 on every layer, fp32 router gate with learned per-expert router_bias, routed expert-weight normalization) plus 4 dense layers (0, 1, 2 and the final layer 91, d_ff 13824). Attention is a 3:1 sliding/full hybrid where only the 23 full-attention layers carry the top-512 sparse indexer — a DSA-style token-selection scheme (Step's own 'sparse_gqa' implementation) rather than DeepSeek's MLA-based DSA. Three MTP (multi-token-prediction) speculative-decoding heads (num_nextn_predict_layers 3, layers 92–94, each with enorm/hnorm/eh_proj and a shared output head) ship in the same checkpoint. Serving: vLLM/SGLang with --spec-method mtp --spec-tokens 3, reasoning + tool-call parsers; day-0 MegaMoE expert-parallel backend on B300. Apache-2.0-style StepFun Model License 1.0. Param self-consistency: computed 604.4B vs claimed 600B (ratio 0.99); the BF16 safetensors index total_size of 1208.7 GB independently measures 604.3B params.",
+"sources": [
+"https://www.stepfun.com/step-5-preview",
+"https://huggingface.co/stepfun-ai/Step-5-Preview-BF16",
+"https://huggingface.co/stepfun-ai/Step-5-Preview-BF16/raw/main/README.md",
+"https://huggingface.co/stepfun-ai/Step-5-Preview-BF16/raw/main/config.json",
+"https://huggingface.co/stepfun-ai/Step-5-Preview-BF16/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 3,
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 69,
+"type": "sliding",
+"sub": "window 512"
+},
+{
+"name": "Sparse Full",
+"n": 23,
+"type": "global",
+"sub": "indexer top-512"
+}
+],
+"pattern": "sssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssfsssf",
+"pattern_map": {
+"s": "sliding",
+"f": "global"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
