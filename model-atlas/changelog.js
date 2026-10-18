@@ -1,8 +1,14 @@
-// Maintained automatically by the weekly update job (scripts/weekly-update-prompt.md).
-// Newest entry first; capped at 20 entries. last_run updates on EVERY run, even no-change runs.
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-17 10:55",
+  "last_run": "2026-10-18 09:54",
   "entries": [
+    {
+      "date": "2026-10-18",
+      "added": [
+        "beam-1-0-501b-a23b"
+      ],
+      "upgraded": [],
+      "note": "Added Reflection Beam 1.0 (501.3B total / 23.4B active, Apache-2.0, confidence verified) — the first open release from Reflection, the new US lab, and the model we had been watching for three weeks under the wrong org handle (weights landed Oct 16 on HF org 'reflection', not 'reflection-ai'): a 52-layer sparse MoE (3 dense SwiGLU + 49 MoE layers of 256 routed experts top-8 with NO shared expert, DeepSeek-V3-style group-limited sigmoid routing ×2.5) whose attention is a 43+9 sliding/full gated-GQA hybrid where the 9 full layers drop positional encoding entirely in favour of scalable-softmax query scaling, and whose residual stream adds each sublayer with weight 1/√k while rescaling by √((k−1)/k) so the stream stays at constant scale. Verified against config.json + README table + HF blog + safetensors index (1002.66 GB = 501.33B measured; computed 499.6B, ratio 1.00; active recomputes to 23.43B). Skipped: DeepSeek-V4.1-Flash-1017 (config byte-identical to the tracked DeepSeek-V4.1-Flash — a weight-only post-training refresh), Meta Muse Spark Open 816B-A42B (still gated manual 401 — config unreadable), black-forest-labs flux-3-image-klein (still gated auto), MOSS-Image-SFT/Base + quant/MLX ports and DFlash2 drafters (finetunes/derivatives), datalab-to/indra-ocr (1M-param OCR utility, out of scope), tencent/Qwen3-8B-DSpine-b16 (research ablation). WATCH rechecks: reflection org now live (Beam added; FP8/NVFP4/DFlash2 siblings noted), Mistral Large 4 'le Chonk' still absent from mistralai, FrancisRing/Prism still flags-only, Kimi-K3-Base + LTX-2.5 still gated 401. Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 83 models, v40."
+    },
     {
       "date": "2026-10-17",
       "added": [
@@ -141,12 +147,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added InternLumina-U2 (Shanghai AI Lab, Apache-2.0; weights landed Sep 24 after a Sep 1 README-only placeholder — verified against nvidia/config.json + weight index + GitHub inference code): a 16B-A1B fully-discrete multi-codebook unified model — a LLaDA-2.0 MoE masked-diffusion backbone (20L/2048d, 256 experts top-8 + 1 shared, first layer dense) handles text QA, text-to-image generation, image editing and image/video/3D understanding through one discrete-token interface. Visual positions use Apple's AToken tokenizer with 8 complementary codebooks: input-side the 8 per-codebook embeddings concatenate and project into a single backbone token; output-side the dLLM denoises masked spatial positions in parallel while a codebook-depth AR head predicts each position's 8 codes. Dual Ascend/NVIDIA-trained checkpoints ship in one repo; on-disk 16.9B BF16 vs the official 16B claim (computed ratio 0.98). Skipped: internlm Intern-Decision-0.8/2/4B (Qwen3.5-0.8/2/4B decision-making finetunes), orcarouter OrcaSAQ-2-27B (Qwen3.8-27B exl3 3-bit quant + agentic post-train), Contrastive-LM CLM-v0.1-8B (assessed Sep 26), and the usual Qwen3.8-27B / Qwen-Image-2.1 / MiniMax-H3 GGUF-MLX-LoRA churn. Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still gated (28th run). 69 models, v29."
-    },
-    {
-      "date": "2026-09-26",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Discovery window Sep 25 09:23 → Sep 26 09:23: swept ~50 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video) since Sep 24, and trendingScore/likes7d top-40. Everything found was a finetune/quant of tracked models (Qwen3.8-27B, Qwen-Image-2.1, MiniMax-H3 churn), previously assessed (laya, needle3, Hemmingway-1, TeleOCR, Ternary-Bonsai, LensVLM-9B), or out of scope (ASR/diarization/music). CohereLabs tiny-aya-* metadata refresh (3B translation models, 9 likes) — not notable. Partial entries rechecked: LLaDA2.2-flash (no official active-param count yet) and DeepSeek-V4-Flash-Vision-Exp (unchanged since Sep 1) stay partial; Step-5-Preview-BF16 still 401; LTX-2.5 + North-Small-Translate still gated."
     }
   ]
 };

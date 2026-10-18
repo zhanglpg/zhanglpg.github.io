@@ -3601,6 +3601,69 @@ window.MODELS = [
 "confidence": "verified"
 },
 {
+"id": "beam-1-0-501b-a23b",
+"name": "Beam 1.0",
+"org": "Reflection",
+"family": "Beam",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 501.3,
+"params_active_B": 23.4,
+"n_layers": 52,
+"d_model": 5120,
+"d_ff": 20480,
+"d_ff_moe": 2560,
+"n_heads": 48,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "52 gated-GQA layers (48 query heads / 8 KV heads, head_dim 128 — attention width 6144 > d_model 5120) in a 43+9 sliding/full interleave: 43 sliding-window layers (window 512) use RoPE θ 10K, while the 9 full-context layers (every 6th layer at indices 5, 11, … 47 plus the final layer 51) carry NO positional encoding — instead each query is multiplied by a slowly growing scaler (1 + (pos+1)/2048)^0.1 ('scalable-softmax query scaling') that keeps softmax precision as context lengthens. Per-head QK RMSNorm (q_norm/k_norm) before attention; a learned sigmoid output gate computed from the layer input scales every channel of every head before the output projection (gate_proj 5120→6144 + per-head gate_bias, confirmed from tensor shapes).",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 151936,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "First open-weight model from Reflection, the new US lab (announced Oct 5, weights + HF blog Oct 16, Apache-2.0 with a Rust-based 'Mirror' harness): 501.3B total / 23.4B active sparse MoE for coding and long-horizon agentic work. 52 layers = 3 dense SwiGLU (d_ff 20480) + 49 MoE layers of 256 routed experts (d_ff 2560, ~39M each — experts hold 98.4% of parameters), DeepSeek-V3-style group-limited sigmoid routing (8 groups × 32, top-4 groups by summed top-2 scores, top-8 experts inside them, normalized weights × routed_scaling_factor 2.5) with NO shared expert. Most distinctive feature is the residual stream: counting the embedding as step 1, each sublayer output is added with weight 1/√k while the stream is rescaled by √((k−1)/k) — squares sum to 1, so the stream stays at constant scale and after all 104 additions every sublayer carries equal weight; final logits pass an FP32 tanh softcap at ±30, with FP32 fixed for router, SwiGLU product, norms, RoPE, query scaling and softcap. Pretrained on 23.8T tokens; RL ran 4 weeks on 10,500 GB300s (>100M rollouts). Harmony-XML-style grammar tokenizer (analysis/final channels, rfl:parameter tool-call XML, preserve_thinking reasoning across turns) + DFlash2 speculative drafter; BF16/FP8/NVFP4 checkpoints (~1 TB BF16). Param self-consistency: computed 499.6B vs claimed 501.3B (ratio 1.00); the BF16 safetensors index total_size of 1002.66 GB independently measures 501.33B.",
+"sources": [
+"https://huggingface.co/blog/reflection-beam",
+"https://www.reflection.ai/blog/introducing-beam",
+"https://huggingface.co/reflection/Beam-1.0-501B-A23B",
+"https://huggingface.co/reflection/Beam-1.0-501B-A23B/raw/main/config.json",
+"https://huggingface.co/reflection/Beam-1.0-501B-A23B/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 3,
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 43,
+"type": "sliding",
+"sub": "win 512 · RoPE"
+},
+{
+"name": "Full NoPE",
+"n": 9,
+"type": "global",
+"sub": "ssmax q-scale"
+}
+],
+"pattern": "sssssgsssssgsssssgsssssgsssssgsssssgsssssgsssssgsssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
