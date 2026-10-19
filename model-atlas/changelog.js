@@ -1,6 +1,12 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-18 09:54",
+  "last_run": "2026-10-19 09:35",
   "entries": [
+    {
+      "date": "2026-10-19",
+      "added": [],
+      "upgraded": [],
+      "note": "Checked — no changes. Discovery window Oct 18 09:55 → Oct 19 09:25: createdAt sweep (top-500, generation/image/video pipelines), likes7d top-40, trendingScore top-60, and a 33-org lastModified sweep — zero new qualifying releases. Everything trending was already tracked (DeepSeek-V4.1-Flash, MiniCPM-V 4.7, LFM2.5-24B-A2B, Hy-Memory, MOSS-Image, Dory, Ling-3.1-flash, iris-3b) or a derivative/quant/repack of a tracked model (V4.1-Flash-1017 strata/FLARE ports, Hy-Memory-FP8, Dory BF16/GGUF/MXFP8, Comfy-Org MOSS-Image, klein-comfy ComfyUI repack, Underdog-Saluki = Qwen3.8-27B quant). Skipped as out of scope: nvidia cosmos3-nano-libero10 robot-data exports (0 likes), Nemotron-3.5-Parse (document-parser utility VLM: C-RADIOv4-SO400M + 10L mBART decoder — indra-ocr class), mistralai Timestral (time-series forecasting), UltraBERT 150M/380M (BERT-class retrieval encoders), swiss-ai Apertus 1.5 (Oct-18 news was documentation for Jul–Sep weights; dense standard architecture), LiquidAI d1-omni GGUF (decision-router skip list). WATCH rechecks: Mistral Large 4 'le Chonk' placeholder repo now 401s with ETA Oct 31; meta-models Muse-Spark-Open-816B-A42B still gated-manual 401; Kimi-K3-Base, LTX-2.5 and flux-3-image-klein still gated 401; reflection org has no Beam tech report or 1.1 yet (FP8/NVFP4/DFlash2 siblings are derivatives); FrancisRing/Prism config still flags-only. Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 83 models unchanged, v40."
+    },
     {
       "date": "2026-10-18",
       "added": [
@@ -139,14 +145,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Discovery window Sep 27 09:37 → Sep 28 09:25: swept ~55 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 27, and trendingScore/likes7d top-40. The only fresh official releases were XiaomiMiMo/MiMo-V2.6-{Flash,Pro}-MOPD (Sep 27) — explicitly the MOPD2 multi-teacher on-policy-distillation upgrade of the already-tracked MiMo-V2.6-{Flash,Pro}-RL checkpoints (same MiMoV2ForCausalLM architecture, 48L/9-full+39-SWA hybrid unchanged); skip per no-distill rule — same precedent as MiMo-V2.6-Distill-Qwen-9B. Qwen3Guard-Stream-* were Sep-2025 guard classifiers with a metadata refresh; SupersonicLabs/Julia-1 (195 likes) is a 144M mmBERT-small decision/router classifier — not frontier, out of scope; tsinghua VeriLoop-E2 is a Qwen3.8-27B post-train. naiveailab (Jifeng Dai's Tencent-backed startup rumored to drop its first open-weight LLM this month) has no HF org/models yet — watching. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); North-Small-Translate-1.0 and LTX-2.5 still gated (29th run). 69 models unchanged, v29."
-    },
-    {
-      "date": "2026-09-27",
-      "added": [
-        "internlumina-u2"
-      ],
-      "upgraded": [],
-      "note": "Added InternLumina-U2 (Shanghai AI Lab, Apache-2.0; weights landed Sep 24 after a Sep 1 README-only placeholder — verified against nvidia/config.json + weight index + GitHub inference code): a 16B-A1B fully-discrete multi-codebook unified model — a LLaDA-2.0 MoE masked-diffusion backbone (20L/2048d, 256 experts top-8 + 1 shared, first layer dense) handles text QA, text-to-image generation, image editing and image/video/3D understanding through one discrete-token interface. Visual positions use Apple's AToken tokenizer with 8 complementary codebooks: input-side the 8 per-codebook embeddings concatenate and project into a single backbone token; output-side the dLLM denoises masked spatial positions in parallel while a codebook-depth AR head predicts each position's 8 codes. Dual Ascend/NVIDIA-trained checkpoints ship in one repo; on-disk 16.9B BF16 vs the official 16B claim (computed ratio 0.98). Skipped: internlm Intern-Decision-0.8/2/4B (Qwen3.5-0.8/2/4B decision-making finetunes), orcarouter OrcaSAQ-2-27B (Qwen3.8-27B exl3 3-bit quant + agentic post-train), Contrastive-LM CLM-v0.1-8B (assessed Sep 26), and the usual Qwen3.8-27B / Qwen-Image-2.1 / MiniMax-H3 GGUF-MLX-LoRA churn. Partial rechecks: LLaDA2.2-flash (Aug 20) and DeepSeek-V4-Flash-Vision-Exp (Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still gated (28th run). 69 models, v29."
     }
   ]
 };
