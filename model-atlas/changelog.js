@@ -1,6 +1,14 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-19 09:35",
+  "last_run": "2026-10-20 10:25",
   "entries": [
+    {
+      "date": "2026-10-20",
+      "added": [
+        "xiaomi-lens-0"
+      ],
+      "upgraded": [],
+      "note": "Added Xiaomi-Lens-0 (4.6B, Apache-2.0, verified): Xiaomi's grounded-reasoning MLLM on a Qwen3.5-4B hybrid backbone (24 Gated DeltaNet + 8 gated full-attention layers) that predicts pixel masks from its own visual latents — each <|mask|> token's hidden state plus vision-encoder patch features feed a 0.084B decoder, so mask supervision reaches the shared backbone with no extra segmentation encoder (arXiv 2610.23279; +5.6 pts over Qwen3.5 on RefCOCO splits). Skipped: VAST-AI EdenLive (real-time proxy-video rendering; its DiTs are stock WanTransformer3DModel configs — Wan2.1-14B/Wan2.2-5B family plus a DINOv3 control encoder, no new architecture or tech report), lodestones Kromoss (MOSS-Image-Base finetune), and a wave of DeepSeek-V4.1-Flash-1017 / flux-3-klein / MOSS-Image quants and repacks; WATCH items unchanged (Muse-Spark gate, ML4, Kimi-K3-Base, Prism flags-only)."
+    },
     {
       "date": "2026-10-19",
       "added": [],
@@ -139,12 +147,6 @@ window.ATLAS_CHANGELOG = {
       "added": [],
       "upgraded": [],
       "note": "Checked — no changes. Discovery window Sep 28 09:35 → Sep 29 09:24: swept ~55 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 27, and trendingScore/likes7d top-40. The window's headline release is H Company's Holo4 family (blog Sep 28, weights landed Sep 24): Holo4-27B is a computer-use VLM tagged base_model:finetune of the tracked Qwen/Qwen3.8-27B (Qwen3_5ForConditionalGeneration, 64L/5120d linear+full 3:1 hybrid, cc-by-nc-4.0), Holo4-35B-A3B is a finetune of Qwen/Qwen3.6-35B-A3B (apache-2.0), and Holotron4-30B-A3B is a NemotronH-Nano-Omni finetune — agentic post-trains of existing architectures, skipped per the no-finetune rule (LensVLM-9B / Intern-S2-397B precedent). Also skipped: autotrust/JEV-27B (Sep 27 blog; Qwen3.8-27B decision-model student distilled from TypeSafe Jev outputs — distill + out-of-scope router class), manjunathshiva OpenDecider (400M Ettin-encoder / Qwen3-4B-LoRA decision models, out of scope), SIZWL/NVIDIA-Nemotron-3-Super-120B-A12B-BF16 (third-party re-upload of the March nvidia release), nvidia metadata refreshes (Kumo-Relational = TabICL finetune, Kumo-Tabular = tabular foundation model, SOMA-X = parametric human-body model, NV-Generate-CT = medical latent diffusion, AI-for-Media-Sports-Tennis = Nemotron-3-Nano-Omni any-to-any finetune — all non-LLM or finetunes), BernaLabs berna-r7 (from-scratch 0-like toy), yava-code Tessera-1B-Nano (SmolLM2-360M concept-LM), introvoyz043 BioMatrix-1.7B (Qwen3-1.7B finetune), 0xSojalSec REDCELL-26B-A4B (gemma-4 finetune), and the usual zero-like GLM-5.3/Qwen3.8-27B/Qwen-Image-2.1/LTX-2.5/MiniMax-H3 GGUF-quant-LoRA churn. naiveailab (Jifeng Dai startup) still has no HF org/models — watching. GPT-6 Astra DevDay news (Sep 29) is closed API-only, out of scope. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); North-Small-Translate-1.0 and LTX-2.5 still gated (30th run). 69 models unchanged, v29."
-    },
-    {
-      "date": "2026-09-28",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Discovery window Sep 27 09:37 → Sep 28 09:25: swept ~55 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 27, and trendingScore/likes7d top-40. The only fresh official releases were XiaomiMiMo/MiMo-V2.6-{Flash,Pro}-MOPD (Sep 27) — explicitly the MOPD2 multi-teacher on-policy-distillation upgrade of the already-tracked MiMo-V2.6-{Flash,Pro}-RL checkpoints (same MiMoV2ForCausalLM architecture, 48L/9-full+39-SWA hybrid unchanged); skip per no-distill rule — same precedent as MiMo-V2.6-Distill-Qwen-9B. Qwen3Guard-Stream-* were Sep-2025 guard classifiers with a metadata refresh; SupersonicLabs/Julia-1 (195 likes) is a 144M mmBERT-small decision/router classifier — not frontier, out of scope; tsinghua VeriLoop-E2 is a Qwen3.8-27B post-train. naiveailab (Jifeng Dai's Tencent-backed startup rumored to drop its first open-weight LLM this month) has no HF org/models yet — watching. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16 still HTTP 401 (weights promised Oct 15); North-Small-Translate-1.0 and LTX-2.5 still gated (29th run). 69 models unchanged, v29."
     }
   ]
 };

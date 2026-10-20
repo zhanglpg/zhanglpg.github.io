@@ -3664,6 +3664,120 @@ window.MODELS = [
 }
 },
 {
+"id": "xiaomi-lens-0",
+"name": "Xiaomi-Lens-0",
+"org": "Xiaomi",
+"family": "Lens",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 4.62,
+"params_active_B": 4.62,
+"n_layers": 32,
+"d_model": 2560,
+"d_ff": 9216,
+"d_ff_moe": null,
+"n_heads": 16,
+"n_kv_heads": 4,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "3:1 hybrid on a Qwen3.5-4B backbone — 24 Gated DeltaNet linear-attention layers (16 QK / 32 V heads, head_dim 128, depthwise conv k=4, per-head decay via learned A_log + dt_bias) + 8 gated full-attention layers every 4th (GQA 16 Q / 4 KV, head_dim 256, attn_output_gate doubles q_proj to 8192, QK RMSNorm per head, partial rotary 0.25, interleaved MRoPE sections 11/11/10, theta 1e7).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 248078,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "Interleaved-MRoPE (partial 0.25)",
+"activation": "SwiGLU",
+"tie_embeddings": true,
+"vision": {
+"encoder": "ViT (24 layers, hidden 1024, 16 heads, patch 16)",
+"encoder_params_B": 0.33,
+"fusion": "adapter",
+"notes": "Native image+video input (temporal_patch 2, GELU-tanh ViT, d_ff 4096, learned pos-embed 2304); 2x2 spatial merge + MLP (4096->4096->2560) into the decoder. Its per-patch features are ALSO fed to the mask decoder — patch features + LLM mask-token states are combined without any extra segmentation encoder."
+},
+"notes": "Xiaomi's 4B grounded-reasoning MLLM (tech report arXiv 2610.23279, weights Oct 19 2026): built on Qwen3.5-4B, it adds a lightweight pixel-mask decoder so the LM itself predicts segmentation masks. Every generated <|mask|> token's hidden state is a visual latent; the decoder (patch_proj 1024->2560 on vision features, channel_reduce 2560->256, one patch self-attention block, mask_embed 2560->2560->32, conv upscaler 32->128->256) turns it into a mask, so mask supervision reaches the shared backbone and the model can interleave reasoning with region latents ('think with visual latents'). Grounded chain-of-thought traces supervise visited regions. Outputs <bbox>[x1,y1,x2,y2]</bbox><mask><|mask|></mask> with 0-1000-normalized coordinates; +5.6 avg points over Qwen3.5 across all eight RefCOCO/+/g splits and best-in-class segmentation cIoU. Measured 4.62B from the BF16 safetensors index (LM 4.21B + ViT/merger 0.33B + mask decoder 0.084B); tied embeddings; Apache-2.0 (base Qwen3.5-4B Apache-2.0, mods (c) Xiaomi).",
+"sources": [
+"https://arxiv.org/abs/2610.23279",
+"https://seerray-lab.github.io/Xiaomi-Lens-0/",
+"https://huggingface.co/SeerRay-Lab/Xiaomi-Lens-0",
+"https://huggingface.co/SeerRay-Lab/Xiaomi-Lens-0/raw/main/config.json",
+"https://huggingface.co/SeerRay-Lab/Xiaomi-Lens-0/raw/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 24,
+"type": "linear",
+"sub": "gated linear"
+},
+{
+"name": "Full GQA",
+"n": 8,
+"type": "GQA",
+"sub": "16/4 · iMRoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (24 layers)",
+"p": {
+"d": 2560,
+"kh": 16,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 2560 → 8192 · in_proj_z → 4096",
+"projSub": "split projections · in_proj_b / a → β, α",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 4096 → 2560",
+"cacheline": "no KV cache on linear layers — state 32 × 128 × 128 ≈ 0.52 M el (fp32) + conv state 8192 × 4 per layer"
+},
+"notes": [
+"same Qwen3.5 Gated DeltaNet module as qwen3-5-397b-a17b (32 V / 16 K heads, dh 128)",
+"dense FFN every layer (d_ff 9216) — no MoE"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (8 layers — every 4th)",
+"p": {
+"d": 2560,
+"nq": 16,
+"nkv": 4,
+"dh": 256,
+"rope": "iMRoPE 64/256",
+"qknorm": "QK-norm / head",
+"gate": "σ(gate) per head",
+"cache": "2,048 el/token/layer × 8 full-attention layers"
+},
+"notes": [
+"attn_output_gate doubles q_proj (2560 → 8192)",
+"partial_rotary_factor 0.25 — only 64 of 256 head dims rotated",
+"mask-token states from these layers feed the pixel-mask decoder"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
