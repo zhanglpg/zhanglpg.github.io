@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra 与 Max 训练流水线设计</title>
+<meta name="description" content="10T 总参 MoE 分阶段生长训练与 ~1T 同族模型的能力转移：流水线组织、算力账与证据综述。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+/* Layout: single reading column (72ch) with full-bleed figures; a technical memo, not a landing page. */
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --tint:#e9eef5; --tint-2:#f7f1e8;
+  --fg:#151b23; --fg-2:#475161; --fg-3:#737f8f; --line:#d9dfe7; --line-2:#c3cbd6;
+  --ultra:#1f4e9c; --max:#b8531a; --ok:#1d7a4f; --warn:#a1640a; --bad:#b3362e;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --serif:"Noto Serif SC","Songti SC","SimSun",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f141a; --surface:#161c24; --tint:#1b2634; --tint-2:#241f18;
+    --fg:#e8ecf1; --fg-2:#b3bcc8; --fg-3:#86919f; --line:#283240; --line-2:#36414f;
+    --ultra:#7aa8ec; --max:#e8864f; --ok:#5fc48f; --warn:#e0a84a; --bad:#ec7b73;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f141a; --surface:#161c24; --tint:#1b2634; --tint-2:#241f18;
+  --fg:#e8ecf1; --fg-2:#b3bcc8; --fg-3:#86919f; --line:#283240; --line-2:#36414f;
+  --ultra:#7aa8ec; --max:#e8864f; --ok:#5fc48f; --warn:#e0a84a; --bad:#ec7b73;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;}
+.wrap{max-width:860px;margin:0 auto}
+header.hero{padding:48px 0 28px;border-bottom:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3)}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.5vw,40px);line-height:1.25;margin:10px 0 12px;text-wrap:balance}
+.sub{font-size:17px;color:var(--fg-2);max-width:64ch;margin:0 0 18px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--mono);font-size:12.5px;color:var(--fg-3)}
+h2{font-family:var(--serif);font-weight:700;font-size:24px;margin:56px 0 14px;padding-top:18px;border-top:1px solid var(--line);text-wrap:balance}
+h2 .num{font-family:var(--mono);font-size:13px;color:var(--fg-3);display:block;letter-spacing:.08em;margin-bottom:4px}
+h3{font-family:var(--sans);font-weight:700;font-size:17.5px;margin:30px 0 8px}
+h4{font-size:15.5px;margin:18px 0 6px;font-weight:700}
+p{margin:0 0 12px;max-width:72ch}
+ul,ol{padding-left:1.4em;margin:0 0 12px;max-width:72ch}
+li{margin-bottom:5px}
+strong{font-weight:700}
+code,.mono{font-family:var(--mono);font-size:.92em}
+.toc{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 20px;margin:28px 0 0}
+.toc ol{columns:2;column-gap:28px;margin:0;padding-left:1.3em;max-width:none}
+.toc li{break-inside:avoid;font-size:14.5px}
+.toc a{color:var(--fg);text-decoration:none;border-bottom:1px dotted var(--line-2)}
+a{color:var(--ultra)}
+.verdict{background:var(--surface);border-left:4px solid var(--ultra);padding:16px 20px;margin:18px 0 22px;border-radius:0 6px 6px 0}
+.verdict p:last-child{margin-bottom:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-width:0}
+.tile .v{font-family:var(--mono);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.2}
+.tile .l{font-size:12.5px;color:var(--fg-2);margin-top:4px}
+.tile.ultra .v{color:var(--ultra)} .tile.max .v{color:var(--max)}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:1px 7px;border-radius:3px;border:1px solid var(--line-2);color:var(--fg-2);vertical-align:middle;white-space:nowrap}
+.tag.est{border-color:var(--ok);color:var(--ok)} .tag.one{border-color:var(--warn);color:var(--warn)} .tag.inf{border-color:var(--fg-3)}
+.tag.u{border-color:var(--ultra);color:var(--ultra)} .tag.m{border-color:var(--max);color:var(--max)}
+.tablewrap{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.5}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{background:var(--tint);font-weight:700;white-space:nowrap;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.n,th.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px 10px;margin:16px 0 20px}
+.fig svg{width:100%;height:auto;display:block}
+.cap{font-size:13px;color:var(--fg-2);margin:8px 0 0;max-width:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--fg-2);margin:6px 0 2px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-2px}
+.ladder{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0 18px}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-width:0}
+.stage .h{font-family:var(--mono);font-size:12px;color:var(--fg-3);letter-spacing:.06em}
+.stage .t{font-weight:700;font-size:16px;margin:2px 0 6px}
+.stage ul{font-size:13.5px;padding-left:1.2em;margin:0}
+.callout{background:var(--tint-2);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin:14px 0 18px;font-size:14.5px}
+.callout p{max-width:none}
+.risk td:first-child{font-weight:700;white-space:nowrap}
+.refs{font-size:13.5px;columns:1}
+.refs li{margin-bottom:6px;overflow-wrap:anywhere}
+.refs li a{word-break:break-all}
+.small{font-size:13px;color:var(--fg-2)}
+@media (max-width:640px){
+  .toc ol{columns:1}
+  body{font-size:15px}
+  h2{font-size:21px}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+
+.kn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--line-2);font-family:var(--mono);font-size:10px;margin-right:5px;color:var(--fg-2)}
+.hand{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 18px;font-size:14px;margin:10px 0 16px}
+.hand b{font-family:var(--mono);font-weight:500;color:var(--fg);margin-right:6px}
+.note{font-size:13.5px;color:var(--fg-2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">深度研究报告 · 2026-10-21</div>
+  <h1>Ultra 与 Max 训练流水线设计</h1>
+  <p class="sub">10T 总参 MoE（Ultra）分阶段生长训练，并以 OPD 向 ~1T 同族模型（Max）转移能力：如何组织两条流水线，使模型效果最好、算力与时间最省，以及"是否能避免两个模型各自完整预训练"的直接回答。</p>
+  <div class="meta">
+    <span>假设：Ultra ≈ 10T 总参 / ~300B 激活 / 30T tokens</span>
+    <span>Max ≈ 1T 总参 / ~40B 激活 / 同族架构（3–4T 情形见 §7）</span>
+    <span>FLOPs：训练 ≈ 6A·D，teacher 前向 ≈ 2A·D</span>
+    <span>作者：Liping Zhang（assisted by Claude, Anthropic — deep research）</span>
+    <span>证据标签：<span class="tag est">已确立</span> <span class="tag one">单一来源</span> <span class="tag inf">推断</span></span>
+  </div>
+  <nav class="toc">
+    <ol>
+      <li><a href="#s0">核心结论</a></li>
+      <li><a href="#s1">问题拆解与算力边界</a></li>
+      <li><a href="#s2">证据综述（生长 / MoE 扩增 / 预训练蒸馏 / OPD / 剪枝嵌套 / 万亿级实践）</a></li>
+      <li><a href="#s3">候选流水线方案 A–E 对比</a></li>
+      <li><a href="#s4">推荐方案：一条主干、三次承接</a></li>
+      <li><a href="#s5">风险与缓解</a></li>
+      <li><a href="#s6">待验证的开放问题与 proxy 实验</a></li>
+      <li><a href="#s7">Max 为 3–4T / 100B+ 时结论怎么变</a></li>
+      <li><a href="#s8">多版本迭代：流水线交织的优化空间</a></li>
+      <li><a href="#s9">新增风险与门控（G6–G8）</a></li>
+      <li><a href="#s10">参考文献</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ============ 0 ============ -->
+<h2 id="s0"><span class="num">§0</span>核心结论</h2>
+<div class="verdict">
+  <p><strong>直接回答：Max 的完整预训练不能被"省掉"，但也不值得为了省它而设计流水线。</strong>在本报告假设下，Max 的预训练只占系统总算力的 ~11%（7.2e24 对 6.7e25 FLOPs），而 Ultra 生长能否兑现 token 效率，其不确定区间宽达 1.2e25（系统的 ~17%）。真正的杠杆是：Ultra 的生长效率、后训练成本（2026 年已超过预训练的 10%）、日历并行，以及 Max 的最终质量。</p>
+  <p><strong>推荐组织方式是"一条主干、三次承接"</strong>：Ultra 的第一生长阶段就按 Max 的形态训练，Max 在该阶段末（WSD 稳定期、未退火）分叉出去独立完成预训练（承接权重）；Max 的退火/中期训练用 Ultra 在同一批数据上前向时顺带捕获的 logits 做蒸馏退火（承接分布）；Max 的后训练以 Ultra 输出做 off-policy SFT 冷启动，再从 Ultra 最终 RL checkpoint 做 OPD（承接策略）。剪枝/嵌套派生 Max 没有任何 10× 压缩的公开证据，不作为主路径。</p>
+</div>
+
+<div class="callout"><p><strong>两条适用边界（详见 §7–§9）。</strong>上面的结论以 Max ≈ 1T / 40B、单版本为前提。若 Max 放大到 3–4T / 100 多 B 激活，Ultra:Max 从 10× 降到 2.7×：Max 预训练升至系统算力的 25%，预训练蒸馏进入最优师生比区间，剪枝/嵌套派生进入证据范围（算力为独立预训练的 1/9–1/40），并行训练第一次出现真实的资源争用——方案 D/E 从"否"变为可行备选（§7）。若版本持续迭代，"不做全程协同蒸馏"只在单版本内成立：Max v(n) 可全程蒸馏自已成熟的 Ultra v(n−1)，加上阶段错峰与主干延续，年算力约省 20–25%（§8）。</p></div>
+<h3>推荐流水线要点</h3>
+<ol>
+  <li><strong>Ultra 三阶段生长，而非纯"扩层"。</strong>S1 = Max 形态（≈1.3T/46B）→ S2 深度插值（interposition）×2 → S3 专家数 ×4。10× 总参不可能只靠加层得到：深度每翻一倍，每 token 激活 FLOPs 同步翻倍，而前沿 10T 级设计点的激活比只有 2–4%；证据也显示深度是回报最高的生长算子，但应 ≤2× 且在专家扩增之前 [Du 2024; Wang/MSRA 2026]。d_model、注意力配置、专家粒度 d_expert、共享专家、词表、位置编码从第一天固定，只生长专家数与（有界的）深度。</li>
+  <li><strong>每次生长都在 WSD 稳定期、从未退火的 checkpoint 出发</strong>；拷贝层时连同 Adam 矩一起拷贝、不重置全局 LR、仅对新参数做数百步 re-warm；专家复制加 ~1% 噪声并同时扰动 router 行、新参数的优化器状态清零、aux-loss-free 偏置归零。生长后的新增 FLOPs 至少不低于此前沉没成本 [Wang/MSRA 2026]。</li>
+  <li><strong>Max 在 S1 末分叉。</strong>分叉只为 Max 省下 ~5% 的 tokens（S1 的 1.5–2T），真正的收益是：一套 scaling-law/超参搜索与数据流水线、S1 本身就是对 Ultra 配方的全尺寸去风险化、同源分布使后续 KD 与 OPD 的初始 KL 更小（OPD 的失败案例几乎都源于分布距离而非尺寸比）、更高的投机解码接受率 [Yano 2026]。</li>
+  <li><strong>不做全程协同蒸馏（单版本内）。</strong>日历上 Ultra 在大部分时间里并不比 Max 强（S1/S2 阶段它就是 Max 大小；S3 早期 loss 高于已训完的 Max），而不成熟 teacher 的在线 logits 会显著伤害学生（−21%）[Peng/Zhipu 2024]。只在 Max 的退火/中期训练（3–5T 高质量 tokens）阶段做 KD 退火：logits 来自 Ultra 自己在同一份退火数据上的前向（额外算力≈0），采用重要性采样 ~12 个样本/token（≈36 B/token，5T tokens ≈ 180 TB），α 走 WSD-α 调度、峰值 ≤0.9，低熵 token 回退硬标签；teacher checkpoint 按 loss 比值而非"最新"选择，以控制 10× 容量差。</li>
+  <li><strong>后训练按 2026 主流组织。</strong>Ultra：SFT → 领域×努力度 RL 专家 → 多教师 OPD（MOPD）统一 [Kimi K3; DeepSeek-V4; Nemotron 3 Ultra]，预算按预训练的 10–20% 规划 [DeepSeek-V3.2]。Max：Ultra 双模式输出 off-policy SFT 冷启动 → 从 Ultra 最终 RL checkpoint（或其专家池）OPD → 轻量 RLVR/RLHF → 可选跨阶段 OPD 修复 [Qwen3 2025; GLM-5 2026]。OPD 中 Ultra 的前向开销可忽略（100B 学生 token ≈ 6e22 FLOPs），Qwen3 报告 OPD 仅需 RL 流水线 1/10 的 GPU 小时且效果更好。</li>
+  <li><strong>算力与日历。</strong>系统总算力 ≈ 4.8–6.3e25 FLOPs，相对"两条独立预训练 + OPD"的 6.7e25 节省 6–28%，幅度几乎全部取决于 Ultra 生长是否兑现 G_stack 级别的 token 效率（区间下沿假设 token 中性，若出现饱和则节省归零）。Max 的全部预训练可以放在 ~10% 的集群切片上与 Ultra 并行，完全不在关键路径上；Max 的发布时间由 Ultra 后训练完成时间决定（约 Ultra 发布后 3–4 周），除非走"双轨"先发 Max-preview。</li>
+  <li><strong>承诺前必须跑 proxy 阶梯</strong>（如 10B→20B→80B 的同构三阶段 MoE，含从头训练对照），验证：生长后的 loss-gap 是否随 token 收敛（饱和风险）、S1 分叉的小模型是否不弱于同算力独立训练、KD 退火相对纯退火的增益、OPD 冷启动后初始 per-token KL 是否 ≤0.05–0.1。</li>
+</ol>
+
+<h3>三大风险</h3>
+<ul>
+  <li><strong>生长饱和。</strong>Liew &amp; Kato（2025，arXiv:2510.06548）拟合的法则说阶段二的 scaling 指数随基模型 tokens 对数衰减，按字面外推，10T 模型在不到 1T 阶段二 tokens 后从头训练就会反超；Du et al. 与 Q Labs（2026-09）则给出相反证据（生长抬高 scaling 指数）。两边都是 ≤7B 规模的外推，必须自测。</li>
+  <li><strong>10× 师生差距。</strong>预训练蒸馏的最优 teacher 约为学生 2.5×（ACL 2025 杰出论文）、Zhipu 发现 32B teacher 对多数学生不如 9B；OPD 中一个分布距离大的更强 teacher 曾让学生归一化得分从 0.937 崩到 0.600。缓解手段存在（checkpoint 选择、α 调度、SFT 冷启动、优势裁剪）但都未在 1T 学生上验证。</li>
+  <li><strong>没有先例。</strong>截至 2026-10，没有任何实验室公开过万亿级的尺寸生长或 upcycling；Tele-FLM-1T 在 1T 尺寸只训了 15.7B tokens 且无评测；唯一的前沿 MoE 协同蒸馏 teacher（Llama 4 Behemoth）从未发布。本设计将是首例，需要为"生长不兑现"保留退路（S1/S2 的 tokens 本就只占 ~15%，即使 S3 退化为准从头训练也只损失这部分）。</li>
+</ul>
+
+<!-- ============ 1 ============ -->
+<h2 id="s1"><span class="num">§1</span>问题拆解与算力边界</h2>
+<p>把问题拆成四个独立子问题：(a) Ultra 的生长能省多少；(b) Max 能从 Ultra 的轨迹里"白拿"多少预训练；(c) Max 的后训练能否靠 Ultra 变得又便宜又好；(d) 两条线怎么在日历上排。先把算力账算清楚，很多直觉会被纠正。</p>
+
+<div class="grid">
+  <div class="tile ultra"><div class="v">5.4e25</div><div class="l">Ultra 从头预训练 FLOPs（6 × 300B × 30T）</div></div>
+  <div class="tile max"><div class="v">7.2e24</div><div class="l">Max 从头预训练（6 × 40B × 30T）= Ultra 的 13%</div></div>
+  <div class="tile"><div class="v">~11%</div><div class="l">"完全省掉 Max 预训练"对系统总算力的节省上限</div></div>
+  <div class="tile ultra"><div class="v">3.7–4.8e25</div><div class="l">Ultra 三阶段生长（乐观 −32% / token 中性 −11%）</div></div>
+  <div class="tile max"><div class="v">6.8e24</div><div class="l">Max 在 S1 末分叉后的剩余预训练（−5%）</div></div>
+  <div class="tile"><div class="v">6e22</div><div class="l">OPD 中 Ultra 对 100B 学生 token 的前向（可忽略）</div></div>
+</div>
+
+<p class="small">估算口径：训练 FLOPs/token ≈ 6·A，teacher 前向 ≈ 2·A，A 为激活参数；忽略注意力的序列长度项与 MTP。生长阶梯 S1 1.3T/46B × 1.5T tokens、S2 2.5T/92B × 3T、S3 10T/300B × 25.5T（合计 30T，与从头基线相同）；"乐观"假设 S3 因生长少用 25% tokens（G_stack 在 1–7B 上为 ~50%，此处打对折）→ 3.65e25；"token 中性"假设小尺寸阶段看过的 token 全额计入、总 tokens 不变，只省下前两阶段相对全尺寸的差额 → 4.80e25；若出现 Liew–Kato 式饱和、S3 需要额外 tokens 追赶，则会回到甚至超过 5.4e25——这正是 §4.5 G1 门控要排除的情形。Max 后训练按预训练的 10% 为全 RL 流水线、OPD 为其 1/10 加 2% 轻量 RL。</p>
+
+<div class="fig" role="img" aria-label="五个候选方案的系统算力堆叠条形图，单位 1e25 FLOPs">
+  <svg viewBox="0 0 780 262" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12">
+    <defs>
+      <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="var(--s1)" stroke-width="2" opacity=".45"/>
+      </pattern>
+    </defs>
+    <!-- scale: 1e25 = 90px, origin x=120 -->
+    <g stroke="var(--line)" stroke-width="1">
+      <line x1="120" y1="18" x2="120" y2="222"/>
+      <line x1="210" y1="18" x2="210" y2="222" stroke-dasharray="2 4"/>
+      <line x1="300" y1="18" x2="300" y2="222" stroke-dasharray="2 4"/>
+      <line x1="390" y1="18" x2="390" y2="222" stroke-dasharray="2 4"/>
+      <line x1="480" y1="18" x2="480" y2="222" stroke-dasharray="2 4"/>
+      <line x1="570" y1="18" x2="570" y2="222" stroke-dasharray="2 4"/>
+      <line x1="660" y1="18" x2="660" y2="222" stroke-dasharray="2 4"/>
+      <line x1="750" y1="18" x2="750" y2="222" stroke-dasharray="2 4"/>
+    </g>
+    <g fill="var(--fg-3)" text-anchor="middle">
+      <text x="120" y="238">0</text><text x="210" y="238">1</text><text x="300" y="238">2</text><text x="390" y="238">3</text>
+      <text x="480" y="238">4</text><text x="570" y="238">5</text><text x="660" y="238">6</text><text x="750" y="238">7</text>
+      <text x="435" y="256" font-size="11">系统总算力 ×1e25 FLOPs（条内灰斜纹 = Ultra 生长可能节省的区间）</text>
+    </g>
+    <!-- Row A: U 5.40, Up .54, M .72, Mx .03 -->
+    <g>
+      <text x="8" y="44" fill="var(--fg)" font-family="Noto Sans SC, sans-serif" font-weight="700">A 独立×2+OPD</text>
+      <rect x="120" y="30" width="486" height="18" rx="2" fill="var(--s1)"/>
+      <rect x="608" y="30" width="46.6" height="18" rx="2" fill="var(--s3)"/>
+      <rect x="656.6" y="30" width="62.8" height="18" rx="2" fill="var(--s2)"/>
+      <rect x="721.4" y="30" width="2.7" height="18" rx="1" fill="var(--s4)"/>
+      <text x="730" y="44" fill="var(--fg-2)">6.7</text>
+    </g>
+    <!-- Row B: U 4.80 token-neutral (3.65 solid + 1.15 hatch), Up .54, M .68, Mx .03 → 6.05 / 4.90 -->
+    <g>
+      <text x="8" y="80" fill="var(--fg)" font-family="Noto Sans SC, sans-serif" font-weight="700">B 生长+分叉+OPD</text>
+      <rect x="120" y="66" width="328.5" height="18" rx="2" fill="var(--s1)"/>
+      <rect x="448.5" y="66" width="103.5" height="18" fill="url(#hatch)" stroke="var(--s1)" stroke-width="1"/>
+      <rect x="554" y="66" width="46.6" height="18" rx="2" fill="var(--s3)"/>
+      <rect x="602.6" y="66" width="59.2" height="18" rx="2" fill="var(--s2)"/>
+      <rect x="663.8" y="66" width="2.7" height="18" rx="1" fill="var(--s4)"/>
+      <text x="672" y="80" fill="var(--fg-2)">4.9–6.1</text>
+    </g>
+    <!-- Row C: U 4.80, Up .54, M .60, Mx .03, teacher-score 0–.30 → 6.27 / 4.82 -->
+    <g>
+      <text x="8" y="116" fill="var(--fg)" font-family="Noto Sans SC, sans-serif" font-weight="700">C 生长+分叉+KD退火+OPD</text>
+      <rect x="120" y="102" width="328.5" height="18" rx="2" fill="var(--s1)"/>
+      <rect x="448.5" y="102" width="103.5" height="18" fill="url(#hatch)" stroke="var(--s1)" stroke-width="1"/>
+      <rect x="554" y="102" width="46.6" height="18" rx="2" fill="var(--s3)"/>
+      <rect x="602.6" y="102" width="52" height="18" rx="2" fill="var(--s2)"/>
+      <rect x="656.6" y="102" width="2.7" height="18" rx="1" fill="var(--s4)"/>
+      <rect x="661.3" y="102" width="27" height="18" fill="none" stroke="var(--s4)" stroke-dasharray="3 2"/>
+      <text x="694" y="116" fill="var(--fg-2)">4.8–6.3</text>
+    </g>
+    <!-- Row D: U 4.80, Up .54, prune retrain .10, teacher .24 + OPD .03 = .27 → 5.71 / 4.56 -->
+    <g>
+      <text x="8" y="152" fill="var(--fg)" font-family="Noto Sans SC, sans-serif" font-weight="700">D 生长+剪枝派生+OPD</text>
+      <rect x="120" y="138" width="328.5" height="18" rx="2" fill="var(--s1)"/>
+      <rect x="448.5" y="138" width="103.5" height="18" fill="url(#hatch)" stroke="var(--s1)" stroke-width="1"/>
+      <rect x="554" y="138" width="46.6" height="18" rx="2" fill="var(--s3)"/>
+      <rect x="602.6" y="138" width="9" height="18" rx="2" fill="var(--s2)"/>
+      <rect x="613.6" y="138" width="24.3" height="18" rx="2" fill="var(--s4)"/>
+      <text x="645" y="152" fill="var(--fg-2)">4.6–5.7（质量无证据）</text>
+    </g>
+    <!-- Row E: U 4.80×1.15 = 5.52 (4.20 solid + 1.32 hatch), Up .54, M 0, Mx .03 → 6.09 / 4.77 -->
+    <g>
+      <text x="8" y="188" fill="var(--fg)" font-family="Noto Sans SC, sans-serif" font-weight="700">E 嵌套/弹性联合训练+OPD</text>
+      <rect x="120" y="174" width="378" height="18" rx="2" fill="var(--s1)"/>
+      <rect x="498" y="174" width="118.8" height="18" fill="url(#hatch)" stroke="var(--s1)" stroke-width="1"/>
+      <rect x="618.8" y="174" width="46.6" height="18" rx="2" fill="var(--s3)"/>
+      <rect x="667.4" y="174" width="2.7" height="18" rx="1" fill="var(--s4)"/>
+      <text x="676" y="188" fill="var(--fg-2)">4.8–6.1（≤2.5× 有证据）</text>
+    </g>
+    <text x="8" y="218" fill="var(--fg-3)" font-size="11" font-family="Noto Sans SC, sans-serif">Max 预训练（橙）在任何方案里都只是条尾的一小段；方案间差异小于 Ultra 生长本身的不确定带。</text>
+  </svg>
+  <div class="legend"><span><i style="background:var(--s1)"></i>Ultra 预训练</span><span><i style="background:var(--s3)"></i>Ultra 后训练（按预训练 10%）</span><span><i style="background:var(--s2)"></i>Max 预训练 / 剪枝重训</span><span><i style="background:var(--s4)"></i>Max 后训练 + teacher 开销（C 的虚线框 = 若用最终 Ultra 另行打分 5T tokens 的 3e24）</span></div>
+  <p class="cap">图 1 · 五个候选方案的系统算力（规划估算，非测量值）。详细数字见 §3 表格。</p>
+</div>
+
+<h3>四个结论性的边界</h3>
+<ul>
+  <li><strong>算力边界。</strong>Max 预训练是 Ultra 的 13%；加上后训练后占系统 ~11%。即便把 Max 的预训练压到零（现有证据做不到），系统算力也只降 11%，低于生长不确定带的宽度（~17%）。所以流水线设计的目标函数应是"Max 质量 + Ultra 生长效率 + 日历"，而不是"少训一个模型"。</li>
+  <li><strong>时间边界。</strong>以 5 万张 GB300 级 GPU、每卡 1–1.5 PF 有效吞吐（FP8 稠密峰值 5 PF 的 20–30%，与 Megatron-Core 在 GB300 上对 DeepSeek-V3 报告的 1,233 TF/卡一致）计：Ultra 5.4e25 ≈ 8–12 天纯计算，考虑可用率、退火、长上下文与故障，现实 1–2 个月（与 36Kr 的"5 万 Blackwell × 1 个月"、字节 10T 传闻的"3 万卡 × 3–6 个月"同量级）；Max 7.2e24 ≈ 1–2 天纯计算，放在 10% 切片上约 3–6 周。Max 从来不在关键路径上。图 2 的日历排程比这些纯算力下限保守 3–4×，以覆盖生长门控暂停、小阶段的批大小限制、长上下文与排障。</li>
+  <li><strong>质量边界。</strong>Max 能超过"同算力独立训练"多少，取决于三次承接各自的增益：分叉（Yano 等：家族成员 ≥ 独立训练，省 25–31% 总算力，但那是 1B→8B 的 dense）、KD 退火（≤10B 规模 +5–10% 平均分、随 tokens 衰减至 +1–3 分）、OPD（Qwen3 8B：AIME24 74.4 对 RL 的 67.6）。没有一项在 1T 学生上测过。</li>
+  <li><strong>证据边界。</strong>生长、upcycling、KD、嵌套训练的全部受控证据都在 ≤70B 总参（MoE）/ ≤12.6B（dense）以内；万亿级实践只有"时间上的分叉"（K2→K2.5、V3→V3.1→V3.2、Ling 2.0→2.6）和"同配方独立预训练各尺寸"（Ling 2.0、Qwen3、V4 Pro/Flash）。</li>
+</ul>
+
+<!-- ============ 2 ============ -->
+<h2 id="s2"><span class="num">§2</span>证据综述</h2>
+
+<h3>2.1 模型生长（depth stacking / interposition）</h3>
+<p><strong>结论：</strong>深度方向的直接拷贝是唯一在 decoder LLM 上做过大规模受控比较并胜出的生长算子；最优生长因子 2–4，一次到位优于多次渐进；对已收敛的基模型，原位插值（interposition）优于整体堆叠（stacking）；"生长优势是否随 tokens 饱和"是悬而未决的核心争议。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>发现</th><th>数字</th><th>来源</th><th>标签</th></tr></thead>
+<tbody>
+<tr><td>G_stack（整模深度拷贝）相对从头训练的算力加速；宽度生长无优势（定性结论另有 SPARKLING、Mallik 等佐证，具体数字为单篇）</td><td class="n">1.1B 49.1%；3B 54.5%；7B 54.6%（194B tokens 达到 300B 的 loss）</td><td>Du et al., NeurIPS 2024, 2405.15319</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>生长时机拟合式</td><td class="n">log10 d = 0.88·log10 N + 163.27/log10 C − 5.74；g∈[2,4]，推荐 4；1 层基模失败</td><td>同上（已用其 Llama 表验证 C=6ND 可复现）</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>一次性 G_stack 对比两次渐进堆叠</td><td class="n">+2.4 平均准确率，−0.6 Wikitext PPL</td><td>同上</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>已收敛 MoE 的深度生长：插值优于堆叠（堆叠在接缝处产生 ~10× 的权重范数断裂）；深度生长优于专家宽度生长；最佳 70B 为深度先于宽度（但两种顺序的权重余弦 &gt;0.82，差异不大）</td><td class="n">17B→35B→70B，1T tokens；比同等额外 FLOPs 的从头训练 +6.18 分</td><td>Wang et al. (USTC/MSRA), ICML 2026, 2510.08008</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>固定总预算下，从早/中期 checkpoint 生长优于从头，从退火后的晚期 checkpoint 生长差于从头</td><td class="n">scratch 45.82；grow@8k 46.99 / 16k 47.38 / 24k 47.29；56k–64k &lt; scratch</td><td>同上</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>中间层生长改善推理（闭卷知识持平）</td><td class="n">MIDAS 8B 数学 34.9→43.1；LIDAS 1.7B 13.8→18.6</td><td>Saunshi 2024, 2409.19044；Kapl 2025, 2512.08819</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>饱和（反方）：阶段二指数随基模 tokens 对数衰减；100B 模型 ×2 堆叠的反超点 ≈13T tokens，随 N 缩小</td><td class="n">L = A·D1^−α1·D2^−(α2−α3·log D1)+E，≤1.1B 拟合</td><td>Liew &amp; Kato, 2025, 2510.06548</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>持续优势（正方）：生长抬高 scaling 指数 γ 0.111→0.117；7.4B 外推点落在曲线上</td><td class="n">1e18–1e20 FLOPs 阶梯，Muon</td><td>Q Labs, 2026-09, 2609.19107</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>唯一 &gt;50B 的从头生长实录（无从头对照）</td><td class="n">FLM-101B：16B 245B / 51B 40B / 101B 27B tokens，21.5 天 ×192 A800；Tele-FLM-1T：52B 2003B / 102B 300B / 1T 15.7B tokens，无评测</td><td>2309.03852；2407.02783</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>用扩展法构建模型家族：每个成员 ≥ 独立训练，总算力省 25–31%；相邻尺寸 KL 更低、投机解码接受率 93.2% 对 87.2%</td><td class="n">1B→2B→4B→8B，dense</td><td>Yano et al., 2504.00623 (v2 2026)</td><td><span class="tag one">单一来源</span></td></tr>
+</tbody></table></div>
+<p><strong>工程共识（2025–26）：</strong>非函数保持的直接拷贝可行，≤20% 噪声略有帮助 [Du]；拷贝层时一并拷贝 Adam 矩 [Kapl; Shen 2022]，全部清零优化器状态会引发不稳定；在 WSD 稳定期生长、不重置全局 LR；仅对新参数 re-warm（SPARKLING：1.3× 峰值、250 步）；可将拷贝块的最后一个子层清零以消除尖峰 [Bu/Meta 2025]。生长步的 μP 跨深度迁移没有文献支持，残差流范数剖面是最接近原则的东西 [Wang/MSRA]。</p>
+<p><strong>对 Ultra 的含义：</strong>深度生长放在 S1→S2、因子 2、原位插值；S1 必须相对 S2/S3 的预算"训练不足"（Du 公式对 N=1e13、D=30T 外推给出基阶段 ~0.5T tokens，约为总量的 1–2%），但又要足够收敛才能作为 Max 的起点——这就是 §4 "稳定期分叉"要解决的张力。</p>
+
+<h3>2.2 MoE 专家扩增与 upcycling</h3>
+<p><strong>结论：</strong>dense→MoE 的 upcycling 在这个规模是错误的起手式；MoE→MoE 的专家数扩增是证据最充分的生长路径（三项独立研究在同等续训算力下持平或优于从头）；除专家数与深度外的维度应从第一天固定；前沿稀疏度正从 32 走向 56–64，激活比 2–4%。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>发现</th><th>数字</th><th>来源</th><th>标签</th></tr></thead>
+<tbody>
+<tr><td>dense→MoE 交叉点随规模、沉没成本、稀疏度单调缩小</td><td class="n">T5 ~120% dense 预算 → OLMoE ~25% → Skywork "C_MoE ≥ 2·C_dense 则从头" → 8×1B 的 D* ≈ 4B tokens，所需数据 ∝ N^1.8 → 激活比 3.13% 时 val loss 差 0.241</td><td>2212.05055；2409.02060；2406.06563；Liew ICML 2025 2502.03009；Amazon 2604.19835</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>MoE→MoE 专家数 ×2（k 固定），续训 50–100% 基预算即可持平从头</td><td class="n">7B：val loss 1.305 对 1.308；GPU 小时省 24–32%（沉没不计则 50–67%）；梯度范数效用选择优于均匀复制</td><td>Amazon, 2604.19835 (2026-05)</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>专家数 8→128（四次 ×2，k=8 固定）渐进训练</td><td class="n">最终 loss 1.017 对固定 128 专家的 0.994（2.3% 差）；MMLU 56.3 对 57.4；GPU 小时省 ~10%；每次扩增尖峰约 10K 步恢复</td><td>EMO, 2605.13247</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>17B→35B→70B（深度插值再专家 ×2，k 同倍）</td><td class="n">+6.18 分 对等额外 FLOPs 从头；"额外 FLOPs ≥ 沉没成本"</td><td>Wang/MSRA, 2510.08008</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>复制专家需破对称：α≈0.01·σ 噪声于权重与 router 行；近似克隆在硬 top-k 下会坍缩回原专家数</td><td class="n">噪声 +~1% 下游；过大有害；随机初始化更差</td><td>Wang/MSRA；Reversible Foundations 2606.07404</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>前沿设计点：稀疏度与激活比</td><td class="n">DS-V3 256/8（32）→ K2 384/8（48，比 8 省 1.69× FLOPs）→ V4-Pro 384/6（64）→ K3 896/16（56）；Ant：激活比低至 0.8% 仍改善 loss，最优粒度 ~8–12</td><td>2412.19437；2507.20534；2606.19348；K3 报告；2507.17702</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>各家族跨尺寸固定不变的维度</td><td class="n">Ling 2.0：256/8/1、156K 词表不变，hidden 随尺寸增长（1T 为 8192）；Nemotron 3：512/top-22、KV 头 2；K2→K3：hidden 7168 不变，层 61→93，专家 384→896</td><td>2510.22115；Nemotron 3 报告；K3 报告</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>稳定性基线：万亿级无生长运行</td><td class="n">DS-V3 14.8T、K2 15.5T 零尖峰零回滚；Nemotron 3 Ultra 550B 在 ~8T 与 ~16T 两次发散，MaxVio 漂到 ~12</td><td>2412.19437；2507.20534；Nemotron 3 Ultra 报告</td><td><span class="tag est">已确立</span></td></tr>
+</tbody></table></div>
+<p><strong>对 Ultra 的含义：</strong>10× ≈ 深度 ×2 × 专家 ×4–5。专家扩增步的配方：按梯度范数效用选择要复制的专家 → 复制 + 1% 噪声（权重与 router 行）→ 新参数优化器状态清零 → aux-loss-free 偏置归零（K3 的 Quantile Balancing 可在数步内重新平衡）→ 500 步 re-warm 后回到稳定期 LR → 监控 MaxVio/Gini 与专家间相似度 [Skywork]。是否同步提高 top-k 是一个真实的设计分叉：MSRA 同倍提高 k 以严格函数保持，Amazon/EMO 固定 k 以保住每 token FLOPs。EMO 的 2.3% loss 税（相对固定大模型）是目前对"分阶段代价"最直接的量化，必须在 proxy 上复测。</p>
+
+<h3>2.3 预训练期蒸馏与协同蒸馏</h3>
+<p><strong>结论：</strong>预训练 logit 蒸馏对家族中的小成员是成熟实践（Gemma 2/3、Gemini Flash、Llama 3.2、Apple），但 (i) 最优 teacher 只比学生大 ~2.5×，10× 远超已发表最优区间；(ii) teacher 前向 2A_T 对学生训练 6A_S，在 5–10× 激活比下在线打分是学生算力的 1.7–3.3×，经济上只能靠"在 teacher 自己训练的前向里顺带捕获"；(iii) 不成熟 teacher 的在线 logits 有害；(iv) 收益随 tokens 衰减。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>发现</th><th>数字</th><th>来源</th><th>标签</th></tr></thead>
+<tbody>
+<tr><td>蒸馏 scaling law：teacher 只通过其 loss L_T 影响学生；容量差转折点在 L_T/L̃_S = d₁；只有 teacher 已存在/被摊销且学生算力低于某阈值时蒸馏才优于监督训练；大学生更受益</td><td class="n">L_S = L_T + L_T^−c₀·[1+(L_T/(L̃_S·d₁))^{1/f₁}]^−c₁f₁·(A/N_S^α′+B/D_S^β′)^γ′；dense ≤12.6B、≤512B tokens；λ=1、τ=1 最优</td><td>Busbridge et al. (Apple), ICML 2025, 2502.08606</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>容量差法则：最优 teacher ≈ 2.5× 学生</td><td class="n">T* ≈ 2.498·S − 11.5（百万参数），R² 0.996；MiniMA 随 LLaMA2 teacher 7B→13B→70B 性能下降</td><td>Zhang et al., ACL 2025 杰出论文, 2311.07052</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>设计空间：GLM-4-32B teacher 对多数学生不如 9B；WSD-α 调度 +8.0%，对比常数 α=1 的 +1.6%、最佳常数 α=0.9 的 +3.6%；top-k 50（p 0.95）最佳但 k=1 也有效；在线早期 logits −20.9%、teacher 后期 −3.9%、α=0.1 时 +0.5%</td><td class="n">学生 330M–6.8B，100B/500B tokens；500B 时增益衰减至 +1.2/+3.5 分</td><td>Peng et al. (Zhipu/THU), ACL 2025, 2410.16215</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>生产案例增益</td><td class="n">Gemma 2 2B@500B：60.3→67.7；Gemma 3 全尺寸 KD，每 token 采样 256 logits；Gemini 2.5 Flash 及以下 k-sparse 蒸馏；Apple AFM 用 top-1 标签在 6.3T 上 +5% MMLU，但续训阶段 KD 无益</td><td>2408.00118；2503.19786；Gemini 2.5 报告；2407.21075</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>Gemma 3 消融：短训练小 teacher 更好，长训练反转为大 teacher 更好</td><td class="n">10B–100B tokens 区间</td><td>2503.19786 §5.4</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>Llama 4：Maverick/Scout 从仍在训练的 Behemoth（~2T/288B 激活）协同蒸馏；软硬目标动态加权；teacher 前向在学生数据上摊销；增益从未量化；Behemoth 2025-05 推迟、07 停测、从未发布</td><td class="n">唯一的前沿 MoE 协同蒸馏案例</td><td>Meta 博客（经二手）；2601.11659（已撤稿）；WSJ/NYT 报道</td><td><span class="tag est">已确立（方法）</span></td></tr>
+<tr><td>稀疏目标的存储与无偏性：3 B/样本；~12 个重要性采样 ≈ 全词表 KD；朴素 top-k 有偏、需 k≈300</td><td class="n">100B tokens：全 KD 10 PB，top-300 90 TB，RS-KD 3.6 TB</td><td>Sparse Logit Sampling, ACL 2025, 2503.16870</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>ICL 回退与修复：低熵 15% token 回退硬标签恢复 needle/反事实 QA；pass@k 增益更持久</td><td class="n">DPT-90@125B 在 pass@16 上胜 SPT@250B</td><td>Goyal et al. (FAIR), 2509.01649</td><td><span class="tag one">单一来源</span></td></tr>
+</tbody></table></div>
+<p><strong>对 Max 的含义：</strong>Ultra 的 S1/S2 与 S3 早期并不比 Max 强，全程协同蒸馏既贵又可能有害；可行形态是 Max 的退火/中期训练阶段做 KD 退火：Ultra 在同一份退火数据上前向时捕获重要性采样 logits（额外算力 ≈0，5T tokens ≈ 180 TB；若改用固定的最终 Ultra checkpoint 另行打分则需 3e24 FLOPs ≈ Ultra 预训练的 5.6%）；α 走 WSD-α、峰值 ≤0.9、末 1% 衰减到 0；低熵 token 回退硬标签；teacher checkpoint 按 loss 比值选择，而不是一味用最新——这把 10× 容量差变成了可调旋钮。Apple AFM "续训阶段 KD 无益"是反例，必须用消融而非假设决定。以上限于单版本；多版本迭代下可用上一代、已成熟的 Ultra 做全程 KD 的 teacher，时序与容量差问题同时消失（§8）。</p>
+
+<h3>2.4 On-policy 蒸馏（OPD）</h3>
+<p><strong>结论：</strong>OPD 配方已收敛（采样 token 的 log π_T − log π_S 作为逐 token 优势、PPO/GRPO 代理、组大小 1、大 prompt 批、优势裁剪）；成本上 teacher 只做前向（prefill 型、异步），"墙钟由学生采样主导"；强到弱压缩的报告级先例只有 Qwen3，2026 前沿用法全部是同尺寸 RL 专家的合并；失败模式是分布距离而非参数比；知识不可经 OPD 传递。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>发现</th><th>数字</th><th>来源</th><th>标签</th></tr></thead>
+<tbody>
+<tr><td>Qwen3 强到弱蒸馏：off-policy（双模式 teacher 输出）→ on-policy logit KL；对 8B 学生</td><td class="n">AIME24 74.4（OPD，1,800 GPU·h）对 67.6（RL，17,920 GPU·h）；pass@64 OPD 上升、RL 持平</td><td>Qwen3 报告 2505.09388 表 21</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>Thinking Machines：OPD 对 SFT 达同精度省 9–30× FLOPs（GPU 小时 ~18×）；~77K prompts × 4 样本、150 步；可用部分 rollout</td><td class="n">Qwen3-8B-Base 60%→70% AIME24</td><td>thinkingmachines.ai 2025-10</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>2026 前沿后训练骨架："专家 → OPD → 统一"</td><td class="n">DeepSeek-V4 按领域训专家后以反向 KL OPD 统一（"10+ teacher、全词表 KL"为二手来源）；Kimi K3 3 领域 × 3 努力度 = 9 专家 → MOPD；Nemotron 3 Ultra 11 teacher、两轮 MOPD；GLM-5 跨阶段 OPD 防遗忘</td><td>2606.19348；K3 报告；2606.15007；2602.15763</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>采样 token 已足够；top-k/全词表无一致增益</td><td class="n">MOPD 0.937（策略梯度式）对 0.909（top-64）；K3、Nemotron 明确"无优势"</td><td>2606.30406；K3；2606.15007</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>分布差距导致崩溃：外来的更强 teacher（Qwen3-235B）对 30B-A3B 学生</td><td class="n">归一化分 0.937→0.600；初始 per-token KL 0.19 对同源 0.04；top-k 形式第 18 步发散</td><td>MOPD, 2606.30406</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>最强 teacher 对小学生最无效；长度利用病态需裁剪/对数压缩</td><td class="n">1.7B-Base：OPD(1.7B-GRPO) 28.1 &gt; OPD(4B-GRPO) 26.7；+log 压缩 30.4</td><td>Demystifying OPD, 2607.13399</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>传得好 / 传不好</td><td class="n">好：推理格式、模式切换、IF、工具策略（Nemotron Terminal Bench 超 teacher）；差：学生从不采样的知识（HLE 26.7 对 32.1）、创意写作 −3.9、BrowseComp −6.3、&gt;10–15K token 视界（teacher 优势 +0.37→+0.02）</td><td>2606.15007；2601.02780；2604.13016</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>调度：teacher 取最终 RL checkpoint；OPD 后再 RL 优于联合或 SFT 后 RL；第二轮 OPD 边际收益小；冷启动 SFT 是承重墙</td><td class="n">RL-tuned teacher 弥合 58.6% 差距对非 RL 15.6%；OPD→RL pass@32 58.5 对 SFT→RL 54.1；Nemotron 无 warmup SFT GDPVal 35.3 对 46.7</td><td>2604.13016；2609.04108；2606.15007</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>体量与系统</td><td class="n">批 1,024–2,048 prompt × 1 rollout；teacher 作为独立 vLLM/SGLang 服务异步打分；MoE 需 rollout 路由回放（R3）；IcePop 截断 IS；每轮学生 token 总量无人公开（按批×长度×步数推断为 ~1–20B）</td><td>GLM-5；MOPD；MiMo 2601.02780；verl 文档</td><td><span class="tag est">已确立</span> <span class="tag inf">推断（token 量）</span></td></tr>
+</tbody></table></div>
+<p><strong>对 Ultra→Max 的含义：</strong>这是整条流水线里证据最硬、成本最低的一环。Ultra 对 100B 学生 token 的前向 ≈ 6e22 FLOPs，可忽略；teacher 服务池按与学生 decode 吞吐匹配来配（估计 0.5–1.5× 学生 rollout 的 GPU 数，prefill 优化部署）。必须做：Ultra 双模式/多努力度输出的 off-policy SFT 冷启动，把初始 per-token KL 压到 ~0.05 量级；优势裁剪 A_max≈5 或 sign·log(1+|Δ|)；OPD 期响应长度上限 8–16K；高熵 token 混入前向 KL 以保 pass@k；OPD 之后再做 RLVR。Max 缺的知识必须在预训练/中期训练里补，OPD 补不了。</p>
+
+<h3>2.5 剪枝派生与嵌套/弹性训练</h3>
+<p><strong>结论：</strong>近无损的剪枝+蒸馏全部落在 1.2–2.7× 压缩、0.3–5% 父模型 tokens；一次性专家剪枝在 50% 时代码任务近无损但知识类掉 8–22 分，75% 时崩到基线 67%；嵌套训练最远到 30B-A3.6B→12B（2.5×），最小成员在难推理上掉 5–10 分；没有任何 10× 的结果，也没有 ≥400B MoE 剪枝后再训练的结果。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>发现</th><th>数字</th><th>来源</th><th>标签</th></tr></thead>
+<tbody>
+<tr><td>Minitron 家族</td><td class="n">15B→8B 94B tokens（从头 3.8T），MMLU 63.8 对 54.7；MN-Minitron 8B 380B tokens；Nemotron-H 56B→47B 63B tokens（0.3%）保留 98.6%；LN-Ultra 405B→253B 153B tokens（最大 dense 案例）</td><td>2407.14679；2408.11796；2504.03624；2505.00949</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>Llama 3.2 1B/3B（8×/2.7×）：剪枝 + 8B/70B logit 蒸馏，但用了"至多 9T tokens"</td><td class="n">916K H100 小时</td><td>HF 模型卡</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>等总算力受控研究：从头训练持平或优于粗粒度结构化剪枝；深度剪枝优势在 ~5.3× 消失（无蒸馏）</td><td class="n">S250 67.5 对 Minitron-W P200-R50 66.3</td><td>2606.14150 (2026-06)</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>一次性专家剪枝 1T 级：REAP 50% 近无损代码，知识类大跌；EASY-EP 75% 崩</td><td class="n">Kimi-K2 MC 0.780→0.643；R1 128/256 ≈99%、64/256 → 67%</td><td>Cerebras REAP ICLR 2026 2510.13999；2504.06792</td><td><span class="tag est">已确立</span></td></tr>
+<tr><td>MoE→dense 9×（Qwen3-30B-A3B→3.3B）</td><td class="n">4B tokens 后仅 73% teacher</td><td>KRAFTON 2605.28207</td><td><span class="tag one">单一来源</span></td></tr>
+<tr><td>嵌套训练：Nemotron Elastic 12B→9B/6B 110B tokens；Star Elastic 30B-A3.6B→23B→12B 160B tokens（0.6%），全尺寸 ≈0 损失，保留全部 128 专家、压嵌入与专家 FFN 宽度</td><td class="n">12B 成员 AIME25 −10、GPQA −15；"360× 对从头"= 40T/110B</td><td>2511.16664；2605.07182 ICML 2026；Gemma 3n</td><td><span class="tag est">已确立</span></td></tr>
+</tbody></table></div>
+<p><strong>含义：</strong>不是 Max 的来源。可支持的派生产品是 ~4–5T 的"Ultra-Lite"（Star-Elastic 式嵌套后训练、~0.6% tokens）或 25–50% REAP 的廉价服务变体。专家数是最脆弱的压缩轴，知识类基准先掉。</p>
+
+<h3>2.6 2025–2026 万亿级 MoE 实践</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>模型（时间）</th><th class="n">总参/激活</th><th class="n">专家/激活+共享</th><th class="n">层 / hidden</th><th class="n">tokens</th><th>调度与要点</th><th>小尺寸成员如何来</th></tr></thead>
+<tbody>
+<tr><td>DeepSeek-V3（2024-12）</td><td class="n">671B/37B</td><td class="n">256/8+1</td><td class="n">61 / 7168</td><td class="n">14.8T</td><td>WSD；2.788M H800·h，2048 卡 &lt;2 月；180K GPU·h/T tokens；零回滚</td><td>—</td></tr>
+<tr><td>Kimi K2（2025-07）</td><td class="n">1.04T/32.6B</td><td class="n">384/8+1</td><td class="n">61 / 7168</td><td class="n">15.5T</td><td>WSD 10T 稳 + 5.5T 余弦；MuonClip 零尖峰；稀疏度 48 法则</td><td>K2.5 从"接近末尾的 K2 checkpoint"续训 15T 视觉文本 token（时间分叉）</td></tr>
+<tr><td>Ling-1T（2025-10）</td><td class="n">1T/51B</td><td class="n">256/8+1</td><td class="n">80 / 8192</td><td class="n">20T</td><td>WSM（合并 32 个 ckpt 代替衰减）；FP8；"全部参数随机初始化 std 0.006"</td><td>mini/flash/1T 同配方独立预训练；Ring-1T 从 Ling-1T-base RL；Ling 2.6 "架构迁移预训练"</td></tr>
+<tr><td>Qwen3-Max（2025-09）</td><td class="n">&gt;1T</td><td class="n">—</td><td class="n">—</td><td class="n">36T</td><td>PAI-FlashMoE +30% MFU；ChunkFlow 3×；零尖峰零回滚；Thinking 版 4 个月后</td><td>Qwen3 各尺寸独立预训练；小模型后训练用强到弱蒸馏</td></tr>
+<tr><td>GLM-5（2026-02）</td><td class="n">744B/40B</td><td class="n">256</td><td class="n">80 / —</td><td class="n">28.5T</td><td>Muon；DSA（20B tokens 稀疏适配）；跨阶段 OPD；LR 调度未披露（前代 GLM-4.5 明确用余弦、弃 WSD）</td><td>无小尺寸披露</td></tr>
+<tr><td>DeepSeek-V4 Pro / Flash（2026-04）</td><td class="n">1.6T/49B；284B/13B</td><td class="n">384/6+1；256/6+1</td><td class="n">61 / 7168；43 / 4096</td><td class="n">33T / 32T</td><td>Muon；FP4 专家权重；专家 → OPD（反向 KL）统一</td><td>两者各自从头预训练（5.6:1 并行对，最接近的真实先例）</td></tr>
+<tr><td>Qwen3.8-2.4T-A95B（2026-08）</td><td class="n">2.4T/95B</td><td class="n">512/10+1</td><td class="n">92 / 8192</td><td class="n">未披露</td><td>Gated DeltaNet 3:1 混合；"建立在 Qwen3.5 架构基础上"</td><td>27B 稠密版无蒸馏声明</td></tr>
+<tr><td>Kimi K3（2026-07）</td><td class="n">2.78T/104B</td><td class="n">896/16+2</td><td class="n">93 / 7168</td><td class="n">未披露</td><td>余弦优于 WSD（各自最优超参下）；8K→64K 预训练、256K→1M 在冷却期；"相对 K2 2.5× scaling 效率"；SFT → 9 专家 → MOPD</td><td>无小尺寸</td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>没有任何实验室披露过万亿级的尺寸生长或 upcycling</strong>；最大的公开生长 MoE 是 70B，最大的生产 upcycle 是 Skywork-MoE 146B（从 13B dense）。万亿级常见的是"时间上的分叉"：K2→K2.5、V3→V3.1→V3.2（续训 2.1B + 943.7B tokens 完成 DSA 转换）、Ling 2.0→2.6。</li>
+  <li><strong>后训练预算已超过预训练的 10%</strong>（DeepSeek-V3.2 明示；V3 一年前是 0.2%）；基座→Thinking 版的日历约 4 个月（K2 7→11 月；Qwen3-Max 9 月→次年 1 月）。</li>
+  <li><strong>硬算力锚点稀少</strong>：DS-V3 2.788M H800·h；Llama 3.1 405B 30.84M H100·h、38–43% BF16 MFU、54 天；Behemoth FP8 390 TF/卡 × 32K 卡；Megatron-Core 在 GB300/GB200 上对 DS-V3-685B 达 1,233/1,048 TF/卡（≈ FP8 稠密峰值的 25%）。K2/K3、Qwen3-Max/3.8、V4、GLM-5、Ling-1T 均未披露 GPU 小时或 MFU。</li>
+  <li><strong>10T 级计划已公开</strong>：阿里 CEO 吴泳铭在 2026-09-22 云栖大会称 Qwen 4 在训、计划训练 5–10 万亿参数模型、真武 V900 支持 50 万卡集群（2027 Q1 量产）；字节 5T+/10T（3 万卡、3–6 个月）为传闻；OpenAI "Bel" &gt;10T 为单一社媒来源。</li>
+</ul>
+
+<!-- ============ 3 ============ -->
+<h2 id="s3"><span class="num">§3</span>候选流水线方案 A–E 对比</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>方案</th><th>Max 来源</th><th class="n">系统算力 ×1e25（悲观–乐观）</th><th>日历关键路径</th><th>Max 预期质量</th><th>主要风险</th><th>证据成熟度</th><th>结论</th></tr></thead>
+<tbody>
+<tr><td><strong>A</strong> 两条独立预训练 + OPD（用户原计划）</td><td>独立从头 30T</td><td class="n">6.7</td><td>Ultra 预训练 → Ultra 后训练 → Max OPD；Max 预训练可并行</td><td>基线；OPD 带来 Qwen3 级后训练增益</td><td>两套超参/数据搜索；Ultra/Max 分布不同源（OPD 初始 KL 偏大）；Ultra 从头无中途验证</td><td>高（V4 Pro/Flash 各自从头预训练，是最接近的先例；Flash 的 OPD teacher 是否源自 Pro 未披露）</td><td>可靠的兜底</td></tr>
+<tr><td><strong>B</strong> Ultra 生长；Max 自 S1 末分叉后独立；OPD</td><td>S1 权重 + 独立 ~28T</td><td class="n">4.9–6.1</td><td>同 A；S1 多出 ~1–2 周的全尺寸验证</td><td>≥A（Yano：家族成员 ≥ 独立；同源分布利于 OPD）</td><td>生长饱和；S1 "为 Max 训得太足"会损害 S2/S3 效率</td><td>中（生长 ≤70B；分叉模式为综合推断）</td><td>推荐骨架</td></tr>
+<tr><td><strong>C</strong> B + Max 退火期 KD（Ultra 自身前向捕获 logits）+ OPD</td><td>同 B，退火 3–5T 用 Ultra 软标签</td><td class="n">4.8–6.3</td><td>Max 退火需等 Ultra S3 明显领先（约第 10 周），不影响关键路径</td><td>&gt;B：≤10B 证据为 +1–10 分，随 tokens 衰减；pass@k 增益有利于后续 RL</td><td>10× 容量差；Apple AFM 续训期 KD 无益的反例；180 TB 级 logits 存储与 I/O</td><td>中低（生产案例均 ≤27B 学生；Llama 4 未量化）</td><td><strong>推荐（含消融门控）</strong></td></tr>
+<tr><td><strong>D</strong> Ultra 生长；Max = 剪枝 Ultra + KD 重训；OPD</td><td>Ultra 终稿剪 10× 后重训 ~4T</td><td class="n">4.6–5.7</td><td>Max 只能在 Ultra 预训练结束后开始，进入关键路径</td><td>未知；75% 专家剪枝已崩到 67%，9× MoE→dense 仅 73%</td><td>无任何 10× 证据；等算力研究显示从头持平或更好；Max 发布推迟</td><td>低（10×）/ 高（≤2.5×）</td><td>否（Max 1T）；Max 为 3–4T 时进入证据范围，见 §7</td></tr>
+<tr><td><strong>E</strong> 嵌套/弹性联合训练（Max 为 Ultra 子网络）+ OPD</td><td>Ultra 内嵌子网</td><td class="n">4.8–6.1</td><td>与 Ultra 同步完成</td><td>未知；已发表最远 2.5×，最小成员难推理 −5–10 分</td><td>全尺寸质量税（知识类 −2 分）；训练系统复杂度（多预算采样、路由屏蔽）；10× 无先例</td><td>低（≤30B 父模型）</td><td>否（Max 1T）；Max 为 3–4T 时为备选，见 §7</td></tr>
+</tbody></table></div>
+<p class="small">系统算力包含 Ultra 后训练（按从头预训练的 10%，5.4e24）。B–E 的区间来自 Ultra 生长的乐观（−32%）/ token 中性（−11%）两端，饱和情形未计入；方案间差异小于这一不确定带，所以选择依据应是质量、风险与日历，而不是表中算力。</p>
+
+<!-- ============ 4 ============ -->
+<h2 id="s4"><span class="num">§4</span>推荐方案：一条主干、三次承接</h2>
+
+<h3>4.1 从第一天固定 vs 允许生长</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>维度</th><th>决定</th><th>依据</th></tr></thead>
+<tbody>
+<tr><td>词表、位置编码/线性注意力混合比、注意力类型、Q/KV 头数、MLA 潜维</td><td><strong>固定</strong></td><td>任何规模都没有生长证据；各家族跨尺寸保持不变 [Ling 2.0; Nemotron 3; K2→K3]</td></tr>
+<tr><td>d_model（建议 8192）</td><td><strong>固定</strong></td><td>2.4–2.8T 的前沿仍用 7168–8192；宽度生长仅 SPARKLING 在 2.5B 上验证、最终 loss 略差；Ling-1T 在 1T 已用 8192，Max 不会"过宽"</td></tr>
+<tr><td>专家粒度 d_expert（建议 3072–4096）、共享专家数、dense/MoE 层模式</td><td><strong>固定</strong></td><td>Ant 粒度最优 8–12；K3/V4-Pro 均迁到 3072；Liew 称细粒度/共享专家"难以 upcycle"</td></tr>
+<tr><td>层数</td><td><strong>生长 ×2</strong>（原位插值）</td><td>回报最高的算子但受推理成本与"深度诅咒"约束；K3 93 层、Qwen3.8 92 层为上沿</td></tr>
+<tr><td>路由专家数</td><td><strong>生长 ×4–5</strong>（1–2 次）</td><td>k 固定时每 token FLOPs 不变；三项独立研究支持 ×2/步</td></tr>
+<tr><td>top-k</td><td>S3 时 8→16–24（可选）</td><td>K2→K3 8→16；函数保持与激活比之间的设计分叉，proxy 决定</td></tr>
+<tr><td>优化器、精度、负载均衡</td><td>Muon 族 + QK-clip；FP8（专家权重可 FP4）；aux-loss-free 偏置或 Quantile Balancing</td><td>2026 万亿级标配 [K2/K3; V4; GLM-5]；生长步后偏置归零</td></tr>
+</tbody></table></div>
+
+<h3>4.2 生长阶梯（示意设计点）</h3>
+<div class="ladder">
+  <div class="stage"><div class="h">S1 · MAX 形态 <span class="tag m">Max 由此分叉</span></div><div class="t">≈1.3T 总 / 46B 激活</div>
+    <ul><li>48 层，256 路由专家 + 1 共享，top-8，d_model 8192，d_expert 4096（每专家 ≈100M）</li><li>1.5–2T tokens，WSD 稳定期（不衰减）</li><li>Du 公式外推的基阶段量级为数百 B 到低 T；兼顾 MSRA "额外 FLOPs ≥ 沉没成本"</li><li>此阶段同时是 Ultra 配方的全尺寸验证</li></ul></div>
+  <div class="stage"><div class="h">S2 · 深度 ×2（原位插值）</div><div class="t">≈2.5T 总 / 92B 激活</div>
+    <ul><li>48→96 层：每层原位复制一份，连同 router、专家与 Adam 矩；最后子层可清零</li><li>+3T tokens；全局 LR 不重置，新层 re-warm 250–500 步</li><li>可借 MIDAS 效应改善推理；监控范数剖面与 MaxVio</li></ul></div>
+  <div class="stage"><div class="h">S3 · 专家 ×4 <span class="tag u">Ultra 终态</span></div><div class="t">≈10T 总 / 170–330B 激活</div>
+    <ul><li>256→1024 路由专家（一次 ×4 或两次 ×2，proxy 决定）；k 8→16–32 → 激活比 1.7–3.3%</li><li>复制 + 1% 噪声（权重与 router 行）、新参数优化器状态清零、偏置归零、500 步 re-warm</li><li>25–27T tokens；最后 10–15% 衰减或 WSM 合并；4K→32K→128K→1M 上下文在冷却期</li></ul></div>
+</div>
+<div class="callout"><p><strong>核心张力。</strong>算力最优的生长要求基模型"训练不足"（Du、Q Labs、Liew–Kato 都指向早生长），而一个可独立发布的 1T 级模型要求训练到或超过 Chinchilla 最优。Wang/MSRA 的固定总预算表在小规模量化了这一点：从训到 1–3× Chinchilla 的 checkpoint 生长仍胜从头，从完全退火、过训的 checkpoint 生长则输给从头。因此 <strong>分叉而不是分享</strong>：S1 跑在 WSD 稳定期，在衰减之前分叉——一支继续独立训练并最终退火成为 Max，另一支立即生长。Max 只从 S1 白拿 ~5% 的 tokens，设计不能依赖 token 共享来省算力；它依赖的是同源、去风险与两次后续承接。</p></div>
+
+<h3>4.3 时间线（50K GB300 级集群，Ultra 占 ~90%、Max 占 ~10%）</h3>
+<div class="fig" role="img" aria-label="Ultra 与 Max 两条流水线的 28 周甘特图">
+  <svg viewBox="0 0 870 470" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC, sans-serif" font-size="12">
+    <!-- week axis: x = 150 + w*25 -->
+    <g stroke="var(--line)" stroke-width="1">
+      <line x1="150" y1="30" x2="150" y2="440"/><line x1="250" y1="30" x2="250" y2="440" stroke-dasharray="2 4"/>
+      <line x1="350" y1="30" x2="350" y2="440" stroke-dasharray="2 4"/><line x1="450" y1="30" x2="450" y2="440" stroke-dasharray="2 4"/>
+      <line x1="550" y1="30" x2="550" y2="440" stroke-dasharray="2 4"/><line x1="650" y1="30" x2="650" y2="440" stroke-dasharray="2 4"/>
+      <line x1="750" y1="30" x2="750" y2="440" stroke-dasharray="2 4"/><line x1="850" y1="30" x2="850" y2="440" stroke-dasharray="2 4"/>
+    </g>
+    <g fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">
+      <text x="150" y="22">第0周</text><text x="250" y="22">4</text><text x="350" y="22">8</text><text x="450" y="22">12</text><text x="550" y="22">16</text><text x="650" y="22">20</text><text x="750" y="22">24</text><text x="850" y="22">28</text>
+    </g>
+    <!-- Ultra lane -->
+    <text x="8" y="50" fill="var(--ultra)" font-weight="700" font-size="13">ULTRA</text>
+    <g font-size="11.5" fill="var(--fg-2)">
+      <text x="8" y="76">S1 Max 形态 1.5–2T</text>
+      <text x="8" y="102">S2 深度×2 3T</text>
+      <text x="8" y="128">S3 专家×4 25–27T</text>
+      <text x="8" y="154">退火+长上下文（捕获 logits）</text>
+      <text x="8" y="180">SFT</text>
+      <text x="8" y="206">领域×努力度 RL 专家</text>
+      <text x="8" y="232">MOPD 统一 → 发布</text>
+    </g>
+    <g fill="var(--ultra)">
+      <rect x="150" y="64" width="37" height="16" rx="3"/>
+      <rect x="189" y="90" width="36" height="16" rx="3"/>
+      <rect x="227" y="116" width="173" height="16" rx="3"/>
+      <rect x="402" y="142" width="48" height="16" rx="3"/>
+      <rect x="452" y="168" width="48" height="16" rx="3" opacity=".72"/>
+      <rect x="502" y="194" width="148" height="16" rx="3" opacity=".72"/>
+      <rect x="652" y="220" width="73" height="16" rx="3" opacity=".72"/>
+    </g>
+    <text x="730" y="233" fill="var(--ultra)" font-weight="700" font-size="11.5">▲ Ultra 发布 ≈ 第23周</text>
+    <!-- Max lane -->
+    <text x="8" y="268" fill="var(--max)" font-weight="700" font-size="13">MAX</text>
+    <g font-size="11.5" fill="var(--fg-2)">
+      <text x="8" y="294">分叉 → 独立预训练 ~28T</text>
+      <text x="8" y="320">稳定期保持（等 teacher 领先）</text>
+      <text x="8" y="346">KD 退火 3–5T + 长上下文</text>
+      <text x="8" y="372">可选：自主后训练 → Max-preview</text>
+      <text x="8" y="398">Off-policy SFT 冷启动</text>
+      <text x="8" y="424">OPD ← Ultra 终稿 → RLVR → 发布</text>
+    </g>
+    <g fill="var(--max)">
+      <circle cx="187" cy="290" r="5"/>
+      <rect x="189" y="282" width="161" height="16" rx="3"/>
+      <rect x="352" y="308" width="48" height="16" rx="3" opacity=".45"/>
+      <rect x="402" y="334" width="86" height="16" rx="3"/>
+      <rect x="502" y="360" width="123" height="16" rx="3" opacity=".4"/>
+      <rect x="652" y="386" width="48" height="16" rx="3" opacity=".72"/>
+      <rect x="727" y="412" width="48" height="16" rx="3" opacity=".72"/>
+      <rect x="777" y="412" width="48" height="16" rx="3" opacity=".5"/>
+    </g>
+    <text x="826" y="444" fill="var(--max)" font-weight="700" font-size="11.5" text-anchor="end">▲ Max 发布 ≈ 第27周</text>
+    <!-- arrows: fork, logits, OPD -->
+    <g stroke="var(--fg-3)" stroke-width="1.4" fill="none" stroke-dasharray="4 3">
+      <path d="M187 80 V 284"/>
+      <path d="M426 158 V 334"/>
+      <path d="M725 236 V 412"/>
+    </g>
+    <g fill="var(--fg-3)" font-size="10.5" font-family="IBM Plex Mono, monospace">
+      <text x="192" y="250">① 权重分叉</text>
+      <text x="431" y="250">② logits（≈免费）</text>
+      <text x="640" y="300">③ OPD（策略）</text>
+    </g>
+    <text x="8" y="458" fill="var(--fg-3)" font-size="11">周数为保守日历排程（含生长门控暂停、长上下文与排障余量），比 5 万卡纯算力下限慢 3–4×；按 2025–26 公开节奏校准（预训练 1–2 月、基座→Thinking ≈ 4 月）。</text>
+  </svg>
+  <p class="cap">图 2 · 推荐时间线。三条虚线是 Max 从 Ultra 承接的三个时点：S1 末分叉权重、Ultra 退火期捕获 logits、Ultra 最终 RL checkpoint 作 OPD teacher。Max 的全部预训练在 ~10% 切片上与 Ultra 并行，不在关键路径上。</p>
+</div>
+<div class="fig"><div class="small" style="margin-bottom:6px"><strong>同一时间线的资源份额视图 · Max-S 1T / 40B</strong></div><svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC, sans-serif" font-size="11.5" role="img" aria-label="单版本：Max 1T 与 Ultra 的资源—时间安排">
+<defs><pattern id="inf" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="1.6" opacity=".55"/></pattern><pattern id="free" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--line-2)" stroke-width="1"/></pattern></defs>
+<line x1="46" y1="254.0" x2="888" y2="254.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="258.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">0%</text>
+<line x1="46" y1="196.0" x2="888" y2="196.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="200.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">25%</text>
+<line x1="46" y1="138.0" x2="888" y2="138.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="142.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">50%</text>
+<line x1="46" y1="80.0" x2="888" y2="80.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="84.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">75%</text>
+<line x1="46" y1="22.0" x2="888" y2="22.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="26.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">100%</text>
+<line x1="46.0" y1="22" x2="46.0" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="46.0" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">第0周</text>
+<line x1="166.3" y1="22" x2="166.3" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="166.3" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">4</text>
+<line x1="286.6" y1="22" x2="286.6" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="286.6" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">8</text>
+<line x1="406.9" y1="22" x2="406.9" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="406.9" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">12</text>
+<line x1="527.1" y1="22" x2="527.1" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="527.1" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">16</text>
+<line x1="647.4" y1="22" x2="647.4" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="647.4" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">20</text>
+<line x1="767.7" y1="22" x2="767.7" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="767.7" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">24</text>
+<line x1="888.0" y1="22" x2="888.0" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="888.0" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">28</text>
+<rect x="46.0" y="22.0" width="45.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="91.1" y="22.0" width="45.1" height="90.5" fill="url(#free)" opacity=".95"/>
+<rect x="286.6" y="22.0" width="60.1" height="9.3" fill="url(#free)" opacity=".95"/>
+<rect x="346.7" y="22.0" width="60.1" height="32.5" fill="url(#free)" opacity=".95"/>
+<rect x="406.9" y="22.0" width="45.1" height="171.7" fill="url(#free)" opacity=".95"/>
+<rect x="452.0" y="22.0" width="15.0" height="194.9" fill="url(#free)" opacity=".95"/>
+<rect x="467.0" y="22.0" width="150.4" height="106.7" fill="url(#free)" opacity=".95"/>
+<rect x="617.4" y="22.0" width="30.1" height="125.3" fill="url(#free)" opacity=".95"/>
+<rect x="647.4" y="22.0" width="60.1" height="153.1" fill="url(#free)" opacity=".95"/>
+<rect x="707.6" y="22.0" width="30.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="737.6" y="22.0" width="60.1" height="190.2" fill="url(#free)" opacity=".95"/>
+<rect x="797.8" y="22.0" width="60.1" height="199.5" fill="url(#free)" opacity=".95"/>
+<rect x="857.9" y="22.0" width="30.1" height="218.1" fill="url(#free)" opacity=".95"/>
+<rect x="46.0" y="240.1" width="43.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="91.1" y="240.1" width="43.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="136.2" y="240.1" width="149.2" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="286.6" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="346.7" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="406.9" y="240.1" width="43.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="452.0" y="240.1" width="13.8" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="240.1" width="149.2" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="617.4" y="240.1" width="28.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="647.4" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="707.6" y="240.1" width="28.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="737.6" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="797.8" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="857.9" y="240.1" width="28.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="46.0" y="182.1" width="43.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="91.1" y="135.7" width="43.9" height="103.2" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="136.2" y="45.2" width="149.2" height="193.7" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="286.6" y="45.2" width="58.9" height="193.7" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="346.7" y="77.7" width="58.9" height="161.2" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="91.1" y="112.5" width="43.9" height="22.0" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="136.2" y="22.0" width="149.2" height="22.0" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="286.6" y="31.3" width="58.9" height="12.7" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="346.7" y="54.5" width="58.9" height="22.0" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="406.9" y="216.9" width="43.9" height="22.0" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="406.9" y="193.7" width="43.9" height="22.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="452.0" y="216.9" width="13.8" height="22.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="147.3" width="149.2" height="91.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="147.3" width="149.2" height="91.6" fill="url(#inf)" rx="1.5"/>
+<rect x="617.4" y="147.3" width="28.9" height="91.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="617.4" y="147.3" width="28.9" height="91.6" fill="url(#inf)" rx="1.5"/>
+<rect x="647.4" y="182.1" width="58.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="647.4" y="182.1" width="58.9" height="56.8" fill="url(#inf)" rx="1.5"/>
+<rect x="707.6" y="182.1" width="28.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="707.6" y="182.1" width="28.9" height="56.8" fill="url(#inf)" rx="1.5"/>
+<rect x="467.0" y="128.7" width="149.2" height="17.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="128.7" width="149.2" height="17.4" fill="url(#inf)" rx="1.5"/>
+<rect x="647.4" y="175.1" width="58.9" height="5.8" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="647.4" y="175.1" width="58.9" height="5.8" fill="url(#inf)" rx="1.5"/>
+<circle cx="677.5" cy="178.6" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<rect x="737.6" y="221.5" width="58.9" height="17.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="737.6" y="221.5" width="58.9" height="17.4" fill="url(#inf)" rx="1.5"/>
+<rect x="737.6" y="212.2" width="58.9" height="8.1" fill="var(--s4)" opacity="1.0" rx="1.5"/>
+<circle cx="767.7" cy="216.9" r="7" fill="var(--surface)" stroke="var(--s4)" stroke-width="1.5"/>
+<rect x="797.8" y="221.5" width="58.9" height="17.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="797.8" y="221.5" width="58.9" height="17.4" fill="url(#inf)" rx="1.5"/>
+<text x="467.0" y="251.0" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="146" lengthAdjust="spacingAndGlyphs">proxy 消融 / 下一代预研</text>
+<text x="68.6" y="215.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">S1</text>
+<text x="113.7" y="191.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">S2</text>
+<text x="241.5" y="146.6" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="100" lengthAdjust="spacingAndGlyphs">Ultra S3 专家×4</text>
+<text x="376.8" y="162.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">退火</text>
+<text x="211.4" y="37.6" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="126" lengthAdjust="spacingAndGlyphs">Max 预训练（分叉后）</text>
+<text x="316.6" y="42.2" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">保持</text>
+<text x="376.8" y="70.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="48" lengthAdjust="spacingAndGlyphs">KD 退火</text>
+<text x="436.9" y="209.3" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">SFT</text>
+<text x="557.2" y="197.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="86" lengthAdjust="spacingAndGlyphs">Ultra RL 专家</text>
+<text x="692.5" y="215.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">MOPD</text>
+<text x="542.2" y="142.0" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="124" lengthAdjust="spacingAndGlyphs">Max-preview（可选）</text>
+<text x="677.5" y="182.1" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">a</text>
+<text x="767.7" y="234.8" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">OPD</text>
+<text x="767.7" y="220.4" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">b</text>
+<text x="827.9" y="234.8" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">RLVR</text>
+<circle cx="91.1" cy="135.7" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="91.1" y="139.5" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">①</text>
+<circle cx="346.7" cy="77.7" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="346.7" y="81.5" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">②</text>
+<circle cx="647.4" cy="211.1" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="647.4" y="214.9" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">③</text>
+<text x="46" y="294" fill="var(--fg-3)" font-size="10.5">纵轴：集群算力份额（100% = 全部 GPU）；横轴：周；斜纹 = 空闲/可借用；条内细斜纹 = 推理密集阶段（rollout / teacher 打分），可落在推理池</text>
+</svg>
+  <div class="legend"><span><i style="background:var(--s1)"></i>Ultra 阶段</span><span><i style="background:var(--s2)"></i>Max 阶段</span><span><i style="background:var(--s4)"></i>Ultra 作为 teacher 的推理服务</span><span><i style="background:var(--fg-3)"></i>proxy / 预研</span><span><i style="background:url(#free);border:1px dashed var(--line-2)"></i>空闲 / 可借用</span></div>
+  <div class="legend" style="margin-top:6px"><span><span class="kn">a</span>SFT</span><span><span class="kn">b</span>T</span></div>
+  <p class="cap">图 3 · Max-S（1T）：Max 的预训练与退火只占 ~10% 份额，与 Ultra 并行；第 12 周之后 Ultra 预训练池大面积空闲（斜纹），这正是多版本交织中下一代预训练的接入窗口。三次承接：① S1 末权重分叉；② Ultra 退火前向顺带写出 logits 供 Max 的 KD 退火；③ Ultra 终稿作 OPD teacher。</p></div>
+
+<h3>4.4 三次承接的具体配方</h3>
+<h4>① 分叉（权重）</h4>
+<ul>
+  <li>时点：S1 稳定期末、衰减之前（K2.5 也是从"接近末尾"的稳定期 checkpoint 分叉）。Max 分支拷贝全部权重与优化器状态，继续同一 LR 调度与数据流水线，但按 Max 的 scaling-law 调整批大小/峰值 LR（Ling 2.0 表 1：16B→1T 的 LR 3.36e-4→1.86e-4、批 4,400→18,144）。</li>
+  <li>Max 继续 ~28T tokens；它的 WSD 衰减与长上下文阶段 <strong>推迟</strong>，稳定期可持续到 Ultra S3 明显领先为止（稳定期多训几百 B 高质量 token 没有坏处，且 Max 不在关键路径）。</li>
+  <li>收益核算：省 ~5% tokens；省一套 Max 尺寸的 scaling-law 与超参搜索（这部分并不便宜：DeepSeek-V3 的消融/实验算力被估计为正式训练的 2–4 倍 [Lambert]；Ant 用 500M–8B 的 "Ling 风洞" 预测 1T 行为，成本仍约为传统消融的 35%）；S1 的 loss 曲线直接验证 Ultra 的数据与配方。</li>
+</ul>
+<h4>② KD 退火（分布）</h4>
+<ul>
+  <li>门控：仅当 Ultra 某 checkpoint 在留出集上的 loss 低于 Max 当前 loss 一个预设裕度（proxy 上标定 d₁）时才启用；Zhipu 的 −21% 来自早期 teacher，−4% 来自 teacher 自己训练后 1/4 段的在线 logits。</li>
+  <li>数据与存储：Max 的退火/中期训练数据（3–5T，高质量、推理密集、含长上下文）与 Ultra 退火数据同源；Ultra 在其退火前向中写出重要性采样目标（N=50 次抽样 → ~12 个唯一 token，3 B/样本 ≈ 36 B/token），5T tokens ≈ 180 TB；朴素 top-k 有偏，不用。若 Ultra 的退火数据与 Max 的不完全重合，差集用固定 Ultra checkpoint 离线打分（每 T token ≈ 6e23 FLOPs）。</li>
+  <li>损失：前向 KL / 采样 token 上的 CE，τ=1；α 走 WSD-α（前 10% 线性升到 ≤0.9，稳定，末 1% 余弦归零）；teacher 熵最低的 ~15% token 回退硬标签以保 ICL；可在高熵 token 上提高 KD 权重。</li>
+  <li>teacher 选择：以 L_T/L̃_S 比值选 Ultra checkpoint（不一定是最新/最终），作为无需另训"助教"的容量差旋钮；Gemma 3 的"长视界下大 teacher 反而更好"是支持最终用最强 teacher 的唯一证据。</li>
+  <li>预期：≤10B 规模证据为 +1–10 分（随 tokens 衰减）、pass@k 更持久；必须以 proxy 消融（纯退火 vs KD 退火，同 tokens）决定是否保留——Apple AFM 在续训阶段未见增益。</li>
+</ul>
+<h4>③ OPD（策略）</h4>
+<ul>
+  <li>前置：Ultra 完成 SFT → 领域×努力度 RL 专家 → MOPD；Max 用 Ultra（含各专家、各努力度/模式）的输出做 off-policy SFT 冷启动（Qwen3 第一阶段；Rethinking-OPD 的 ~200K rollouts 量级），目标是把初始 per-token KL 压到 ~0.05（MOPD 同源 0.04 稳定、外源 0.19 崩溃）。</li>
+  <li>OPD 本体：采样 token 的 sg[log π_Ultra − log π_Max] 作逐 token 优势，PPO/GRPO 代理 + IcePop 截断 IS；批 1,024–2,048 prompt × 1 rollout；优势裁剪 A_max≈5 或 sign·log(1+|Δ|)；响应长度上限 8–16K（teacher 优势在 16K 前缀衰减到 +0.02）；高熵 token 混入前向 KL 保 pass@k；MoE 需 R3 路由回放；teacher 用 Ultra 最终 RL checkpoint，或直接复用 Ultra 的专家池做多教师（每 prompt 单 teacher，避免梯度抵消 [GLM-5]）。</li>
+  <li>系统：Ultra 作为独立推理服务异步 prefill 打分（权重 FP8 ≈10 TB、FP4 ≈5 TB，专家按需加载），池规模按与 Max decode 吞吐匹配配置；每轮 ~1–20B 学生 token，算力可忽略；两轮 OPD 的第二轮边际收益小，但 Ultra 后续升级时重跑 OPD 很便宜（K2 系列每 2–3 个月一个点版本）。</li>
+  <li>之后：轻量 RLVR + 奖励模型 RL（OPD→RL 优于 SFT→RL 与联合目标）；可选 GLM-5 式跨阶段 OPD 修复遗忘；验证指标用任务成功率而非与 teacher 的一致度。</li>
+</ul>
+<h4>可选"双轨"：先发 Max-preview</h4>
+<p>若产品需要 Max 早于 Ultra 发布，Max 在第 14–19 周按 V4-Flash 模式走自己的"专家 → OPD → 统一"后训练并发布 preview；Ultra 完成后再做一次 Ultra→Max 的 OPD 升级（成本低、可重复）。代价是多一套 Max 尺寸的 RL 流水线（约 Max 预训练的 10%，7e23）。</p>
+
+<h3>4.5 承诺前的门控（proxy 阶梯 + 全尺寸信号）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>门控</th><th>实验</th><th>通过标准（建议）</th></tr></thead>
+<tbody>
+<tr><td>G0 架构冻结</td><td>Ling 风洞式 500M–8B 扫描，定 d_model、d_expert、k、共享专家、混合注意力比</td><td>EL/scaling 外推在 1e25–1e26 自洽；一经冻结不再改</td></tr>
+<tr><td>G1 生长 vs 从头</td><td>同构三阶段 10B→20B→80B（深度 ×2、专家 ×4），与同总算力从头 80B 对照；跟踪生长后 loss-gap 随 tokens 的轨迹至 ≥3× 沉没成本</td><td>等总算力下生长 ≥ 从头，且 loss-gap 不随 tokens 扩大（否则缩短 S1/S2，或退化为"S1 仅作 Max 起点、S3 准从头"）</td></tr>
+<tr><td>G2 分叉质量</td><td>S1-proxy 稳定期分叉后独立退火 vs 同算力独立训练的同尺寸模型</td><td>分叉模型 ≥ 独立模型（Yano 在 dense 1B→8B 成立，MoE 需复测）</td></tr>
+<tr><td>G3 KD 退火</td><td>proxy 学生：纯退火 vs KD 退火（teacher 为 proxy-Ultra 不同 checkpoint），同 tokens；测平均分、ICL、pass@k</td><td>≥ +1 分且 ICL 不退；标定 d₁ 与 α 峰值</td></tr>
+<tr><td>G4 OPD 冷启动</td><td>proxy 师生 10× 比例；冷启动后测初始 per-token KL、长度病态、pass@k</td><td>初始 KL ≤0.05–0.1；无长度利用；pass@64 不低于冷启动点</td></tr>
+<tr><td>G5 全尺寸在线信号</td><td>S1/S2 的 loss 与小基准曲线对照 proxy 预测；每次生长后 10K 步内 loss 尖峰恢复、MaxVio、专家相似度</td><td>偏离预测 &gt;2σ 即暂停生长并回退到最近稳定 checkpoint</td></tr>
+</tbody></table></div>
+
+<!-- ============ 5 ============ -->
+<h2 id="s5"><span class="num">§5</span>风险与缓解</h2>
+<div class="tablewrap"><table class="risk">
+<thead><tr><th>风险</th><th>证据</th><th>缓解</th></tr></thead>
+<tbody>
+<tr><td>生长饱和 / 从头反超</td><td>Liew–Kato 法则字面外推：10T 模型 &lt;1T 阶段二 tokens 后从头反超；Wang/MSRA：从退火后 checkpoint 生长输给从头；SPARKLING 宽度生长最终 loss 略差</td><td>S1+S2 只占 ~15% tokens；只从稳定期 checkpoint 生长；G1 门控；最坏情形损失上限 ≈ S1+S2 的 2e24 FLOPs（系统的 3%）</td></tr>
+<tr><td>生长步不稳定</td><td>EMO 每次扩增尖峰、~10K 步恢复；Nemotron 3 Ultra 无生长也两次发散、MaxVio 漂移</td><td>拷贝含 Adam 矩、最后子层清零、新参数 re-warm、偏置归零 + Quantile Balancing、QK-clip；生长前后密集 checkpoint；K2 式零尖峰基线为验收标准</td></tr>
+<tr><td>10× 容量差使 KD 无益或有害</td><td>最优 teacher ≈2.5×；32B 不如 9B；Apple 续训期 KD 无益</td><td>按 loss 比值选 Ultra checkpoint；α ≤0.9 且 WSD-α；低熵回退硬标签；G3 消融决定去留——KD 退火是可选项不是承重墙</td></tr>
+<tr><td>OPD 分布崩溃 / 熵坍缩 / 长度病态</td><td>外源 teacher 0.937→0.600；SDSD pass@16 −5–8；长度利用两种模式</td><td>off-policy SFT 冷启动到 KL≈0.05；优势裁剪；长度上限；高熵前向 KL；OPD 后 RLVR；监控 opd/frac_tokens_with_kd 等静默失效指标</td></tr>
+<tr><td>知识缺口无法经 OPD 弥补</td><td>HLE 26.7 对 32.1；V4-Flash 知识类较弱</td><td>Max 的知识容量来自其 1T 总参与 ~28T tokens；退火期知识改写数据；KD 退火覆盖知识密集语料</td></tr>
+<tr><td>teacher 时序错位（Ultra 在大部分日历里不比 Max 强）</td><td>Zhipu 在线早期 logits −21%</td><td>不做全程协同蒸馏；Max 稳定期可等待；KD 退火门控于留出 loss 裕度</td></tr>
+<tr><td>logits 存储与 I/O</td><td>5T tokens × 36 B = 180 TB；Gemini 承认 k 倍吞吐/存储开销</td><td>重要性采样 ≤16 样本/token；只对退火数据；与 Ultra 前向同机写出、按数据分片对齐</td></tr>
+<tr><td>Max 尺寸固定项"为 Ultra 而设"</td><td>d_model 8192、d_expert 4096 对 1.3T 偏宽；无实测</td><td>Ling-1T 已用 8192；G0 中同时验证 Max 形态；必要时 Max 多用 tokens 补偿（它不在关键路径）</td></tr>
+<tr><td>项目级风险：首例、无先例可对标</td><td>Tele-FLM-1T 无评测；Behemoth 未发布；Llama 4 学生口碑差（原因被归于 teacher 的其它问题）</td><td>保留方案 A 作兜底：S1 本身就是可独立继续的 Max；若 G1 失败，S3 改为从头 10T，Max 仍按 B/C 路线进行</td></tr>
+</tbody></table></div>
+
+<!-- ============ 6 ============ -->
+<h2 id="s6"><span class="num">§6</span>待验证的开放问题</h2>
+<ol>
+  <li><strong>生长优势的渐近行为</strong>在 ≥100B MoE、≥1T tokens 上未被测过；Du（持续）与 Liew–Kato（饱和）互相矛盾且都只拟合到 ≤7B。G1 是本设计最重要的实验。</li>
+  <li><strong>一次 ×4 还是两次 ×2 的专家扩增</strong>：Du 在深度上发现一次到位更好，EMO/Amazon 只测过 ×2；MoE 专家数上没有 ×4 单步的数据。</li>
+  <li><strong>生长轨迹中间 checkpoint 作为独立模型的"质量税"</strong>从未与同算力专门训练的模型对照过（Yano 最接近，但是 dense ≤8B）。</li>
+  <li><strong>MoE 师生对的容量差</strong>：总参比 10×、激活比 ~7×，Apple 法则与 Zhang 法则都只在 dense 上成立；d₁ 必须自测。</li>
+  <li><strong>≥10× 同族 OPD</strong>没有受控研究（TRL 的 235B→4B 为非正式实验，GPQA 在第 40 步后掉 10%）。</li>
+  <li><strong>深度生长后的路由稳定性</strong>（熵、MaxVio、专家坍缩）无人测量；深度生长对长上下文与指令跟随的影响无证据。</li>
+  <li><strong>Muon/MuonClip 与生长步的交互</strong>只在 ≤7B 上有数据（Bu、SPARKLING）；μP 跨深度生长的迁移无文献。</li>
+  <li><strong>万亿级 KD 退火的实际 I/O 与吞吐</strong>（Gemini 只给了定性说法）。</li>
+</ol>
+
+<!-- ============ 7 (merged) ============ -->
+<h2 id="s7"><span class="num">§7</span>Max = 3–4T / 100 多 B 激活：结论怎么变</h2>
+<p>取 Max-L 的示意设计点为 Ultra 生长阶梯的 S2 形态：96 层 × 384 路由专家（+1 共享）、d_model 8192、d_expert 4096、top-10 → <strong>≈3.7T 总参 / ≈110B 激活</strong>（每专家 ≈100M；10×96×100M ≈ 97B 路由 + 10B 共享 + 注意力）。这意味着 Max-L 不再是"S1 的分叉"，而是"S2 的分叉"，Ultra 的 S3 相对 Max-L 只剩一次 ×2.7 的专家扩增。</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th>维度</th><th>Max-S 1T / 40B</th><th>Max-L 3.7T / 110B</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>Ultra : Max（总参 / 激活）</td><td class="n">10× / 7.5×</td><td class="n">2.7× / 2.7×</td><td>Max-L 更像 V4-Pro 与 K2→K3 之间的"同级轻量版"，而非 Flash 级小模型</td></tr>
+<tr><td>Max 从头预训练 FLOPs</td><td class="n">7.2e24（Ultra 的 13%，系统 11%）</td><td class="n">2.0e25（Ultra 的 37%，系统 25%）</td><td>"省掉 Max 预训练"的上限从 11% 升到 25%</td></tr>
+<tr><td>分叉点与节省</td><td class="n">S1 末，省 5%（1.5T）</td><td class="n">S2 末，省 15%（4.5T）→ 1.68e25</td><td>分叉收益按比例放大；S2 需 ≈1.4× Chinchilla（3T tokens）即可满足 MSRA 的"1–3× 仍胜从头"窗口</td></tr>
+<tr><td>预训练蒸馏的容量差</td><td class="n">远超 2.5× 最优 [Zhang 2025]</td><td class="n">正处最优区（Gemma 2 的 27B→9B = 3×）</td><td>KD 从"需门控的可选项"变为"默认开启"；Gemma 3 的长视界反转也更有利</td></tr>
+<tr><td>teacher 在线前向 / 学生训练 FLOPs</td><td class="n">2.5×</td><td class="n">0.9×</td><td>仍应在 Ultra 自身前向里捕获，但即便另行打分也只占 Max-L 的 15%（5T tokens ≈ 3e24）</td></tr>
+<tr><td>剪枝 / 嵌套派生</td><td class="n">无证据（10×）</td><td class="n">在证据范围内：Minitron 2–2.7×（0.6–2.5% tokens，95–99%）；Star Elastic 2.5×（0.6% tokens，最小成员难推理 −5–10）</td><td>派生算力 4e23（嵌套）– 1.9e24（剪枝+1.5T KD），为独立预训练的 1/40–1/9；但父模型证据 ≤30B，且 Max 只能在 Ultra 预训练结束后出现</td></tr>
+<tr><td>OPD 分布差距</td><td class="n">更大（初始 KL 风险）</td><td class="n">更小</td><td>冷启动 SFT 仍必要，但容量差不再是主要风险</td></tr>
+<tr><td>日历可隐藏性</td><td class="n">10% 切片即可并行，不在关键路径</td><td class="n">独立预训练 = Ultra 生长算力的 35%：并行需 ~24% 集群，Ultra S3 份额 85→65%、发布推迟 ~2.5 周；或派生（滞后 Ultra 预训练 ~4 周，但发布日历与 Max-S 相同）</td><td>资源冲突第一次真实出现（图 4 对 图 5）</td></tr>
+<tr><td>推理经济性</td><td class="n">比 Ultra 便宜 ~7.5×</td><td class="n">便宜 ~2.7×</td><td>Max-L 的产品定位接近"Ultra-Lite"，与 Matryoshka/弹性 k 的服务变体有重叠</td></tr>
+</tbody></table></div>
+
+<h3>算力账（系统总量，×1e25 FLOPs；Ultra 后训练按 10%，Max 后训练按 OPD 为主 3%）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>方案</th><th>Max-L 来源</th><th class="n">系统算力（Ultra 生长乐观–token 中性）</th><th class="n">相对 A′</th><th>Max-L 可用时点</th><th>证据成熟度</th></tr></thead>
+<tbody>
+<tr><td><strong>A′</strong> 两条独立 + OPD</td><td>从头 30T</td><td class="n">8.0</td><td class="n">100%</td><td>与 Ultra 同步</td><td>高</td></tr>
+<tr><td><strong>B′</strong> 生长 + S2 分叉 + OPD</td><td>S2 权重 + 独立 25.5T（需 ~24% 集群）</td><td class="n">5.9–7.1</td><td class="n">74–89%</td><td>与 Ultra 同步（Ultra 推迟 ~2.5 周）</td><td>中</td></tr>
+<tr><td><strong>C′</strong> B′ + KD 退火</td><td>同上，退火 3–5T 用 Ultra 软标签</td><td class="n">5.9–7.3</td><td class="n">73–91%</td><td>同上</td><td>中（容量差已在最优区）</td></tr>
+<tr><td><strong>D′</strong> 生长 + 剪枝蒸馏派生</td><td>Ultra 终稿切回 S2 形态 + 1–1.5T KD 续训</td><td class="n">4.4–5.6</td><td class="n">56–70%</td><td>Ultra 预训练结束后 ~4 周</td><td>中低（2.7× 有证据；父模型 ≤405B dense / 1T MoE 一次性剪枝）</td></tr>
+<tr><td><strong>E′</strong> 生长 + 嵌套派生</td><td>Ultra 退火后做 Star-Elastic 式弹性后训练 ~0.6% tokens</td><td class="n">4.3–5.4</td><td class="n">54–68%</td><td>同上</td><td>低（父模型 ≤30B）</td></tr>
+</tbody></table></div>
+
+<div class="callout"><p><strong>单版本推荐（Max-L）：</strong>首版走 B′/C′（并行分叉，质量最稳、证据最硬），同时把 D′ 作为门控实验在 Ultra 退火后试跑——它的算力（≤2e24）相对系统可以忽略，而一旦派生质量达标（难推理 ≤ −3 分、知识类 ≤ −1 分），后续版本切换到"派生 + 跨代 KD"（§8），每代省下 ~1.5e25。</p>
+<p><strong>若长期打算走派生，S2/S3 的形状应为"切回"而设计：</strong>让 S3 相对 S2 的专家扩增恰好是 ×2（而非 ×2.7），切回时只需移除 50% 专家（REAP 在 Qwen3-Coder-480B / Kimi-K2 上验证近无损的比例；75% 已崩）。例如 S2′ = 72 层 × 512 专家 × top-12 ≈ 3.7T/100B，S3 = 96 层 × 1024 专家 × top-24 ≈ 10T/250B：切回 = 去掉一半专家 + 25% 深度（Star Elastic：15% 深度削减保留 95%；Minitron 深度剪枝需蒸馏恢复）。</p></div>
+
+
+<h3>7.1 单版本资源视角：并行路线 vs 派生路线</h3>
+<p>三张图共用一个口径：纵轴是集群算力份额，横轴是周；Ultra 阶段为蓝、Max 为橙、Ultra 作为 teacher 的推理服务为黄；条内细斜纹表示推理密集阶段（RL rollout、teacher 打分、数据合成），这些阶段对互联带宽要求低，可以落到独立的推理池（含推理卡或国产卡）而不占预训练池。周数为保守日历排程（见 §4.3）。</p>
+<div class="fig"><div class="small" style="margin-bottom:6px"><strong>单版本 · Max-L 3.7T / 110B · 并行路线（B′/C′）</strong></div><svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC, sans-serif" font-size="11.5" role="img" aria-label="单版本：Max 3.8T 并行路线">
+<defs><pattern id="inf" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="1.6" opacity=".55"/></pattern><pattern id="free" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--line-2)" stroke-width="1"/></pattern></defs>
+<line x1="46" y1="254.0" x2="888" y2="254.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="258.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">0%</text>
+<line x1="46" y1="196.0" x2="888" y2="196.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="200.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">25%</text>
+<line x1="46" y1="138.0" x2="888" y2="138.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="142.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">50%</text>
+<line x1="46" y1="80.0" x2="888" y2="80.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="84.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">75%</text>
+<line x1="46" y1="22.0" x2="888" y2="22.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="26.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">100%</text>
+<line x1="46.0" y1="22" x2="46.0" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="46.0" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">第0周</text>
+<line x1="158.3" y1="22" x2="158.3" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="158.3" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">4</text>
+<line x1="270.5" y1="22" x2="270.5" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="270.5" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">8</text>
+<line x1="382.8" y1="22" x2="382.8" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="382.8" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">12</text>
+<line x1="495.1" y1="22" x2="495.1" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="495.1" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">16</text>
+<line x1="607.3" y1="22" x2="607.3" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="607.3" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">20</text>
+<line x1="719.6" y1="22" x2="719.6" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="719.6" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">24</text>
+<line x1="831.9" y1="22" x2="831.9" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="831.9" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">28</text>
+<rect x="46.0" y="22.0" width="42.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="88.1" y="22.0" width="42.1" height="113.7" fill="url(#free)" opacity=".95"/>
+<rect x="130.2" y="22.0" width="266.6" height="11.6" fill="url(#free)" opacity=".95"/>
+<rect x="396.8" y="22.0" width="56.1" height="44.1" fill="url(#free)" opacity=".95"/>
+<rect x="453.0" y="22.0" width="42.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="495.1" y="22.0" width="14.0" height="194.9" fill="url(#free)" opacity=".95"/>
+<rect x="509.1" y="22.0" width="168.4" height="125.3" fill="url(#free)" opacity=".95"/>
+<rect x="677.5" y="22.0" width="56.1" height="148.5" fill="url(#free)" opacity=".95"/>
+<rect x="733.6" y="22.0" width="28.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="761.7" y="22.0" width="56.1" height="169.4" fill="url(#free)" opacity=".95"/>
+<rect x="817.8" y="22.0" width="56.1" height="183.3" fill="url(#free)" opacity=".95"/>
+<rect x="874.0" y="22.0" width="14.0" height="218.1" fill="url(#free)" opacity=".95"/>
+<rect x="46.0" y="240.1" width="40.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="88.1" y="240.1" width="40.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="130.2" y="240.1" width="265.4" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="396.8" y="240.1" width="54.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="453.0" y="240.1" width="40.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="495.1" y="240.1" width="12.8" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="509.1" y="240.1" width="167.2" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="677.5" y="240.1" width="54.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="733.6" y="240.1" width="26.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="761.7" y="240.1" width="54.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="817.8" y="240.1" width="54.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="874.0" y="240.1" width="12.8" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="46.0" y="182.1" width="40.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="88.1" y="135.7" width="40.9" height="103.2" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="130.2" y="89.3" width="265.4" height="149.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="396.8" y="100.9" width="54.9" height="138.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="130.2" y="33.6" width="265.4" height="54.5" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="396.8" y="66.1" width="54.9" height="33.6" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="453.0" y="205.3" width="40.9" height="33.6" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="453.0" y="182.1" width="40.9" height="22.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="495.1" y="216.9" width="12.8" height="22.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="509.1" y="147.3" width="167.2" height="91.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="509.1" y="147.3" width="167.2" height="91.6" fill="url(#inf)" rx="1.5"/>
+<rect x="677.5" y="182.1" width="54.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="677.5" y="182.1" width="54.9" height="56.8" fill="url(#inf)" rx="1.5"/>
+<rect x="733.6" y="182.1" width="26.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="733.6" y="182.1" width="26.9" height="56.8" fill="url(#inf)" rx="1.5"/>
+<rect x="677.5" y="170.5" width="54.9" height="10.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="677.5" y="170.5" width="54.9" height="10.4" fill="url(#inf)" rx="1.5"/>
+<circle cx="705.6" cy="176.3" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<rect x="761.7" y="205.3" width="54.9" height="33.6" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="761.7" y="205.3" width="54.9" height="33.6" fill="url(#inf)" rx="1.5"/>
+<rect x="761.7" y="191.4" width="54.9" height="12.7" fill="var(--s4)" opacity="1.0" rx="1.5"/>
+<rect x="817.8" y="205.3" width="54.9" height="33.6" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="817.8" y="205.3" width="54.9" height="33.6" fill="url(#inf)" rx="1.5"/>
+<text x="467.0" y="251.0" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="80" lengthAdjust="spacingAndGlyphs">proxy / 预研</text>
+<text x="67.0" y="215.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">S1</text>
+<text x="109.2" y="191.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">S2</text>
+<text x="263.5" y="168.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="222" lengthAdjust="spacingAndGlyphs">Ultra S3（份额 65%，拉长至 9.5 周）</text>
+<text x="424.9" y="174.5" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">退火</text>
+<text x="263.5" y="65.4" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="202" lengthAdjust="spacingAndGlyphs">Max-L 独立预训练（需 ~24% 集群）</text>
+<text x="424.9" y="87.5" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="48" lengthAdjust="spacingAndGlyphs">KD 退火</text>
+<text x="481.0" y="197.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">SFT</text>
+<text x="593.3" y="197.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="86" lengthAdjust="spacingAndGlyphs">Ultra RL 专家</text>
+<text x="719.6" y="215.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">MOPD</text>
+<text x="705.6" y="179.8" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">a</text>
+<text x="789.8" y="226.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">OPD</text>
+<text x="789.8" y="202.3" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="50" lengthAdjust="spacingAndGlyphs">teacher</text>
+<text x="845.9" y="226.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">RLVR</text>
+<circle cx="130.2" cy="89.3" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="130.2" y="93.1" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">①</text>
+<circle cx="677.5" cy="211.1" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="677.5" y="214.9" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">③</text>
+<text x="46" y="294" fill="var(--fg-3)" font-size="10.5">纵轴：集群算力份额（100% = 全部 GPU）；横轴：周；斜纹 = 空闲/可借用；条内细斜纹 = 推理密集阶段（rollout / teacher 打分），可落在推理池</text>
+</svg>
+  <div class="legend"><span><i style="background:var(--s1)"></i>Ultra 阶段</span><span><i style="background:var(--s2)"></i>Max 阶段</span><span><i style="background:var(--s4)"></i>Ultra 作为 teacher 的推理服务</span><span><i style="background:var(--fg-3)"></i>proxy / 预研</span><span><i style="background:url(#free);border:1px dashed var(--line-2)"></i>空闲 / 可借用</span></div>
+  <div class="legend" style="margin-top:6px"><span><span class="kn">a</span>SFT</span></div>
+  <p class="cap">图 4 · Max-L（3.7T）并行路线：S2 即 Max-L 形态，① 在 S2 末分叉；Max-L 独立预训练需 ~24% 集群，Ultra S3 份额从 85% 降到 65%、拉长到 9.5 周，Ultra 发布推迟约 2.5 周（第 25.5 周）；KD 退火含长上下文阶段。质量最稳，但第一次出现真实的资源争用。</p></div>
+<div class="fig"><div class="small" style="margin-bottom:6px"><strong>单版本 · Max-L 3.7T / 110B · 派生路线（D′/E′）</strong></div><svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC, sans-serif" font-size="11.5" role="img" aria-label="单版本：Max 3.8T 派生路线">
+<defs><pattern id="inf" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="1.6" opacity=".55"/></pattern><pattern id="free" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--line-2)" stroke-width="1"/></pattern></defs>
+<line x1="46" y1="254.0" x2="888" y2="254.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="258.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">0%</text>
+<line x1="46" y1="196.0" x2="888" y2="196.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="200.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">25%</text>
+<line x1="46" y1="138.0" x2="888" y2="138.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="142.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">50%</text>
+<line x1="46" y1="80.0" x2="888" y2="80.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="84.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">75%</text>
+<line x1="46" y1="22.0" x2="888" y2="22.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="26.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">100%</text>
+<line x1="46.0" y1="22" x2="46.0" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="46.0" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">第0周</text>
+<line x1="166.3" y1="22" x2="166.3" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="166.3" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">4</text>
+<line x1="286.6" y1="22" x2="286.6" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="286.6" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">8</text>
+<line x1="406.9" y1="22" x2="406.9" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="406.9" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">12</text>
+<line x1="527.1" y1="22" x2="527.1" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="527.1" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">16</text>
+<line x1="647.4" y1="22" x2="647.4" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="647.4" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">20</text>
+<line x1="767.7" y1="22" x2="767.7" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="767.7" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">24</text>
+<line x1="888.0" y1="22" x2="888.0" y2="254.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="888.0" y="268.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">28</text>
+<rect x="46.0" y="22.0" width="45.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="91.1" y="22.0" width="45.1" height="113.7" fill="url(#free)" opacity=".95"/>
+<rect x="136.2" y="22.0" width="210.5" height="20.9" fill="url(#free)" opacity=".95"/>
+<rect x="346.7" y="22.0" width="60.1" height="55.7" fill="url(#free)" opacity=".95"/>
+<rect x="406.9" y="22.0" width="60.1" height="125.3" fill="url(#free)" opacity=".95"/>
+<rect x="467.0" y="22.0" width="60.1" height="78.9" fill="url(#free)" opacity=".95"/>
+<rect x="527.1" y="22.0" width="120.3" height="125.3" fill="url(#free)" opacity=".95"/>
+<rect x="647.4" y="22.0" width="60.1" height="148.5" fill="url(#free)" opacity=".95"/>
+<rect x="707.6" y="22.0" width="30.1" height="160.1" fill="url(#free)" opacity=".95"/>
+<rect x="737.6" y="22.0" width="60.1" height="169.4" fill="url(#free)" opacity=".95"/>
+<rect x="797.8" y="22.0" width="60.1" height="183.3" fill="url(#free)" opacity=".95"/>
+<rect x="857.9" y="22.0" width="30.1" height="218.1" fill="url(#free)" opacity=".95"/>
+<rect x="46.0" y="240.1" width="43.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="91.1" y="240.1" width="43.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="136.2" y="240.1" width="209.3" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="346.7" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="406.9" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="527.1" y="240.1" width="119.1" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="647.4" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="707.6" y="240.1" width="28.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="737.6" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="797.8" y="240.1" width="58.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="857.9" y="240.1" width="28.9" height="12.7" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="46.0" y="182.1" width="43.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="91.1" y="135.7" width="43.9" height="103.2" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="136.2" y="42.9" width="209.3" height="196.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="346.7" y="77.7" width="58.9" height="161.2" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="406.9" y="170.5" width="58.9" height="68.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="193.7" width="58.9" height="45.2" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="406.9" y="147.3" width="58.9" height="22.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="100.9" width="58.9" height="91.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="100.9" width="58.9" height="91.6" fill="url(#inf)" rx="1.5"/>
+<rect x="527.1" y="147.3" width="119.1" height="91.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="527.1" y="147.3" width="119.1" height="91.6" fill="url(#inf)" rx="1.5"/>
+<rect x="647.4" y="182.1" width="58.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="647.4" y="182.1" width="58.9" height="56.8" fill="url(#inf)" rx="1.5"/>
+<rect x="707.6" y="182.1" width="28.9" height="56.8" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="707.6" y="182.1" width="28.9" height="56.8" fill="url(#inf)" rx="1.5"/>
+<rect x="647.4" y="170.5" width="58.9" height="10.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="647.4" y="170.5" width="58.9" height="10.4" fill="url(#inf)" rx="1.5"/>
+<circle cx="677.5" cy="176.3" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<rect x="737.6" y="205.3" width="58.9" height="33.6" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="737.6" y="205.3" width="58.9" height="33.6" fill="url(#inf)" rx="1.5"/>
+<rect x="737.6" y="191.4" width="58.9" height="12.7" fill="var(--s4)" opacity="1.0" rx="1.5"/>
+<rect x="797.8" y="205.3" width="58.9" height="33.6" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="797.8" y="205.3" width="58.9" height="33.6" fill="url(#inf)" rx="1.5"/>
+<text x="467.0" y="251.0" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="200" lengthAdjust="spacingAndGlyphs">proxy / 预研（或提前启动下一代）</text>
+<text x="68.6" y="215.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">S1</text>
+<text x="113.7" y="191.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">S2</text>
+<text x="241.5" y="145.5" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="100" lengthAdjust="spacingAndGlyphs">Ultra S3 专家×4</text>
+<text x="376.8" y="162.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">退火</text>
+<text x="436.9" y="209.3" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="48" lengthAdjust="spacingAndGlyphs">派生+KD</text>
+<text x="497.1" y="220.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="48" lengthAdjust="spacingAndGlyphs">KD 退火</text>
+<text x="436.9" y="162.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">SFT</text>
+<text x="587.3" y="197.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="86" lengthAdjust="spacingAndGlyphs">Ultra RL 专家</text>
+<text x="692.5" y="215.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">MOPD</text>
+<text x="677.5" y="179.8" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">a</text>
+<text x="767.7" y="226.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">OPD</text>
+<text x="767.7" y="202.3" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="50" lengthAdjust="spacingAndGlyphs">teacher</text>
+<text x="827.9" y="226.7" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">RLVR</text>
+<circle cx="406.9" cy="240.1" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="406.9" y="243.9" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">④</text>
+<circle cx="647.4" cy="211.1" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="647.4" y="214.9" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">③</text>
+<text x="46" y="294" fill="var(--fg-3)" font-size="10.5">纵轴：集群算力份额（100% = 全部 GPU）；横轴：周；斜纹 = 空闲/可借用；条内细斜纹 = 推理密集阶段（rollout / teacher 打分），可落在推理池</text>
+</svg>
+  <div class="legend"><span><i style="background:var(--s1)"></i>Ultra 阶段</span><span><i style="background:var(--s2)"></i>Max 阶段</span><span><i style="background:var(--s4)"></i>Ultra 作为 teacher 的推理服务</span><span><i style="background:var(--fg-3)"></i>proxy / 预研</span><span><i style="background:url(#free);border:1px dashed var(--line-2)"></i>空闲 / 可借用</span></div>
+  <div class="legend" style="margin-top:6px"><span><span class="kn">a</span>SFT</span></div>
+  <p class="cap">图 5 · Max-L（3.7T）派生路线：Ultra 按原份额训练，④ 退火后把 Ultra 切回 S2 形态（去掉生长出的专家/层）并做 1–1.5T 的 KD 续训，再 KD 退火；Max-L 的发布日历与 Max-S 相同（第 27 周），因为 Max 本就被 Ultra 的后训练卡住；预训练期份额几乎为零，省下的 ~20% 集群可提前启动下一代。代价是质量风险（最小成员 −5–10 分的证据来自 30B 父模型）与「Max 无法先于 Ultra」。</p></div>
+<h3>单版本的三个资源结论</h3>
+<ul>
+  <li><strong>Max-S 不争资源，Max-L 争。</strong>1T Max 的全部预训练可以藏在 10% 切片里；3.7T Max 要么拿走 ~1/4 集群并把 Ultra 推迟 2–3 周，要么放弃并行、改为派生。</li>
+  <li><strong>Ultra 的预训练池在第 12 周后就空了。</strong>后训练（SFT、RL 专家、MOPD）是推理密集、份额 25–40% 的阶段，不需要预训练池的互联形状——这是把下一代预训练接进来的物理基础，也是把 RL 搬到推理池/异构卡的理由。</li>
+  <li><strong>Max 的发布时间与它的预训练无关，只与 Ultra 后训练何时完成有关</strong>（第 23 周 Ultra 发布 → 第 27 周 Max 发布）。要让 Max 先发，只能走"双轨"（Max 自己的专家→OPD 流水线先发 preview，Ultra 完成后再重跑一次 OPD）。</li>
+</ul>
+
+<!-- ============ 8 (merged) ============ -->
+<h2 id="s8"><span class="num">§8</span>多版本：两种尺寸的流水线有多少交织空间</h2>
+<p>2025–26 的公开节奏是：大版本间隔 5–6 个月（Qwen3.5 2 月→3.8 8 月；K2.5 1 月→K3 7 月；V3.2 12 月→V4 4 月），点版本 2–3 个月一个，基座→Thinking 约 4 个月，后训练算力已超过预训练的 10% [DeepSeek-V3.2]。在这种节奏下，任一时刻集群上同时存在三个版本的不同阶段，交织空间来自八个承接点：</p>
+
+<div class="fig"><div class="small" style="margin-bottom:6px"><strong>多版本 · 52 周 · 三代 Ultra 与三代 Max</strong></div><svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC, sans-serif" font-size="11.5" role="img" aria-label="多版本交织：52 周">
+<defs><pattern id="inf" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="1.6" opacity=".55"/></pattern><pattern id="free" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--line-2)" stroke-width="1"/></pattern></defs>
+<line x1="46" y1="284.0" x2="888" y2="284.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="288.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">0%</text>
+<line x1="46" y1="218.5" x2="888" y2="218.5" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="222.5" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">25%</text>
+<line x1="46" y1="153.0" x2="888" y2="153.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="157.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">50%</text>
+<line x1="46" y1="87.5" x2="888" y2="87.5" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="40" y="91.5" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">75%</text>
+<line x1="46" y1="22.0" x2="888" y2="22.0" stroke="var(--line)" stroke-width="1" />
+<text x="40" y="26.0" text-anchor="end" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">100%</text>
+<line x1="46.0" y1="22" x2="46.0" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="46.0" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">第0周</text>
+<line x1="175.5" y1="22" x2="175.5" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="175.5" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">8</text>
+<line x1="305.1" y1="22" x2="305.1" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="305.1" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">16</text>
+<line x1="434.6" y1="22" x2="434.6" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="434.6" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">24</text>
+<line x1="564.2" y1="22" x2="564.2" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="564.2" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">32</text>
+<line x1="693.7" y1="22" x2="693.7" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="693.7" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">40</text>
+<line x1="823.2" y1="22" x2="823.2" y2="284.0" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="823.2" y="298.0" text-anchor="middle" fill="var(--fg-3)" font-family="IBM Plex Mono, monospace" font-size="10.5">48</text>
+<rect x="46.0" y="22.0" width="24.3" height="39.3" fill="url(#free)" opacity=".95"/>
+<rect x="70.3" y="22.0" width="137.6" height="15.7" fill="url(#free)" opacity=".95"/>
+<rect x="207.9" y="22.0" width="32.4" height="41.9" fill="url(#free)" opacity=".95"/>
+<rect x="240.3" y="22.0" width="16.2" height="199.1" fill="url(#free)" opacity=".95"/>
+<rect x="256.5" y="22.0" width="8.1" height="81.2" fill="url(#free)" opacity=".95"/>
+<rect x="264.6" y="22.0" width="8.1" height="104.8" fill="url(#free)" opacity=".95"/>
+<rect x="272.7" y="22.0" width="97.2" height="5.2" fill="url(#free)" opacity=".95"/>
+<rect x="369.8" y="22.0" width="48.6" height="23.6" fill="url(#free)" opacity=".95"/>
+<rect x="418.4" y="22.0" width="32.4" height="81.2" fill="url(#free)" opacity=".95"/>
+<rect x="450.8" y="22.0" width="16.2" height="89.1" fill="url(#free)" opacity=".95"/>
+<rect x="467.0" y="22.0" width="16.2" height="49.8" fill="url(#free)" opacity=".95"/>
+<rect x="483.2" y="22.0" width="16.2" height="70.7" fill="url(#free)" opacity=".95"/>
+<rect x="499.4" y="22.0" width="32.4" height="83.8" fill="url(#free)" opacity=".95"/>
+<rect x="531.8" y="22.0" width="97.2" height="5.2" fill="url(#free)" opacity=".95"/>
+<rect x="628.9" y="22.0" width="16.2" height="23.6" fill="url(#free)" opacity=".95"/>
+<rect x="645.1" y="22.0" width="16.2" height="13.1" fill="url(#free)" opacity=".95"/>
+<rect x="661.3" y="22.0" width="16.2" height="23.6" fill="url(#free)" opacity=".95"/>
+<rect x="677.5" y="22.0" width="16.2" height="81.2" fill="url(#free)" opacity=".95"/>
+<rect x="693.7" y="22.0" width="16.2" height="41.9" fill="url(#free)" opacity=".95"/>
+<rect x="709.9" y="22.0" width="16.2" height="49.8" fill="url(#free)" opacity=".95"/>
+<rect x="726.1" y="22.0" width="16.2" height="201.7" fill="url(#free)" opacity=".95"/>
+<rect x="742.3" y="22.0" width="16.2" height="222.7" fill="url(#free)" opacity=".95"/>
+<rect x="758.5" y="22.0" width="97.2" height="144.1" fill="url(#free)" opacity=".95"/>
+<rect x="855.6" y="22.0" width="32.4" height="162.4" fill="url(#free)" opacity=".95"/>
+<rect x="46.0" y="270.9" width="23.1" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="70.3" y="270.9" width="136.4" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="207.9" y="270.9" width="31.2" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="240.3" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="256.5" y="270.9" width="6.9" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="264.6" y="270.9" width="6.9" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="272.7" y="270.9" width="96.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="369.8" y="270.9" width="47.4" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="418.4" y="270.9" width="31.2" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="450.8" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="483.2" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="499.4" y="270.9" width="31.2" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="531.8" y="270.9" width="96.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="628.9" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="645.1" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="661.3" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="677.5" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="693.7" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="709.9" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="726.1" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="742.3" y="270.9" width="15.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="758.5" y="270.9" width="96.0" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="855.6" y="270.9" width="31.2" height="11.9" fill="var(--fg-3)" opacity="1.0" rx="1.5"/>
+<rect x="46.0" y="61.3" width="23.1" height="208.4" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="70.3" y="61.3" width="136.4" height="208.4" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="207.9" y="87.5" width="31.2" height="182.2" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="256.5" y="153.0" width="6.9" height="116.7" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="264.6" y="153.0" width="6.9" height="116.7" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="272.7" y="153.0" width="96.0" height="116.7" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="369.8" y="153.0" width="47.4" height="116.7" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="418.4" y="153.0" width="31.2" height="116.7" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="450.8" y="153.0" width="15.0" height="116.7" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="467.0" y="113.7" width="15.0" height="156.0" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="483.2" y="113.7" width="15.0" height="156.0" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="499.4" y="153.0" width="31.2" height="116.7" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="531.8" y="153.0" width="96.0" height="116.7" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="628.9" y="153.0" width="15.0" height="116.7" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="645.1" y="153.0" width="15.0" height="116.7" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="661.3" y="153.0" width="15.0" height="116.7" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="677.5" y="153.0" width="15.0" height="116.7" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="693.7" y="113.7" width="15.0" height="156.0" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="709.9" y="113.7" width="15.0" height="156.0" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="70.3" y="37.7" width="136.4" height="22.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="207.9" y="63.9" width="31.2" height="22.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="240.3" y="247.3" width="15.0" height="22.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="256.5" y="129.4" width="6.9" height="22.4" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<circle cx="224.1" cy="75.7" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<rect x="272.7" y="132.0" width="96.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="369.8" y="132.0" width="47.4" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="418.4" y="132.0" width="31.2" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="450.8" y="132.0" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="467.0" y="92.7" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="483.2" y="92.7" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="499.4" y="132.0" width="31.2" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="531.8" y="132.0" width="96.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="628.9" y="132.0" width="15.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="645.1" y="132.0" width="15.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="661.3" y="132.0" width="15.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="677.5" y="132.0" width="15.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="693.7" y="92.7" width="15.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="709.9" y="92.7" width="15.0" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="240.3" y="221.1" width="15.0" height="25.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="256.5" y="103.2" width="6.9" height="25.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="264.6" y="126.8" width="6.9" height="25.0" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<circle cx="248.4" cy="234.2" r="7" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.5"/>
+<rect x="272.7" y="27.2" width="96.0" height="103.6" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="272.7" y="27.2" width="96.0" height="103.6" fill="url(#inf)" rx="1.5"/>
+<rect x="369.8" y="66.5" width="47.4" height="64.3" fill="var(--s1)" opacity="1.0" rx="1.5"/>
+<rect x="369.8" y="66.5" width="47.4" height="64.3" fill="url(#inf)" rx="1.5"/>
+<rect x="499.4" y="105.8" width="31.2" height="25.0" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="531.8" y="27.2" width="96.0" height="103.6" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="531.8" y="27.2" width="96.0" height="103.6" fill="url(#inf)" rx="1.5"/>
+<rect x="628.9" y="66.5" width="15.0" height="64.3" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="628.9" y="66.5" width="15.0" height="64.3" fill="url(#inf)" rx="1.5"/>
+<rect x="645.1" y="66.5" width="15.0" height="64.3" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="645.1" y="66.5" width="15.0" height="64.3" fill="url(#inf)" rx="1.5"/>
+<rect x="661.3" y="66.5" width="15.0" height="64.3" fill="var(--s1)" opacity="0.7" rx="1.5"/>
+<rect x="661.3" y="66.5" width="15.0" height="64.3" fill="url(#inf)" rx="1.5"/>
+<rect x="726.1" y="244.7" width="15.0" height="25.0" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="742.3" y="244.7" width="15.0" height="25.0" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="758.5" y="166.1" width="96.0" height="103.6" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="758.5" y="166.1" width="96.0" height="103.6" fill="url(#inf)" rx="1.5"/>
+<rect x="855.6" y="205.4" width="31.2" height="64.3" fill="var(--s1)" opacity="0.48" rx="1.5"/>
+<rect x="855.6" y="205.4" width="31.2" height="64.3" fill="url(#inf)" rx="1.5"/>
+<rect x="369.8" y="45.6" width="47.4" height="19.8" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="369.8" y="45.6" width="47.4" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="418.4" y="111.1" width="31.2" height="19.8" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="418.4" y="111.1" width="31.2" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="450.8" y="111.1" width="15.0" height="19.8" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="450.8" y="111.1" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="467.0" y="71.8" width="15.0" height="19.8" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="467.0" y="71.8" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<circle cx="394.1" cy="56.1" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<rect x="418.4" y="103.2" width="31.2" height="6.7" fill="var(--s4)" opacity="1.0" rx="1.5"/>
+<rect x="628.9" y="45.6" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="628.9" y="45.6" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="645.1" y="45.6" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="645.1" y="45.6" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="661.3" y="45.6" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="661.3" y="45.6" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="677.5" y="111.1" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="677.5" y="111.1" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="693.7" y="71.8" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="693.7" y="71.8" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="709.9" y="71.8" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="709.9" y="71.8" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<rect x="726.1" y="223.7" width="15.0" height="19.8" fill="var(--s2)" opacity="0.7" rx="1.5"/>
+<rect x="726.1" y="223.7" width="15.0" height="19.8" fill="url(#inf)" rx="1.5"/>
+<circle cx="637.0" cy="56.1" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<rect x="677.5" y="103.2" width="15.0" height="6.7" fill="var(--s4)" opacity="0.7" rx="1.5"/>
+<rect x="693.7" y="63.9" width="15.0" height="6.7" fill="var(--s4)" opacity="0.7" rx="1.5"/>
+<rect x="645.1" y="35.1" width="15.0" height="9.3" fill="var(--s2)" opacity="1.0" rx="1.5"/>
+<rect x="645.1" y="35.1" width="15.0" height="9.3" fill="url(#inf)" rx="1.5"/>
+<rect x="855.6" y="184.4" width="31.2" height="19.8" fill="var(--s2)" opacity="0.48" rx="1.5"/>
+<rect x="855.6" y="184.4" width="31.2" height="19.8" fill="url(#inf)" rx="1.5"/>
+<circle cx="871.8" cy="194.9" r="7" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.5"/>
+<text x="467.0" y="281.4" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="116" lengthAdjust="spacingAndGlyphs">proxy / 下一代消融</text>
+<text x="127.0" y="170.1" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="122" lengthAdjust="spacingAndGlyphs">U1 预训练（S1→S3）</text>
+<text x="224.1" y="183.2" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">退火</text>
+<text x="361.8" y="215.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="127" lengthAdjust="spacingAndGlyphs">U2 预训练（续自 U1）</text>
+<text x="483.2" y="196.3" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">退火</text>
+<text x="596.5" y="215.9" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="127" lengthAdjust="spacingAndGlyphs">U3 预训练（续自 U2）</text>
+<text x="709.9" y="196.3" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">退火</text>
+<text x="139.1" y="53.5" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="60" lengthAdjust="spacingAndGlyphs">M1 预训练</text>
+<text x="224.1" y="79.2" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">a</text>
+<text x="369.8" y="146.5" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="148" lengthAdjust="spacingAndGlyphs">M2 预训练 · 全程 KD←U1</text>
+<text x="483.2" y="107.2" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">KD</text>
+<text x="596.5" y="146.5" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="148" lengthAdjust="spacingAndGlyphs">M3 预训练 · 全程 KD←U2</text>
+<text x="709.9" y="107.2" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="17" lengthAdjust="spacingAndGlyphs">KD</text>
+<text x="248.4" y="237.7" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">b</text>
+<text x="321.3" y="83.6" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="67" lengthAdjust="spacingAndGlyphs">U1 RL 专家</text>
+<text x="394.1" y="103.3" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">MOPD</text>
+<text x="515.6" y="122.9" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">SFT</text>
+<text x="580.3" y="83.6" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="67" lengthAdjust="spacingAndGlyphs">U2 RL 专家</text>
+<text x="653.2" y="103.3" text-anchor="middle" fill="var(--surface)" font-weight="700" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">MOPD</text>
+<text x="742.3" y="261.8" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="24" lengthAdjust="spacingAndGlyphs">SFT</text>
+<text x="807.0" y="222.5" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="67" lengthAdjust="spacingAndGlyphs">U3 RL 专家</text>
+<text x="871.8" y="242.1" text-anchor="middle" fill="var(--fg)" font-weight="700" font-size="11" textLength="28" lengthAdjust="spacingAndGlyphs">MOPD</text>
+<text x="394.1" y="59.6" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">c</text>
+<text x="637.0" y="59.6" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">d</text>
+<text x="871.8" y="198.4" text-anchor="middle" fill="var(--fg)" font-family="IBM Plex Mono, monospace" font-size="9.5" font-weight="500">e</text>
+<circle cx="70.3" cy="61.3" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="70.3" y="65.1" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">①</text>
+<circle cx="207.9" cy="87.5" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="207.9" y="91.3" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">②</text>
+<circle cx="369.8" cy="56.1" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="369.8" y="59.9" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">③</text>
+<circle cx="256.5" cy="270.9" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="256.5" y="274.7" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">④</text>
+<circle cx="272.7" cy="142.5" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="272.7" y="146.3" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">⑤</text>
+<circle cx="499.4" cy="118.9" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="499.4" y="122.7" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">⑥</text>
+<circle cx="645.1" cy="40.3" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="645.1" y="44.1" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">⑦</text>
+<circle cx="628.9" cy="121.6" r="8.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="1.5"/>
+<text x="628.9" y="125.4" text-anchor="middle" fill="var(--bg)" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700">⑧</text>
+<text x="46" y="324" fill="var(--fg-3)" font-size="10.5">纵轴：集群算力份额（100% = 全部 GPU）；横轴：周；斜纹 = 空闲/可借用；条内细斜纹 = 推理密集阶段（rollout / teacher 打分），可落在推理池</text>
+</svg>
+  <div class="legend"><span><i style="background:var(--s1)"></i>Ultra 阶段</span><span><i style="background:var(--s2)"></i>Max 阶段</span><span><i style="background:var(--s4)"></i>Ultra 作为 teacher 的推理服务</span><span><i style="background:var(--fg-3)"></i>proxy / 预研</span><span><i style="background:url(#free);border:1px dashed var(--line-2)"></i>空闲 / 可借用</span></div>
+  <div class="legend" style="margin-top:6px"><span><span class="kn">a</span>KD退火</span><span><span class="kn">b</span>SFT</span><span><span class="kn">c</span>M1 后训练</span><span><span class="kn">d</span>M2 后训练</span><span><span class="kn">e</span>M3 后训练</span></div>
+  <p class="cap">图 6 · 52 周、三代 Ultra（U1–U3）与三代 Max（M1–M3）的交织。U2/U3 续训或生长自上一代的近末 checkpoint（算力按从头的 ~70% 计），在上一代退火结束时立刻接入预训练池；上一代的后训练（斜纹）与之重叠。M2/M3 续自 Max 主干并全程蒸馏自已成熟的上一代 Ultra（⑤），OPD 仍取自同代 Ultra（⑧）。整体占用率稳定在 85–100%，大版本节奏约 14–16 周，点版本（⑦ M1.5）只是重跑一次 OPD。</p></div>
+
+<div class="hand">
+  <div><b>①</b>Ultra v(n) S1/S2 末 → Max v(n) 权重分叉（架构换代时才需要）</div>
+  <div><b>②</b>Ultra v(n) 退火前向 → Max v(n) KD 退火的 logits（≈免费）</div>
+  <div><b>③</b>Ultra v(n) 最终 RL checkpoint → Max v(n) OPD</div>
+  <div><b>④</b>Ultra v(n) 近末 checkpoint → Ultra v(n+1) 预训练初始化（续训 / 生长 / 架构迁移）</div>
+  <div><b>⑤</b>成熟的 Ultra v(n) → Max v(n+1) 全程 KD（跨代 teacher，单版本内做不到）</div>
+  <div><b>⑥</b>Ultra v(n) 的 RL 专家池 → Ultra v(n+1) 的 SFT 数据合成（K2.5/K3 用前代专家合成）</div>
+  <div><b>⑦</b>Ultra v(n+1) 的专家池 → Max v(n) 点版本：只重跑 OPD（~1–20B 学生 token）</div>
+  <div><b>⑧</b>Ultra v(n+1) 终稿 → Max v(n+1) OPD</div>
+</div>
+
+<h3>交织带来的六项优化</h3>
+<ol>
+  <li><strong>跨代 teacher 消除时序与容量差两难。</strong>单版本里 Ultra 不是太晚就是太强；跨代后 Max v(n) 可以像 Gemma 2/3、Gemini Flash 那样全程蒸馏自一个已经完成后训练、loss 已知的 Ultra v(n−1)，teacher checkpoint 按 loss 比值选、logits 一次写出多代复用（Apple 法则中"teacher 被多个学生摊销"是蒸馏最划算的情形）。对 Max-L（2.7×）这正是最优师生比；对 Max-S（10×）则用 Ultra v(n−1) 的中间 checkpoint 作"助教"。</li>
+  <li><strong>阶段错峰把预训练池填满。</strong>Ultra v(n+1) 的预训练大块在 v(n) 退火结束的第 12–13 周接入，与 v(n) 的 SFT/RL/MOPD（推理密集，25–40%）重叠；图 6 中第 13 与第 28 周两次接入使总占用率维持在 85–100%，而不是单版本里第 12 周后的 60% 空闲。</li>
+  <li><strong>主干延续代替从头。</strong>架构不变时 Ultra v(n+1) = 续训/生长 v(n)（K2.5 从"近末 K2 checkpoint"续训 15T；V3.2 用 ~1T tokens 完成 DSA 迁移；Ling 2.0→2.6 架构迁移预训练），算力按从头的 30–100% 计；只在架构大改（K2→K3、V3→V4）时重启生长阶梯——此时 S1/S2 分叉模式重新出现。用户的"分阶段生长"前提在多版本下自然延伸为<strong>跨代生长</strong>：10T→15T 可从 10T 生长而非从头。</li>
+  <li><strong>两类资源池。</strong>预训练池（NVLink/大 EP、FP8/FP4）被连续的 Ultra 预训练占满；推理池（rollout、teacher 打分、OPD、数据合成、点版本）承接所有斜纹阶段，可用推理卡或国产卡。DeepSeek-V3.2 "后训练 >10% 预训练算力"意味着推理池不再是零头。</li>
+  <li><strong>Max 的血统策略。</strong>架构不变：Max v(n+1) 续自 Max v(n) 主干 + 全程 KD ← Ultra v(n)，再 OPD ← Ultra v(n+1)；架构换代：从新 Ultra 的 S1/S2 重新分叉以保持同源（OPD 初始 KL 小）。血统漂移是续主干的隐性代价，每两代重新分叉一次是保守做法。</li>
+  <li><strong>点版本 = 重跑 OPD。</strong>Ultra 每出一个专家池升级，Max 的对应点版本只需 1–20B 学生 token 的 OPD（Qwen3：1/10 RL 的 GPU 小时），这是 K2 系列 2–3 个月一个点版本节奏在 Max 侧的低成本复制。</li>
+</ol>
+
+<h3>年算力对比（规划估算，Max-S 口径，两代 Ultra + 两代 Max + 一个点版本）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>组织方式</th><th class="n">Ultra 预训练</th><th class="n">Ultra 后训练</th><th class="n">Max 预训练</th><th class="n">Max 后训练</th><th class="n">合计 ×1e25</th><th>版本数 / 年</th></tr></thead>
+<tbody>
+<tr><td>每代从头、各自独立（A × 2）</td><td class="n">5.4 + 5.4</td><td class="n">0.54 + 0.54</td><td class="n">0.72 + 0.72</td><td class="n">0.02 + 0.02</td><td class="n">13.4</td><td>2 Ultra + 2 Max</td></tr>
+<tr><td>图 6：首代生长 + 二代续训/生长 + 交织</td><td class="n">4.8（生长，token 中性）+ 3.4（续训 ~70%）</td><td class="n">0.54 + 0.54</td><td class="n">0.68（分叉）+ 0.36（续主干 ~15T + KD）</td><td class="n">0.02 + 0.02 + 0.01（M1.5）</td><td class="n">10.4</td><td>2 Ultra + 2 Max + 1 点版本</td></tr>
+<tr><td>同上，但 Max 为 Max-L 且二代起派生</td><td class="n">4.8 + 3.4</td><td class="n">0.54 + 0.54</td><td class="n">1.68（分叉）+ 0.2（派生）</td><td class="n">0.06 + 0.06</td><td class="n">11.3（对比独立 16.0）</td><td>同上</td></tr>
+</tbody></table></div>
+<p class="note">续训算力的 30–100% 区间取自公开案例（V3.2 ≈7%、K2.5 ≈100%），表中按 70% 计；若架构换代则该代回到从头/生长口径。所有数字为规划估算。</p>
+
+
+<!-- ============ 9 (merged) ============ -->
+<h2 id="s9"><span class="num">§9</span>尺寸与版本维度的新增风险与门控（G6–G8）</h2>
+<div class="tablewrap"><table class="risk">
+<thead><tr><th>风险</th><th>说明</th><th>缓解</th></tr></thead>
+<tbody>
+<tr><td>延迟传播</td><td>交织后 Ultra v(n) 延期会同时推迟 Max v(n) 的 OPD、Ultra v(n+1) 的接入与 Max v(n+1) 的 teacher</td><td>Max 双轨（自主后训练先发 preview）；U(n+1) 接入点绑定"v(n) 退火结束"而非"v(n) 发布"；跨代 KD 可退回 Ultra v(n−1)</td></tr>
+<tr><td>跨代 teacher 反而弱于学生目标</td><td>Ultra v(n−1) 对 Max-L v(n) 不一定领先足够多（若代际进步大）；Zhipu：teacher 不够强则 KD 有害</td><td>loss 比值门控（留出集上 L_T &lt; L_S − 裕度才开 KD）；α 随比值自适应；对 Max-L 优先用 Ultra v(n−1) 的最终而非中间 checkpoint</td></tr>
+<tr><td>logits 资产过期</td><td>数据分布随代际变化（新语料、新混合），旧 logits 覆盖不到新数据</td><td>只对稳定的高质量退火/中期语料存 logits；新增语料用推理池离线打分（每 T token ≈ 6e23）</td></tr>
+<tr><td>血统漂移</td><td>Max 续主干多代后与 Ultra 分布渐远，OPD 初始 KL 上升</td><td>监控冷启动后 KL（目标 ≤0.05–0.1）；超阈值则下一代重新分叉</td></tr>
+<tr><td>派生 Max-L 的质量天花板</td><td>Star Elastic/Minitron 的 2.5–2.7× 证据均 ≤30B 父模型；最小成员难推理 −5–10 分</td><td>G6 门控：在 Ultra v1 退火后试跑派生并与并行分叉的 Max-L v1 同基准对照；不达标则维持并行路线</td></tr>
+<tr><td>主干延续锁死架构</td><td>续训省算力的前提是架构不变；混合注意力/稀疏注意力等迁移有成本（V3.2 ~1T tokens、Ling 2.6）</td><td>架构大改按"重启生长阶梯"预算；小改按架构迁移预训练预算（5–10% tokens）</td></tr>
+<tr><td>组织复杂度</td><td>三个版本并存需要错峰排班、两类资源池、版本化的数据/logits/专家池资产管理</td><td>把 ①–⑧ 承接点做成流水线的显式接口（checkpoint 命名、logits 分片对齐、专家池注册）</td></tr>
+</tbody></table></div>
+
+<h3>新增门控（在 G0–G5 之上）</h3>
+<ul>
+  <li><strong>G6 派生质量：</strong>proxy 阶梯上比较"切回 + KD 续训"的 Max-L 与并行分叉的 Max-L（同 tokens），阈值：难推理 ≤ −3、知识类 ≤ −1；并在全尺寸 Ultra v1 退火后复测。</li>
+  <li><strong>G7 跨代 KD：</strong>用 proxy-Ultra v(n−1) 对 proxy-Max v(n) 做全程 KD vs 无 KD，测平均分、ICL、pass@k，并标定 loss 比值门控阈值。</li>
+  <li><strong>G8 续训 vs 从头：</strong>proxy 上比较"续训/生长自上一代"与"同算力从头"的下一代质量（Liew–Kato 饱和风险在跨代同样存在）。</li>
+</ul>
+
+
+<!-- ============ 10 ============ -->
+<h2 id="s10"><span class="num">§10</span>参考文献</h2>
+<p class="small">按主题分组；arXiv 编号即 URL 后缀（https://arxiv.org/abs/ID）。标注"二手"者为未能直接获取原文、经转述的来源。</p>
+<h4>模型生长</h4>
+<ol class="refs">
+  <li>Du et al. Stacking Your Transformers. NeurIPS 2024. arXiv:2405.15319 — <a href="https://arxiv.org/abs/2405.15319">arxiv.org/abs/2405.15319</a>；项目页 <a href="https://llm-stacking.github.io/">llm-stacking.github.io</a></li>
+  <li>Saunshi et al. On the Inductive Bias of Stacking Towards Improving Reasoning (MIDAS). NeurIPS 2024. arXiv:2409.19044</li>
+  <li>Kapl et al. Do Depth-Grown Models Overcome the Curse of Depth? (LIDAS). arXiv:2512.08819；Kapl et al. From Growing to Looping. ICML 2026. arXiv:2602.16490</li>
+  <li>Wang et al. Beyond Sunk Costs: Orthogonal Growth of MoE. ICML 2026. arXiv:2510.08008</li>
+  <li>Liew &amp; Kato. Reusing Overtrained Language Models Saturates Scaling（v2 改题；原题 From Acceleration to Saturation）. arXiv:2510.06548</li>
+  <li>Chen, Vegesna, Dahal, Wilson (Q Labs). How Model Growth, Recursion, and Boundary Operators Influence Scaling Exponents. arXiv:2609.19107</li>
+  <li>Yano et al. Efficient Construction of Model Family through Progressive Training Using Model Expansion. arXiv:2504.00623 (v2 2026)</li>
+  <li>Bu (Meta FAIR). Scaling depth capacity via zero/one-layer model expansion. arXiv:2511.04981</li>
+  <li>Yu et al. (ByteDance Seed). SPARKLING. ICML 2026. arXiv:2602.02472</li>
+  <li>Mallik et al. When is Warmstarting Effective for Scaling Language Models? arXiv:2605.13405</li>
+  <li>Li et al. FLM-101B. arXiv:2309.03852；Li et al. 52B to 1T: Lessons Learned via Tele-FLM Series. arXiv:2407.02783</li>
+  <li>Shen et al. Staged Training for Transformer LMs. ICML 2022. arXiv:2203.06211；Yao et al. Masked Structural Growth. ICLR 2024. arXiv:2305.02869；Samragh et al. HyperCloning. arXiv:2409.12903</li>
+</ol>
+<h4>MoE 扩增、upcycling 与 scaling law</h4>
+<ol class="refs">
+  <li>Dwivedi et al. (Amazon). Expert Upcycling: Shifting the Compute-Efficient Frontier of MoE. arXiv:2604.19835</li>
+  <li>Jin et al. EMO: Frustratingly Easy Progressive Training of Extendable MoE. arXiv:2605.13247</li>
+  <li>Komatsuzaki et al. Sparse Upcycling. ICLR 2023. arXiv:2212.05055；He et al. (NVIDIA) Upcycling LLMs into MoE. arXiv:2410.07524；Nakamura et al. Drop-Upcycling. ICLR 2025. arXiv:2502.19261</li>
+  <li>Liew, Kato, Takase. Scaling Laws for Upcycling MoE. ICML 2025. arXiv:2502.03009；Wei et al. Skywork-MoE. arXiv:2406.06563；Muennighoff et al. OLMoE. arXiv:2409.02060</li>
+  <li>Tian et al. (Ant). Towards Greater Leverage: Scaling Laws for Efficient MoE. arXiv:2507.17702；Ling Team. Every FLOP Counts. arXiv:2503.05139；Ling 2.0 / Ling-1T 报告 arXiv:2510.22115</li>
+  <li>Krajewski et al. Scaling Laws for Fine-Grained MoE. ICML 2024. arXiv:2402.07871；Ludziejewski et al. Joint MoE Scaling Laws. ICML 2025. arXiv:2502.05172</li>
+  <li>Wang et al. (DeepSeek) Auxiliary-Loss-Free Load Balancing. arXiv:2408.15664</li>
+</ol>
+<h4>预训练期蒸馏</h4>
+<ol class="refs">
+  <li>Busbridge et al. (Apple). Distillation Scaling Laws. ICML 2025. arXiv:2502.08606</li>
+  <li>Zhang et al. Towards the Law of Capacity Gap in Distilling Language Models. ACL 2025 杰出论文. arXiv:2311.07052</li>
+  <li>Peng et al. (Zhipu/THU). Pre-training Distillation for LLMs: A Design Space Exploration. ACL 2025. arXiv:2410.16215</li>
+  <li>Gemma Team. Gemma 2. arXiv:2408.00118；Gemma 3. arXiv:2503.19786；Gemini 2.5 技术报告 <a href="https://storage.googleapis.com/deepmind-media/gemini/gemini_v2_5_report.pdf">deepmind-media/gemini_v2_5_report.pdf</a>；Gemini 1.5. arXiv:2403.05530</li>
+  <li>Meta. The Llama 4 Herd 博客（2025-04-05）<a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/">ai.meta.com</a>（本报告经二手引述）；第三方综述 arXiv:2601.11659（注：该文已在 arXiv 撤稿、署名被移除，仅作线索）</li>
+  <li>Anshumann et al. Sparse Logit Sampling (RS-KD). ACL 2025. arXiv:2503.16870</li>
+  <li>Goyal, Lopez-Paz, Ahuja (FAIR). Distilled Pretraining. arXiv:2509.01649</li>
+  <li>Apple. Apple Intelligence Foundation Language Models. arXiv:2407.21075；2025 版 arXiv:2507.13575</li>
+  <li>Muralidharan et al. Minitron. arXiv:2407.14679；Sreenivas et al. LLM Pruning and Distillation in Practice. arXiv:2408.11796；Nemotron-H. arXiv:2504.03624</li>
+  <li>Anil et al. Large scale distributed neural network training through online distillation. ICLR 2018. arXiv:1804.03235</li>
+</ol>
+<h4>On-policy 蒸馏</h4>
+<ol class="refs">
+  <li>Qwen Team. Qwen3 Technical Report. arXiv:2505.09388（§4.5、表 21）</li>
+  <li>Lu et al. (Thinking Machines). On-Policy Distillation. 2025-10. <a href="https://thinkingmachines.ai/blog/on-policy-distillation/">thinkingmachines.ai</a></li>
+  <li>Agarwal et al. GKD. ICLR 2024. arXiv:2306.13649；Gu et al. MiniLLM. ICLR 2024. arXiv:2306.08543</li>
+  <li>MOPD（多教师 OPD）. arXiv:2606.30406；Xiaomi MiMo-V2-Flash. arXiv:2601.02780</li>
+  <li>DeepSeek-V4. arXiv:2606.19348；Kimi K3 技术报告 <a href="https://github.com/MoonshotAI/Kimi-K3">github.com/MoonshotAI/Kimi-K3</a>；NVIDIA Nemotron 3 Ultra. arXiv:2606.15007；Nemotron-Cascade 2. arXiv:2603.19220；GLM-5. arXiv:2602.15763</li>
+  <li>Li et al. Rethinking OPD. arXiv:2604.13016；Demystifying OPD. arXiv:2607.13399；Sequential Beats Joint. arXiv:2609.04108；Entropy-Aware OPD. arXiv:2603.07079；OPD 综述 arXiv:2604.00626</li>
+  <li>DeepSeek-R1. arXiv:2501.12948；DeepSeek-V3.2. arXiv:2512.02556</li>
+</ol>
+<h4>剪枝与嵌套训练</h4>
+<ol class="refs">
+  <li>Cerebras. REAP: Router-weighted Expert Activation Pruning. ICLR 2026. arXiv:2510.13999；EASY-EP. arXiv:2504.06792</li>
+  <li>Small LLMs: Pruning vs. Training from Scratch. arXiv:2606.14150</li>
+  <li>NVIDIA. Nemotron Elastic. arXiv:2511.16664；Star Elastic / Nemotron Labs 3 Elastic. ICML 2026. arXiv:2605.07182；Flextron. arXiv:2406.10260；MatFormer. arXiv:2310.07707</li>
+  <li>KRAFTON/KAIST. MoE→dense 蒸馏. arXiv:2605.28207；Llama-Nemotron (Puzzle). arXiv:2505.00949；Sheared-LLaMA. arXiv:2310.06694</li>
+</ol>
+<h4>万亿级实践与算力锚点</h4>
+<ol class="refs">
+  <li>DeepSeek-V3 Technical Report. arXiv:2412.19437（表 1：2.788M H800 GPU 小时）</li>
+  <li>Kimi K2: Open Agentic Intelligence. arXiv:2507.20534；Kimi K2.5. arXiv:2602.02276</li>
+  <li>Qwen3-Max "Just Scale It" <a href="https://www.alibabacloud.com/blog/qwen3-max-just-scale-it_602621">alibabacloud.com</a>；Qwen3.8-2.4T-A95B 模型卡 <a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B">huggingface.co/Qwen/Qwen3.8-2.4T-A95B</a></li>
+  <li>GLM-4.5. arXiv:2508.06471；Ring-1T. arXiv:2510.18855；Ling/Ring 2.6. arXiv:2606.15079</li>
+  <li>Llama 3 Herd. arXiv:2407.21783；Llama 3.1 405B 模型卡（30.84M H100 小时）；gpt-oss 模型卡 arXiv:2508.10925</li>
+  <li>NVIDIA Megatron-Core MoE 训练吞吐（GB300/GB200）. arXiv:2603.07685；NVIDIA GB300 NVL72 规格页</li>
+  <li>阿里云栖大会 2026-09-22（Qwen 4 在训、5–10T 计划、真武 V900）：SCMP 与 RITS 报道；36Kr "万亿参数大模型"分析（2026-08-11）；ByteDance 10T 传闻（Wired 经 Crypto Briefing，2026-08）</li>
+  <li>Behemoth 状态：WSJ 2025-05、NYT 2025-07（经 AIM/TechCrunch 转述）；Meta Superintelligence Labs / Muse Spark（Wikipedia）</li>
+</ol>
+
+<p class="small" style="margin-top:40px;border-top:1px solid var(--line);padding-top:14px">文本版（Markdown gist）：<a href="https://gist.github.com/zhanglpg/3d77da4d71b729131f292cfb0272eb77">gist.github.com/zhanglpg/3d77da4d71b729131f292cfb0272eb77</a><br>方法说明：§7–§9 为合并进来的续篇（Max 尺寸敏感性与多版本交织），口径与 §1 相同。本报告由六条并行调研线（模型生长、MoE 扩增/upcycling、预训练蒸馏、OPD、剪枝/嵌套、万亿级实践）的笔记综合而成，约 170 项带出处的发现；所有算力、存储与日历数字均为规划估算，口径见 §1；未能直接获取的原文（Meta Llama 4 博客、DeepSeek-V4 §5 正文、Apple 蒸馏法则附录系数、Kimi K3 稀疏度图）已在正文标注为二手或缺口。截至 2026-10-21。</p>
+</div>
+</body></html>
