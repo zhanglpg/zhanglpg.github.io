@@ -1,6 +1,16 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-21 09:44",
+  "last_run": "2026-10-23 09:55",
   "entries": [
+    {
+      "date": "2026-10-23",
+      "added": [
+        "recursive-flint",
+        "raon-1-mini",
+        "minimax-m3-1-flash"
+      ],
+      "upgraded": [],
+      "note": "Added three verified MoEs: Recursive Flint (39.8B/2.5B coding-agent MoE — 35 sliding-window + 14 full-NoPE GQA layers, learned per-head softmax sinks, 256 experts top-6 + shared; measured 39.79B from the BF16 index), KRAFTON Raon-1 mini (28.8B/4.3B preview — Raon Delta Attention decouples KDA's erase/write gates in an 18+7 RDA/gated-MLA hybrid with zero positional encoding, Raon-mHC 4-stream residuals replace DeepSeek mHC's Sinkhorn projection with a static Helmert chart), and MiniMax-M3.1-Flash (428B/23B — the Oct-23 open-weights drop we were watching: same M3 stack but MiniMax Sparse Attention now covers ALL 60 layers (no dense warm-up), RoPE θ 5M→10M, DSpark draft head replaces MTP, MXFP8/NVFP4 quantization-aware release). Skipped: Muse Spark Open 816B-A42B was already staged in the repo from yesterday's session and is committed with this run; Sage-A1.5 / Ornith-1.5-122B (stock Qwen3.5-MoE configs), Spark-X2.6-4B (README says architecture identical to X2.5, previously skipped as minor-org dense 4B), Nemotron-3.5-Super-VL (tri-block Mamba/MoE/GQA stack still un-mappable to the schema), Fibo-2.0 (gated README 401, FLUX.2-VAE image stack), drama-3/tyger (speech). WATCH unchanged: Mistral-Large-4 (ETA Oct 31), Kimi-K3-Base, flux-3-klein, LTX-2.5 all still 401."
+    },
     {
       "date": "2026-10-21",
       "added": [],
@@ -141,12 +151,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added NaiveAI Naive-N0.5-Flash (309B/15.5B, MIT, verified): the first open-weight release from the AI-centered-R&D lab we had been watching as 'naiveailab' (the real HF org is NaiveAI). Architecturally notable because it has NO full-attention layers at all — 39 sliding-window layers (window 128) interleaved with 9 lightweight-DSA layers (DeepSeek Sparse Attention rebuilt on GQA4 instead of MLA; 16-head fp8 indexer selects top-2,048 tokens) in a 5:1 pattern — giving native 1M context with flat decode cost. DeepSeek-V3-style 256-expert top-8 sigmoid/noaux_tc routing with no shared expert and a single dense first layer; continued-pretrained 3.25T tokens from Xiaomi's open MiMo-V2.5 base. Specs verified against HF config.json, in-repo modeling code, README table and the naive.ai research blog; computed param total (309.4B) matches the claimed 309B. Skipped this window: BAAI/AREX-2 (Qwen3.8-27B finetune), apple/LensVLM-9B (Qwen3.5-9B finetune), TaichuAI/ZDTaichu5.0-9B (custom_code, previously assessed), prism-ml Ternary-Bonsai-2 (2-bit ternary quant of Qwen3.8-27B), convaiinnovations/laya + SupersonicLabs/Julia-1 (decision-router classifiers, no LLM decoder), Edge0/Audio8-ASR-Infinite (ASR pipeline, out of atlas modalities). Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still HTTP 401 gated (32nd run). 70 models, v30."
-    },
-    {
-      "date": "2026-09-30",
-      "added": [],
-      "upgraded": [],
-      "note": "Checked — no changes. Discovery window Sep 29 09:31 → Sep 30 09:23: swept ~50 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, text-to-video, image-to-video, audio-text-to-text) since Sep 28 23:00, and trendingScore/likes7d top-40. Everything found was a finetune/quant of tracked models or out of scope: BAAI/AREX-2 (Sep 29; base_model:finetune of Qwen/Qwen3.8-27B deep-research agent — no-finetune rule, Holo4/JEV-27B precedent), freelawproject/surya-ocr-2 + dots.mocr (Sep 29; OCR doc-parsing models, surya-ocr-2 tagged qwen3_5 finetune — same skip as TeleOCR), internlm/AdvancedMathBench-AutoVerifier (Sep 29; qwen3_5_moe math proof-verifier finetune), inclusionAI/Ming-flash-omni-2.0 (mod Sep 29 was README + TDS-summary-PDF upload only; Feb release unchanged), nvidia/cbottle (Sep 29 mod; FourCastNet-style weather diffusion, non-LLM), nvidia/GLM-5.3-Flash-NVFP4 + SOMA-X + AI-for-Media-Sports-Tennis metadata refreshes, Efficient-Large-Model/LongLive-Plug-* (Wan/MiniMax-H3 long-video plugins, not standalone models), IFM/K2-Horizon family (Sep 28 mods only; tracked), and the usual GLM-5.3/Qwen3.8-27B/Qwen-Image-2.1/MiMo-V2.6-MOPD/Holo4 GGUF-NVFP4-MLX-LoRA quant churn (bartowski/AxionML/DavidAU/ISTA-DASLab/unsloth etc). naiveailab org still 401/empty — watching for the Jifeng Dai first release. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged, stay partial; Step-5-Preview-BF16, North-Small-Translate-1.0 and LTX-2.5 still HTTP 401 gated (31st run). 69 models unchanged, v29."
     }
   ]
 };
