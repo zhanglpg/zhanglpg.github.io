@@ -3778,6 +3778,369 @@ window.MODELS = [
 ]
 },
 {
+"id": "muse-spark-open-816b-a42b",
+"name": "Muse Spark Open 816B-A42B",
+"org": "Meta",
+"family": "Muse",
+"released": "2026-10",
+"license": "Muse Model License",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 816,
+"params_active_B": 42,
+"n_layers": 62,
+"d_model": 8192,
+"d_ff": null,
+"d_ff_moe": 4096,
+"moe_latent_dim": 4096,
+"n_heads": 128,
+"n_kv_heads": 16,
+"head_dim": 64,
+"attention": "hybrid",
+"attention_detail": "62 gated-GQA layers (128 query heads / 16 KV heads, head_dim 64 — 8192-wide attention) in a 46+16 sliding/full interleave: 46 sliding-window layers (window 2048) carry RoPE θ 500,000, while the 16 full-context layers (every 4th layer at indices 1, 5, 9, … 61 — confirmed by layer_rope_theta = 0 at exactly those indices) get NO positional encoding, so long-range attention stays position-free. Gated attention: a learned sigmoid output gate computed from the layer input (gate_proj 8192→8192, tensor-verified) scales every head before the output projection, with QK-norm enabled and a fixed qk_scale_factor 5.473 on the QK logits; the attention output is scaled by output_multiplier 0.1768 (= 1/√32). Both sublayers are residually gated — post_attention_residual_gate and post_feedforward_residual_gate are per-channel learned gates at sigmoid temperature 0.3. Final logits pass an FP32 tanh softcap at ±20 (final_logit_softcapping).",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 202048,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Perception Encoder (50L/1536d) + audio tower",
+"encoder_params_B": 1.8,
+"fusion": "adapter",
+"notes": "Natively multimodal (text + image + video + audio in, text out). Vision: 50-layer, 1536-dim / 16-head perception encoder, 14×14 patch, sparse attention with factor 4 (every 4th layer plus the last are full attention — 37 window + 13 full, tensor-verified), LayerNorm + GELU MLP 8960, learned absolute (1024-slot table) + 2D RoPE positions, then a 2×2-merge adapter (fc1 6144→4096, fc2 4096→4096) and vision_projection 4096→8192 into decoder space; measured 1.85B, matching the card's 1.8B. Audio: 4-stage conv/patch-embedding tower (hidden sizes 256/512/1024/2048, depths 2 each, patch sizes 16/6/5/4, kernel 7) projecting 2048→8192."
+},
+"notes": "Meta Superintelligence Labs' flagship open-weights release (Oct 15 2026): 816B total / 42B active sparse MoE for coding and long-horizon agentic work, natively multimodal over text, image, video and audio with a 1M-token context. All 62 layers are sparse — 256 routed experts, top-8, NO shared expert — and the experts do not run at d_model width: pre_expert_proj 8192→4096 compresses the residual stream into a 4096-dim expert latent (moe_hidden_size), each expert is a SwiGLU MLP with a fused gate_up [2×4096, 4096] plus down [4096, 4096], and post_expert_proj 4096→8192 expands back, with pre/post expert RMSNorms around the block — a LatentMoE-style bottleneck that keeps routing and projection cheap relative to the expert stack. Routing is DeepSeek-V3-style aux-loss-free: sigmoid gate + a per-expert e_score_correction_bias (FP32) with routed_scaling_factor 1.0. The residual stream is gated rather than plain-summed (two learned per-channel gates per layer at temperature 0.3). Norm stack is pre + post (input_layernorm, pre_feedforward_layernorm, post_feedforward_layernorm; weight-only, rms_norm_eps 1e-5 / post_norm_eps 1e-8). Verification: huggingface.co/meta-models has been gated-manual (config 401) since the Oct 15 release, so specs were read from the ModelScope copy of the same official repo — config.json, Meta's own model card (Meta Platforms copyright, Muse Model License, benchmark table), the 65-shard safetensors index and per-tensor shapes — and cross-checked against three independent mirrors (unsloth NVFP4, mlx-community 4bit, RadixArk) whose configs are field-identical apart from their quantization_config. Param self-consistency: computed 811.5B from the architecture fields vs the claimed 816B (ratio 1.01), and the index total_size of 1644.33 GB independently measures 822.17B @BF16 (ratio 0.99 to claimed) once the un-modelled attention gates, expert projections, router biases and both encoders are added.",
+"sources": [
+"https://dev.meta.ai/resources/blog/build-with-muse-spark-open",
+"https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
+"https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B/raw/main/config.json",
+"https://modelscope.cn/models/meta-models/Muse-Spark-Open-816B-A42B/resolve/master/config.json",
+"https://modelscope.cn/models/meta-models/Muse-Spark-Open-816B-A42B/resolve/master/README.md",
+"https://modelscope.cn/models/meta-models/Muse-Spark-Open-816B-A42B/resolve/master/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 46,
+"type": "sliding",
+"sub": "win 2048 · RoPE θ500K"
+},
+{
+"name": "Full NoPE",
+"n": 16,
+"type": "global",
+"sub": "θ=0 · no positions"
+}
+],
+"pattern": "sgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+}
+},
+{
+"id": "recursive-flint",
+"name": "Recursive Flint",
+"org": "Recursive",
+"family": "Flint",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 39.8,
+"params_active_B": 2.5,
+"n_layers": 49,
+"d_model": 2048,
+"d_ff": 6144,
+"d_ff_moe": 512,
+"dense_first_layers": 2,
+"n_heads": 32,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "GQA (32 query / 4 KV heads, head_dim 128) in a 35+14 sliding/full interleave read from layer_types: 35 sliding-window layers (window 513 = current token + 512 preceding) carry RoPE θ 10,000, while the 14 full-context layers get NO positional encoding — no_rope_layer_indices matches exactly those 14 indices (tensor-verified, includes the 2 dense layers 0-1). Per-head QK RMSNorm (q_norm/k_norm [128]) and a learnable softmax (softmax_type: learnable) that adds a learned per-head sink logit (softmax_offset [32]) in the denominator of every attention layer.",
+"n_experts": 256,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 150144,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Recursive's coding-agent MoE (Oct 21 2026, Apache-2.0): 39.8B total / ~2.5B active (convention includes the output head; body alone ~2.2B), trained from scratch for codebase investigation, bug fixing and multi-turn tool use (Terminal-Bench 2.1 54.9%, SWE-bench Pro v2 89.7%, SWE-bench Verified 74.2%). 49 layers = 2 dense (d_ff 6144, mlp_only_layers [0,1]) + 47 MoE layers of 256 routed experts top-6 (d_ff 512 each) plus one always-on shared expert at double width (shared_expert_intermediate_size 1024, gate/up [1024,2048] tensor-verified); sigmoid router with normalized top-k (norm_topk_prob) and a small aux loss (5e-4). Full-attention layers drop RoPE entirely (NoPE) while every layer's softmax carries a learned per-head sink. Measured 39.79B from the 15-shard BF16 safetensors index (ratio 1.00 to claimed). BF16 checkpoint plus an SGLang serving kit; NVFP4/int4 quant siblings released separately.",
+"sources": [
+"https://www.recursive.com/updates/introducing-recursive-flint",
+"https://huggingface.co/RecursiveSI/flint",
+"https://huggingface.co/RecursiveSI/flint/raw/main/README.md",
+"https://huggingface.co/RecursiveSI/flint/raw/main/config.json",
+"https://huggingface.co/RecursiveSI/flint/raw/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 35,
+"type": "sliding",
+"sub": "win 513 · RoPE θ10K"
+},
+{
+"name": "Full NoPE",
+"n": 14,
+"type": "global",
+"sub": "no positions"
+}
+],
+"pattern": "ggsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgsssgssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "35:14 sliding / full-NoPE attention with learned sinks",
+"p": {
+"variants": [
+{
+"n": 35,
+"name": "sliding 513",
+"type": "sliding",
+"span": "win",
+"frac": 0.25,
+"spanLabel": "window 513 = current + 512",
+"sub1": "GQA 32Q / 4KV × 128 · per-head QK-norm",
+"sub2": "RoPE θ 10K"
+},
+{
+"n": 14,
+"name": "full · NoPE",
+"type": "global",
+"span": "full",
+"spanLabel": "full 262,144",
+"sub1": "no positional encoding (no_rope_layer_indices)",
+"sub2": "incl. the 2 dense layers 0–1"
+}
+],
+"common": [
+"learnable softmax: a learned per-head sink logit (softmax_offset [32]) joins the denominator of every layer",
+"2 dense layers first (d_ff 6144) · 47 MoE layers: 256 experts top-6 (d_ff 512) + 1 shared expert at double width (1024)",
+"sigmoid router · normalized top-k (norm_topk_prob) · aux loss 5e-4"
+],
+"sink": true,
+"cache": "full layers: unbounded KV cache · sliding layers capped at 513 tokens"
+}
+}
+]
+},
+{
+"id": "raon-1-mini",
+"name": "Raon-1 mini (preview)",
+"org": "KRAFTON",
+"family": "Raon",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 28.8,
+"params_active_B": 4.3,
+"n_layers": 25,
+"d_model": 2560,
+"d_ff": 12032,
+"d_ff_moe": 1088,
+"dense_first_layers": 1,
+"n_heads": 40,
+"n_kv_heads": 40,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "25 layers = 18 Raon Delta Attention (RDA) linear layers + 7 gated-MLA full-attention layers (1-based indices 4, 8, 12, 16, 20, 24, 25 from rda_config.mla_layers). RDA decouples the erase and write gates of Kimi Delta Attention: 40 heads × head_dim 128, q/k conv1d kernel 4, low-rank decay projection f_a 2560→128 → f_b →5120, learned per-head A_log decay + dt_bias, full-rank output gate g_proj →5120 (lower bound −5), per-head o_norm. Gated MLA (mla_use_output_gate): q_lora 576 → 40 heads × 192 QK (128 nope + 64 rope slot) / 128 V, kv_lora 512. No positional encoding anywhere — NoPE (mla_use_nope true, rope_parameters null). Only the 7 MLA layers keep a KV cache (~8 KiB/token BF16); RDA layers run on a fixed-size state.",
+"n_experts": 128,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 259840,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "NoPE",
+"activation": "SiTU-GLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "KRAFTON AI's from-scratch Korean/English agentic MoE (preview release Oct 21 2026, Apache-2.0): 28.8B total / 4.3B active. Two named innovations: Raon Delta Attention (RDA) decouples KDA's erase and write gates for better long-context recall, and Raon-mHC is a cheaper 4-stream manifold-constrained hyper-connection residual (per-sublayer phi_pre/post [4,10240] static+dynamic maps plus a 9-row z-mix, tensor-verified) that drops DeepSeek mHC's Sinkhorn projection to speed up training. 128 routed experts top-6 + 1 shared (d_ff 1088, gate/up [1088,2560] tensor-verified), first layer dense (d_ff 12032), sigmoid router with e_score_correction_bias and renormalization. SiTU-GLU activation (situ β 4.0, linear β 25). Release is MXFP8-quantized (weight_block [1,32]): routed experts F8_E4M3 while attention, dense/shared MLPs, router and embeddings stay BF16 — measured 25.67B FP8 + 3.11B BF16 ≈ 28.8B claimed (ratio 1.00). Native 262K context; a DFlash2 draft sibling ships for speculative decoding. Preview: specs may change before the final model.",
+"sources": [
+"https://huggingface.co/KRAFTON/Raon-1-mini-preview",
+"https://huggingface.co/KRAFTON/Raon-1-mini-preview/raw/main/README.md",
+"https://huggingface.co/KRAFTON/Raon-1-mini-preview/raw/main/config.json",
+"https://huggingface.co/KRAFTON/Raon-1-mini-preview/raw/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "RDA",
+"n": 18,
+"type": "linear",
+"sub": "delta rule · conv k4"
+},
+{
+"name": "Gated MLA",
+"n": 7,
+"type": "MLA",
+"sub": "latent KV · NoPE"
+}
+],
+"pattern": "kkkmkkkmkkkmkkkmkkkmkkkmm",
+"pattern_map": {
+"k": "linear",
+"m": "MLA"
+}
+},
+"residual": {
+"kind": "mhc",
+"note": "Residuals: Raon mHC — 4 streams, Helmert chart, no Sinkhorn (cheaper than DeepSeek mHC)"
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "RDA — Raon Delta Attention (18 layers)",
+"p": {
+"d": 2560,
+"kh": 40,
+"vh": 40,
+"dh": 128,
+"conv": 4,
+"proj": "q / k / v projections 2560 → 5120",
+"projSub": "β: b_proj → 40 · write δ: rda_w_proj → 40 · decay: f_a 2560→128 → f_b →5120",
+"qsub": "L2 norm ×128⁻½",
+"vsub": "40 × 128",
+"update": "S ← e^{log α}·S + σ(β)·k⊗(v·r − Sᵀk)",
+"decayName": "decay α + write δ",
+"decaySub": "A_log / dt_bias learned",
+"out": "o = Sᵀq → RMSNorm ⊗ σ(gate)",
+"outSub": "g_proj → 5120 → o_proj (gate lower bound −5)",
+"cacheline": "fixed-size fp32 state 40 × 128 × 128 — no KV cache on RDA layers"
+},
+"notes": [
+"RDA decouples KDA's erase and write gates: erase σ(β), write σ(β+δ) — realised as an fp32 value rescale σ(β+δ)/σ(β)",
+"V-first delta rule with fp32 recurrent state; depthwise causal conv k=4 + SiLU on q/k/v before the recurrence",
+"per-channel log-decay from a 128-d bottleneck (f_a 2560→128 → f_b →5120) with learned A_log / dt_bias"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA — NoPE (7 layers)",
+"p": {
+"d": 2560,
+"nh": 40,
+"qlora": 576,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": true,
+"gate": "σ(g_proj) head-wise output gate",
+"cache": "KV cache: (512 + 64) latent el/token × 7 layers ≈ 8 KiB/token BF16 — the only cached layers"
+},
+"notes": [
+"q_a 2560 → 576 latent (RMSNorm) → q_b → 40 heads × 192 (128 nope + 64 shared unrotated)",
+"kv fused MQA → 512 latent + one shared 64-d key channel expanded over heads; scores scaled 1/√192",
+"the 64 'rope' channels are never rotated — the model has no positional encoding at all (NoPE)"
+]
+}
+],
+"attn_bullets": [
+"Raon-mHC residual: static Helmert chart B=(I+11ᵀ/n)/2 + input-dynamic E=QZQᵀ clamped by ρ=max(0,−E/B); H_res=(1−γ)I+γΦ, γ=σ(η); per-site phi_pre/post [4,10240] + 9-row z-mix, tensor-verified",
+"preview release (Oct 21 2026) — specs may change before the final model; Apache-2.0",
+"MXFP8-quantized release (weight_block [1,32]): routed experts F8_E4M3 + U8 scales; attention, dense/shared MLPs, router and embeddings stay BF16",
+"128 experts top-6 + 1 shared (d_ff 1088) · first layer dense (d_ff 12032) · sigmoid router with e_score_correction_bias + renormalize",
+"SiTU-GLU FFN (situ β 4.0, linear β 25); DFlash2 draft sibling for speculative decoding"
+]
+},
+{
+"id": "minimax-m3-1-flash",
+"name": "MiniMax-M3.1-Flash",
+"org": "MiniMax",
+"family": "MiniMax",
+"released": "2026-10",
+"license": "MiniMax Community",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 428,
+"params_active_B": 23,
+"n_layers": 60,
+"d_model": 6144,
+"d_ff": 12288,
+"d_ff_moe": 3072,
+"dense_first_layers": 3,
+"n_heads": 64,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "sparse",
+"attention_detail": "MiniMax Sparse Attention (MSA, arXiv 2606.13392) on ALL 60 layers — M3.1 replaces M3's first-3 dense full-attention warmup layers with sparse attention (sparse_disable_index_value all 1s, sparse_attention_freq sum 60): 128-token blocks, top-16 block selection per query, 4 index heads × dim 128, max-pooled block scores, init + local blocks force-included. GQA 64 query / 4 KV heads, head_dim 128, per-head QK-norm, partial RoPE (rotary_dim 64 of 128, θ 10M — doubled from M3's 5M). M3's 7 MTP modules are gone; a separate DSpark speculative-decoding draft head ships in dspark/.",
+"n_experts": 128,
+"active_experts": 4,
+"shared_experts": 1,
+"vocab_size": 200064,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "CLIP-style ViT (hidden 1280, 32 layers)",
+"encoder_params_B": 0.6,
+"fusion": "adapter",
+"notes": "Native multimodal (text + image + video in, text out). 32-layer 1280-dim/16-head CLIP-style ViT, patch 14, image_size 672 (M3 used 2016), 3D RoPE (θ 10K), GELU MLP 5120, then 2×2 spatial patch-merge (temporal patch 2) into a 6144-dim projector."
+},
+"notes": "The open weights MiniMax promised for Oct 23 landed Oct 23 2026 (API since Oct 19): ~428B total / 23B activated native-multimodal MoE aimed at coding, agentic workflows, computer use and cybersecurity (OSWorld V2 61.7, CyberGym 82.2, DeepSWE v1.1 73.7%). The text stack matches tracked MiniMax-M3 (60 layers, 6144-wide, 128 experts top-4 + 1 shared at d_ff 3072, first 3 layers dense at d_ff 12288, sigmoid routing with expert bias and ×2.0 routed scaling, SwiGLU-OAI α 1.702 clamped ±7, Gemma-style norm, 1M context, untied embeddings); the deltas are MSA on every layer (no dense warmup), rope_theta 5M→10M, DSpark replacing MTP, and MXFP8 quantization-aware training — routed experts ship MXFP8-packed (weight_packed U8 at 2 values/byte + F8_E4M3 weight scales, weight_block [1,32]; MoE gates stay FP32-biased BF16) with attention paths quantization-trained too. Measured from the 48-shard index: 206.9B packed bytes ≈ 413.8B params + 3.3B BF16 ≈ 417B vs claimed ~428B (0.97); computed from architecture fields 426B (ratio 1.00). Includes a dspark/ draft-head checkpoint for speculative decoding.",
+"sources": [
+"https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
+"https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash/raw/main/README.md",
+"https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash/raw/main/config.json",
+"https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash/resolve/main/model.safetensors.index.json",
+"https://arxiv.org/abs/2606.13392"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "msa",
+"title": "MSA — MiniMax Sparse Attention (all 60 layers)",
+"p": {
+"d": 6144,
+"nq": 64,
+"nkv": 4,
+"dh": 128,
+"iheads": 4,
+"idim": 128,
+"block": 128,
+"topk": 16,
+"budget": 2048,
+"group": 16,
+"qsub": "per-head QK-norm · partial RoPE 64/128 · θ 10M",
+"cache": "full KV cache retained (1,024 el/token/layer, all 60 layers) + 128-el idx keys — MSA cuts compute, not memory"
+},
+"notes": [
+"4 index-query heads map 1:1 onto the 4 GQA groups · 16 Q heads per group share one block selection",
+"init + local blocks always force-included · max-pooled fp32 block scores, no softmax on the index",
+"M3.1 runs MSA on ALL 60 layers — M3's 3-layer dense full-attention warm-up is gone (sparse_disable_index_value all 1s)",
+"DSpark draft head (dspark/) replaces M3's 7 MTP modules for speculative decoding"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
