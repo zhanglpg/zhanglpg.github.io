@@ -4008,7 +4008,7 @@ window.MODELS = [
 },
 "residual": {
 "kind": "mhc",
-"note": "Residuals: Raon mHC — 4 streams, Helmert chart, no Sinkhorn (cheaper than DeepSeek mHC)"
+"note": "Raon-mHC: 4-stream Helmert-chart residuals, no Sinkhorn"
 },
 "attn_modules": [
 {
@@ -4136,6 +4136,66 @@ window.MODELS = [
 "init + local blocks always force-included · max-pooled fp32 block scores, no softmax on the index",
 "M3.1 runs MSA on ALL 60 layers — M3's 3-layer dense full-attention warm-up is gone (sparse_disable_index_value all 1s)",
 "DSpark draft head (dspark/) replaces M3's 7 MTP modules for speculative decoding"
+]
+}
+]
+},
+{
+"id": "hy-nomas",
+"name": "Hunyuan Hy-Nomas",
+"org": "Tencent Hunyuan",
+"family": "Hunyuan",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "video-gen",
+"decoder_type": "DiT (video diffusion transformer)",
+"params_total_B": 8.6,
+"params_active_B": 8.6,
+"n_layers": 54,
+"d_model": 2048,
+"d_ff": 8192,
+"d_ff_moe": null,
+"n_heads": 16,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MMDiT",
+"attention_detail": "54 double-stream MMDiT blocks (0 single-stream): text and video streams hold separate Q/K/V/O projections (2048→2048 + bias each, per-head QK-RMSNorm at d_h 128) and meet in a segment-wise causal joint attention over [text; video] tokens with 3D RoPE (t/h/w dims 16/56/56, θ 256) and a persistent KV cache carrying all previously generated segments; each stream then runs its own GELU(tanh) MLP (2048→8192→2048) under per-stream SiLU-modulated adaLN (Linear 2048→6×2048 shift/scale/gate). Every block adds camera cross-attention (extrinsics_attn: normalized 4×4 extrinsic matrices grouped over 4 frames → 64-d inputs → learned pose embeddings → video queries attend camera K/V after the video MLP, per-chunk aligned to latent frames) and keyboard-action conditioning modules (keyboard_embed MLP 64→128→128, keyboard_attn_kv 128→2048, img_attn_q 2048→1024, proj_keyboard 1024→2048; 242M params across the 54 blocks). Text path: frozen Qwen2.5-VL-7B-Instruct LM hidden states (3584-d) → input embedder + 2-block individual token refiner (self-attn QKV 2048→6144, adaLN, MLP 8192) → 2048-d; video path: patch-embed conv over 32-ch DCAE-V latents (patch 1×1×1). Output head predicts flow velocity on the video stream only; Euler ODE sampling, 8 distilled denoising steps, 720×1280 @ 24 fps.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "3D RoPE",
+"activation": "GELU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Tencent Hunyuan's open interactive world-generation model (weights + code Oct 23 2026, Apache-2.0): it grows a persistent world one video segment at a time, steered mid-generation by free-form text instructions, camera trajectories, and keyboard actions. Generation is segment-autoregressive diffusion — each segment denoises while attending, causally, to a persistent KV cache of all earlier segments (full history by default; the single-RTX-4090 config bounds GPU attention to 18 latent frames with a CPU archive, INT8 DiT + INT8 KV cache + FP8 decoder). Runs on DCAE-V f32t4c32 latents (32 ch, 32× spatial, 4× temporal compression) decoded by a fine-tuned PixelUMM transformer decoder (36 layers, 4096-d, 32 query / 8 KV heads, one decoding step, 10-latent-frame windows with 5-frame overlap; the released encoder+decoder checkpoint measures 7.89B). Distilled DiT measures 8.55B params from its FP32 checkpoint (double_blocks 8.16B + action/camera modules 0.24B + text refiner 0.14B); the non-distilled base autoregressive DiT ships at the same size. A separate Nomas-PE model converts user instructions into structured prompts for the demo. Tech report 'coming soon'; Hy-Nomas-Bench (280 multi-turn interaction / camera / spatial-memory cases) released alongside.",
+"sources": [
+"https://github.com/Tencent-Hunyuan/Hy-Nomas",
+"https://huggingface.co/tencent/Hy-Nomas",
+"https://hy-nomas.hy.tencent.com/"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "mmdit",
+"title": "Double-stream MMDiT block (×54, segment-autoregressive)",
+"p": {
+"d": 2048,
+"mods": 6,
+"cond": "timestep MLP 256→2048 → per-stream SiLU · Linear 2048→6×2048 shift/scale/gate",
+"pos": "3D RoPE [16,56,56] θ 256 · segment-wise causal joint attention + persistent KV cache",
+"mlpact": "GELU(tanh)",
+"cap": "each segment denoises while attending causally to all cached earlier segments — an interactive world grows one segment at a time"
+},
+"notes": [
+"16 heads × 128 · separate text/video Q,K,V,O (2048→2048 +bias) · per-head QK-RMSNorm",
+"camera cross-attn in every block: 4×4 extrinsics over 4 frames → 64-d pose embeds → video queries attend camera K/V",
+"keyboard-action modules (242M): embed 64→128, attn_kv 128→2048, img_q 2048→1024, proj 1024→2048",
+"text cond: frozen Qwen2.5-VL-7B LM states (3584) → 2-block token refiner → 2048 · video: 32-ch DCAE-V latents, patch 1×1×1",
+"output head predicts flow velocity on the video stream only · 8 distilled Euler steps · 720×1280 @ 24 fps"
 ]
 }
 ]
