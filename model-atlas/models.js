@@ -4201,6 +4201,70 @@ window.MODELS = [
 ]
 },
 {
+"id": "fibo-2-0",
+"name": "Fibo 2.0",
+"org": "BRIA",
+"family": "FIBO",
+"released": "2026-10",
+"license": "CC BY-NC 4.0",
+"modality": "image-gen",
+"decoder_type": "DiT (diffusion transformer)",
+"params_total_B": 8.13,
+"params_active_B": 8.13,
+"n_layers": 44,
+"d_model": 3584,
+"d_ff": 9536,
+"d_ff_moe": null,
+"n_heads": 28,
+"n_kv_heads": 28,
+"head_dim": 128,
+"attention": "MHA",
+"attention_detail": "44 single-stream DiT blocks (Z-Image block lineage; 28 heads x 128, d 3584) over one packed sequence of [ gist text tokens ; clean context-image latents ; noisy target latents ] with full bidirectional attention. Per block: bias-free fused QKV 3584->10752 + W_O with per-head QK-RMSNorm, then SwiGLU FFN (w1/w3 3584->9536, w2 9536->3584), all under four sandwich RMSNorms (attention_norm1/2, ffn_norm1/2) and SiLU adaLN modulation (Linear 256->4x3584) whose scale/gate pairs are tanh-gated on the residual branches. Per-token timestep modulation separates noisy vs clean tokens (clean gist/context tokens ride t=0, so their modulation is denoising-step independent). 3-axis RoPE (axes dims 32/48/48, theta 256, axes lens 2048/512/512): the noisy image occupies its own plane, gist tokens take the plane before it, and each context image (up to 5 for editing) gets the k-th plane after. Five INJECTION blocks (ids 6, 14, 22, 30, 38) add gated cross-attention (to_q 3584->3584, to_kv 7680->7168, to_out, per-head QK-RMSNorm, tanh gate initialized at 0) reading raw Qwen3-VL layer bundles directly. A 2-block noise_refiner pre-processes the noisy latents before the main stack; a final adaLN + Linear 3584->128 unpatchifies flow-velocity predictions.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "RMSNorm + AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "3-axis RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "BRIA's 8B flow-matching model (weights Oct 18, announced Oct 20 2026) unifying text-to-image generation and instruction-based editing in one set of weights — ranked #1 open-weights for image editing and #2 for T2I on Artificial Analysis (Oct 20, 2026). Conditioning is the distinctives: prompts are encoded by Qwen3-VL-4B-Instruct and compressed by a 2-layer Perceiver resampler (512 learned latent queries, self-attn + cross-attn over 7680-d encoder states) into 256-512 'gist' tokens — count scales linearly with prompt length (256-2048 tokens, step 64), bounding conditioning cost for 1,000+-word structured VGL (Visual GenAI Language) JSON captions. Separately, six layer-bundles of the text encoder (each = three Qwen3-VL layers concatenated after per-layer unit-RMS normalization: (9,20,31) for the Perceiver; (5,16,27),(7,18,29),(9,20,31),(11,22,33),(13,24,35) for the five injection blocks) feed those blocks' zero-init tanh-gated cross-attention, so deep VLM features reach the DiT directly, not only through the gist bottleneck. Runs in FLUX.2 VAE latent space (32 ch, 2x2 patchify -> 128-d tokens; x_embedder 128->3584). Dev is the CFG base (50 steps, guidance 5.0); Edit Turbo is a same-architecture distillation for 4-step guidance-free editing. Measured 8,127,342,213 params (official gated BF16 shards equal the open Comfy-Org single-file repack 8,226,432,645 minus 99.1M of zero-padding the repack adds by widening FFN 9536->9728). Trained exclusively on BRIA's ~1B licensed-image corpus.",
+"sources": [
+"https://huggingface.co/briaai/Fibo-2.0-dev",
+"https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_bria_fibo2.py",
+"https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/bria_fibo2/pipeline_bria_fibo2.py",
+"https://huggingface.co/Comfy-Org/Fibo-2.0",
+"https://arxiv.org/abs/2511.06876"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Single-stream DiT block attention (×44)",
+"p": {
+"d": 3584,
+"nq": 28,
+"nkv": 28,
+"dh": 128,
+"nocache": true,
+"rope": "3-axis RoPE 32/48/48 · θ 256 — noisy plane + gist plane + one plane per context image",
+"qknorm": "per-head QK-RMSNorm",
+"gate": "× tanh(gate) residual (adaLN mod 256→4×3584)"
+},
+"notes": [
+"one packed bidirectional stream: [ 256–512 gist tokens ; clean context-image latents ; noisy target latents ] — editing = clean + noisy planes in one attention",
+"per-token timestep modulation: noisy tokens get t, clean gist/context tokens ride t=0 — step-independent conditioning",
+"5 INJECTION blocks (6/14/22/30/38) add gated cross-attn (tanh gate, init 0) reading 7680-d Qwen3-VL layer bundles directly",
+"Qwen3-VL-4B prompt encoder → 2-layer Perceiver resampler (512 learned queries) → gist tokens; count scales with prompt length (step 64)",
+"2-block noise_refiner pre-processes noisy latents before the 44-block stack · FLUX.2 VAE latents, 2×2 patchify → 128-d tokens"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
