@@ -4265,6 +4265,175 @@ window.MODELS = [
 ]
 },
 {
+"id": "flux-3-image-klein",
+"name": "FLUX.3 Image Klein",
+"org": "Black Forest Labs",
+"family": "FLUX.3",
+"released": "2026-10",
+"license": "FLUX Kommunity License",
+"modality": "image-gen",
+"decoder_type": "DiT (diffusion transformer)",
+"params_total_B": 5.6,
+"params_active_B": 5.6,
+"n_layers": 33,
+"d_model": 3072,
+"d_ff": 9216,
+"d_ff_moe": null,
+"n_heads": 24,
+"n_kv_heads": 24,
+"head_dim": 128,
+"attention": "MMDiT",
+"attention_detail": "33 block stages over three token modes (image, reference-image cond, text): 5 per-mode blocks with SEPARATE weights per mode (15 mode-block weights total) where each mode self-attends alone, then 28 joint single-stream blocks over the concatenated [image; image_cond; text] sequence. Every block computes attention and FFN in parallel from the same modulated input: bias-free q/k/v 3072->3072 (24 heads x 128, per-head QK-RMSNorm run in fp32), bias-free fused mlp_in 3072->18432 (SwiGLU gate+up, inner 9216) + mlp_out 9216->3072; the residual branch is gated by per-mode adaLN (Linear 3072->9216 shift/scale/gate from the SiLU'd timestep embedding). No LayerNorm inside blocks. 4-axis RoPE (t,h,w,l; 32 dims each, theta 10000) over mode-major packed tokens. Flow-map distillation: ref_time_in embeds the timestep each step jumps to and adds it to every mode's modulation (distilled Klein runs 16 guidance-free steps; the undistilled Base runs 50 steps at CFG 3.5 and drops ref_time_in). Text cond: Qwen3-VL-4B-Instruct hidden states from 8 layers (4,8,...,32; 2560-d each) stacked to 20480-d tokens -> txt_in 20480->3072. Image tokens: FLUX.2-style VAE (32-ch z, 8x spatial) + 2x2 patchify = 16x total -> 128-d tokens -> emb_in 128->3072; up to 10 reference images enter through the same path as image_cond. Final layer: adaLN (3072->6144 shift/scale) + Linear 3072->128 unpatchify to flow velocity.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "QK-RMSNorm + AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "4-axis RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "BFL's 5.6B open-weights FLUX.3 image model (Oct 13 2026, FLUX Kommunity License - non-commercial with a qualifying-user commercial-output exception): one checkpoint for text-to-image, single-reference editing and multi-reference composition over up to 10 reference images, with in-prompt bounding-box layout control (0-1000 grid) and in-image text rendering. Conditioning runs through Qwen3-VL-4B-Instruct (8 stacked layers -> 20480-d tokens), and a separate 9B Qwen3.5 prompt upsampler (flux-3-image-klein-pup) rewrites short requests into the full scene captions the model expects - the reference CLI runs it by default. The distilled checkpoint (the BFL API's model) is a flow-map: ref_time_in embeds each step's jump target, enabling 16 guidance-free steps; Klein Base is the undistilled CFG model for fine-tuning. Official HF repos stay gated (auto) - specs verified from BFL's public reference implementation (src/flux3/dit.py: HIDDEN 3072, HEADS 24, DEPTH 5, DEPTH_SINGLE 28, AXES_DIM 32x4, THETA 10000, IN_CHANNELS text 20480) cross-checked against the diffusers Flux3Transformer2DModel and measured from the open ml-resources BF16 repack: 5,548,681,984 params (distilled) / 5,538,458,368 (Base; difference = ref_time_in 10,223,616) - the analytic block reconstruction matches both to the parameter.",
+"sources": [
+"https://github.com/black-forest-labs/flux-3-image-klein",
+"https://huggingface.co/black-forest-labs/flux-3-image-klein",
+"https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_flux3.py",
+"https://huggingface.co/ml-resources/flux-3-image-klein-comfy"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "mmdit",
+"title": "FLUX.3 Klein — mode blocks + joint single stream",
+"p": {
+"d": 3072,
+"mods": 3,
+"cond": "timestep MLP 256→3072 · SiLU · Linear →3×3072 shift/scale/gate per mode (+ref_time_in)",
+"pos": "4-axis RoPE 32×4 · θ 10000",
+"mlpact": "SwiGLU · inner 9216",
+"cap": "5 per-mode stages × 3 modes (separate weights each) → 28 joint single-stream blocks — attention ∥ FFN in parallel, gated residual"
+},
+"notes": [
+"text cond: Qwen3-VL-4B-Instruct layers (4,8,…,32) stacked 8×2560 → 20480-d tokens → txt_in 20480→3072",
+"image: FLUX.2-style VAE 32-ch z, 8× spatial + 2×2 patchify = 16× → 128-d tokens → emb_in; ≤10 reference images via image_cond",
+"distilled = flow map: 16 guidance-free steps (BFL API checkpoint); Base = undistilled CFG 3.5, 50 steps, for fine-tuning"
+]
+},
+{
+"kind": "gqa",
+"title": "Joint single-stream block attention (×28)",
+"p": {
+"d": 3072,
+"nq": 24,
+"nkv": 24,
+"dh": 128,
+"nocache": true,
+"rope": "4-axis RoPE 32/32/32/32 · θ 10000",
+"qknorm": "per-head QK-RMSNorm (fp32)",
+"gate": "⊗ gate — parallel attn+FFN branches"
+}
+}
+]
+},
+{
+"id": "memt-1-0-flash",
+"name": "MemT-1.0-Flash",
+"org": "MemTensor",
+"family": "MemT",
+"released": "2026-10",
+"license": "MIT",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 288,
+"params_active_B": 17,
+"n_layers": 43,
+"d_model": 4096,
+"d_ff": 2048,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 1,
+"head_dim": 512,
+"attention": "sparse",
+"attention_detail": "DeepSeek-V4-Flash sparse backbone (config-identical: 2 sliding-window-128 warmup layers + 21 CSA + 20 HCA, shared K=V MQA n_kv=1, Lightning Indexer top-512 over 4:1-compressed blocks, q_lora 1024, partial RoPE 64 of 512 head dims, 8 output groups x o_lora 1024) PLUS a Native Memory Block inside the attention of 20 layers (even ids 4-42 - every CSA layer except layer 2): grouped-KV low-rank memory attention with in_proj 4096 -> q(1024) + k(8x512) + v(8x512) + erase/write/forget/gate(4x512) = 11264, q up-projected 1024->32768 (64 memory heads x 512) and L2-normalized, k/v expanded per group (RMSNorm + 4096x512 group_up); the readout o = q'S * 512^-0.5 passes a gated RMSNorm (SiLU output gate, softcap 2.0) and ADDS to the backbone attention output. At each turn/segment end a stable GDN-2 performs token-level memory updates: S <- decay*S + a (v - S'a) with per-head learned decay (exp of softplus forget), sigmoid^0.5 erase and sigmoid write gates, chunk_tokens 2048, tail_policy commit. The persistent state is a constant-size fp32 snapshot per layer (64 x 512 x 512; 336M elements total), savable/resumable as a session file - ~66x less storage than a full-context KV cache at 128K.",
+"n_experts": 256,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 129280,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "MemTensor's (Fudan-NLP-led, 74 authors) memory foundation model - arXiv 2610.26825 'MemT-1.0: Towards Memory-Native Evolution' (Oct 19 2026): persistent, dynamically evolving memory as an intrinsic part of computation, so the model answers from latent memory with the plaintext context cleared. Each Native Memory Block pairs a Local Memory (dynamic multi-channel matrix, the GDN-2 state above) with a Hyper Memory (the trainable q/k/v projections + erase/write/forget/output gates); Mixture-of-Storage (MoS) scales memory capacity. Built on DeepSeek-V4-Flash via deliberate backbone preparation + two-stage training (continued pretraining then post-training) on 34B tokens; 3.61B trainable memory params ship in 2 extra shards on top of the 288B backbone (index total_size 575.96 GB = 287.98B BF16), 17B active, 1M context, first 3 MoE layers hash-routed. Ranks #1 among evaluated parametric-memory methods across 11 memory benchmarks (strong textual-memory/RAG systems still lead on detailed long-history retrieval); demonstrated for experience-guided agentic coding where retrieved procedural experience lives in native memory instead of the context. Sibling MemT-1.0-Nano: Qwen3.6-35B-A3B backbone, 36B/3B active, 451M memory params. MIT (backbone retains its own license).",
+"sources": [
+"https://arxiv.org/abs/2610.26825",
+"https://huggingface.co/MemTensor/MemT-1.0-Flash",
+"https://huggingface.co/MemTensor/MemT-1.0-Flash/raw/main/config.json",
+"https://github.com/MemTensor/MemT-1.0"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "CSA",
+"n": 21,
+"type": "CSA",
+"sub": "top-512"
+},
+{
+"name": "HCA",
+"n": 20,
+"type": "HCA",
+"sub": "ratio 128"
+},
+{
+"name": "SW",
+"n": 2,
+"type": "SW",
+"sub": "win 128"
+}
+],
+"pattern": "??CHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHCHC",
+"pattern_map": {
+"C": "CSA",
+"H": "HCA",
+"?": "SW"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Native Memory Block — stable GDN-2 (20 layers: even ids 4–42)",
+"p": {
+"d": 4096,
+"proj": "in_proj → q | k | v | b,w,f,g",
+"projSub": "4096 → 1024 + 2×(8·512) + 4×512 · grouped-KV low-rank expand",
+"kh": 64,
+"dh": 512,
+"vh": 64,
+"qsub": "q_up 1024→512 · L2 norm",
+"vsub": "× sigmoid(write)",
+"update": "S ← decay·S + aᵀ(v − S·a) — token-level, per turn end",
+"decayName": "decay · erase · forget",
+"decaySub": "softplus decay · √σ(b) erase",
+"out": "o = qᵀS · 512^−½ → gated RMSNorm ⊗ σ(gate)",
+"outSub": "softcap 2.0 · ADDED to backbone attention output",
+"cacheline": "state: fp32 64×512×512 snapshot per layer — 336M elements total · save/resume as session file · ~66× smaller than full KV cache @128K"
+},
+"notes": [
+"read path runs INSIDE attention every token; write path (GDN-2 update) commits at each turn/segment end (chunk 2048, tail commit)",
+"Local Memory = the evolving fp32 matrix state · Hyper Memory = the trainable q/k/v + erase/write/forget/output gates",
+"memory layers = every CSA layer except layer 2 · Mixture-of-Storage (MoS) scales native memory capacity",
+"3.61B trainable memory params ship in 2 extra shards (memt-0000{1,2}-of-00002) on top of the 288B backbone"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
