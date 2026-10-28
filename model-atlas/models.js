@@ -4434,6 +4434,148 @@ window.MODELS = [
 ]
 },
 {
+"id": "lfm3-1-7b",
+"name": "LFM3-1.7B",
+"org": "Liquid AI",
+"family": "LFM",
+"released": "2026-10",
+"license": "LFM Open License v1.0",
+"modality": "text",
+"decoder_type": "Dense",
+"params_total_B": 1.73,
+"params_active_B": 1.73,
+"n_layers": 24,
+"d_model": 2048,
+"d_ff": 7680,
+"d_ff_moe": null,
+"n_heads": 16,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "Liquid AI's LFM3 tri-hybrid backbone — 24 layers mixing three operators from a hardware-in-the-loop architecture search (14 device/backend combos): 13 gated short-convolution blocks (depthwise causal conv1d, kernel 7 = conv_L_cache, up from 3 in LFM2; in_proj 2048→6144 split into B/C/x with h=B⊙x gating; out_proj 2048→2048; no KV cache — fixed conv state), 5 sliding-window attention layers (256-token window, full RoPE θ 1e4), and 6 global attention layers (partial RoPE θ 1e6 — only the highest-frequency half of each 128-dim head is rotated). All attention layers are 16 Q / 4 KV GQA heads with per-head q_norm/k_norm RMSNorm and a head-wise sigmoid output gate (gate_proj 16×2048) that lets each head switch off, suppressing activation outliers for quantization. layer_types order: conv,conv,full,conv,sliding repeating.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 128000,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": true,
+"vision": null,
+"notes": "First release of Liquid AI's LFM3 family (blog Oct 27, 2026) and the shared backbone for six 2B-class models (text, VL, audio, omni, and two decision models). The new tri-hybrid mix — gated short convolutions (over half the layers), 256-token SWA, and global attention with partial RoPE — beats LFM2.5-2.6B with 35% fewer parameters and is ~25% faster per parameter at 8K context on edge devices. Sandwich norm (operator_norm/post_operator_norm + ffn_norm/post_ffn_norm on every block) keeps activations well-scaled; 128K-token vocab shared with LFM2.5-8B-A1B for non-Latin efficiency. Pre-trained on 22T tokens (final 3.5T mid-training extends context to 256K with agentic traces/tool calls); fits in ~1 GB at 4-bit. Measured 1,728,801,536 params from the BF16 safetensors header (README claims 1.73B).",
+"sources": [
+"https://www.liquid.ai/blog/lfm3",
+"https://huggingface.co/LiquidAI/LFM3-1.7B",
+"https://huggingface.co/LiquidAI/LFM3-1.7B/raw/main/config.json",
+"https://huggingface.co/LiquidAI/LFM3-1.7B/raw/main/README.md",
+"https://huggingface.co/LiquidAI/LFM3-1.7B/raw/main/modeling_lfm3.py"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Gated Conv",
+"n": 13,
+"type": "linear",
+"sub": "k7 · gated"
+},
+{
+"name": "SWA",
+"n": 5,
+"type": "sliding",
+"sub": "win 256"
+},
+{
+"name": "Global",
+"n": 6,
+"type": "global",
+"sub": "½-RoPE"
+}
+],
+"pattern": "ccgcscgcscgcscgcscgcscgc",
+"pattern_map": {
+"c": "linear",
+"s": "sliding",
+"g": "global"
+}
+}
+},
+{
+"id": "lfm3-vl-2b",
+"name": "LFM3-VL-2B",
+"org": "Liquid AI",
+"family": "LFM",
+"released": "2026-10",
+"license": "LFM Open License v1.0",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 1.92,
+"params_active_B": 1.92,
+"n_layers": 24,
+"d_model": 2048,
+"d_ff": 7680,
+"d_ff_moe": null,
+"n_heads": 16,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "Same LFM3 tri-hybrid language backbone as LFM3-1.7B — 13 gated short convolutions (kernel 7), 5 sliding-window attention (256 window, full RoPE θ 1e4), 6 global attention (partial RoPE θ 1e6, half-rotary) — 16 Q / 4 KV GQA heads with head-wise sigmoid gating and sandwich RMSNorm; text context 128K here (vs 256K for the text model).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 128000,
+"context_length": 128000,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": true,
+"vision": {
+"encoder": "LFM3 Vision (14L/1024d tri-hybrid)",
+"encoder_params_B": 0.164,
+"fusion": "adapter",
+"notes": "New in-house flagship vision encoder: 14 layers mixing 8 gated depthwise 2D convolutions with 6 bidirectional attention layers (16 Q / 8 KV heads, 2D axial RoPE θ 1e6), 16×16 patches, d_ff 2560. Native-resolution image and video input (video sampled at 2 fps, temporal patch 2); each 2×2 spatial-merge block of patches becomes one language token via a 25M GELU projector (hidden 4096, downsample factor 2)."
+},
+"notes": "Vision-language member of the LFM3 family (blog Oct 27, 2026), trained from LFM3-1.7B-Base. Official split: 1.92B total = 1.73B language model + 164M vision encoder + 25M projector (measured 1,918,181,888 from the BF16 safetensors header: language_model 1,728,801,536 + vision_tower 164,206,336 + multi_modal_projector 25,174,016). Targets on-device visual tasks — video QA, documents/charts/app screens, object finding, robot spatial reasoning — and lifts Liquid's 62-benchmark vision average from 57.6 to 71.4 (on par with Gemma 4 12B per Liquid). check_params ratio ~1.17 is expected: the vision tower and projector sit outside the LM-only formula (same convention as MiniCPM-V 4.7 / Xiaomi Lens-0).",
+"sources": [
+"https://www.liquid.ai/blog/lfm3",
+"https://huggingface.co/LiquidAI/LFM3-VL-2B",
+"https://huggingface.co/LiquidAI/LFM3-VL-2B/raw/main/config.json",
+"https://huggingface.co/LiquidAI/LFM3-VL-2B/raw/main/README.md"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Gated Conv",
+"n": 13,
+"type": "linear",
+"sub": "k7 · gated"
+},
+{
+"name": "SWA",
+"n": 5,
+"type": "sliding",
+"sub": "win 256"
+},
+{
+"name": "Global",
+"n": 6,
+"type": "global",
+"sub": "½-RoPE"
+}
+],
+"pattern": "ccgcscgcscgcscgcscgcscgc",
+"pattern_map": {
+"c": "linear",
+"s": "sliding",
+"g": "global"
+}
+}
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
