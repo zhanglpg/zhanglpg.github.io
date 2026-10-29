@@ -4576,6 +4576,121 @@ window.MODELS = [
 }
 },
 {
+"id": "safin-1-35b-a3b",
+"name": "Safin-1 35B-A3B",
+"org": "AI45Lab",
+"family": "Safin",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 35.63,
+"params_active_B": 3,
+"n_layers": 40,
+"d_model": 2048,
+"d_ff": null,
+"d_ff_moe": 512,
+"n_heads": 16,
+"n_kv_heads": 2,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "MARCH (Memory-Anchor Routing across Context History) over Qwen3.5's Gated DeltaNet — 40 layers in the 3:1 hybrid pattern (full_attention_interval 4): 30 MARCH-GDN linear-attention layers + 10 gated full-attention layers (16 Q / 2 KV heads, head_dim 256, partial RoPE 0.25 = 64/256 dims, interleaved mRoPE sections [11,11,10], theta 1e7, per-head q_norm/k_norm, head-wise sigmoid output gate — q_proj 8192 = 16×256×2 emits [query|gate]). GDN layers: 16 key heads × 128 / 32 value heads × 128, short conv kernel 4, in_proj_qkv 8192 + in_proj_z gate 4096 + in_proj_a/b 32 each, out_proj 4096→2048 — PLUS the MARCH addition: a per-layer anchor_q_proj (2048→4096) producing content-conditioned anchor queries, and a shared learned anchor_embedding (1×2048). Recurrent states are checkpointed as state anchors every 512 tokens into a growing memory bank; HSD (history-state-diffusion) global read on layers 10–30 attends top-4 of 32768-token read blocks (chunk 16, q LoRA rank 32, shared_local mode) with a null-read gate and additive mixing.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 248320,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Qwen3.5 ViT (27L/1152d)",
+"encoder_params_B": 0.447,
+"fusion": "adapter",
+"notes": "Vision tower inherited from the Qwen3.5-35B-A3B conditional-generation backbone (27 blocks, 1152-d, 16 heads, patch 16, spatial merge 2, out_hidden 2048, temporal patch 2; measured 446,571,248 params). Release scope per the card is text inference — image/video token ids and the tower ship, but no multimodal benchmark record is supplied."
+},
+"notes": "First foundation-model family built on MARCH (arXiv 2608.12435) by AI45Lab (HF org AI45Research), realizing the 'Safety from Within' thesis (arXiv 2609.00092): safety-relevant capabilities live in routed memory states rather than post-hoc alignment. MARCH fixes the classic linear-attention recall failure — instead of one fixed-size recurrent state, it caches cumulative state checkpoints (anchors) every 512 tokens, each tagged with a content-conditioned key; every token issues an anchor query and aggregates over causally available anchors, so memory grows with context while keeping the recurrent compute path. Trained from Qwen3.5-35B-A3B (Intern-S2-derived CPT step 5961 → SFT step 7200, seq len 32768); measured 35,628,326,768 params (BF16 index; lm 34.67B + lm_head 0.51B + visual 0.45B). Config declares mtp_num_hidden_layers 1 but the release ships no MTP tensors. A 4B dense sibling and matched SFT baselines are also public. The Oct 28 2026 'Safin-1.5' refresh keeps the identical 1121-tensor weight set (only hsd_* runtime flags added). CPT corpus provenance is undocumented and no formal benchmark table is supplied — the card says so explicitly.",
+"sources": [
+"https://arxiv.org/abs/2608.12435",
+"https://arxiv.org/abs/2609.00092",
+"https://github.com/AI45Lab/Safin-1",
+"https://huggingface.co/AI45Research/Safin-1-35B-A3B",
+"https://huggingface.co/AI45Research/Safin-1-35B-A3B/raw/main/config.json",
+"https://huggingface.co/AI45Research/Safin-1-35B-A3B/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "MARCH GDN",
+"n": 30,
+"type": "linear",
+"sub": "anchors · k4"
+},
+{
+"name": "Gated GQA",
+"n": 10,
+"type": "GQA",
+"sub": "16/2 · ¼-RoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "MARCH Gated DeltaNet (30 layers)",
+"p": {
+"d": 2048,
+"kh": 16,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 2048 → 8192",
+"projSub": "+ z-gate 4096 · a/b 32 each",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "A_log 32 · dt_bias",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 4096 → 2048",
+"cacheline": "no KV cache — state 32×128×128 ≈ 524K el + anchor_q_proj 2048→4096 per layer"
+},
+"notes": [
+"MARCH: state anchors cached every 512 tokens → growing memory bank",
+"anchor query (learned 1×2048, BOS-init) routes content-wise",
+"HSD read on layers 10–30: top-4 of 32K blocks · null gate"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (10 layers — every 4th)",
+"p": {
+"d": 2048,
+"nq": 16,
+"nkv": 2,
+"dh": 256,
+"rope": "partial RoPE 64/256 · mRoPE [11,11,10] θ1e7",
+"qknorm": "per-head QK-norm",
+"gate": "σ(gate) per head",
+"cache": "2 × 2 × 256 = 1,024 el/token/layer — only these 10 layers cache anything"
+},
+"notes": [
+"q_proj emits [query | gate] per head (8192 = 16×256×2)",
+"identical geometry to the Qwen3.5-35B-A3B backbone"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
