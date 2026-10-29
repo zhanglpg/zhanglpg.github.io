@@ -1,6 +1,14 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-10-28 10:14",
+  "last_run": "2026-10-29 10:37",
   "entries": [
+  {
+    "date": "2026-10-29",
+    "added": [
+      "safin-1-35b-a3b"
+    ],
+    "upgraded": [],
+    "note": "Added AI45Lab's Safin-1 35B-A3B (HF org AI45Research, weights Oct 19) — the first foundation model built on MARCH (Memory-Anchor Routing across Context History, arXiv 2608.12435): on top of Qwen3.5's Gated DeltaNet it caches recurrent-state anchors every 512 tokens into a growing content-routed memory bank, with HSD history-read (top-4 of 32K-token blocks) on layers 10-30; 35.63B/3B MoE, Apache-2.0, verified against config.json + BF16 safetensors header. It slipped past three weekly sweeps (0 likes, org not tracked) — caught by the cursor-paginated createdAt sweep. Considered and skipped: inclusionAI Ling-3.1-flash-1019 (byte-identical config + index to tracked ling-3-1-flash — post-training refresh), AI45Research Safin-1.5 (same 1121 tensors, runtime-flag-only diff), 26B-Suite Gemory-26B-A4B-SOMPOA (Gemma-4 community merge), Apexintelligence Apex-35B (Qwen3.6 finetune), stealth-model Qwen4 / Nvmx-8B (empty placeholder repos), baidu Unlimited-OCR-2 (OCR utility class), nvidia Metatron-v1 + BAAI MS-Human-700 (robotics RL policies, out of scope)."
+  },
   {
     "date": "2026-10-28",
     "added": [
@@ -149,12 +157,6 @@ window.ATLAS_CHANGELOG = {
     ],
     "upgraded": [],
     "note": "Added OpenBMB MiniCPM-V 4.7 (35B-A3B) — a silent Oct 6 upload (16 BF16 shards, no model card, no license, no benchmarks) that is the first MiniCPM-V on a Qwen3.5-MoE text backbone: 30 Gated DeltaNet + 10 gated full-GQA layers (3:1), 256 experts top-8 + 1 shared, 256K context, 16x-downsample ViT; verified against config.json + safetensors index (computed 35.2B vs 35.21B, ratio 1.03), license left undeclared in the entry until a card lands. Skipped per the placeholder rule: Mistral Large 4 (1T/49B, announced Oct 6, weights end of month) and Reflection AI Beam (still no HF org); also FrancisRing/Prism (Tencent-Hunyuan joint video+audio DiT — preview checkpoint, no architecture config) and the usual quant/finetune churn (clef, JEV/GEV, apex-flash-1 = GLM-5.3-Flash FT, Ornith = Qwen3.5-35B-A3B FT). Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged; Step-5-Preview-BF16, Kimi-K3-Base, LTX-2.5, North-Small-Translate-1.0 still gated."
-  },
-  {
-    "date": "2026-10-06",
-    "added": [],
-    "upgraded": [],
-    "note": "Checked — no changes. Discovery window Oct 5 09:40 → Oct 6 09:40 CST (~24h): swept ~66 tracked orgs by lastModified, HF newest per pipeline (text-generation, image-text-to-text, text-to-image, image-to-image, text-to-video, image-to-video, any-to-any, text-to-audio, video-to-video) created in-window, likes7d top-200 and trendingScore top-150 filtered to in-window creations, plus web news. The window's one headline is Reflection AI's Beam (501B/23B sparse MoE, 23.8T tokens, 1M context, Apache-2.0, announced Oct 5 blog) — but weights are not on HuggingFace yet (no reflection-ai org, guessed repo names 401; the blog and TechCrunch both say weights + tech report land later this month), so it is skipped per the placeholder rule and added to the watch list for next run. Everything else was derivative churn: facebook/meta-encoder (Muse-Glimmer-taged feature-extraction/similarity encoder, config 401, out of atlas modalities), facebook/sam3 (SAM 3 released Nov 2025 — outside atlas modalities, not an in-window release; merely re-trending), autotrust/GEV-26B-Decide + JEV-27B-VL (gemma4/Qwen3.8-27B decision-model class — standing skip, JEV/Clef precedent), AEON-7 Qwen3.6/3.8 uncensored quant refreshes, google/DiarizationLM-Gemma-4-E4B-v1 (speaker diarization, out of scope), ibm-granite/granitelib-core-r1.0 (LoRA/PEFT library checkpoint), nvidia/music-flamingo-hf + Kumo-Tabular metadata touches (music understanding / tabular, out of scope), and the usual zero-like GGUF/MLX/FP8/LoRA quant churn over tracked models. Partial rechecks: LLaDA2.2-flash (mod Aug 20) and DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) unchanged — stay partial; Step-5-Preview-BF16, Kimi-K3-Base, CohereLabs/North-Small-Translate-1.0 and Lightricks/LTX-2.5 all still HTTP 401 gated. 72 models unchanged, v32."
   }
 ]
 };
