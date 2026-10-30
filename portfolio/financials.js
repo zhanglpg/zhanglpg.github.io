@@ -1,5 +1,5 @@
 window.FINANCIALS = {
-  "generated": "2026-08-22",
+  "generated": "2026-10-30",
   "companies": {
     "BABA": {
       "company": "Alibaba Group Holding Limited",
@@ -1871,7 +1871,7 @@ window.FINANCIALS = {
       "eps_unit": "USD per diluted share",
       "fiscal_note": "Fiscal year equals calendar year; quarters end Mar 31, Jun 30, Sep 30, Dec 31.",
       "notes": {
-        "quarterly": "All figures taken from Alphabet's quarterly earnings press releases (8-K Exhibit 99.1 on SEC EDGAR) and cross-checked against SEC XBRL company facts (revenue, cost of revenue, operating income, net income, diluted EPS all match). Alphabet reports GAAP only, so non-GAAP fields are null. gross_profit is computed as revenue minus cost of revenues (Alphabet does not present a gross profit subtotal). free_cash_flow is computed as operating cash flow minus purchases of property and equipment, identical to Alphabet's own free-cash-flow definition. cash_and_investments is total cash, cash equivalents, and marketable securities (excludes non-marketable securities). buyback_usd_m is 'Repurchases of stock' from the quarterly cash flow statement; dividend_per_unit is the common dividend per share declared during the calendar quarter (program initiated April 2024 at $0.20; raised to $0.21 in April 2025 and $0.22 in April 2026; 0.0 before the program). Segments exclude hedging gains/losses, so segment revenues sum to total revenue minus hedging. Segment operating income for 2022 Q2-Q4 uses the recast comparatives from the Q2-Q4 2023 press releases (in Q1 2023 Alphabet moved DeepMind from Other Bets to unallocated corporate costs and updated cost-allocation methodology; revenues were not affected). 'Google subscriptions, platforms, and devices' was labeled 'Google other' through 2023; renamed in Q1 2024 with comparatives unchanged. 'Alphabet-level activities' (formerly 'Corporate costs, unallocated') is omitted from segments, so segment profits sum to total operating income only after including it. 2026 items: buybacks were zero in 2026 Q1-Q2; the Q2 2026 release re-presents Q2 2025 repurchases as $13,238M vs $13,638M originally reported (original kept here). In Q2 2026 Alphabet issued ~$30.5B common stock and ~$19.1B Series A/B mandatory convertible preferred stock (quarterly preferred dividend $12.15 per preferred share, $86M total); net_income for 2026 Q2 is net income available to common stockholders ($112,107M; consolidated net income $112,193M), consistent with the reported diluted EPS of $9.11. Net income in 2026 Q1-Q2 is inflated by large net gains on equity securities in other income (expense), net (~$99.0B in Q2 2026 per the press release: $99,031M gain on equity securities, net, in the OI&E table).",
+        "quarterly": "All figures taken from Alphabet's quarterly earnings press releases (8-K Exhibit 99.1 on SEC EDGAR) and cross-checked against SEC XBRL company facts (revenue, cost of revenue, operating income, net income, diluted EPS all match). Alphabet reports GAAP only, so non-GAAP fields are null. gross_profit is computed as revenue minus cost of revenues (Alphabet does not present a gross profit subtotal). free_cash_flow is computed as operating cash flow minus purchases of property and equipment, identical to Alphabet's own free-cash-flow definition. cash_and_investments is total cash, cash equivalents, and marketable securities (excludes non-marketable securities). buyback_usd_m is 'Repurchases of stock' from the quarterly cash flow statement; dividend_per_unit is the common dividend per share declared during the calendar quarter (program initiated April 2024 at $0.20; raised to $0.21 in April 2025 and $0.22 in April 2026; 0.0 before the program). Segments exclude hedging gains/losses, so segment revenues sum to total revenue minus hedging. Segment operating income for 2022 Q2-Q4 uses the recast comparatives from the Q2-Q4 2023 press releases (in Q1 2023 Alphabet moved DeepMind from Other Bets to unallocated corporate costs and updated cost-allocation methodology; revenues were not affected). 'Google subscriptions, platforms, and devices' was labeled 'Google other' through 2023; renamed in Q1 2024 with comparatives unchanged. 'Alphabet-level activities' (formerly 'Corporate costs, unallocated') is omitted from segments, so segment profits sum to total operating income only after including it. 2026 items: buybacks were zero in 2026 Q1-Q3; the Q2 2026 release re-presents Q2 2025 repurchases as $13,238M vs $13,638M originally reported (original kept here). In Q2 2026 Alphabet issued ~$30.5B common stock and ~$19.1B Series A/B mandatory convertible preferred stock (quarterly preferred dividend $12.15 per preferred share, $86M total); net_income for 2026 Q2 is net income available to common stockholders ($112,107M; consolidated net income $112,193M), consistent with the reported diluted EPS of $9.11. Likewise net_income for 2026 Q3 is net income available to common stockholders ($26,170M; consolidated net income $26,468M; preferred dividends $298M), consistent with the reported diluted EPS of $2.12; Q3 2026 other income (expense), net includes an $8,664M net loss on equity securities that the release says reduced net income by ~$6.7B and diluted EPS by $0.55. Net income in 2026 Q1-Q2 is inflated by large net gains on equity securities in other income (expense), net (~$99.0B in Q2 2026 per the press release: $99,031M gain on equity securities, net, in the OI&E table). From Q3 2026 Google Cloud's reported revenues include product revenue from sales of TPU systems (Google Cloud revenue +103% YoY to $30,709M).",
         "annual": "All figures sourced from Alphabet 10-K filings via SEC EDGAR (XBRL companyfacts API cross-checked against the filed financial-statement and segment-note tables). Where a later 10-K recast prior-period figures, the recast comparatives from the NEWEST 10-K covering that year are used, and each period's source_url points to that filing: 2015 from the FY2017 10-K, 2016 from the FY2018 10-K (Nest moved from Other Bets into Google), 2017 from the FY2019 10-K, 2018 from the FY2020 10-K, 2019 from the FY2021 10-K, 2020 from the FY2022 10-K, 2021 from the FY2023 10-K, 2022 from the FY2024 10-K, 2023-2025 from the FY2025 10-K. Operating income for 2017 is the restated $26,178M (originally $26,146M) and for 2018 the restated $27,524M (originally $26,321M), per the FY2019 10-K reclassification. SEGMENTS: 2015-2017 are available only under the Google vs Other Bets structure (as recast per above; the 2015-to-2016 series has a small discontinuity because the Nest recast was applied only to 2016-2017). 2018-2019 are shown under the Google Services / Google Cloud / Other Bets structure as recast in the FY2020 10-K; as originally reported those years used Google vs Other Bets (2018: Google $136,362M rev / $36,655M op inc; 2019: Google $160,743M / $41,673M, per the FY2019 10-K). 2021-2022 segment operating income reflects the FY2023 10-K recast moving AI (DeepMind) costs to Alphabet-level activities (unrecast 2021: Google Services $91,855M, Cloud -$3,099M, Other Bets -$5,281M; unrecast 2022: $86,572M / -$2,968M / -$6,083M); 2020 was not recast. Segment revenues exclude hedging gains/losses, reported at Alphabet level (2017 -$169M, 2018 -$138M, 2019 +$455M, 2020 +$176M, 2021 +$149M, 2022 +$1,960M, 2023 +$236M, 2024 +$211M, 2025 -$127M), and segment operating income excludes unallocated corporate/reconciling items (2015 -$503M, 2016 -$598M, 2017 -$3,544M, 2018 -$7,907M, 2019 -$5,299M, 2020 -$3,299M, 2021 -$3,085M, 2022 -$1,299M, 2023 -$9,186M, 2024 -$10,541M, 2025 -$16,760M), so segments do not sum to consolidated totals. SPLIT ADJUSTMENT: diluted EPS and diluted shares for 2015-2019 are as-reported values divided/multiplied by 20 for the July 2022 20-for-1 split (reported diluted EPS: 2015 $22.84, 2016 $27.85, 2017 $18.00, 2018 $43.70, 2019 $49.16); 2020-2025 are split-adjusted as reported by Alphabet. 2015 diluted EPS shown is the Class A/B figure; Class C diluted EPS was $24.34 pre-split ($1.217 adjusted) due to the one-time $522M Class C settlement adjustment payment; all classes have identical EPS from 2016 onward. shares_diluted_m = Class A diluted shares (including assumed Class B conversion) plus Class C diluted shares, matching Alphabet's combined presentation used from 2022. gross_profit is derived as revenue minus cost of revenues (Alphabet presents no gross-profit subtotal). free_cash_flow is operating cash flow minus purchases of property and equipment (Alphabet's own FCF definition in earnings releases). cash_and_investments is cash and cash equivalents plus current marketable securities per the balance sheet; where the cited (newer) filing does not include that year-end balance sheet, the balance comes from the balance sheet or cash-flow statement of the year's own or following year's 10-K. Alphabet reports no non-GAAP net income or non-GAAP EPS, so those fields are null. buyback_usd_m is cash paid for repurchases of Class A and Class C stock per the cash-flow statement. Dividends began June 2024 at $0.20/quarter (raised to $0.21/quarter from June 2025); dividend_per_unit is dividends declared per share for the year ($0.60 in 2024, $0.83 in 2025, zero before)."
       },
       "quarterly": [
@@ -3200,6 +3200,84 @@ window.FINANCIALS = {
           "ttm_free_cash_flow": 53273,
           "ttm_diluted_eps": 19.91,
           "ttm_capex": 132402
+        },
+        {
+          "label": "2026 Q3",
+          "period_end": "2026-09-30",
+          "revenue": 127577,
+          "cost_of_revenue": 51419,
+          "gross_profit": 76158,
+          "operating_income": 40576,
+          "net_income": 26170,
+          "non_gaap_net_income": null,
+          "diluted_eps": 2.12,
+          "non_gaap_diluted_eps": null,
+          "operating_cash_flow": 42290,
+          "capex": 51355,
+          "free_cash_flow": -9065,
+          "cash_and_investments": 265098,
+          "shares_diluted_m": 12368,
+          "buyback_usd_m": 0,
+          "dividend_per_unit": 0.22,
+          "segments": [
+            {
+              "name": "Google Search & other",
+              "revenue": 63350,
+              "profit": null,
+              "profit_metric": null
+            },
+            {
+              "name": "YouTube ads",
+              "revenue": 11207,
+              "profit": null,
+              "profit_metric": null
+            },
+            {
+              "name": "Google Network",
+              "revenue": 7455,
+              "profit": null,
+              "profit_metric": null
+            },
+            {
+              "name": "Google subscriptions, platforms, and devices",
+              "revenue": 14290,
+              "profit": null,
+              "profit_metric": null
+            },
+            {
+              "name": "Google Services",
+              "revenue": 96302,
+              "profit": 39157,
+              "profit_metric": "operating income"
+            },
+            {
+              "name": "Google Cloud",
+              "revenue": 30709,
+              "profit": 11121,
+              "profit_metric": "operating income"
+            },
+            {
+              "name": "Other Bets",
+              "revenue": 372,
+              "profit": -2047,
+              "profit_metric": "operating income"
+            }
+          ],
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000080/googexhibit991q32026.htm",
+          "gross_margin": 0.597,
+          "operating_margin": 0.3181,
+          "net_margin": 0.2051,
+          "fcf_margin": -0.0711,
+          "revenue_yoy": 0.2465,
+          "operating_income_yoy": 0.2993,
+          "net_income_yoy": -0.2518,
+          "diluted_eps_yoy": -0.2613,
+          "free_cash_flow_yoy": -1.3706,
+          "ttm_revenue": 471097,
+          "ttm_net_income": 235310,
+          "ttm_free_cash_flow": 19747,
+          "ttm_diluted_eps": 19.16,
+          "ttm_capex": 159804
         }
       ],
       "annual": [
