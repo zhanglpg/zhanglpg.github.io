@@ -4691,6 +4691,271 @@ window.MODELS = [
 ]
 },
 {
+"id": "mistral-large-4-1t-a52b",
+"name": "Mistral Large 4",
+"org": "Mistral AI",
+"family": "Mistral Large",
+"released": "2026-10",
+"license": "Mistral Ecosystem Open-Weight License",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 1000,
+"params_active_B": 52,
+"n_layers": 72,
+"d_model": 6144,
+"d_ff": 24576,
+"d_ff_moe": 6144,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 128,
+"attention": "MLA",
+"attention_detail": "MLA + DSA-style indexed sparse attention on all 72 layers: full-rank W_Q 6144→64×(64 nope + 64 rope), fused wkv_a_with_mqa 6144→576 (512 latent + 1 shared rope key, MQA-style), wkv_b 512→64×(64 k_nope + 128 v), W_O 8192→6144. A 32-head × 128-d lightning indexer projects straight from the hidden state (wq_b 6144→4096, wk 6144→128) and selects top-2048 of up to 1M tokens per query; 44 layers own an indexer, 28 reuse the nearest left selection (IndexShare). 3:1 RoPE:NoPE interleave (54 RoPE / 18 NoPE — every 4th layer), YaRN ×2048 (native 512 → 1,048,576), learned per-frequency LeRoPE α (32 bands), per-layer learned SSMax s·log(n)+b logit scaling in attention and indexer, final-logit tanh softcap 30. Cross-layer KV sharing: layers 39,43,…,71 reuse layer 35's latent KV — only 63 layers materialize KV projections. FP8-E4M3 KV cache.",
+"n_experts": 128,
+"active_experts": 4,
+"shared_experts": 1,
+"vocab_size": 204800,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Pixtral ViT (30L/2048d)",
+"encoder_params_B": 1.64,
+"fusion": "adapter",
+"notes": "Pixtral-style native-resolution encoder, measured 1,637,107,712 params from safetensors headers: 30 layers, 2048-d, 16 heads × 128, SwiGLU FFN 6144, patch 14 conv (3×14×14), axial RoPE. 2×2 spatial-merge patch merger (8192→2048, 16.8M) + pre-projector RMSNorm + two-matrix vision-language adapter (w_in 2048→6144, w_out 6144→6144, 50.3M). Kept BF16 in the FP8 release."
+},
+"notes": "Mistral's frontier flagship ('Le Chonk') and the largest Western open-weight release: ~1T total / 52B active including embeddings+output (49B routed active per token; hence the A52B repo name), announced Oct 6 2026 as an API preview with open weights landing Oct 29, trained from scratch on 3,800 NVIDIA Grace Blackwell GPUs in Mistral's European datacenters. Two sparsities stack: MoE (128 routed experts top-4 + 1 always-on shared, softmax router, layer 0 dense d_ff 24576) and DSA-style context sparsity (top-2048 of 1M). Ships FP8 block-quantized (128×128 e4m3, dynamic acts, ue8m0 scales; index total_size 1.06 TB) with BF16 islands (vision tower + adapter, lm_head, wkv_a/wkv_b, indexer wk/weights_proj) and an embedded 2.1B DSpark speculative-decoding head (3 dense-FFN MLA draft layers + 512-d autoregressive head, target_projection 30720→6144 stacking 5 positions); NVFP4 sibling and same-day unsloth/ggml-org GGUFs. One weight set serves instruct + reasoning (effort low/medium/high), 160+ languages, SOTA visual grounding among open weights (AA Coding Agent Index 48%, Intelligence Index v5 26). License is a modified MIT — operating a Model-as-a-Service business requires a separate Mistral commercial license.",
+"sources": [
+"https://mistral.ai/news/mistral-large-4-oss",
+"https://huggingface.co/blog/mistral-large4",
+"https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B",
+"https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B/raw/main/config.json",
+"https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B/raw/main/params.json",
+"https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B/resolve/main/consolidated.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"attn_modules": [
+{
+"kind": "mla",
+"title": "MLA — Compressed Latent KV (all 72 layers)",
+"p": {
+"d": 6144,
+"kvlora": 512,
+"rope": 64,
+"nope": 64,
+"nh": 64,
+"v": 128,
+"qfullsub": "wq 6144 → 8192 direct · FP8",
+"cache": "FP8-E4M3 latent KV — 512 + 64 per token per layer; 63 layers own KV, 9 reuse L35"
+},
+"notes": [
+"3:1 RoPE:NoPE interleave — 54 RoPE / 18 NoPE layers",
+"LeRoPE: learned per-frequency α across 32 rope bands",
+"YaRN ×2048: native 512 → 1,048,576 ctx (θ 1e4)",
+"SSMax: learned per-layer s·log(n)+b logit scaling",
+"L39,43,…,71 attend L35's KV — 63 layers own wkv",
+"final logits tanh-softcapped at 30"
+]
+},
+{
+"kind": "dsaidx",
+"title": "DSA Lightning Indexer — top-2048 of 1M ctx",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"qlabel": "h (6144)",
+"keynorm": "LN",
+"note": "FP8-E4M3 wq_b/wk · own ssmax scaling",
+"share": {
+"total": 72,
+"full": 44,
+"shared": 28,
+"layers": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13,
+14,
+15,
+16,
+19,
+20,
+23,
+24,
+27,
+28,
+31,
+32,
+35,
+36,
+39,
+40,
+43,
+44,
+47,
+48,
+51,
+52,
+55,
+56,
+59,
+60,
+63,
+64,
+67,
+68,
+71
+]
+},
+"shareLabel": "IndexerShare",
+"cache": "indexer k^I (128-d, FP8) cached on the 44 own-indexer layers"
+},
+"notes": [
+"indexer q^I/k^I project from h (6144), not the KV latent",
+"first 17 layers own indexer; then 2-shared/2-own alternate",
+"biased LN (q_input_norm, k_norm) before ReLU scoring",
+"top-2048 mask → MLA attends only selected latents"
+]
+}
+],
+"attn_bullets": [
+"KV budget: (512 + 64) FP8 bytes/token × 63 own-KV layers ≈ 35 KB/token; indexer keys add ≈5.5 KB across the 44 own-indexer layers",
+"Embedded DSpark draft (measured 2.10B): 3 dense-FFN MLA layers + 512-d autoregressive head (joint_proj 7168→1536); target_projection 30720→6144 stacks 5 positions",
+"Two sparsities stack: the MoE router picks 4+1 of 128 expert FFNs per token; the DSA indexer picks 2,048 of up to 1M KV positions per query",
+"Day-one vLLM / SGLang / transformers / llama.cpp; NVFP4 Blackwell sibling + same-day unsloth & ggml-org GGUFs"
+]
+},
+{
+"id": "clover-35b-a3b-preview",
+"name": "Clover 35B-A3B Preview",
+"org": "DiffuSpace",
+"family": "Clover",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 34.66,
+"params_active_B": 3,
+"n_layers": 40,
+"d_model": 2048,
+"d_ff": null,
+"d_ff_moe": 512,
+"n_heads": 16,
+"n_kv_heads": 2,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "Block-diffusion rework of the Qwen3.6-35B-A3B hybrid backbone — 40 layers in the 3:1 pattern (full_attention_interval 4): 30 Bidirectional Gated DeltaNet layers + 10 gated full-attention layers (16 Q / 2 KV heads, head_dim 256, partial RoPE ¼ = 64 of 256 dims, θ 1e7, per-head q_norm/k_norm, sigmoid output gate — q_proj 8192 emits [query|gate]). GDN layers: 16 key heads × 128 / 32 value heads × 128, causal conv k4 PLUS a learned right-convolution [8192,1,3] adding 3 future taps inside the noisy block; the causal prefix lives in the compressed recurrent state, whose readout joins the block's bidirectional softmax as one extra information unit, calibrated by 3 learned per-layer scalar banks (bd_softmax history_bias / history_c / logit_scale, width = block size 32). Denoising: LowConfidence — each masked 32-token block resolves positions ≥0.95 confidence in parallel (else the single most-confident position); resolved blocks replay causally into the clean GDN state before committing, so preview never mutates the cache.",
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 248320,
+"context_length": 131072,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "partial-RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "First release from DiffuSpace — the HKU-NLP Dream 7B diffusion-LM lineage (2.7M+ cumulative Dream downloads) scaling block diffusion to a 35B-class MoE with thinking mode. Claims best-in-class open diffusion-LM results at release: beats same-size autoregressive Qwen3.6-35B-A3B on six agent benchmarks (SWE-bench Verified 73.6, Terminal-Bench 2.1 51.7, τ³ Overall 65.3; also above LLaDA2.2-flash and Mercury 2.5) while generating faster — 680 tok/s on one GB300 (BF16, batch 1), 515 tok/s on H200 vs 365 for a DFlash2-accelerated Qwen. Derived from Qwen3.6-35B-A3B (Apache-2.0 attribution preserved) with new bidirectional-GDN tensors: 30 right-conv weights [8192,1,3] + 90 block-softmax scalars; measured 34,661,350,848 params from the BF16 index (69,322,701,696 B). MoE routing adds block-level coreset selection: per 32-token block, keep the experts covering 90% of the aggregated top-8 routing mass (inference-time only — weights unchanged). Preview release; official SGLang / llama.cpp backends add self-speculative decoding.",
+"sources": [
+"https://diffuspace.ai/blog/clover-35b/",
+"https://github.com/DiffuSpace/Clover-35B-A3B-Preview",
+"https://huggingface.co/Diffuspace/Clover-35B-A3B-Preview",
+"https://huggingface.co/Diffuspace/Clover-35B-A3B-Preview/raw/main/config.json",
+"https://huggingface.co/Diffuspace/Clover-35B-A3B-Preview/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "Bidir GDN",
+"n": 30,
+"type": "linear",
+"sub": "conv k4 · bidir"
+},
+{
+"name": "Gated GQA",
+"n": 10,
+"type": "GQA",
+"sub": "16/2 · ¼-RoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Bidirectional GDN (30 layers)",
+"p": {
+"d": 2048,
+"kh": 16,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 2048 → 8192",
+"projSub": "+ z-gate 4096 · a/b 32 each",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "A_log 32 · dt_bias",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 4096 → 2048",
+"cacheline": "clean state = committed causal prefix — block preview never mutates it"
+},
+"notes": [
+"right-conv [8192,1,3]: 3 future taps inside the noisy block",
+"history-state readout joins the block's bidirectional softmax",
+"3 learned scalar banks/layer calibrate block-size 32",
+"resolved blocks replay causally before state commits"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (10 layers — every 4th)",
+"p": {
+"d": 2048,
+"nq": 16,
+"nkv": 2,
+"dh": 256,
+"rope": "partial RoPE ¼ — 64 of 256 · θ1e7",
+"qknorm": "per-head q_norm/k_norm",
+"gate": "σ(gate) per head",
+"cache": "2 × 2 × 256 = 1,024 el/token/layer — only these 10 layers cache"
+},
+"notes": [
+"q_proj emits [query | gate] (8192 = 16×256×2)",
+"bidirectional within the 32-token denoising block",
+"Qwen3.6-35B-A3B backbone geometry"
+]
+}
+],
+"attn_bullets": [
+"LowConfidence denoising: positions ≥0.95 confidence fill in parallel per masked 32-token block; else the single most-confident position keeps progress",
+"Block coreset MoE: per block, keep the experts covering 90% of the aggregated top-8 routing mass — inference-time selection only, weights unchanged",
+"Mask token 151669 seeds each block; thinking mode; official SGLang / llama.cpp backends add self-speculative decoding"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",

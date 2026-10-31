@@ -459,7 +459,7 @@
       const rA = y0 + hP - 72, rB = y0 + hP - 134, rC = y0 + hP - 196;
       // lower row: query down-proj + fused kv projection
       if (p.qlora) pbox(RX + 18, rA, 150, 40, 'W_DQ → c_Q', `rank ${num(fmtNum(p.qlora))} · RMSNorm`);
-      else pbox(RX + 18, rA, 150, 40, 'W_Q (full-rank)', 'no c_Q latent (V2-Lite style)');
+      else pbox(RX + 18, rA, 150, 40, 'W_Q (full-rank)', esc(p.qfullsub || 'no c_Q latent (V2-Lite style)'));
       pbox(RX + 188, rA, 170, 40, 'kv_a_proj (fused)', `${num(fmtNum(p.d))} → ${num(p.kvlora + p.rope)}`);
       feedUp(cxA, inY - 12, [{ x: RX + 93, bottom: rA + 40 }, { x: RX + 273, bottom: rA + 40 }]);
       // latent row
@@ -535,7 +535,7 @@
       panel(y0, hP, '#f0883e');
       const inY = y0 + hP - 14;
       T(RX + 300, inY, 'h', { fs: 10.5, fill: DIM, fw: 600 });
-      T(RX + 90, inY, 'c_Q (MLA query latent)', { fs: 9.5, fill: DIM, fw: 600 });
+      T(RX + 90, inY, esc(p.qlabel || 'c_Q (MLA query latent)'), { fs: 9.5, fill: DIM, fw: 600 });
       const rA = y0 + hP - 66;
       pbox(RX + 10, rA, 140, 40, 'wq_b → q^I', `${num(p.iheads)} × ${num(p.idim)}`);
       pbox(RX + 164, rA, 150, 40, `wk → ${esc(p.keynorm || 'LN')} → k^I`, `${num(p.idim)} — 1 shared / token`);
