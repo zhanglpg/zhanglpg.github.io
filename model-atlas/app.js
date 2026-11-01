@@ -260,12 +260,14 @@
     const resKind = m.residual && m.residual.kind;
     const skip = (yBranch, yPlusC) => {
       if (resKind === 'mhc') {
+        const nS = m.residual.streams || 4;
+        const offs = nS === 2 ? [-3, 3] : [-6, -2, 2, 6];
         P.push(`<line x1="${cx}" y1="${yBranch}" x2="${skipX + 6}" y2="${yBranch}" stroke="${DIM2}" stroke-width="1.5"/>`);
-        for (const o of [-6, -2, 2, 6]) P.push(`<line x1="${skipX + o}" y1="${yBranch}" x2="${skipX + o}" y2="${yPlusC}" stroke="#bc8cff" stroke-width="1.1" opacity="0.9"/>`);
+        for (const o of offs) P.push(`<line x1="${skipX + o}" y1="${yBranch}" x2="${skipX + o}" y2="${yPlusC}" stroke="#bc8cff" stroke-width="1.1" opacity="0.9"/>`);
         P.push(`<path d="M ${skipX - 6} ${yPlusC} L ${cx + 19} ${yPlusC}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
         const mid = (yBranch + yPlusC) / 2;
         R(skipX - 14, mid - 9, 28, 18, { fill: '#0d1420', stroke: '#bc8cff', rx: 4, sw: 1.1 });
-        T(skipX, mid + 3.5, '×4', { fs: 9.5, fill: '#d2a8ff', fw: 800 });
+        T(skipX, mid + 3.5, `×${nS}`, { fs: 9.5, fill: '#d2a8ff', fw: 800 });
       } else {
         P.push(`<path d="M ${cx} ${yBranch} L ${skipX} ${yBranch} L ${skipX} ${yPlusC} L ${cx + 19} ${yPlusC}" fill="none" stroke="${DIM2}" stroke-width="1.5" marker-end="url(#au)"/>`);
       }
