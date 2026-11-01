@@ -4956,6 +4956,124 @@ window.MODELS = [
 ]
 },
 {
+"id": "sensenova-loop-9b-preview",
+"name": "SenseNova-Loop 9B (Preview)",
+"org": "SenseTime",
+"family": "SenseNova",
+"released": "2026-10",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "Dense",
+"params_total_B": 9.7,
+"params_active_B": 14.6,
+"n_layers": 32,
+"d_model": 4096,
+"d_ff": 12288,
+"d_ff_moe": null,
+"n_heads": 16,
+"n_kv_heads": 4,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "32 distinct decoder layers in a 3:1 hybrid read from layer_types: 24 Qwen3.5-style Gated DeltaNet linear-attention layers (16 q/k heads × 128 + 32 v heads × 128, depthwise causal conv k4, per-v-head β = σ(in_proj_b) write gate and α = e^g decay from in_proj_a + learned A_log/dt_bias, gated output o = norm(qᵀS) ⊙ SiLU(in_proj_z), fp32 recurrent state, no KV cache) interleaved with 8 gated full-attention GQA layers (16 Q / 4 KV heads, head_dim 256, per-head QK RMSNorm, sigmoid output gate doubling q_proj to 8192, interleaved MRoPE on 64 of 256 dims — sections 11/11/10, θ 10M). The middle block [4, 28) is executed twice per forward pass with shared weights (B(B(h)): layers 0–3 → 4–27 → 4–27 → 28–31 = 56 layer executions), and autoregressive cache states are kept independent per loop visit.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 248320,
+"context_length": 262144,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "Interleaved-MRoPE (partial 0.25)",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Qwen3.5-VL ViT (27L/1152d)",
+"encoder_params_B": 0.46,
+"fusion": "adapter",
+"notes": "27-layer 1152-dim 16-head qwen3_5_vision tower (GELU-tanh, patch 16, conv3d patchify with temporal patch 2, learned 2304-slot position embeddings); 2×2 spatial-merge adapter (LayerNorm → 4608 → 4608 → 4096) into the decoder. Native image + video input; 256K-token multimodal training with text, images, code and tool trajectories."
+},
+"notes": "SenseTime's looped-transformer research preview (weights Oct 30 2026, Apache-2.0, tech report TBD): a Qwen3.5-lineage 32-layer multimodal decoder (model_type qwen3_5_text/qwen3_5_vision) whose middle 24 layers run twice per token — 56 layer executions from 32 weight sets — trading compute for depth without duplicating parameters (~9B backbone claimed; ~14.6B inference params = 9.41B stored backbone + the 5.20B looped block re-executed, MTP excluded). The looped section carries two-stream manifold-constrained hyper-connections (mHC): 96 tiny FP32 routers (per-layer mhc_attn + mhc_ffn, [8, 8192] each, 3.1M params total) apply a σ pre-read, a 2σ post-write, and a Sinkhorn-normalized (20 iterations) doubly-stochastic 2×2 stream-mixing matrix — the Sinkhorn variant of DeepSeek-V4's mHC, at 2 streams instead of 4, and the same mechanism KRAFTON's Raon-mHC dropped. A 1-layer BF16 MTP module (243M) ships for speculative decoding; DSpark/DFlash2 heads are in training. Measured 9,656,250,480 unique params from all 9 safetensors headers (index total 38,138,420,672 B): the backbone is stored FP32 (9.41B params) despite the README's 'BF16 backbone' line — only the MTP module is BF16.",
+"sources": [
+"https://huggingface.co/sensenova/SenseNova-Loop-9B-Preview",
+"https://huggingface.co/sensenova/SenseNova-Loop-9B-Preview/raw/main/README.md",
+"https://huggingface.co/sensenova/SenseNova-Loop-9B-Preview/raw/main/config.json",
+"https://huggingface.co/sensenova/SenseNova-Loop-9B-Preview/raw/main/model.safetensors.index.json",
+"https://huggingface.co/sensenova/SenseNova-Loop-9B-Preview/raw/main/modeling_sensenova_loop.py",
+"https://github.com/OpenSenseNova/SenseNova-Loop"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "DeltaNet",
+"n": 24,
+"type": "linear",
+"sub": "gated · conv k4"
+},
+{
+"name": "Gated GQA",
+"n": 8,
+"type": "GQA",
+"sub": "16/4 · ¼ iMRoPE"
+}
+],
+"pattern": "lllflllflllflllflllflllflllflllf",
+"pattern_map": {
+"l": "linear",
+"f": "GQA"
+}
+},
+"residual": {
+"kind": "mhc",
+"streams": 2,
+"note": "2-stream mHC on the looped layers 4–27: FP32 per-sublayer routers — σ pre-read, 2σ post-write, Sinkhorn ×20 doubly-stochastic 2×2 stream mix"
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "Gated DeltaNet (24 layers)",
+"p": {
+"d": 4096,
+"kh": 16,
+"vh": 32,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkv 4096 → 8192 · in_proj_z → 4096",
+"projSub": "q 16×128 · k 16×128 · v 32×128 · in_proj_a / b → 32",
+"qsub": "L2 norm",
+"vsub": "32 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A · softplus(a + bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → RMSNormGated ⊗ SiLU(z)",
+"outSub": "→ out_proj 4096 → 4096",
+"cacheline": "no KV cache on linear layers — fp32 state 32 × 128 × 128 + conv state 8192 × 4, kept independent per loop visit"
+},
+"notes": [
+"Qwen3.5-family GDN: 32 v-heads / 16 qk-heads, conv k4"
+]
+},
+{
+"kind": "gqa",
+"title": "Gated Full Attention (8 layers — every 4th)",
+"p": {
+"d": 4096,
+"nq": 16,
+"nkv": 4,
+"dh": 256,
+"rope": "iMRoPE 64/256",
+"qknorm": "per-head RMSNorm",
+"gate": "σ(gate) per head",
+"cache": "1,024 el/token/layer × 8 full layers · independent per loop visit"
+},
+"notes": [
+"q_proj 8192 = 16×256 doubled by the sigmoid output gate",
+"iMRoPE 11/11/10 (t/h/w), ¼ rotary → 64 of 256 dims"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
