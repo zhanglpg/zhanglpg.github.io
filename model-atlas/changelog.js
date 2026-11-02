@@ -1,6 +1,14 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-11-01 09:56",
+  "last_run": "2026-11-02 10:05",
   "entries": [
+  {
+    "date": "2026-11-02",
+    "added": [
+      "prism-preview"
+    ],
+    "upgraded": [],
+    "note": "Added Prism Preview (Fudan University + Tencent Hunyuan, MIT, arXiv 2610.05416) — the first open-weights natively-trained 2K joint video-audio generation model, closing a WATCH open since October: the official GitHub code (Tencent-Hunyuan/Prism), tech report and per-component configs made its architecture fully verifiable. On the MOVA dual-tower backbone (Wan2.2-style high/low-noise 40-layer video experts + 30-layer audio DiT + 2.66B bidirectional DualTowerConditionalBridge at layers 0-29) it layers Prism dynamic block-sparse attention — 8×8×8 spatiotemporal macro-zones with per-head anisotropic block shapes guided by video channel variance + audio→video cross-attention norms and hybrid Top-k∪Top-p per-query selection — giving a 2.5× training speedup at 2K (~870k video tokens) while beating full attention on quality. Released α/β preview checkpoints measure 32,656,733,440 BF16 params (both video experts + audio tower + bridge; ~18.4B active per denoising step) with frozen UMT5-XXL, DAC audio VAE and Wan video VAE bundled. The Nov-1→2 sweep found nothing else archivable: burner22/numbat — the viral 'leaked 14T Anthropic mid-pretraining checkpoint' (202 likes, trending #21) — is a fabricated hoax per community forensics (tensors synthesized from SHA-256(tensor-name)-seeded RNG; HF discussions #13/#19), skipped with its mirror Alpha9/numbat; remaining hits are finetunes/quants/merges (Qwen3.5-4B-GLB-3D-Coder, MossRAEL on MOSS-Image-Base, Acaua-Lite on LFM3-1.7B, Erebus RP merge, Comfy-Org/Idol 3D repack) or audio-scope TTS (maya2-native, PiVo-1.4M). The Nov-1 SenseNova-Loop touch was docs-only (config identical to the tracked entry); the Nov-1 Prism touch was the README/code link that triggered this add. WATCH unchanged: Kimi-K3-Base / LTX-2.5 / flux-3 root / Muse-Spark-Open gates still 401, Beam still no tech report; partials LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp unchanged. 99 models, v50."
+  },
   {
     "date": "2026-11-01",
     "added": [
@@ -149,15 +157,6 @@ window.ATLAS_CHANGELOG = {
     "added": [],
     "upgraded": [],
     "note": "Checked — no changes. Discovery window Oct 10 10:44 → Oct 11 09:24 CST (~23h): swept 42 tracked orgs by lastModified (only hits: yandex/AliceAI-Foundation-80B-A3B-Base README-only edit — entry already in atlas; stabilityai audio touch; nvidia robotics/AGILE checkpoints + SOMA-X body model — out of scope), HF newest per pipeline (text-generation, image-text-to-text, text-to-image, image-to-image, text-to-video, image-to-video, any-to-any, text-to-audio, video-to-video), likes7d + trendingScore top-150 (nothing created in-window above the already-assessed Qwen-Image-2.1-Turbo distill, LiquidAI d1 decision pair, LightOnOCR-3, Mellum2.1 GGUF), and a global newest sweep (zero repos created in-window with ≥25 likes). News check surfaced nothing new: Wan 3.0 (calamansi/wan-3-0-video text stub) is API-only with no open weights — open Wan line still ends at 2.2; Microsoft-Decision-1 and h2oai/h2o-lightning-31b are Qwen3.5-9B/gemma-4-31B decision-model class (standing JEV/Clef/d1 skip); unbiased Pareto 26.9 'official release' is a closed blended router, no weights. WATCH unchanged: Reflection AI Beam (501B/23B) still no HF org, Mistral Large 4 'le Chonk' still absent from mistralai (weights promised end of October), Step-5-Preview-BF16 / Kimi-K3-Base / LTX-2.5 / North-Small-Translate-1.0 / MiniCPM-V-4.7 / Kandinsky-6.0-Pro all still gated 401, FrancisRing/Prism config.json still flags-only (no DiT arch; report 'stay tuned'). Partial rechecks: inclusionAI/LLaDA2.2-flash and deepseek-ai/DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 76 models unchanged, v35."
-  },
-  {
-    "date": "2026-10-10",
-    "added": [
-      "youtu-parsing-omni",
-      "iris-3b"
-    ],
-    "upgraded": [],
-    "note": "Added two architecturally novel open-weight releases, both verified against primary sources. Tencent Youtu-Parsing-Omni (5B, custom Youtu-Parsing license) — an omni-modal parser that turns documents, natural images, charts/flowcharts, geometry figures, audio and audio-visual video into one structured OmniSchema JSON envelope; its novelty is a single unified Youtu-Omni-Encoder (one 28-layer bidirectional GQA transformer initialized from a text LM, thin modality stems, shared (t,h,w) positional encoding, 4 audio-visual fusion layers) feeding a 40-layer MLA decoder (2560-d, q_lora 1536 / kv_lora 512, 1M context, tied embeddings); verified vs config.json + modeling code + safetensors header (5.33B measured vs 5B claimed, 0.94); SOTA on OmniDocBench v1.6 (96.96). SperidLabs Iris-3B (3B, Apache-2.0) — the atlas's first pixel-space image generator: no VAE anywhere; a dual-level rectified-flow DiT (8 dual-stream MMDiT + 16 single-stream blocks, 2560-d, GQA 20/5, sigmoid-gated attention, sandwich RMSNorm) over 16x16 RGB patches plus a 4-block pixel-refinement head, frozen Qwen3-VL-4B text adapter; verified vs config.yaml + GitHub modeling code + safetensors header (2.99B FP32 measured vs 3B claimed); arXiv 2610.09450. Skipped per the placeholder rule: Mistral Large 4 'le Chonk' (weights promised end of October; mistralai newest is still LIDstral-Arabic) and Reflection AI Beam (still no HF org); also Qwen-Image-2.1-Turbo (8-step distill checkpoint of tracked Qwen-Image-2.1), IQuestLab/SAIL (post-training of Qwen3.6-35B-A3B), JetBrains Mellum2.1 (Sep 20, pre-window), LightOnOCR-3 (Qwen3.5 finetune), Phocinae-Largha/neuphonic neudecide/pplx-decider (decision-router class), XiaomiMiMo MOPD pair (distills of tracked checkpoints), and the usual GGUF/MLX/LoRA churn. Partial rechecks: LLaDA2.2-flash and DeepSeek-V4-Flash-Vision-Exp unchanged; Step-5-Preview-BF16, Kimi-K3-Base, LTX-2.5, North-Small-Translate-1.0, MiniCPM-V-4.7 and Kandinsky-6.0-Pro still gated 401. 76 models, v35."
   }
 ]
 };
