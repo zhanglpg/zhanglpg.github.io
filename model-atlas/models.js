@@ -5074,6 +5074,72 @@ window.MODELS = [
 ]
 },
 {
+"id": "prism-preview",
+"name": "Prism Preview",
+"org": "Tencent Hunyuan",
+"family": "Prism",
+"released": "2026-10",
+"license": "MIT",
+"modality": "video-gen",
+"decoder_type": "DiT (video diffusion transformer)",
+"params_total_B": 32.66,
+"params_active_B": 18.37,
+"n_layers": 40,
+"d_model": 5120,
+"d_ff": 13824,
+"d_ff_moe": null,
+"n_heads": 40,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MHA",
+"attention_detail": "Dual-tower joint video-audio flow-matching DiT on the MOVA backbone (arXiv 2602.08794) with Wan2.2-style timestep experts: each denoising step runs ONE 40-layer Wan-lineage video expert — high-noise video_dit above boundary t=900/1000 (boundary_ratio 0.9, FlowMatchPairScheduler, shift 5-17 by resolution), low-noise video_dit_2 below — fused per-layer with a 30-layer audio DiT (1536-d, 12 heads × 128, ffn 8960) through a 2.66B DualTowerConditionalBridge that attaches at every shared layer 0-29 (a2v: video queries 5120 attend audio K/V 1536→5120; v2a: audio queries 1536 attend video K/V 5120→1536; RMSNorm'd Q/K, cross-RoPE, head_dim 128, 50 Hz audio-latent alignment; video layers 30-39 run without bridge). Video blocks: bidirectional 3D self-attention (40 heads × 128, per-head QK-RMSNorm, 3D RoPE t/h/w θ 10K) REPLACED by Prism dynamic block-sparse attention (BSA) in training and inference — 8×8×8 spatiotemporal macro-zones, per-head/per-layer anisotropic block shape from 16 candidates (edges {2,4,8}, B ∈ {64,128,256}) minimizing intra-block information loss from video channel-wise variance + previous-layer audio→video cross-attention norm guidance, hybrid Top-k (95%) ∪ Top-p (0.2) per-query block selection over mean-pooled block representatives, Triton online-softmax kernel on 64-token tiles (release defaults: sparsity 0.75, chunk 4×4×4, CDF 0.2); audio self-attention and ALL cross-modal attention (text→video 4096→5120 MLP, text→audio 4096→1536, a2v, v2a) stay dense on FlashAttention-3. 6-param SiLU-modulated adaLN per block (modulation [1,6,5120]); LayerNorm; GELU(tanh) FFN 5120→13824→5120.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "3D RoPE",
+"activation": "GELU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "First open-weights natively-trained 2K joint video-audio generation model (Fudan University + Tencent Hunyuan Foundation Model Team, MIT; paper Oct 4 2026, code + checkpoints Oct 6, HF FrancisRing/Prism + GitHub Tencent-Hunyuan/Prism). Prism is a dynamic block-sparse attention training framework on the MOVA dual-tower backbone: trained from MOVA-720p init with ONLY the attention modules trainable (5 epochs, 100k 2K clips, 160× H800, SP=8, lr 1e-5, BF16 FSDP), it gives a 2.5× training speedup over full attention (10.6 vs 26.5 min/step at 2K, where a 10 s 24 fps clip is ~870k video tokens) while beating it on quality (2K-Bench AQ 0.61 vs 0.42, DeSync 0.63 vs 1.05) and roughly halving inference memory (38.0 vs 72.8 GB/GPU across 4 GPUs). Released preview checkpoints α (stable) and β (motion) each measure 32,656,733,440 BF16 params (3,735 tensors) in fused MOVABridge layout = both 14.29B video experts + 1.42B audio DiT + 2.66B bridge; per-step active ≈ 18.37B (one video expert + audio tower + bridge). Frozen support ships in the same repo: UMT5-XXL text encoder (5.68B measured), DAC audio VAE (48 kHz, 960× compression → 50 Hz 128-d continuous latents, 0.37B), Wan video VAE (16-ch, 0.13B). I2V conditioning packs 16 noisy + 16 reference-image latents + 4-ch first-frame mask (patch-embed in_dim 36; patch 1×2×2 → 16× spatial / 4× temporal overall); native 720p/1080p/2K at 193-205 frames @ 24 fps. Prism-pro (full 2K release) still TODO.",
+"sources": [
+"https://arxiv.org/abs/2610.05416",
+"https://github.com/Tencent-Hunyuan/Prism",
+"https://huggingface.co/FrancisRing/Prism",
+"https://huggingface.co/FrancisRing/Prism/raw/main/pretrained_models/MOVA-360p/model_index.json",
+"https://huggingface.co/FrancisRing/Prism/raw/main/pretrained_models/MOVA-360p/video_dit/config.json",
+"https://huggingface.co/FrancisRing/Prism/raw/main/pretrained_models/MOVA-360p/dual_tower_bridge/config.json",
+"https://arxiv.org/abs/2602.08794"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Video DiT self-attn (×40 · HN/LN experts · Prism BSA)",
+"p": {
+"d": 5120,
+"nq": 40,
+"nkv": 40,
+"dh": 128,
+"nocache": true,
+"rope": "3D RoPE (t,h,w) · θ 10K",
+"qknorm": "per-head QK-RMSNorm",
+"cache": "none — bidirectional block-sparse attention, recomputed every denoising step"
+},
+"notes": [
+"Prism BSA: 8×8×8 macro-zones · block shapes {2,4,8}³",
+"hybrid Top-k 95% ∪ Top-p 0.2 selection · 64-tok tiles",
+"shape from video channel variance + a2v attn norms",
+"text cross-attn: frozen UMT5-XXL 4096→5120 (dense)",
+"bridge layers 0-29: bidirectional audio↔video x-attn"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
