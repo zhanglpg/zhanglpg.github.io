@@ -5140,6 +5140,70 @@ window.MODELS = [
 ]
 },
 {
+"id": "ltx-2-5",
+"name": "LTX-2.5 (22B)",
+"org": "Lightricks",
+"family": "LTX",
+"released": "2026-08",
+"license": "LTX-2.x Community License (free <$10M ARR)",
+"modality": "video-gen",
+"decoder_type": "DiT (video diffusion transformer)",
+"params_total_B": 21.0,
+"params_active_B": 21.0,
+"n_layers": 48,
+"d_model": 4096,
+"d_ff": 16384,
+"d_ff_moe": null,
+"n_heads": 32,
+"n_kv_heads": null,
+"head_dim": 128,
+"attention": "MMDiT",
+"attention_detail": "48 dual-stream audio+video blocks — streams never concatenate (not joint-MMDiT); they couple through per-block bidirectional gated cross-attention. Video stream: 4096-d (32 heads x 128), patchify Linear 128->4096 over VAE latents; audio stream: 2048-d (32 heads x 64), Linear 128->2048, audio tokens at 25 Hz (100 Hz VAE latents, audio_scale_factor 4). Every attention module is head-gated (to_gate_logits, 32 per-head sigmoid gates) with QK-RMSNorm across heads and split 3D RoPE (t,h,w) theta 10000, max_pos 20 per axis, base grid 20 frames @ 2048x2048; audio RoPE from 16 kHz/hop-160 geometry. Block order: video self-attn -> audio self-attn -> text cross-attn (video attn2 consumes 4096-d connector tokens, audio attn2 2048-d) -> bidirectional AV cross-attn (a2v: video queries attend audio K/V 2048->4096; v2a mirror; RMSNorm'd, gated by per-layer AdaLN scale-shift tables [5,d] F32) -> FFs (video GELU-approximate 4096->16384 bias-free in 2.5; audio 2048->8192 with bias). Modulation: 9-param AdaLN-single per stream (video Linear 4096->36864, audio 2048->18432; F32 scale_shift_table) plus separate prompt-AdaLN that modulates text cross-attn Q and K/V per timestep (use_prompt_adaln_single; KV-cacheable checkpoints drop it). Text conditioning: custom Gemma-4-12B encoder (48L/3840d, GQA 16q/8kv x 256 head_dim, per-head q/k norm, sandwich LayerNorms, GeGLU 15360, vocab 262144, 13.15B with projections) -> per-modality connectors (8 gated 1D-attention blocks + 128 learnable registers each; video 1.61B -> 4096d, audio 0.40B -> 2048d — ltx-core: 'LTX-2.3+ uses per-modality feature projections in the connector instead' of in-DiT caption projection) + pooled aggregate embeddings (49-token windows, [4096, 188160] / [2048, 188160]) feeding prompt-AdaLN; the TE file also carries a small vision patch encoder (patch_dense 6912->3840, pos_embedding 1120 slots) for image/keyframe conditioning. Learned keyframes_abs_pos_embedding [1,4096] marks keyframe tokens for multishot/i2v conditioning.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": null,
+"context_length": null,
+"norm": "AdaLN",
+"norm_placement": "pre",
+"pos_encoding": "3D RoPE",
+"activation": "GELU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Lightricks' open-weights native video+audio 'world model' (launched Aug 11 2026; gated HF download, free under $10M ARR — custom license, not OSI). Generates synchronized video and stereo audio in one pass with native multishot consistency (character, lighting, voice, style held across cuts); 'diffusion fidelity rendering' replaces the conv-VAE reconstruction stage with a diffusion video decoder, and a two-stage recipe (distilled DiT at half res -> x2 latent spatial upscaler 498M, 128->512ch 4 blocks/stage -> second pass) scales to 4K; optional duration head predicts clip length from the prompt. Video VAE: causal, 128-ch latents, 8x temporal / 32x spatial (valid keyframe indices 0 or 1+8k); conv encode+decode measured 726M. Audio VAE + vocoder measured 182M (HiFi-GAN-style, snake activation, 100 Hz latents -> 24 kHz stereo with bandwidth extension). dev and distilled checkpoints have identical shapes (measured 21,004,025,600 params each; distilled also ships as a rank-450 LoRA); ltx-core calls the trunk-minus-connectors the '19B model' and marketing says 22B — measured BF16 file is 21.0B. Full system ~35.5B measured (DiT 21.0 + Gemma4-12B TE 13.15 + conv VAE 0.73 + audio VAE/vocoder 0.18 + spatial upscaler 0.50), excluding gated-only components (diffusion decoder, prompt enhancer, duration head, temporal upscaler). 290 tensors (AdaLN scale-shift tables) are kept F32 inside the BF16 file. Verified without gated files: config constants from Lightricks/LTX-2 ltx-core model_configurator.py + diffusers transformer_ltx2.py; tensor geometry from HTTP-Range safetensors-header reads of unsloth's open mirror of the original BF16 single-file checkpoints.",
+"sources": [
+"https://ltx.io/llm-info",
+"https://huggingface.co/Lightricks/LTX-2.5",
+"https://github.com/Lightricks/LTX-2/blob/main/packages/ltx-core/src/ltx_core/model/transformer/model_configurator.py",
+"https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_ltx2.py",
+"https://huggingface.co/unsloth/LTX-2.5-GGUF"
+],
+"confidence": "verified",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Dual-stream AV block (×48 · gated · a2v/v2a x-attn)",
+"p": {
+"d": 4096,
+"nq": 32,
+"nkv": 32,
+"dh": 128,
+"nocache": true,
+"rope": "split 3D RoPE (t,h,w) · θ 10K",
+"qknorm": "QK-RMSNorm (across heads)",
+"cache": "none — bidirectional attention, recomputed every denoising step"
+},
+"notes": [
+"video 4096 · audio 2048 streams, all attn head-gated",
+"per-block bidirectional a2v/v2a x-attn, AdaLN gate",
+"text x-attn: Gemma4-12B → 8-blk connectors + registers",
+"audio tokens 25 Hz (VAE 100 Hz latents, scale 4)",
+"9-param AdaLN-single per stream, F32 tables"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",

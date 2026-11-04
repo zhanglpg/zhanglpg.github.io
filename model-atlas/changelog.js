@@ -1,6 +1,14 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-11-03 09:42",
+  "last_run": "2026-11-04 10:08",
   "entries": [
+  {
+    "date": "2026-11-04",
+    "added": [
+      "ltx-2-5"
+    ],
+    "upgraded": [],
+    "note": "LTX-2.5 (22B) added — Lightricks' open-weights native video+audio world model (Aug 11 2026), closing a 22-run WATCH: the HF repo is gated:auto, but the Fibo-2.0 precedent applies — official ltx-core configurators + diffusers transformer_ltx2.py give the config constants, and unsloth's open mirror of the original BF16 single-file checkpoints gave exact tensor geometry (48 dual-stream blocks: 4096-d video + 2048-d audio, all attention head-gated, per-block bidirectional a2v/v2a cross-attn, custom Gemma-4-12B text encoder with 8-block register connectors; measured 21,004,025,600 DiT params). Nov-3→Nov-4 sweeps otherwise quiet: SenseNova-6.8-Code2Video skipped (Qwen3.8-27B finetune, config identical to tracked qwen3-8-27b), Kimi-K3.1-Pro weights promised 'by Nov 4' still gated 401 (WATCH), Beam Nov-3 touch = eval docs only (no tech report), tracked-repo touches (Ling-3.1-flash, LFM3-1.7B, LFM2.5-24B, MiniCPM-V-4.7) all byte-match their entries."
+  },
   {
     "date": "2026-11-03",
     "added": [],
@@ -151,12 +159,6 @@ window.ATLAS_CHANGELOG = {
     ],
     "upgraded": [],
     "note": "Added Liquid AI LFM2.5-24B-A2B (24B total / 2.45B active, LFM Open License v1.0, confidence verified) — the largest and final model of the LFM2.5 family (230M→24B), an always-thinking on-device agent MoE (184 tok/s on Apple M5 Max) on Liquid AI's hybrid LFM2 backbone: 30 double-gated short-convolution blocks (depthwise causal conv1d kernel 3, in_proj 2048→6144 split B/C/x with B⊙x gating, no KV cache) interleaved every 4th layer with 10 full-attention GQA layers (32 Q / 8 KV, head_dim 64, per-head QK RMSNorm, RoPE θ 1e7); 64-expert top-4 MoE on every layer except 2 dense SwiGLU first layers (d_ff 11776), aux-loss-free expert_bias routing with norm_topk_prob, tied embeddings, 128K vocab and 131K context (both doubled vs LFM2-24B-A2B via in-place tokenizer expansion), ~36T training tokens with agentic RL in OpenClaw/Hermes/Pi/OpenCode harnesses. Verified against HF config.json + README + model.safetensors.index.json (23.97B measured vs 24B claimed) + transformers modeling_lfm2_moe.py (conv/attention module shapes confirm head_dim 64, kernel 3, dense layers 0-1); param self-consistency ratio 1.01. Considered and skipped: Qwen-Image-2.1-Turbo (8-step distill of tracked Qwen-Image-2.1), openbmb/MiniCPM-V-4.7-1B (small sibling of tracked 35B-A3B), ConwayResearch/Underdog-Saluki-27B-1.0 (2-bit GGUF quant of Qwen3.8-27B), LiquidAI d1-3B + d1-omni-600M (single-forward decision-router class, standing skip), LightOnOCR-3-4B (Qwen3.5 OCR finetune), JetBrains Mellum2.1 (Sep 20, pre-window), ai-forever Zarya-4B (4B diffusion-LM, minor org, 2 likes), fishaudio/drama-3 (TTS, out of scope), autotrust/JEV-35B + vllm-sr/d3 (decision class). WATCH rechecks: reflection-ai org endpoint still returns an empty list and reflection-ai/beam still 401 (weights promised end of Oct); Mistral Large 4 'le Chonk' still absent from mistralai; FrancisRing/Prism root config still flags-only; Step-5-Preview-BF16, Kimi-K3-Base, FLUX.3-Image and LTX-2.5 still gated 401. Partial rechecks: inclusionAI/LLaDA2.2-flash and deepseek-ai/DeepSeek-V4-Flash-Vision-Exp configs unchanged — both stay partial. 77 models, v36."
-  },
-  {
-    "date": "2026-10-13",
-    "added": [],
-    "upgraded": [],
-    "note": "Checked — no changes. Discovery window Oct 11 09:30 → Oct 13 09:25 CST (~48h): swept ~70 tracked orgs by lastModified, likes7d top-40 + trendingScore top-60, HF newest across 11 pipelines (218 in-window repos, all zero/low-like churn), global-newest sweep (zero repos created in-window with ≥20 likes), and web news (theopenweights timeline/editions). Considered and skipped: vllm-sr/d3 + five size variants (Oct 10-12, trending; single-forward structured decision models, finetune of Qwen3.8-27B — standing no-finetune + decision-router skip, Clef/JEV/d1/pplx-decider precedents); autotrust/JEV-35B + NVFP4 (Oct 11, 196 likes — same decision class, Qwen3.5-35B-A3B finetune); openbmb/Trident-Qwen3VL-2B (Oct 12 — multimodal-embedding/retrieval finetune of Qwen3-VL-2B, out-of-scope task); TencentARC/Multics (Oct 12, 3 likes — multi-player world-model research checkpoint finetuned from Wan2.1/2.2, no architecture novelty); FenomAI/YuE2-3B (mirror of Sep 9 m-a-p/YuE2-3B); the MiniCPM-V 4.7 quant wave (GGUF/GPTQ/AWQ/FP8/int4/DSpark), LiquidAI MLX ports, gemma-4 quants, and metadata/README touches (DeepSeek-V4.1-Flash indexer-cache fix, GLM-5.3 card benchmarks, Qwen-Image-2.1-Turbo README, Ling-3.0-flash MTP fix — no spec changes). Qwen3.8-2.4T-A95B resurfaced on openweights news = already in atlas as qwen3-8-max (verified). Kimi-K3 cross-check: moonshotai/Kimi-K3 config.json now readable — 93L / 7168d / 896 experts top-16 + 2 shared / 69 KDA + 24 MLA / situ / MXFP4 all match the stored verified entry; Kimi-K3-Base still 401. WATCH unchanged: Reflection AI Beam (org endpoint now returns an empty list instead of 404 — possibly provisioned; reflection-ai/beam still 401, weights promised by end of Oct), Mistral Large 4 'le Chonk' (absent from mistralai org; guessed repo names 401), FrancisRing/Prism (root config still flags-only, no DiT arch), Step-5-Preview-BF16 / FLUX.3-Image / LTX-2.5 still gated 401. Partial rechecks: inclusionAI/LLaDA2.2-flash and deepseek-ai/DeepSeek-V4-Flash-Vision-Exp (mod Sep 1) configs unchanged — both stay partial. 76 models unchanged, v35."
   }
 ]
 };
