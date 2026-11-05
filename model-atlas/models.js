@@ -5204,6 +5204,264 @@ window.MODELS = [
 ]
 },
 {
+"id": "kimi-k3-1-pro",
+"name": "Kimi K3.1 Pro",
+"org": "Moonshot",
+"family": "Kimi",
+"released": "2026-11",
+"license": "Kimi K3.1-Pro License",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 2800,
+"params_active_B": 104,
+"n_layers": 93,
+"d_model": 7168,
+"d_ff": 33792,
+"d_ff_moe": 3072,
+"n_heads": 96,
+"n_kv_heads": 96,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "69 KDA (Kimi Delta Attention) linear-attention layers interleaved with 24 Gated DSA (Gated DeepSeek Sparse Attention) full-attention layers (full_attn_layers every 4th, 4/8/.../92 plus final layer 93). KDA: 96 heads, head_dim 128, short-conv kernel 4, per-channel safe decay gate bounded in (-5,0), full-rank sigmoid output gate. Gated DSA: latent-KV gated MLA (q_lora 1536, kv_lora 512, qk_nope 128 + unrotated 64 rope slot, v 128, NoPE) with full-rank sigmoid output gate, sparsified by a lightning indexer — 32 index heads × 128, biased LayerNorm on k^I, ReLU scoring, top-2048 of up to 1M tokens; attn_res_block_size 12 (Attention Residuals).",
+"n_experts": 896,
+"active_experts": 16,
+"shared_experts": 2,
+"vocab_size": 163840,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "NoPE",
+"activation": "SiTU-GLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "MoonViT-V2 (27L/1024d)",
+"encoder_params_B": 0.4,
+"fusion": "adapter",
+"notes": "27-layer, 1024-dim (12-head) MoonViT-V2 tower (401M official), patch 14, divided-fixed positional embeddings (bilinear interpolation, 64x64x4 init), sd2_tpool 2x2 patch merger → patchmergerv2 projector (4096→4096→7168, post-norm) into the decoder; text + image input."
+},
+"notes": "First model of the K3.1 series — Moonshot's most capable 3T-class flagship, post-trained from Kimi K3 with large-scale joint RL across hundreds of downstream domains. 2.8T/104B Stable LatentMoE (896 experts top-16 + 2 shared, latent dim 3584, expert d_ff 3072, first layer dense 33792), SiTU-GLU (β 4.0), noaux_tc routing, 1M context. Key architecture change vs K3: the 24 full-attention Gated MLA layers become Gated DSA — a DeepSeek-style lightning indexer (32×128 heads, top-2048) selects which latents each query attends, cutting 1M-context attention cost. Release is quantization-aware trained: MXFP4-packed expert weights (group 32) with MXFP8 activations; attention, shared experts, latent up/down projections, embeddings and vision tower stay BF16. Measured index 1.561 TB across 96 shards; repo created gated Nov 2, weights ungated Nov 4 2026.",
+"sources": [
+"https://www.kimi.ai/blog/kimi-k3-1-pro",
+"https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+"https://huggingface.co/moonshotai/Kimi-K3.1-Pro/raw/main/config.json",
+"https://huggingface.co/moonshotai/Kimi-K3.1-Pro/raw/main/README.md"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"moe_latent_dim": 3584,
+"attention_split": {
+"parts": [
+{
+"name": "KDA",
+"n": 69,
+"type": "linear",
+"sub": "delta rule · conv k4 · gated"
+},
+{
+"name": "Gated DSA",
+"n": 24,
+"type": "sparse",
+"sub": "indexer top-2048"
+}
+],
+"pattern": "kkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmkkkmm",
+"pattern_map": {
+"k": "linear",
+"m": "sparse"
+}
+},
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "KDA — Kimi Delta Attention (69 layers)",
+"p": {
+"d": 7168,
+"kh": 96,
+"vh": 96,
+"dh": 128,
+"conv": 4,
+"proj": "q / k / v / g projections 7168 → 12288",
+"projSub": "β: b_proj → 96 · decay: f_a(128) → f_b(12288)",
+"qsub": "L2 norm",
+"vsub": "96 × 128",
+"update": "S ← Diag(e^g)·S + β·k⊗(v − (Diag(e^g)S)ᵀk)",
+"decayName": "per-channel decay Diag(e^g)",
+"decaySub": "g = −5·σ(·) ∈ (−5, 0)",
+"beta": "β = σ(b) per head ∈ (0,1)",
+"out": "o = Sᵀq → RMSNorm(128) ⊗ σ(g_proj h)",
+"outSub": "full-rank output gate → o_proj 12288 → 7168",
+"cacheline": "no KV cache — recurrent state 96 × 128 × 128 ≈ 1.57 M el + 3 conv states (12288 × 4) per layer"
+},
+"notes": [
+"per-channel (diagonal) decay — vs Gated DeltaNet’s per-head scalar",
+"safe decay gate: g = −5·σ(e^A(f + dt_bias))",
+"RMSNorm weight (128) shared across all 96 heads (one FusedRMSNormGated)",
+"position comes from the recurrence — the whole decoder is NoPE"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA + DSA selection, NoPE (24 layers)",
+"p": {
+"d": 7168,
+"nh": 96,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": true,
+"gate": "σ(g_proj h)",
+"cache": "architecturally 576 el/token × 24 MLA layers ≈ 27 KB/token (HF reference caches expanded per-head K/V — kernel-dependent)"
+},
+"notes": [
+"NoPE: rotary never applied — the 64-dim slot stays unrotated",
+"softmax scale 192⁻⁰·⁵ — no YaRN temperature",
+"full-rank sigmoid output gate (7168 → 12288) before o_proj"
+]
+},
+{
+"kind": "dsaidx",
+"title": "DSA Lightning Indexer — top-2048 of 1M ctx",
+"p": {
+"iheads": 32,
+"idim": 128,
+"topk": 2048,
+"qlabel": "c_Q query latent (1536)",
+"keynorm": "biased LN",
+"note": "BF16 · NoPE indexer (rope_dim 0) · topk_freq 1",
+"cache": "k^I (128-d, BF16) cached on all 24 DSA layers beside the 576-el MLA latent"
+},
+"notes": [
+"wq_b: query latent c_Q (1536) → 32 × 128 q^I",
+"wk: hidden h (7168) → 128 k^I — not the KV latent",
+"weights_proj: h → 32 per-head ReLU-score weights",
+"top-2048 mask → MLA attends only selected latents"
+]
+},
+{
+"kind": "attnres",
+"title": "AttnRes — Attention Residuals",
+"p": {
+"d": 7168,
+"block": 12,
+"snapshots": 8,
+"mixes": 187
+}
+}
+],
+"residual": {
+"kind": "attnres",
+"note": "AttnRes: stream snapshots every 12 layers; every sublayer input is a softmax mix over {bank ∪ stream} — see panel"
+},
+"attn_bullets": [
+"KDA layers carry constant-size state (no per-token growth); the 24 DSA layers cache 576-el latents + a 128-d index key",
+"93-layer NoPE decoder: position is implicit in KDA recurrence + short conv",
+"vs Kimi K3: full-attention layers swap dense Gated MLA → Gated DSA (top-2048 sparse selection over 1M context)"
+]
+},
+{
+"id": "ripple-65b-preview",
+"name": "Ripple 65B Preview",
+"org": "Ricursive",
+"family": "Ripple",
+"released": "2026-11",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "Dense",
+"params_total_B": 65,
+"params_active_B": 65,
+"n_layers": 80,
+"d_model": 5120,
+"d_ff": 40960,
+"d_ff_moe": null,
+"n_heads": 80,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "Thin-and-deep GQA with overprovisioned heads: 80 query heads × 128 = 10240-d Q (2× the 5120 hidden) over 8 KV heads (1024-d, 10:1 grouping), per-head QK-RMSNorm, elementwise sigmoid output gate g_proj (5120→10240, computed in fp32). Gemma-3N-like 4:1 hybrid — 64 sliding-window layers (window 1024, RoPE θ 10K) + 16 global layers (every 5th: 5/10/.../80, NoPE — no rotary). Value residuals: every layer's V input is lerped between the entry embeddings and the layer's hidden state by a learned per-layer σ(λ).",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 100352,
+"context_length": 2097152,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE + NoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Ricursive Intelligence's debut release (new US lab, team scaled 1→5): a deliberately dense — not MoE — transformer trained from scratch on 12T tokens, co-designed for NVIDIA hardware with 40% MFU, simple sharding, no custom kernels, BF16 throughout. Modernized Gemma-3N-like PeriNorm backbone (4 RMSNorms per block) evolved from an Olmo 3 baseline recipe, thin-and-deep 5120-d × 80-layer aspect ratio; stability additions: FFN activation clamping (±20), gated attention, value residuals, runtime embedding scale ×√5120. Terminal-Bench 2.1 80.5 self-reported — above Reflection Beam 501B (80.1) and Muse Spark Open 816B (76.4) at ~1/8-1/13 the parameters; fits DGX Spark-class consumer hardware. Measured 64.78B params (BF16 index 129.57 GB). README cites up to 1M supported context; config max_position_embeddings is 2,097,152 (long-context stages trained at 2M seqlen). Siblings: Base-Preview (pretrain-only), NVFP4, DFlash2 drafter.",
+"sources": [
+"https://www.ricursive.com/ripple",
+"https://huggingface.co/ricursiveAI/Ripple-65B-Preview",
+"https://huggingface.co/ricursiveAI/Ripple-65B-Preview/raw/main/config.json",
+"https://huggingface.co/ricursiveAI/Ripple-65B-Preview/raw/main/modeling_ricursive.py",
+"https://huggingface.co/ricursiveAI/Ripple-65B-Preview/raw/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 64,
+"type": "sliding",
+"sub": "win 1024 · RoPE"
+},
+{
+"name": "Global",
+"n": 16,
+"type": "global",
+"sub": "NoPE"
+}
+],
+"pattern": "ssssgssssgssssgssssgssssgssssgssssgssssgssssgssssgssssgssssgssssgssssgssssgssssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+},
+"attn_modules": [
+{
+"kind": "swa",
+"title": "4:1 local SWA / global — gated attention + value residuals",
+"p": {
+"variants": [
+{
+"n": 64,
+"name": "local sliding 1024",
+"type": "sliding",
+"span": "win",
+"frac": 0.3,
+"spanLabel": "window 1024",
+"sub1": "GQA 80Q / 8KV × 128 · QK-norm",
+"sub2": "RoPE θ 10K · σ(g_proj) output gate"
+},
+{
+"n": 16,
+"name": "global",
+"type": "global",
+"span": "full",
+"spanLabel": "full 2M ctx",
+"sub1": "NoPE — no rotary on global layers",
+"sub2": "1 global after every 4 local"
+}
+],
+"common": [
+"80 heads × 128 = 10240 q dim — 2× the 5120 hidden",
+"value residual: V lerped with entry embeddings via σ(λ)",
+"PeriNorm: 4 RMSNorms per block (pre/post attn + FFN)"
+],
+"cache": "global: 2,048 el/token unbounded · sliding capped at 1024 tokens"
+}
+}
+],
+"attn_bullets": [
+"Value residual source is the (scaled) entry embedding — one shared v₀ for all 80 layers, blended per layer by σ(λ)",
+"Global layers see the full 2M-token context with no rotary — position arrives only through the 64 RoPE sliding layers"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
