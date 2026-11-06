@@ -1,6 +1,14 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-11-05 10:04",
+  "last_run": "2026-11-06 10:52",
   "entries": [
+    {
+      "date": "2026-11-06",
+      "added": [
+        "ernie-5-5-flash-base"
+      ],
+      "upgraded": [],
+      "note": "Added Baidu ERNIE 5.5 Flash Base (280B/14B, confidence verified) — the pre-training-only efficiency flagship whose weights landed Nov 2–5 in a repo created Oct 21 as a placeholder (invisible to every createdAt sweep since; caught today via likes7d #38 + a baidu org sweep): 43 layers = 37 HCA (128:1 gated learned compression, single 512-d K=V entry per 128-token block) + 6 MLA+DSA full-context layers, 512-expert top-10 Multi-Router Latent MoE with dual sigmoid routers, ECHO final-layer predictor replacing MTP, 4-stream mHC residuals, MultiMax piecewise-temperature head, SiTU-GLU, FP8-E4M3 release; verified against config.json + 128-shard index + README + 3 arXiv papers. Considered and skipped: IndexTeam Index-Translate-Omni-35B (translation-utility family, no root config), nvidia MetricTrail (visual-odometry CV research, no LLM weights), allenai Molmo2-4B-tb/maniflow-tb (robotics finetunes of a Dec-2025 base), webAI TwIL-8B (GRPO finetune of Granite 4.2), Viggle-Remake (MiniMax-H3 LoRA), gemma-4-26B-A4B quant dry-run + Elliott9444 Muse-Glimmer mirror (derivatives/mirrors of tracked lines), vllm-project Kimi-K3.1-Pro-pruned75 (pruning research on yesterday's add), plus the usual quant/finetune/repack churn. WATCH gates unchanged (Kimi-K3-Base + Muse-Spark HF still 401, no reflection Beam report/1.1, no FrancisRing Prism-pro); both partials (LLaDA2.2-flash, DeepSeek-V4-Flash-Vision-Exp) unchanged; tracked-entry touches (Qwen3.8-27B/Flash-Next card theme fix, K3.1 encoding_k3.py, Ripple server-config) are docs/runtime only."
+    },
     {
       "date": "2026-11-05",
       "added": [
@@ -152,14 +160,6 @@ window.ATLAS_CHANGELOG = {
       ],
       "upgraded": [],
       "note": "Added StepFun Step 5 Preview (600B total / 27B active, StepFun Model License 1.0, confidence verified) — the flagship agentic model whose BF16 weights went ungated on HF Oct 15 after weeks of 401s (announced Sep 20, API-only until then). 92 layers = 88 MoE (352 experts top-8 + 1 shared, expert d_ff 1536, SwiGLU clamped at 7, fp32 router with learned bias) + 4 dense (d_ff 13824); attention is a 3:1 sliding/full hybrid — 69 sliding-window GQA layers (window 512, 64/4 heads, head_dim 192, θ 10K) + 23 full-attention layers (θ 10M, 1/3 partial RoPE, YaRN) each carrying a DSA-style sparse indexer selecting top-512 tokens (proxy_dim 256, ssmax, csa_block_compress); head-wise sigmoid output gates + per-head QK RMSNorm throughout; 3 MTP speculative heads; 47-layer perception-encoder ViT (1536d, quick_gelu) with a single 6144→4096 projector; 1M context, vocab 128,896. Verified against config.json + README table + safetensors index (1208.7 GB ≈ 604.3B) + per-shard tensor shapes; computed 604.4B vs 600B claimed (ratio 0.99). Considered and skipped: NVIDIA Nemotron 3.5 Super VL 120B-A12B (Oct 15, fully verified from config + tensor shapes — 88 single-mixer layers: 40 Mamba-2 + 40 MoE-only + 8 GQA, 512 experts top-22 + shared in a 1024-d latent, C-RADIO ViT-H 0.65B, 1M ctx — but its per-layer tri-block stack has no honest mapping to the atlas's per-layer attention schema or param gate, so deferred to a future harness change rather than misdrawn), Nemotron 3.5 Bolt 74B-A9B (2-bit quant of Super VL), FLUX-3-Image-Klein family (gated 401; ungated 'pup' is a Qwen3.5-VL wrapper), granite-switch-4.1 (LoRA-adapter ensemble), mistralai Timestral (time-series forecasting, out of scope), TaoMate-H3-FL2VA (MiniMax-H3 LoRA), anon-1b (gemma-3-1b quant). WATCH rechecks: reflection-ai org endpoint still empty + /beam 401; Mistral Large 4 absent; FrancisRing/Prism flags-only; Kimi-K3-Base + FLUX.3-Image still 401; LTX-2.5 gated. Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 79 models, v38."
-    },
-    {
-      "date": "2026-10-15",
-      "added": [
-        "ling-3-1-flash"
-      ],
-      "upgraded": [],
-      "note": "Added InclusionAI Ling-3.1-flash (560B total / 25B active, MIT, confidence verified) — Ant Group's upgraded native hybrid-reasoning flagship: 72 layers = 63 KDA delta-rule linear + 9 gated-MLA full-attention (7:1), 512 experts top-8 + 1 shared with aux-loss-free expert_bias routing, 4 dense head layers, 1M-token context claimed over a 262K native window, shipped FP8 e4m3 with day-0 SGLang/vLLM (NEXTN MTP) support. Verified against HF config.json + README table + safetensors index (FP8 573.75 GB ≈ 560B; computed 560.1B, ratio 1.00). Also checked: Qwen-Image-2.1-Turbo (distill of tracked model), Underdog-Saluki (GGUF quant), JEV-35B/d3/clef decision-router class, MiniCPM-V 4.7 quant ports — all skipped; watch list (reflection-ai Beam, Mistral Large 4, Prism) unchanged."
     }
   ]
 };

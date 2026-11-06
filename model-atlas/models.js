@@ -5462,6 +5462,157 @@ window.MODELS = [
 ]
 },
 {
+"id": "ernie-5-5-flash-base",
+"name": "ERNIE 5.5 Flash Base",
+"org": "Baidu",
+"family": "ERNIE",
+"released": "2026-11",
+"license": "ERNIE 5.5 Flash Base Model License v1.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 280,
+"params_active_B": 14,
+"n_layers": 43,
+"d_model": 4096,
+"d_ff": 14336,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 1,
+"head_dim": 512,
+"attention": "hybrid",
+"attention_detail": "37 HCA (Heavily Compressed Attention) layers — 128:1 gated learned compression writes one 512-d K=V entry per 128-token block (learned APE within block), single shared KV stream (MQA-style), q latent 1024 → 64 heads × 512 (448 nope + 64 rope), grouped W_O (8 groups × 1024 low-rank), per-head sinks — interleaved 6:1 with 6 full-context MLA+DSA layers (q latent 1024, kv latent 512 + 64 rope-k, 64 heads × 192 nope / 256 v, lightning indexer 64 × 128 selecting top-2048). Every layer: sigmoid output gate computed from the query latent, VHA rank-16 cross-head post-mix, per-head QK-norm. RoPE θ 8M + YaRN ×16 → 1M context (128K training).",
+"n_experts": 512,
+"active_experts": 10,
+"shared_experts": 1,
+"vocab_size": 201216,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SiTU-GLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Baidu's efficiency-first 280B/14B pre-training-only flagship (33.5T tokens, distributed Muon optimizer), benchmarked head-to-head with DeepSeek-V4-Flash-Base (284B/13B): MMLU 93.3, GPQA 60.2, HumanEval+ 82.3, RepoQA 91.7. Multi-Router Latent MoE: 512 routed experts (top-10) + 1 shared operating in a 2048-d latent (half hidden width, fc1/fc2 dispatch-combine), two independently-initialized sigmoid routers with split-feature routing + per-expert learnable scaling scalars, aux-loss-free bias balancing, latent RMSNorm + SiTU-GLU (Stable-LatentMoE recipe). ECHO replaces the MTP module — the backbone's own final layer doubles as multi-horizon predictor and built-in speculative-decoding draft (+0.36B official; the checkpoint materializes it as a 44th layer, so the measured index is 286.5B BF16 / 288.4 GB FP8 vs the official 280B count). MultiMax output head (4-segment learnable piecewise temperature); 4-stream mHC residuals (Sinkhorn ×20); ≈200K BPE tokenizer grouping numbers right-to-left in 3-digit groups. Released FP8-E4M3 block-quantized (128×128 blocks, UE8M0 scales; compressors, routers and norms stay BF16) with a BF16 sibling repo. Repo created Oct 21; weights + card public Nov 2–5 2026.",
+"sources": [
+"https://ernie.baidu.com/release/ernie-5-5-flash-base/",
+"https://arxiv.org/abs/2610.40577",
+"https://arxiv.org/abs/2610.17959",
+"https://arxiv.org/abs/2610.24766",
+"https://huggingface.co/baidu/ERNIE-5.5-Flash-Base",
+"https://huggingface.co/baidu/ERNIE-5.5-Flash-Base/raw/main/config.json",
+"https://huggingface.co/baidu/ERNIE-5.5-Flash-Base/raw/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 1,
+"moe_latent_dim": 2048,
+"attention_split": {
+"parts": [
+{
+"name": "HCA",
+"n": 37,
+"type": "HCA",
+"sub": "ratio 128"
+},
+{
+"name": "MLA+DSA",
+"n": 6,
+"type": "MLA",
+"sub": "top-2048"
+}
+],
+"pattern": "hhhhhhhmhhhhhhmhhhhhhmhhhhhhmhhhhhhmhhhhhhm",
+"pattern_map": {
+"h": "HCA",
+"m": "MLA"
+}
+},
+"attn_modules": [
+{
+"kind": "hca",
+"title": "HCA — Heavily Compressed Attention (37 layers)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1024,
+"m": 128,
+"win": 128,
+"og": 8,
+"olora": 1024,
+"cache": "HCA cache/token: 1×512 compressed entry per 128 tokens (~4 el/token amortized) + 128-token raw window ring"
+},
+"notes": [
+"gated compressor wkv+wgate 4096→512 · learned APE per block",
+"single shared 512-d K=V stream (MQA-style) + per-head sinks",
+"sigmoid output gate from q latent c_Q — 75% fewer gate params",
+"VHA: rank-16 cross-head post-mix (U/V 64×16), identity skip",
+"grouped W_O: 8 groups × 1024 low-rank → o_proj 8192→4096"
+]
+},
+{
+"kind": "mla",
+"title": "MLA + DSA — full-context layers (6 layers)",
+"p": {
+"d": 4096,
+"nh": 64,
+"qlora": 1024,
+"kvlora": 512,
+"nope": 192,
+"rope": 64,
+"v": 256,
+"gate": "σ(gate_proj c_Q)",
+"yarn": "YaRN ×16 (1M)",
+"cache": "576 el/token (512 latent + 64 k_R) × 6 layers + 128-d indexer keys"
+},
+"notes": [
+"wide 256-d v / 192-d nope heads — kv latent 512, RoPE 64",
+"kv_a_proj fused: 4096 → 512 latent + 64 rope-k (MQA-style)",
+"direct o_proj 16384→4096 — no grouped W_O on MLA layers",
+"per-head softmax offsets + low-rank gate from q latent"
+]
+},
+{
+"kind": "dsaidx",
+"title": "DSA Lightning Indexer — top-2048 of 1M ctx",
+"p": {
+"iheads": 64,
+"idim": 128,
+"topk": 2048,
+"qlabel": "c_Q query latent (1024)",
+"keynorm": "biased LN",
+"note": "BF16 wk/w · NoPE indexer",
+"cache": "k^I (128-d, BF16) cached on the 6 MLA+DSA layers"
+},
+"notes": [
+"wq_b: query latent c_Q (1024) → 64 × 128 q^I (FP8)",
+"wk: hidden h (4096) → 128 k^I — not the KV latent",
+"weights_proj: h → 64 per-head ReLU-score weights",
+"top-2048 mask → MLA attends only selected latents"
+]
+},
+{
+"kind": "mhc",
+"title": "mHC — Manifold-Constrained Hyper-Connections",
+"p": {
+"sinkhorn": 20,
+"cap": "x_{l+1} = H_res·x_l + H_postᵀ·F(H_pre·x_l) — expansion 4 · mapping_proj 24→4×4096"
+}
+}
+],
+"residual": {
+"kind": "mhc",
+"streams": 4,
+"note": "Residuals: 4-stream Manifold-Constrained Hyper-Connections (mHC, Sinkhorn ×20) — see panel"
+},
+"attn_bullets": [
+"output gate on every layer is computed from the 1024-d query latent, not h",
+"VHA rank-16 post-mix across the 64 heads, fused into the attention kernel",
+"ECHO: the backbone's own final layer replaces the MTP module — multi-horizon loss + built-in spec-decode draft",
+"MultiMax head: learnable piecewise temperature (4 segments) sharpens the 201K-vocab distribution",
+"Multi-Router MoE: 2 sigmoid routers, split-feature routing, per-expert learnable scalars",
+"FP8-E4M3 128×128 block quant, UE8M0 scales — compressors, routers and norms stay BF16"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
