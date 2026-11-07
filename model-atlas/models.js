@@ -5613,6 +5613,102 @@ window.MODELS = [
 ]
 },
 {
+"id": "cola2",
+"name": "Cola2",
+"org": "ByteDance Seed",
+"family": "Cola",
+"released": "2026-11",
+"license": "Apache-2.0 (code; weights per NOTICE)",
+"modality": "text",
+"decoder_type": "Dense",
+"params_total_B": 8.77,
+"params_active_B": 8.77,
+"n_layers": 36,
+"d_model": 2560,
+"d_ff": 9728,
+"d_ff_moe": null,
+"n_heads": 32,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "GQA",
+"attention_detail": "Three co-adapted components (measured 8.77B F32 = 4.04B latent DiT + 4.73B compression-VAE/token-decoder stack). (1) Dynamic-compression VAE: own 2560-d wte (Qwen3 vocab) → input_proj 2560→1536 → aux-loss-free DynamicSegmenter — cosine boundary scorer over LayerNorm'd adjacent token features, logits = α·(1 − cos − τ) with α=10, τ=0.5, plus a rate_bias buffer (logit of the 0.5 target compression rate) regulated by a negative-feedback controller; hard span limits 1–8 tokens. Span-local bidirectional contextualization + mean pooling (2 TextVAEBlocks 1536-d/12-head, SwiGLU 3072) → 2 latent-encoder blocks → posterior_proj 1536→128 = μ|logσ of a 64-d variational latent per span. (2) Latent DiT — flow-matching prior over 8-latent blocks: 34 blocks at 2560-d, fused-QKV self-attention (20 heads × 128, per-head QK-LayerNorm with bias, interleaved partial RoPE on 96 of 128 dims, θ 1e4) under a block-causal mask (committed latent prefix clean; the 8 positions of the new block denoise jointly/bidirectionally), GELU(tanh) FFN 2560→10240→2560, and per-block AdaLN from SiLU MLPs (msa_in/mlp_in 2560→5120 shift·scale pairs + msa_out/mlp_out 2560→2560 gates ≈ 39.3M/block, a third of block params); sinusoidal-256 timestep embedding (emb_in), txt_in 64→2560, output AdaLN + txt_out_norm + txt_out 2560→64 velocity head. Solver: 8 Euler steps on the low-noise-biased schedule t=T(1−i/8)² (T=1000), CFG velocity blend u + 10·(c − u). (3) Span-causal token decoder — Qwen3-4B-shaped 36L/2560-d GQA (32 Q / 8 KV × 128, per-head QK-RMSNorm, RoPE θ 1e6, SwiGLU 9728, pre-RMSNorm): a duration head (2560→1280→8) picks each latent's span length 1–8; a HardDurationExpander repeats latents to token-aligned conditions adding a 128-d local-position MLP feature; 2 conditioning blocks (2560-d MHA 20-head, block-causal by latent block) refine them. Realization runs [clean prefix ‖ MASK queries] where query embeddings = learned mask embedding + cond_in(condition), the clean prefix is embedded with the lm_head weight (tied in-path; the compression encoder keeps its own wte), and lm_head 2560→151936 carries a bias; decoder CFG scale −0.9 gives logits = 0.1·conditional + 0.9·latent-dropped unconditional, weighting the decoder's autonomous LM. Inference loop: encode prompt+committed text → Gaussian noise into unfilled positions of an 8-latent block → DiT denoise → duration+expand+condition → commit spans one at a time (greedy) until EOS/max_new_tokens → latent feedback re-encodes the committed spans under the fixed span layout so latent history matches the emitted text.",
+"n_experts": null,
+"active_experts": null,
+"shared_experts": null,
+"vocab_size": 151936,
+"context_length": 32768,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "ByteDance Seed + HKU/PKU/RUC hierarchical continuous-latent LM (paper Oct 22 2026, weights + inference-only code Nov 6; base model, not chat-tuned) — successor to the Cola research line. Factorizes generation into semantic planning (variational 64-d span latents) and discrete token realization, co-adapted during training: token-prediction gradients update the compression encoder through the latents while the flow-matching prior learns from stop-gradient (detached) targets, and the decoder trains on clean/noisy/dropped latent conditions balanced by the negative CFG. Trained on OLMo-2 text retokenized with the Qwen3 tokenizer, decoder + encoder embeddings initialized from Qwen3-4B-Base, in three stages (VAE 52.43B → joint VAE+DiT +125.83B → frozen-EMA-VAE DiT +167.77B) = 346.03B source tokens, released deliberately unconverged: 60.10 eight-task average, beating Llama-3-8B (15T+ tokens) on HellaSwag (41.75 vs 39.21) and StoryCloze (80.42 vs 79.49) with 43× fewer reported pretraining tokens; controlled scaling shows the gap to LLaDA still closing past ~150B tokens, unsaturated at ~210B. FP32 release, 8 shards / 35.07 GB; measured 8,768,019,913 params = DiT 4,038,996,032 + VAE/decoder stack 4,729,023,881 (decoder blocks alone 3,633,509,376). Apache-2.0 code; NOTICE keeps Qwen3-derived assets (tokenizer, init) under their original terms.",
+"sources": [
+"https://arxiv.org/abs/2610.31305",
+"https://hongcanguo.github.io/Cola2/",
+"https://github.com/ByteDance-Seed/Cola2",
+"https://huggingface.co/ByteDance-Seed/Cola2",
+"https://huggingface.co/ByteDance-Seed/Cola2/raw/main/config.json",
+"https://huggingface.co/ByteDance-Seed/Cola2/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"param_check_exempt": "multi-stack (measured 4.04B latent DiT + 4.73B VAE/decoder stack; single-decoder formula covers only the 36L token backbone)",
+"attn_modules": [
+{
+"kind": "gqa",
+"title": "Span-causal token decoder (×36 — Qwen3-4B shape)",
+"p": {
+"d": 2560,
+"nq": 32,
+"nkv": 8,
+"dh": 128,
+"rope": "RoPE θ 1e6 · full 128 dims",
+"qknorm": "per-head QK-RMSNorm",
+"nocache": true,
+"cache": "none in release path — clean prefix re-runs per span chunk"
+},
+"notes": [
+"realize spans: [clean prefix ‖ MASK-query + cond_in(z)]",
+"clean prefix embedded with lm_head weight (tied in-path)",
+"decoder CFG −0.9 → logits = 0.1·cond + 0.9·uncond",
+"SwiGLU 9,728 · pre-RMSNorm · lm_head bias · greedy",
+"duration head 2560→1280→8 picks 1–8 tokens per latent"
+]
+},
+{
+"kind": "gqa",
+"title": "Latent DiT block (×34 — flow-matching prior)",
+"p": {
+"d": 2560,
+"nq": 20,
+"nkv": 20,
+"dh": 128,
+"rope": "interleaved partial RoPE 96/128 · θ 1e4",
+"qknorm": "per-head QK-LayerNorm (bias)",
+"nocache": true,
+"cache": "none — 8 Euler steps re-attend the full latent history"
+},
+"notes": [
+"block-causal: clean committed prefix + bidir in 8-block",
+"fused QKV [7680,2560] no-bias · GELU(tanh) FFN →10240",
+"AdaLN ×4 SiLU-MLPs/block: shift·scale+gates (39.3M, 33%)",
+"8-step Euler t=T(1−i/8)² · CFG 10 velocity blend · T=1000",
+"txt_in 64→2560 · txt_out 2560→64 velocity + out-AdaLN",
+"stop-gradient FM decouples prior from representation"
+]
+}
+],
+"attn_bullets": [
+"compression VAE: own 2560-d wte → input_proj 1536 → cosine boundary segmenter",
+"boundary logits = 10·(1 − cos − 0.5) + rate_bias, feedback-controlled (aux-loss-free)",
+"spans 1–8 tokens · target compression 0.5 (~2 tok/latent) · posterior_proj 1536→128 = μ|logσ of 64-d z",
+"span pool ×2 + latent encoder ×2 (1536-d, 12-head, SwiGLU 3072) · span-local bidir + mean pooling",
+"expander: repeat z by duration + 128-d local-position MLP → 2 cond blocks (20-head, block-causal)",
+"latent feedback: committed spans re-encoded under fixed layout before the next block"
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
