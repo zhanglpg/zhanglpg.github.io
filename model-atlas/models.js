@@ -5709,6 +5709,365 @@ window.MODELS = [
 ]
 },
 {
+"id": "inkling-2-mini",
+"name": "Inkling 2 Mini",
+"org": "Thinking Machines",
+"family": "Inkling",
+"released": "2026-11",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 26.4,
+"params_active_B": 3.4,
+"n_layers": 24,
+"d_model": 2304,
+"d_ff": null,
+"d_ff_moe": 1152,
+"n_heads": 24,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "Looped 24 layers = 48 visits (6-17 run 3x); 5:1 SWA(1,024) + full, 24 Q / 8 KV, learned relative pos (no RoPE).",
+"attn_bullets": [
+"looped core: 6 + 3x12 + 6 = 48 layer visits from 24 weight layers",
+"cross-pass queries carry each pass's q/k/v/MLP state into the next",
+"learned sink + output gate; QK-L2 clip 22.6",
+"dynamic K/V short convs (k4) on full-attention layers",
+"Attention Residuals: snapshot bank every 6 layers"
+],
+"attention_split": {
+"parts": [
+{
+"name": "Local SWA",
+"n": 20,
+"type": "sliding",
+"sub": "win 1024"
+},
+{
+"name": "Global",
+"n": 4,
+"type": "global",
+"sub": "rel-pos"
+}
+],
+"pattern": "sssssgsssssgsssssgsssssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+},
+"n_experts": 128,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 201024,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "relative",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Inkling 2 ViT (23L/1024d)",
+"encoder_params_B": null,
+"fusion": "adapter",
+"notes": "23-layer, 1,024-dim, 16-head ViT (native patch 20, temporal 2, 32x32 pos grid, mlp_ratio 4) + 2x2 merge adapter 1024 -> 4096 -> 2304; ~0.3B derived from component shapes (undisclosed)."
+},
+"notes": "Thinking Machines' second-generation looped multimodal MoE and the local-size member of the Inkling 2 family: 24 layers of weights executed as 48 visits (6 + 3x12 + 6), giving MMLU-class capacity at ~3.4B active / ~5.4B effective active per token. Each token routes to 8 of 128 clamped-SwiGLU experts (gate softcap 4, up softcap 25, route scale 8); 1M context, learned relative positions, attention and residual-stream (Attention Residuals) refinements carried over from Inkling 1. Release is mixed NVFP4 (experts) + MXFP8/FP16 (rest), 19.5 GB single shard, with a 3-layer Markov-head MTP/DSpark drafter in mtp.safetensors. A varloop research sibling (TML-d24-varloop-research) can run 1/3/5 passes.",
+"sources": [
+"https://hf.co/blog/inkling2mini",
+"https://huggingface.co/thinkingmachines/Inkling-2-Mini",
+"https://huggingface.co/thinkingmachines/Inkling-2-Mini/raw/main/config.json",
+"https://huggingface.co/thinkingmachines/Inkling-2-Mini/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified"
+},
+{
+"id": "inkling-2-small",
+"name": "Inkling 2 Small",
+"org": "Thinking Machines",
+"family": "Inkling",
+"released": "2026-11",
+"license": "Apache-2.0",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 594,
+"params_active_B": 17,
+"n_layers": 48,
+"d_model": 4608,
+"d_ff": null,
+"d_ff_moe": 2304,
+"n_heads": 48,
+"n_kv_heads": 8,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "48 layers: 40 SWA(1,024) + 8 full every 6th; 48 Q / 8 KV, learned relative pos (no RoPE), sink + gate.",
+"attn_bullets": [
+"no loop: 48 physical layers, one visit each",
+"384 experts top-8, no shared expert",
+"Attention Residuals: snapshot bank every 6 layers",
+"5-layer MTP drafter; NVFP4-native pretraining"
+],
+"attention_split": {
+"parts": [
+{
+"name": "Local SWA",
+"n": 40,
+"type": "sliding",
+"sub": "win 1024"
+},
+{
+"name": "Global",
+"n": 8,
+"type": "global",
+"sub": "rel-pos"
+}
+],
+"pattern": "sssssgsssssgsssssgsssssgsssssgsssssgsssssgsssssg",
+"pattern_map": {
+"s": "sliding",
+"g": "global"
+}
+},
+"n_experts": 384,
+"active_experts": 8,
+"shared_experts": 0,
+"vocab_size": 201024,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "pre",
+"pos_encoding": "relative",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Inkling 2 ViT (23L/1024d)",
+"encoder_params_B": null,
+"fusion": "adapter",
+"notes": "23-layer, 1,024-dim, 16-head ViT (patch 20/temporal 2, 32x32 pos grid) + 2x2 merge adapter into 4,608-d; ~0.3B derived (undisclosed)."
+},
+"notes": "The large member of Thinking Machines' Inkling 2 generation (weights up Nov 4 2026, i.e. just before the previous run's window — missed then and archived now): 594B total / 17B active, 48 layers of 384-expert top-8 MoE (no shared experts) with the same local/global attention recipe, learned relative positions and Attention Residuals as Inkling 1, extended to 1M context and a 5-layer MTP drafter. Pretrained, midtrained and post-trained natively in NVFP4 (MXFP8 sibling also published); positioned against GLM-5.3-Flash / MiMo V2.6 Flash / MiniMax-M3.1-Flash / Qwen3.8-27B in the card's eval tables.",
+"sources": [
+"https://huggingface.co/thinkingmachines/Inkling-2-Small",
+"https://huggingface.co/thinkingmachines/Inkling-2-Small/raw/main/config.json",
+"https://huggingface.co/thinkingmachines/Inkling-2-Small/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified"
+},
+{
+"id": "hy4-flash",
+"name": "Hunyuan Hy4-flash",
+"org": "Tencent Hunyuan",
+"family": "Hunyuan",
+"released": "2026-11",
+"license": "Tencent Hy License",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 220,
+"params_active_B": 12,
+"n_layers": 42,
+"d_model": 3072,
+"d_ff": 13824,
+"d_ff_moe": 1536,
+"moe_latent_dim": 1536,
+"n_heads": 32,
+"n_kv_heads": 32,
+"head_dim": 256,
+"attention": "hybrid",
+"attention_detail": "42 layers: 12 sparse-MLA (DSA top-2,048) interleaved 1:3 with 30 SWA MLA (win 511); q_lora 1,024, kv_lora 512.",
+"attn_bullets": [
+"DSA indexer: 16 heads x 128, top-2,048 of 1M ctx",
+"Engram n-gram tables at 4 layers (63.5B params)",
+"LatentMoE: 512 experts top-16 + 1 shared in a 1,536-d latent",
+"iHC: 4 residual streams (identity hyper-connections)",
+"sandwich RMSNorm + element-wise gated MLA"
+],
+"attention_split": {
+"parts": [
+{
+"name": "MLA+DSA",
+"n": 12,
+"type": "MLA",
+"sub": "top-2048"
+},
+{
+"name": "SWA",
+"n": 30,
+"type": "SW",
+"sub": "win 511"
+}
+],
+"pattern": "mmwwwmwwwmwwwmwwwmwwwmwwwmwwwmwwwmwwwmwwwm",
+"pattern_map": {
+"m": "MLA",
+"w": "SW"
+}
+},
+"n_experts": 512,
+"active_experts": 16,
+"shared_experts": 1,
+"vocab_size": 120832,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "Hy4 ViT (27L/1152d)",
+"encoder_params_B": 0.43,
+"fusion": "adapter",
+"notes": "27-layer, 1,152-dim, 16-head ViT (patch 16, 2x2 merge, 2D RoPE, up to 2,048 px) + RMSNorm-MLP adapter into 3,072-d; rates text + image input."
+},
+"notes": "Tencent's cost-optimised Hy4 variant: 220B total (155.5B decoder + 63.5B Engram tables + 0.43B ViT + 0.85B DFly2 drafter) with only 12B active per token. Three changes vs Hy4: (1) DSA+SWA hybrid attention at 1:3, (2) LatentMoE — 512 routed experts (top-16 + 1 shared) whose 1,536-d expert FFNs live in a 1,536-d latent, and (3) Engram n-gram memory: bigram/trigram tables (8 hash heads per order, 10.3M-entry hash vocab, 768-d per order) injected at four backbone layers. Identity Hyper-Connections (iHC, 4 residual streams) replace the single residual; weights are BF16 (440.5 GB), with an FP8 sibling and DSpark/DFly2 speculative decoding support.",
+"sources": [
+"https://hy.tencent.ai/research/hy4-flash",
+"https://github.com/Tencent-Hunyuan/Hy4-flash",
+"https://huggingface.co/tencent/Hy4-flash",
+"https://huggingface.co/tencent/Hy4-flash/raw/main/config.json",
+"https://huggingface.co/tencent/Hy4-flash/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"param_check_exempt": "Engram n-gram tables (63.5B) sit outside the decoder formula: card's decoder-only total 155.5B vs formula ~154B; headline 220B includes Engram + ViT + drafter"
+},
+{
+"id": "gigachat4-708b-a41b",
+"name": "GigaChat 4 708B-A41B",
+"org": "Sber",
+"family": "GigaChat",
+"released": "2026-11",
+"license": "MIT",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 708,
+"params_active_B": 41,
+"n_layers": 64,
+"d_model": 7168,
+"d_ff": 18432,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "64L: 48 GDN + 16 MLA+DSA every 4th; GDN 32K/64V heads, top-2,048 sparse.",
+"attn_bullets": [
+"GatedNorm: learned gate on every pre/post norm",
+"GDN: short conv k4 + gated-RMSNorm sigmoid gate",
+"YaRN x32 (32K -> 1M) · clamped SwiGLU ±10 · logit softcap 30",
+"MTP 1 layer + separate DFlash2 drafter",
+"FP8-E4M3 128x128 blocks with BF16 islands"
+],
+"attention_split": {
+"parts": [
+{
+"name": "GDN",
+"n": 48,
+"type": "linear",
+"sub": "delta rule · conv k4"
+},
+{
+"name": "MLA+DSA",
+"n": 16,
+"type": "MLA",
+"sub": "top-2048"
+}
+],
+"pattern": "lllmlllmlllmlllmlllmlllmlllmlllmlllmlllmlllmlllmlllmlllmlllmlllm",
+"pattern_map": {
+"l": "linear",
+"m": "MLA"
+}
+},
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 128256,
+"context_length": 1048576,
+"norm": "GatedNorm",
+"norm_placement": "pre_post",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Sber's 708B/41B flagship and the first GigaChat built as a linear+sparse attention hybrid: 48 Gated DeltaNet layers alternating with 16 MLA layers that carry DeepSeek-style sparse attention, so every long-context layer is either recurrent or top-2,048-sparse. GatedNorm (a learned gate on each pre/post norm, weight 2.0) replaces plain RMSNorm, SwiGLU is clamped at +/-10, and the head applies a 30-logit softcap; 256 experts top-8 + 1 shared, first 3 layers dense (18,432), routed scale 2.5. Released as the final FP8-E4M3 (128x128 block) instruct model with 1-layer MTP plus a separate DFlash2 drafter (dflash_draft/); one checkpoint serves both instant and reasoning modes.",
+"sources": [
+"https://github.com/salute-developers/gigachat4/blob/main/GigaChat_4.pdf",
+"https://giga.chat/blog/en",
+"https://huggingface.co/ai-sage/GigaChat4-708B-A41B",
+"https://huggingface.co/ai-sage/GigaChat4-708B-A41B/raw/main/config.json",
+"https://huggingface.co/ai-sage/GigaChat4-708B-A41B/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 3
+},
+{
+"id": "kolibri-1-1",
+"name": "Kolibri 1.1",
+"org": "Aleph Alpha",
+"family": "Kolibri",
+"released": "2026-11",
+"license": "Apache-2.0",
+"modality": "text",
+"decoder_type": "MoE",
+"params_total_B": 75.1,
+"params_active_B": 3.44,
+"n_layers": 50,
+"d_model": 2560,
+"d_ff": 3584,
+"d_ff_moe": 512,
+"n_heads": 48,
+"n_kv_heads": 4,
+"head_dim": 128,
+"attention": "hybrid",
+"attention_detail": "50 layers: 40 SWA (win 513, RoPE) + 10 YASA sparse every 5th — 2,048 best keys + 128 recent.",
+"attn_bullets": [
+"YASA: 12 index heads, 16,384-entry block pool, 8 sinks",
+"only 4 indexers (L4/14/19/29); other layers reuse KV",
+"RoPE applied only in sliding-window layers",
+"FP8 128x128 blocks; lm_head + routers unquantized"
+],
+"attention_split": {
+"parts": [
+{
+"name": "SWA",
+"n": 40,
+"type": "SW",
+"sub": "win 513 · RoPE"
+},
+{
+"name": "YASA",
+"n": 10,
+"type": "sparse",
+"sub": "top-2048"
+}
+],
+"pattern": "wwwwiwwwwiwwwwiwwwwiwwwwiwwwwiwwwwiwwwwiwwwwiwwwwi",
+"pattern_map": {
+"w": "SW",
+"i": "sparse"
+}
+},
+"n_experts": 384,
+"active_experts": 6,
+"shared_experts": 1,
+"vocab_size": 128000,
+"context_length": 1048576,
+"norm": "RMSNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": null,
+"notes": "Aleph Alpha's German/English sovereign model rebuilt from the Kolibri 1 checkpoint with a new sparse-attention architecture (YASA) introduced in mid-training, plus densified first layers — 75B total (down from 78B) with 3.44B active, 2 dense layers then 48 layers of 384 experts top-6 + 1 shared (expert FFN 512). The point is long-context cost: fixed-size selection makes decode independent of context length, giving up to 14x decode throughput at 1M tokens (262K native) versus Kolibri 1.0 and 3.4x less GPU time per task. Release is FP8 (128x128 weight blocks, dynamic activations) with lm_head and all router/MLP-only layers kept unquantized; Apache-2.0 with GGUF builds.",
+"sources": [
+"https://aleph-alpha.com/en/blog/kolibri-1-1/",
+"https://aleph-alpha.com/en/blog/sparse-attention-in-kolibri-1-1/",
+"https://huggingface.co/Aleph-Alpha/Kolibri-1.1",
+"https://huggingface.co/Aleph-Alpha/Kolibri-1.1/raw/main/config.json",
+"https://huggingface.co/Aleph-Alpha/Kolibri-1.1/resolve/main/model.safetensors.index.json"
+],
+"confidence": "verified",
+"dense_first_layers": 2
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",

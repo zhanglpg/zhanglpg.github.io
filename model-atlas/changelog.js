@@ -1,6 +1,18 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-11-07 09:57",
+  "last_run": "2026-11-27 18:10",
   "entries": [
+    {
+        "date": "2026-11-27",
+        "added": [
+            "inkling-2-mini",
+            "inkling-2-small",
+            "hy4-flash",
+            "gigachat4-708b-a41b",
+            "kolibri-1-1"
+        ],
+        "upgraded": [],
+        "note": "Big catch-up run (first since Nov 7): added Thinking Machines' entire Inkling 2 generation — Inkling 2 Mini (26.4B/3.4B, a looped decoder that runs its middle 12 layers three times for 48 layer-visits) and Inkling 2 Small (594B/17B, 384 experts) — plus Tencent Hunyuan Hy4-flash (220B/12B: DSA+SWA hybrid, LatentMoE, and 63.5B of Engram bigram/trigram tables), Sber GigaChat 4 708B-A41B (48 Gated DeltaNet layers alternating with 16 MLA+DSA layers) and Aleph Alpha Kolibri 1.1 (75B/3.44B, YASA sparse attention replacing its 10 dense layers for 14x decode throughput at 1M context). Considered and skipped: inclusionAI Ling-3.2-air (same 35 KDA + 7 Gated-MLA recipe as tracked Ling-3.1-flash at smaller scale), SenseNova-Loop-9B (byte-identical architecture to the tracked preview, only YaRN/context differs), Baidu ERNIE-5.5-Flash-Preview (tracked Base + DSpark draft head), Edge0 145B/120B (quantized Qwen3.8-Flash-Next), apple FastFrames (Wan2.1-T2V-14B finetune), XingChen Xing4.1-Preview (stock DeepSeek-V3.2 config), MemT-1.0-Pro (Nemotron-3-Ultra + memory, family already tracked), Microsoft Aion-2.3B (small dense), Tencent Hy-MT3 (translation), Kolibri-1.1-GGUF / Inkling-2-Small-MXFP8 class derivatives, plus the usual LoRA/quant/merge churn. WATCH items unchanged: Kimi-K3-Base and Muse-Spark HF still gated, no Beam tech report or Prism-pro; both partials (LLaDA2.2-flash, DeepSeek-V4-Flash-Vision-Exp) unchanged."
+    },
     {
         "date": "2026-11-07",
         "added": [
@@ -150,16 +162,6 @@ window.ATLAS_CHANGELOG = {
         ],
         "upgraded": [],
         "note": "Added Reflection Beam 1.0 (501.3B total / 23.4B active, Apache-2.0, confidence verified) — the first open release from Reflection, the new US lab, and the model we had been watching for three weeks under the wrong org handle (weights landed Oct 16 on HF org 'reflection', not 'reflection-ai'): a 52-layer sparse MoE (3 dense SwiGLU + 49 MoE layers of 256 routed experts top-8 with NO shared expert, DeepSeek-V3-style group-limited sigmoid routing ×2.5) whose attention is a 43+9 sliding/full gated-GQA hybrid where the 9 full layers drop positional encoding entirely in favour of scalable-softmax query scaling, and whose residual stream adds each sublayer with weight 1/√k while rescaling by √((k−1)/k) so the stream stays at constant scale. Verified against config.json + README table + HF blog + safetensors index (1002.66 GB = 501.33B measured; computed 499.6B, ratio 1.00; active recomputes to 23.43B). Skipped: DeepSeek-V4.1-Flash-1017 (config byte-identical to the tracked DeepSeek-V4.1-Flash — a weight-only post-training refresh), Meta Muse Spark Open 816B-A42B (still gated manual 401 — config unreadable), black-forest-labs flux-3-image-klein (still gated auto), MOSS-Image-SFT/Base + quant/MLX ports and DFlash2 drafters (finetunes/derivatives), datalab-to/indra-ocr (1M-param OCR utility, out of scope), tencent/Qwen3-8B-DSpine-b16 (research ablation). WATCH rechecks: reflection org now live (Beam added; FP8/NVFP4/DFlash2 siblings noted), Mistral Large 4 'le Chonk' still absent from mistralai, FrancisRing/Prism still flags-only, Kimi-K3-Base + LTX-2.5 still gated 401. Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 83 models, v40."
-    },
-    {
-        "date": "2026-10-17",
-        "added": [
-            "dory-1-0-4b",
-            "hy-memory-30b-a3b",
-            "moss-image"
-        ],
-        "upgraded": [],
-        "note": "Added three Oct-16 releases, all verified against HF config.json + safetensors headers: NVIDIA Nemotron Labs Dory 1.0 4B (first looped/latent-recurrent open LLM — 36 nGPT blocks (8 Input + 20 shared Recurrent applied ×2 loops + 8 Output), 3:1 sliding/full GQA hybrid with dual RoPE θ, no LayerNorm anywhere; measured 3.975B, ratio 1.11), Tencent Hunyuan Hy-Memory-30B-A3B (specialized long-term-memory writer for Mem0/MemOS/Hy-Memory harnesses — hy_v3 MoE, 128 narrow experts top-8 + 1 shared with true expert d_ff 768, OPD + attributed-memory RL training; measured 30.06B, ratio 1.00), and Fudan OpenMOSS MOSS-Image (5B flow-matching DiT over FLUX.2 VAE latents with SiTU-GLU FFN, one shared adaLN modulation across all 42 blocks, frozen Qwen3.5 hybrid text encoder, layout control + strong in-image text rendering; measured 5.08B). Skipped: NVIDIA Nemotron 3.5 Super VL 120B-A12B (still un-archable: tri-block Mamba-2/MoE-only/GQA stack breaks the param gate, deferred Oct 16), meta-models Muse-Spark-Open-816B-A42B (gated 401), flux-3-image-klein (gated), MOSS-Image-SFT (finetune of Base), tencent/Qwen3-8B-DSpine-b16 (research ablation). Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged → stay partial. 82 models, v39."
     }
 ]
 };
