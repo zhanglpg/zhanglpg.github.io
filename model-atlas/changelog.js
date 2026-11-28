@@ -1,6 +1,14 @@
 window.ATLAS_CHANGELOG = {
-  "last_run": "2026-11-27 18:10",
+  "last_run": "2026-11-28 09:33",
   "entries": [
+    {
+        "date": "2026-11-28",
+        "added": [
+            "gigachat3-5-omni"
+        ],
+        "upgraded": [],
+        "note": "Added Sber's GigaChat 3.5 Omni (432B total / 28B active, verified) — the omni-modal variant of the tracked GigaChat 3.5 Reasoning: same 40-layer GatedDeltaNet + gated-MLA hybrid (10 MLA layers every 4th from layer 3, tensor-census confirmed), but 131K context and an InternViT image/video tower plus a GigaAM audio encoder that interleave 1-fps frames with their soundtrack slice on one time-ordered token stream (6.25 audio tokens/s, separate image/video/audio/video-audio token ids); FP8-E4M3 128x128 release with encoders, projectors, embeddings, router and MTP heads in BF16. The release commit landed Nov 27 10:37Z — 27 minutes after the previous run's sweep. Considered and skipped: KRAFTON Raon-1 nano (MoE-to-Dense pruning + KD distill of tracked Raon-1 mini), Ming-Image-0.2-Design (identical DiT/MLLM architecture to tracked 0.1 — retrained refresh), LingSante-3.1-flash + air-VL (medical finetunes of tracked Ling models), LongCat-Video-Avatar-1.6 (audio-driven avatar finetune of LongCat-Video), prism-ml Ternary-Bonsai-2.5-27B (ternary quant of tracked Qwen3.8-27B), tencent OmniEVIE-4B (Qwen3.5-4B three-stage retrieval encoder, utility class), GigaChat4-37B-A4B + BF16 siblings (smaller same-recipe GigaChat 4), thinkingmachines TML-d24-varloop-research (varloop research sibling of tracked Inkling 2 Mini), MiniMax-H3-Image (API-only, no config/weights), plus the usual finetune/quant/LoRA/merge churn. WATCH unchanged: Kimi-K3-Base, Muse-Spark and Prism-pro still 401, no Beam tech report or Prism-pro; both partials (LLaDA2.2-flash, DeepSeek-V4-Flash-Vision-Exp) unchanged."
+    },
     {
         "date": "2026-11-27",
         "added": [
@@ -154,14 +162,6 @@ window.ATLAS_CHANGELOG = {
         "added": [],
         "upgraded": [],
         "note": "Checked — no changes. Discovery window Oct 18 09:55 → Oct 19 09:25: createdAt sweep (top-500, generation/image/video pipelines), likes7d top-40, trendingScore top-60, and a 33-org lastModified sweep — zero new qualifying releases. Everything trending was already tracked (DeepSeek-V4.1-Flash, MiniCPM-V 4.7, LFM2.5-24B-A2B, Hy-Memory, MOSS-Image, Dory, Ling-3.1-flash, iris-3b) or a derivative/quant/repack of a tracked model (V4.1-Flash-1017 strata/FLARE ports, Hy-Memory-FP8, Dory BF16/GGUF/MXFP8, Comfy-Org MOSS-Image, klein-comfy ComfyUI repack, Underdog-Saluki = Qwen3.8-27B quant). Skipped as out of scope: nvidia cosmos3-nano-libero10 robot-data exports (0 likes), Nemotron-3.5-Parse (document-parser utility VLM: C-RADIOv4-SO400M + 10L mBART decoder — indra-ocr class), mistralai Timestral (time-series forecasting), UltraBERT 150M/380M (BERT-class retrieval encoders), swiss-ai Apertus 1.5 (Oct-18 news was documentation for Jul–Sep weights; dense standard architecture), LiquidAI d1-omni GGUF (decision-router skip list). WATCH rechecks: Mistral Large 4 'le Chonk' placeholder repo now 401s with ETA Oct 31; meta-models Muse-Spark-Open-816B-A42B still gated-manual 401; Kimi-K3-Base, LTX-2.5 and flux-3-image-klein still gated 401; reflection org has no Beam tech report or 1.1 yet (FP8/NVFP4/DFlash2 siblings are derivatives); FrancisRing/Prism config still flags-only. Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 83 models unchanged, v40."
-    },
-    {
-        "date": "2026-10-18",
-        "added": [
-            "beam-1-0-501b-a23b"
-        ],
-        "upgraded": [],
-        "note": "Added Reflection Beam 1.0 (501.3B total / 23.4B active, Apache-2.0, confidence verified) — the first open release from Reflection, the new US lab, and the model we had been watching for three weeks under the wrong org handle (weights landed Oct 16 on HF org 'reflection', not 'reflection-ai'): a 52-layer sparse MoE (3 dense SwiGLU + 49 MoE layers of 256 routed experts top-8 with NO shared expert, DeepSeek-V3-style group-limited sigmoid routing ×2.5) whose attention is a 43+9 sliding/full gated-GQA hybrid where the 9 full layers drop positional encoding entirely in favour of scalable-softmax query scaling, and whose residual stream adds each sublayer with weight 1/√k while rescaling by √((k−1)/k) so the stream stays at constant scale. Verified against config.json + README table + HF blog + safetensors index (1002.66 GB = 501.33B measured; computed 499.6B, ratio 1.00; active recomputes to 23.43B). Skipped: DeepSeek-V4.1-Flash-1017 (config byte-identical to the tracked DeepSeek-V4.1-Flash — a weight-only post-training refresh), Meta Muse Spark Open 816B-A42B (still gated manual 401 — config unreadable), black-forest-labs flux-3-image-klein (still gated auto), MOSS-Image-SFT/Base + quant/MLX ports and DFlash2 drafters (finetunes/derivatives), datalab-to/indra-ocr (1M-param OCR utility, out of scope), tencent/Qwen3-8B-DSpine-b16 (research ablation). WATCH rechecks: reflection org now live (Beam added; FP8/NVFP4/DFlash2 siblings noted), Mistral Large 4 'le Chonk' still absent from mistralai, FrancisRing/Prism still flags-only, Kimi-K3-Base + LTX-2.5 still gated 401. Partial rechecks: LLaDA2.2-flash + DeepSeek-V4-Flash-Vision-Exp configs unchanged — stay partial. 83 models, v40."
     }
 ]
 };

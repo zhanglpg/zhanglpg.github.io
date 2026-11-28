@@ -6068,6 +6068,124 @@ window.MODELS = [
 "dense_first_layers": 2
 },
 {
+"id": "gigachat3-5-omni",
+"name": "GigaChat 3.5 Omni",
+"org": "Sber",
+"family": "GigaChat",
+"released": "2026-11",
+"license": "MIT",
+"modality": "multimodal",
+"decoder_type": "MoE",
+"params_total_B": 432,
+"params_active_B": 28,
+"n_layers": 40,
+"d_model": 7168,
+"d_ff": 18432,
+"d_ff_moe": 2048,
+"n_heads": 64,
+"n_kv_heads": 64,
+"head_dim": 192,
+"attention": "hybrid",
+"attention_detail": "40 layers split 3:1 — 30 GigaChat35GatedDeltaNet linear-attention layers (32 key / 64 value heads, head_dim 128, causal depthwise conv kernel 4 over the 16384-d qkv stream, per-head decay from A_log + dt_bias, zero-centered gated RMSNorm sigmoid output gate ×2.0) interleaved with 10 gated-MLA full-attention layers (full_attention_layers [3, 7, …, 39], 0-indexed — verified by tensor census; q_lora 1536, kv_lora 512, qk_nope 128 + qk_rope 64, v 128, 64 heads, per-head sigmoid output gate via gate_proj, interleaved RoPE + YaRN ×4 from 32768 positions → 131K context). ZeroCenteredGatedNorm (RMSNorm followed by a learned ×2σ multiplicative gate) on every sublayer, pre AND post (layernorm_type pre_post). 3 MTP heads (layers 40–42, dense FFN, shared_head + eh_proj) ship in the checkpoint for EAGLE/MTP speculative decoding.",
+"attention_split": {
+"parts": [
+{
+"name": "GatedDeltaNet",
+"n": 30,
+"type": "linear",
+"sub": "conv k4 · gated"
+},
+{
+"name": "Gated MLA",
+"n": 10,
+"type": "MLA",
+"sub": "latent KV · gate"
+}
+],
+"pattern": "lllmlllmlllmlllmlllmlllmlllmlllmlllmlllm",
+"pattern_map": {
+"l": "linear",
+"m": "MLA"
+}
+},
+"n_experts": 256,
+"active_experts": 8,
+"shared_experts": 1,
+"vocab_size": 128256,
+"context_length": 131072,
+"norm": "ZeroCenteredGatedNorm",
+"norm_placement": "sandwich",
+"pos_encoding": "RoPE",
+"activation": "SwiGLU",
+"tie_embeddings": false,
+"vision": {
+"encoder": "InternViT (24L/1024d) + GigaAM audio (24L/1024d)",
+"encoder_params_B": 0.3,
+"fusion": "adapter",
+"notes": "InternViT-6B tower (24 layers, 1,024-dim, 16 heads, FFN 4,096, patch 14, 448×448, GELU) ~300M params per card, with a projector into the 7,168-d decoder; an image becomes a thumbnail plus up to six best-fit tiles of 256 tokens each. Audio enters through a GigaAM encoder (24 layers, 1,024-dim, 16 heads, FFN 4,096, conv kernel 5, 64-bin log-mel at 16 kHz, 4× subsampling) plus an adapter at 6.25 tokens/s. Video is sampled at 1 fps (up to 512 frames); each frame keeps its timestamp and is followed by the slice of soundtrack between it and the next frame, so audio and frames are interleaved on one time-ordered token stream (separate image/video/audio/video-audio token ids)."
+},
+"notes": "Sber's natively multimodal GigaChat 3.5 (release commit Nov 27 2026, MIT): the 432B/28B GigaChat 3.5 language model — identical 40-layer MLA + GatedDeltaNet hybrid to GigaChat 3.5 Reasoning — extended with an InternViT image/video tower and a GigaAM audio encoder, accepting any combination of text, images, audio and video with soundtrack and answering in text. Context is 131K here (YaRN ×4) rather than the text model's 262K. Release is FP8-E4M3 128×128 block-quantized (437 GB across 28 shards) with both encoders, projectors, embeddings, lm_head, router, linear-attention parameters and MTP heads kept BF16. Card benchmarks: Video-MME (with soundtrack) 80.7, Daily-Omni 81.0, WorldSense 57.0, Video-MME v2 25.9 (best of the compared open models).",
+"sources": [
+"https://huggingface.co/ai-sage/GigaChat3.5-Omni-432B-A28B",
+"https://huggingface.co/ai-sage/GigaChat3.5-Omni-432B-A28B/raw/main/config.json",
+"https://huggingface.co/ai-sage/GigaChat3.5-Omni-432B-A28B/raw/main/README.md",
+"https://github.com/sgl-project/sglang/pull/51276"
+],
+"confidence": "verified",
+"dense_first_layers": 3,
+"attn_modules": [
+{
+"kind": "deltanet",
+"title": "GigaChat35GatedDeltaNet (30 layers)",
+"p": {
+"d": 7168,
+"kh": 32,
+"vh": 64,
+"dh": 128,
+"conv": 4,
+"proj": "in_proj_qkvz 7168 → 24576 (fused)",
+"projSub": "in_proj_ba → β, α (64 v-heads) · conv over qkv 16384",
+"qsub": "L2 norm",
+"vsub": "64 × 128",
+"update": "S ← e^g·S + β·k⊗(v − (e^g S)ᵀk)",
+"decayName": "per-head decay α = e^g",
+"decaySub": "g = −e^A_log · softplus(a + dt_bias)",
+"beta": "β = σ(b) per v-head",
+"out": "o = qᵀS → gated RMSNorm(128) ⊗ σ(z)×2",
+"outSub": "zero-centered sigmoid gate → out_proj 8192 → 7168",
+"cacheline": "no KV cache — recurrent state 32 k-heads × 128 × 256 ≈ 1.05 M el + conv state 16384 × 4 per layer"
+},
+"notes": [
+"delta rule: 32 k-heads ×128, 64 v-heads ×128",
+"q,k L2-norm in kernel · chunked via FLA",
+"gating: gated RMSNorm sigmoid, zero-centered ×2"
+]
+},
+{
+"kind": "mla",
+"title": "Gated MLA (10 layers — every 4th from layer 3)",
+"p": {
+"d": 7168,
+"nh": 64,
+"qlora": 1536,
+"kvlora": 512,
+"nope": 128,
+"rope": 64,
+"v": 128,
+"nope_mode": false,
+"yarn": "mscale² ×4 from 32768",
+"gate": "σ(gate_proj h) per head",
+"cache": "576 el/token × 10 MLA layers ≈ 11.5 KB/token bf16 — only these layers cache anything"
+},
+"notes": [
+"α_q = √(7168/1536), α_kv = √(7168/512)",
+"interleaved RoPE · shared 64-d k_R via kv_a",
+"per-head sigmoid gate (gate_proj 7168→8192)"
+]
+}
+]
+},
+{
 "id": "glm-4-5",
 "name": "GLM-4.5",
 "org": "Zhipu",
